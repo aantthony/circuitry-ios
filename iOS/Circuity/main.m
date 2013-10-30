@@ -1,8 +1,8 @@
 //
 //  main.m
-//  Circuitry
+//  Circuity
 //
-//  Created by Anthony Foster on 24/06/13.
+//  Created by Anthony Foster on 30/10/2013.
 //  Copyright (c) 2013 Anthony Foster. All rights reserved.
 //
 
