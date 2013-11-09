@@ -1,5 +1,5 @@
 //
-//  CAppDelegate.h
+//  AppDelegate.h
 //  Circuitry
 //
 //  Created by Anthony Foster on 9/11/2013.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CAppDelegate : UIResponder <UIApplicationDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
