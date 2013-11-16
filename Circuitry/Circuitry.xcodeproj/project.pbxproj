@@ -25,6 +25,8 @@
 		9204C39D182E2F5C006A008D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9204C377182E2F5C006A008D /* UIKit.framework */; };
 		9204C3A5182E2F5C006A008D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9204C3A3182E2F5C006A008D /* InfoPlist.strings */; };
 		9204C3A7182E2F5C006A008D /* CircuitryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9204C3A6182E2F5C006A008D /* CircuitryTests.m */; };
+		92D90E321837807000387FAC /* Sprite.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E311837807000387FAC /* Sprite.m */; };
+		92D90E381837836500387FAC /* ShaderEffect.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E371837836500387FAC /* ShaderEffect.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +63,10 @@
 		9204C3A2182E2F5C006A008D /* CircuitryTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CircuitryTests-Info.plist"; sourceTree = "<group>"; };
 		9204C3A4182E2F5C006A008D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9204C3A6182E2F5C006A008D /* CircuitryTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CircuitryTests.m; sourceTree = "<group>"; };
+		92D90E301837807000387FAC /* Sprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sprite.h; sourceTree = "<group>"; };
+		92D90E311837807000387FAC /* Sprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sprite.m; sourceTree = "<group>"; };
+		92D90E361837836500387FAC /* ShaderEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderEffect.h; sourceTree = "<group>"; };
+		92D90E371837836500387FAC /* ShaderEffect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShaderEffect.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +98,8 @@
 		9204C367182E2F5C006A008D = {
 			isa = PBXGroup;
 			children = (
+				92D90E361837836500387FAC /* ShaderEffect.h */,
+				92D90E371837836500387FAC /* ShaderEffect.m */,
 				9204C37D182E2F5C006A008D /* Circuitry */,
 				9204C3A0182E2F5C006A008D /* CircuitryTests */,
 				9204C372182E2F5C006A008D /* Frameworks */,
@@ -133,6 +141,8 @@
 				9204C391182E2F5C006A008D /* ViewController.m */,
 				9204C393182E2F5C006A008D /* Images.xcassets */,
 				9204C37E182E2F5C006A008D /* Supporting Files */,
+				92D90E301837807000387FAC /* Sprite.h */,
+				92D90E311837807000387FAC /* Sprite.m */,
 			);
 			path = Circuitry;
 			sourceTree = "<group>";
@@ -267,6 +277,8 @@
 			files = (
 				9204C392182E2F5C006A008D /* ViewController.m in Sources */,
 				9204C388182E2F5C006A008D /* AppDelegate.m in Sources */,
+				92D90E321837807000387FAC /* Sprite.m in Sources */,
+				92D90E381837836500387FAC /* ShaderEffect.m in Sources */,
 				9204C384182E2F5C006A008D /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -478,6 +490,7 @@
 				9204C3AC182E2F5C006A008D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		9204C3AD182E2F5C006A008D /* Build configuration list for PBXNativeTarget "CircuitryTests" */ = {
 			isa = XCConfigurationList;
@@ -486,6 +499,7 @@
 				9204C3AF182E2F5C006A008D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
