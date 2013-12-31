@@ -125,6 +125,7 @@
     _rotation += 1.0;
 }
 
+
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
     glClearColor(0.0, 0.0, 0.0, 1.0f);
@@ -143,5 +144,35 @@
 }
 
 
+
+#pragma mark -  Gesture methods
+
+- (IBAction) handlePanGesture:(UIGestureRecognizer *)gestureRecognizer {
+    NSLog(@"pan");
+}
+
+- (IBAction) handlePinchGesture:(UIGestureRecognizer *)gestureRecognizer {
+    NSLog(@"pinch!");
+}
+- (IBAction) handleLongPressGesture:(UIGestureRecognizer *)gestureRecognizer {
+    NSLog(@"long press");
+}
+
+
+
+#pragma mark -  UIResponder methods
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    NSLog(@"begin");
+}
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    NSLog(@"moved");
+}
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    NSLog(@"ended");
+}
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+    NSLog(@"cancelled");
+}
 
 @end

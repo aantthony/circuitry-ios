@@ -11,6 +11,11 @@
 
 #import "Viewport.h"
 
-@interface ViewController : GLKViewController
+@interface ViewController : GLKViewController <UIGestureRecognizerDelegate>
+
+
+- (IBAction) handlePanGesture:(UIGestureRecognizer *)gestureRecognizer;
+- (IBAction) handlePinchGesture:(UIGestureRecognizer *)gestureRecognizer;
+- (IBAction) handleLongPressGesture:(UIGestureRecognizer *)gestureRecognizer;
 
 @end
