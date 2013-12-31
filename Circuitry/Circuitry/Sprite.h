@@ -12,7 +12,6 @@
 
 @interface Sprite : NSObject
 
-
 + (void)setContext: (EAGLContext*) context;
 
 + (GLKTextureInfo *) textureWithContentsOfFile: (NSString *) fileName;

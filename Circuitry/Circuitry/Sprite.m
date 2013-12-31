@@ -8,6 +8,11 @@
 
 #import "Sprite.h"
 
+
+@interface Sprite()
+@property GLKTextureInfo *texture;
+@end
+
 @implementation Sprite
 
 
@@ -18,7 +23,7 @@ typedef struct {
 
 
 ShaderEffect *shader;
-GLKTextureInfo *texture;
+
 GLuint uTexture;
 GLuint uModelViewProjectMatrix;
 
@@ -95,22 +100,22 @@ static GLuint _vertexArray;
     return info;
 }
 
-- (Sprite *) initWithTexture: (GLKTextureInfo *) textureInfo atX: (int) x Y:(int) y width:(int)w height: (int) h {
+- (Sprite *) initWithTexture: (GLKTextureInfo *) texture atX: (int) x Y:(int) y width:(int)w height: (int) h {
     
     // check sizes:
-    if (x < 0 || y < 0 || w > textureInfo.width || h > textureInfo.height) return nil;
+    if (x < 0 || y < 0 || w > texture.width || h > texture.height) return nil;
     
     // TODO: set position, size etc.
     
     
-    texture = textureInfo;
+    _texture = texture;
     
     return self;
 }
 
 
-- (Sprite *) initWithTexture: (GLKTextureInfo *) textureInfo {
-    return [self initWithTexture:textureInfo atX:0 Y:0 width:textureInfo.width height:textureInfo.height];
+- (Sprite *) initWithTexture: (GLKTextureInfo *) texture {
+    return [self initWithTexture:texture atX:0 Y:0 width:texture.width height:texture.height];
 }
 
 - (void) drawAtPoint: (GLKVector3) point withTransform:(GLKMatrix4) modelViewProjectionMatrix {
@@ -128,7 +133,7 @@ static GLuint _vertexArray;
     int i = 0;
     // Use the texture @i
     glActiveTexture(GL_TEXTURE0 + i);
-    glBindTexture(GL_TEXTURE_2D, texture.name);
+    glBindTexture(GL_TEXTURE_2D, _texture.name);
     glUniform1i(uTexture, i);
     
     GLKVector4 _color = {1.0, 1.0, 1.0, 1.0};

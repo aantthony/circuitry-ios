@@ -74,7 +74,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-Sprite *bg;
+Sprite *bg, *bgTest;
 
 - (void)setupGL
 {
@@ -86,10 +86,14 @@ Sprite *bg;
     
     GLKTextureInfo *texture = [Sprite textureWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"testbg" ofType:@"png"]];
     
-    NSLog(@"pre init!!");
+    GLKTextureInfo *bgTexture = [Sprite textureWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"background" ofType:@"png"]];
+    
+    NSLog(@"pre init!! %@, %@", texture, bgTexture);
     
     [Sprite setContext: self.context];
-    bg = [[Sprite alloc] initWithTexture:texture];
+    
+    bgTest = [[Sprite alloc] initWithTexture:texture];
+    bg = [[Sprite alloc] initWithTexture:bgTexture];
 }
 
 - (void)tearDownGL
@@ -133,7 +137,10 @@ Sprite *bg;
 {
     glClearColor(0.65f, 0.65f, 0.65f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+    glDepthFunc(GL_LEQUAL);
+ 
+//    [bgTest drawAtPoint: GLKVector3Make(0.0, 0.0, 0.0) withTransform: _modelViewProjectionMatrix];
+    
     [bg drawAtPoint: GLKVector3Make(0.0, 0.0, 0.0) withTransform: _modelViewProjectionMatrix];
     
 }
