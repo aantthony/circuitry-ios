@@ -139,7 +139,7 @@ static GLuint _vertexArray;
     glUniformMatrix4fv(uModelViewProjectMatrix, 1, 0, modelViewProjectionMatrix.m);
     glVertexAttrib4fv(GLKVertexAttribColor, _color.v);
     
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, 0);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
 }
 
 
