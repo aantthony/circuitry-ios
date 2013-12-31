@@ -40,6 +40,7 @@ const GLushort QuadIndices[] = {
 };
 
 
+static GLuint _vertexArray;
 
 + (void)setContext: (EAGLContext*) context {
     NSLog(@"init!!");
@@ -57,7 +58,8 @@ const GLushort QuadIndices[] = {
         uModelViewProjectMatrix = [shader getUniformLocation:@"modelViewProjectionMatrix"];
         uTexture                = [shader getUniformLocation:@"texture"];
         
-        
+        glGenVertexArraysOES(1, &_vertexArray);
+        glBindVertexArrayOES(_vertexArray);
         
         glGenBuffers(1, &_quadIndexBuffer);
         glGenBuffers(1, &_quadVertexBuffer);
@@ -69,6 +71,8 @@ const GLushort QuadIndices[] = {
         glBufferData(GL_ARRAY_BUFFER, sizeof(QuadVertices), QuadVertices, GL_STATIC_DRAW);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _quadIndexBuffer);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(QuadIndices), QuadIndices, GL_STATIC_DRAW);
+        
+        glBindVertexArrayOES(0);
         
     }
     
@@ -109,10 +113,13 @@ const GLushort QuadIndices[] = {
     return [self initWithTexture:textureInfo atX:0 Y:0 width:textureInfo.width height:textureInfo.height];
 }
 
-- (void) drawAtPoint: (CGPoint) point withTransform:(GLKMatrix4) modelViewProjectionMatrix {
+- (void) drawAtPoint: (GLKVector3) point withTransform:(GLKMatrix4) modelViewProjectionMatrix {
     
     // use program
     [shader prepareToDraw];
+    
+    // TODO: maybe this should be part of ShaderEffect, but I can't find any documenation for glBindVertexArrayOES so for now it is here:
+    glBindVertexArrayOES(_vertexArray);
     
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
@@ -132,7 +139,7 @@ const GLushort QuadIndices[] = {
     glUniformMatrix4fv(uModelViewProjectMatrix, 1, 0, modelViewProjectionMatrix.m);
     glVertexAttrib4fv(GLKVertexAttribColor, _color.v);
     
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, 0);
 }
 
 

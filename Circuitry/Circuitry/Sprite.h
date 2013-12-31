@@ -22,7 +22,7 @@
 - (Sprite *) initWithTexture: (GLKTextureInfo *) texture;
 
 
-- (void) drawAtPoint: (CGPoint) point withTransform:(GLKMatrix4) modelViewProjectionMatrix;
+- (void) drawAtPoint: (GLKVector3) point withTransform:(GLKMatrix4) modelViewProjectionMatrix;
 
 
 @end
