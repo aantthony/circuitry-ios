@@ -29,6 +29,7 @@
 		928806231872438E0096A1CA /* Sprite.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 928806221872438E0096A1CA /* Sprite.fsh */; };
 		9288062418725AB20096A1CA /* Sprite.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 92880620187243800096A1CA /* Sprite.vsh */; };
 		9288062518725AB20096A1CA /* Sprite.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 928806221872438E0096A1CA /* Sprite.fsh */; };
+		928BBFA218727C4000EF6DDF /* testbg.png in Resources */ = {isa = PBXBuildFile; fileRef = 928BBFA118727C4000EF6DDF /* testbg.png */; };
 		92D90E321837807000387FAC /* Sprite.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E311837807000387FAC /* Sprite.m */; };
 		92D90E381837836500387FAC /* ShaderEffect.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E371837836500387FAC /* ShaderEffect.m */; };
 		92D90E3B1838D7AB00387FAC /* GridShader.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E3A1838D7AB00387FAC /* GridShader.m */; };
@@ -73,6 +74,7 @@
 		9288061D1872136A0096A1CA /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
 		92880620187243800096A1CA /* Sprite.vsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = Sprite.vsh; sourceTree = "<group>"; };
 		928806221872438E0096A1CA /* Sprite.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = Sprite.fsh; sourceTree = "<group>"; };
+		928BBFA118727C4000EF6DDF /* testbg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testbg.png; sourceTree = "<group>"; };
 		92D90E301837807000387FAC /* Sprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sprite.h; sourceTree = "<group>"; };
 		92D90E311837807000387FAC /* Sprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sprite.m; sourceTree = "<group>"; };
 		92D90E361837836500387FAC /* ShaderEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderEffect.h; sourceTree = "<group>"; };
@@ -199,6 +201,7 @@
 		9288061C1872135F0096A1CA /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				928BBFA118727C4000EF6DDF /* testbg.png */,
 				9288061D1872136A0096A1CA /* background.png */,
 			);
 			name = Images;
@@ -291,6 +294,7 @@
 			files = (
 				9288062418725AB20096A1CA /* Sprite.vsh in Resources */,
 				9288062518725AB20096A1CA /* Sprite.fsh in Resources */,
+				928BBFA218727C4000EF6DDF /* testbg.png in Resources */,
 				9204C394182E2F5C006A008D /* Images.xcassets in Resources */,
 				9288061E1872136A0096A1CA /* background.png in Resources */,
 				9204C382182E2F5C006A008D /* InfoPlist.strings in Resources */,
