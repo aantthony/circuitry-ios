@@ -30,8 +30,6 @@ GLuint uModelViewProjectMatrix;
 GLuint _quadVertexBuffer;
 GLuint _quadIndexBuffer;
 
-
-
 static Vertex QuadVertices[] = {
     {{1, 0, 0}, {1, 0}},
     {{1, 1, 0}, {1, 1}},
@@ -63,7 +61,7 @@ static GLuint _vertexArray;
         uModelViewProjectMatrix = [shader getUniformLocation:@"modelViewProjectionMatrix"];
         uTexture                = [shader getUniformLocation:@"texture"];
         
-        glGenVertexArraysOES(1, &_vertexArray);
+//        glGenVertexArraysOES(1, &_vertexArray);
         glBindVertexArrayOES(_vertexArray);
         
         glGenBuffers(1, &_quadIndexBuffer);
@@ -77,7 +75,7 @@ static GLuint _vertexArray;
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _quadIndexBuffer);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(QuadIndices), QuadIndices, GL_STATIC_DRAW);
         
-        glBindVertexArrayOES(0);
+//        glBindVertexArrayOES(0);
         
     }
     
@@ -124,11 +122,17 @@ static GLuint _vertexArray;
     [shader prepareToDraw];
     
     // TODO: maybe this should be part of ShaderEffect, but I can't find any documenation for glBindVertexArrayOES so for now it is here:
-    glBindVertexArrayOES(_vertexArray);
+//    glBindVertexArrayOES(_vertexArray);
     
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_SRC_COLOR);
+    
+    glEnableVertexAttribArray(GLKVertexAttribPosition);
+    glEnableVertexAttribArray(GLKVertexAttribTexCoord0);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, _quadVertexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _quadIndexBuffer);
     
     int i = 0;
     // Use the texture @i
@@ -145,6 +149,10 @@ static GLuint _vertexArray;
     glVertexAttrib4fv(GLKVertexAttribColor, _color.v);
     
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
+    
+    glDisableVertexAttribArray(GLKVertexAttribPosition);
+    
+    glDisableVertexAttribArray(GLKVertexAttribTexCoord0);
 }
 
 

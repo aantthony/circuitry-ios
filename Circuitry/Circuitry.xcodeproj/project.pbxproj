@@ -30,9 +30,13 @@
 		9288062418725AB20096A1CA /* Sprite.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 92880620187243800096A1CA /* Sprite.vsh */; };
 		9288062518725AB20096A1CA /* Sprite.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 928806221872438E0096A1CA /* Sprite.fsh */; };
 		928BBFA218727C4000EF6DDF /* testbg.png in Resources */ = {isa = PBXBuildFile; fileRef = 928BBFA118727C4000EF6DDF /* testbg.png */; };
+		92A4F86D187289F300EEB367 /* Viewport.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A4F86C187289F300EEB367 /* Viewport.m */; };
+		92A4F87018728A1F00EEB367 /* Drawable.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A4F86F18728A1F00EEB367 /* Drawable.m */; };
+		92A4F871187295EF00EEB367 /* Grid.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 92D90E3C1838E9CD00387FAC /* Grid.vsh */; };
+		92A4F872187295EF00EEB367 /* Grid.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 92D90E3E1838E9D700387FAC /* Grid.fsh */; };
 		92D90E321837807000387FAC /* Sprite.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E311837807000387FAC /* Sprite.m */; };
 		92D90E381837836500387FAC /* ShaderEffect.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E371837836500387FAC /* ShaderEffect.m */; };
-		92D90E3B1838D7AB00387FAC /* GridShader.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E3A1838D7AB00387FAC /* GridShader.m */; };
+		92D90E3B1838D7AB00387FAC /* Grid.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E3A1838D7AB00387FAC /* Grid.m */; };
 		92D90E3D1838E9CD00387FAC /* Grid.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E3C1838E9CD00387FAC /* Grid.vsh */; };
 		92D90E3F1838E9D700387FAC /* Grid.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E3E1838E9D700387FAC /* Grid.fsh */; };
 /* End PBXBuildFile section */
@@ -75,12 +79,16 @@
 		92880620187243800096A1CA /* Sprite.vsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = Sprite.vsh; sourceTree = "<group>"; };
 		928806221872438E0096A1CA /* Sprite.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = Sprite.fsh; sourceTree = "<group>"; };
 		928BBFA118727C4000EF6DDF /* testbg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testbg.png; sourceTree = "<group>"; };
+		92A4F86B187289F300EEB367 /* Viewport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Viewport.h; sourceTree = "<group>"; };
+		92A4F86C187289F300EEB367 /* Viewport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Viewport.m; sourceTree = "<group>"; };
+		92A4F86E18728A1F00EEB367 /* Drawable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Drawable.h; sourceTree = "<group>"; };
+		92A4F86F18728A1F00EEB367 /* Drawable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Drawable.m; sourceTree = "<group>"; };
 		92D90E301837807000387FAC /* Sprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sprite.h; sourceTree = "<group>"; };
 		92D90E311837807000387FAC /* Sprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sprite.m; sourceTree = "<group>"; };
 		92D90E361837836500387FAC /* ShaderEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderEffect.h; sourceTree = "<group>"; };
 		92D90E371837836500387FAC /* ShaderEffect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShaderEffect.m; sourceTree = "<group>"; };
-		92D90E391838D7AB00387FAC /* GridShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GridShader.h; sourceTree = "<group>"; };
-		92D90E3A1838D7AB00387FAC /* GridShader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GridShader.m; sourceTree = "<group>"; };
+		92D90E391838D7AB00387FAC /* Grid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Grid.h; sourceTree = "<group>"; };
+		92D90E3A1838D7AB00387FAC /* Grid.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Grid.m; sourceTree = "<group>"; };
 		92D90E3C1838E9CD00387FAC /* Grid.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Grid.vsh; sourceTree = "<group>"; };
 		92D90E3E1838E9D700387FAC /* Grid.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Grid.fsh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -114,10 +122,12 @@
 		9204C367182E2F5C006A008D = {
 			isa = PBXGroup;
 			children = (
+				92A4F86E18728A1F00EEB367 /* Drawable.h */,
+				92A4F86F18728A1F00EEB367 /* Drawable.m */,
 				9288061F187243460096A1CA /* Shaders */,
 				9288061C1872135F0096A1CA /* Images */,
-				92D90E391838D7AB00387FAC /* GridShader.h */,
-				92D90E3A1838D7AB00387FAC /* GridShader.m */,
+				92D90E391838D7AB00387FAC /* Grid.h */,
+				92D90E3A1838D7AB00387FAC /* Grid.m */,
 				92D90E361837836500387FAC /* ShaderEffect.h */,
 				92D90E371837836500387FAC /* ShaderEffect.m */,
 				9204C37D182E2F5C006A008D /* Circuitry */,
@@ -165,6 +175,8 @@
 				92D90E311837807000387FAC /* Sprite.m */,
 				92D90E3C1838E9CD00387FAC /* Grid.vsh */,
 				92D90E3E1838E9D700387FAC /* Grid.fsh */,
+				92A4F86B187289F300EEB367 /* Viewport.h */,
+				92A4F86C187289F300EEB367 /* Viewport.m */,
 			);
 			path = Circuitry;
 			sourceTree = "<group>";
@@ -292,6 +304,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92A4F871187295EF00EEB367 /* Grid.vsh in Resources */,
+				92A4F872187295EF00EEB367 /* Grid.fsh in Resources */,
 				9288062418725AB20096A1CA /* Sprite.vsh in Resources */,
 				9288062518725AB20096A1CA /* Sprite.fsh in Resources */,
 				928BBFA218727C4000EF6DDF /* testbg.png in Resources */,
@@ -318,12 +332,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				928806231872438E0096A1CA /* Sprite.fsh in Sources */,
+				92A4F86D187289F300EEB367 /* Viewport.m in Sources */,
 				92D90E3D1838E9CD00387FAC /* Grid.vsh in Sources */,
-				92D90E3B1838D7AB00387FAC /* GridShader.m in Sources */,
+				92D90E3B1838D7AB00387FAC /* Grid.m in Sources */,
 				92880621187243800096A1CA /* Sprite.vsh in Sources */,
 				9204C392182E2F5C006A008D /* ViewController.m in Sources */,
 				9204C388182E2F5C006A008D /* AppDelegate.m in Sources */,
 				92D90E321837807000387FAC /* Sprite.m in Sources */,
+				92A4F87018728A1F00EEB367 /* Drawable.m in Sources */,
 				9288061B187210180096A1CA /* Shader.vsh in Sources */,
 				92D90E3F1838E9D700387FAC /* Grid.fsh in Sources */,
 				92D90E381837836500387FAC /* ShaderEffect.m in Sources */,

@@ -17,6 +17,8 @@
     
     GLuint _vertexArray;
     GLuint _vertexBuffer;
+    
+    Viewport *_viewport;
 }
 @property (strong, nonatomic) EAGLContext *context;
 
@@ -43,6 +45,7 @@
     view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
     
     [self setupGL];
+    _viewport = [[Viewport alloc] initWithContext:self.context];
     
 //    [[[UIAlertView alloc] initWithTitle:@"Title" message:@"test" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
 }
@@ -74,8 +77,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-Sprite *bg, *bgTest;
-
 - (void)setupGL
 {
     [EAGLContext setCurrentContext:self.context];
@@ -84,16 +85,6 @@ Sprite *bg, *bgTest;
     
     glEnable(GL_DEPTH_TEST);
     
-    GLKTextureInfo *texture = [Sprite textureWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"testbg" ofType:@"png"]];
-    
-    GLKTextureInfo *bgTexture = [Sprite textureWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"background" ofType:@"png"]];
-    
-    NSLog(@"pre init!! %@, %@", texture, bgTexture);
-    
-    [Sprite setContext: self.context];
-    
-    bgTest = [[Sprite alloc] initWithTexture:texture];
-    bg = [[Sprite alloc] initWithTexture:bgTexture];
 }
 
 - (void)tearDownGL
@@ -128,6 +119,7 @@ Sprite *bg, *bgTest;
     _normalMatrix = GLKMatrix3InvertAndTranspose(GLKMatrix4GetMatrix3(modelViewMatrix), NULL);
     
     _modelViewProjectionMatrix = GLKMatrix4Multiply(projectionMatrix, modelViewMatrix);
+    _viewport.modelViewProjectionMatrix = _modelViewProjectionMatrix;
     
 //   _rotation += self.timeSinceLastUpdate * 0.5f;
     _rotation += 1.0;
@@ -135,14 +127,12 @@ Sprite *bg, *bgTest;
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
-    glClearColor(0.65f, 0.65f, 0.65f, 1.0f);
+    glClearColor(0.0, 0.0, 0.0, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glDepthFunc(GL_LEQUAL);
  
 //    [bgTest drawAtPoint: GLKVector3Make(0.0, 0.0, 0.0) withTransform: _modelViewProjectionMatrix];
-    
-    [bg drawAtPoint: GLKVector3Make(0.0, 0.0, 0.0) withTransform: _modelViewProjectionMatrix];
-    
+    [_viewport draw];
 }
 
 #pragma mark -  OpenGL ES 2 shader compilation

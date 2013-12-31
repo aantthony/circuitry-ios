@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <GLKit/GLKit.h>
 
-#import "Sprite.h"
+#import "Viewport.h"
 
 @interface ViewController : GLKViewController
 
