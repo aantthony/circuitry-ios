@@ -8,72 +8,6 @@
 
 #import "ViewController.h"
 
-#define BUFFER_OFFSET(i) ((char *)NULL + (i))
-
-// Uniform index.
-enum
-{
-    UNIFORM_MODELVIEWPROJECTION_MATRIX,
-    UNIFORM_NORMAL_MATRIX,
-    NUM_UNIFORMS
-};
-GLint uniforms[NUM_UNIFORMS];
-
-// Attribute index.
-enum
-{
-    ATTRIB_VERTEX,
-    ATTRIB_NORMAL,
-    NUM_ATTRIBUTES
-};
-
-GLfloat gCubeVertexData[216] = 
-{
-    // Data layout for each line below is:
-    // positionX, positionY, positionZ,     normalX, normalY, normalZ,
-    0.5f, -0.5f, -0.5f,        1.0f, 0.0f, 0.0f,
-    0.5f, 0.5f, -0.5f,         1.0f, 0.0f, 0.0f,
-    0.5f, -0.5f, 0.5f,         1.0f, 0.0f, 0.0f,
-    0.5f, -0.5f, 0.5f,         1.0f, 0.0f, 0.0f,
-    0.5f, 0.5f, -0.5f,          1.0f, 0.0f, 0.0f,
-    0.5f, 0.5f, 0.5f,         1.0f, 0.0f, 0.0f,
-    
-    0.5f, 0.5f, -0.5f,         0.0f, 1.0f, 0.0f,
-    -0.5f, 0.5f, -0.5f,        0.0f, 1.0f, 0.0f,
-    0.5f, 0.5f, 0.5f,          0.0f, 1.0f, 0.0f,
-    0.5f, 0.5f, 0.5f,          0.0f, 1.0f, 0.0f,
-    -0.5f, 0.5f, -0.5f,        0.0f, 1.0f, 0.0f,
-    -0.5f, 0.5f, 0.5f,         0.0f, 1.0f, 0.0f,
-    
-    -0.5f, 0.5f, -0.5f,        -1.0f, 0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,       -1.0f, 0.0f, 0.0f,
-    -0.5f, 0.5f, 0.5f,         -1.0f, 0.0f, 0.0f,
-    -0.5f, 0.5f, 0.5f,         -1.0f, 0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,       -1.0f, 0.0f, 0.0f,
-    -0.5f, -0.5f, 0.5f,        -1.0f, 0.0f, 0.0f,
-    
-    -0.5f, -0.5f, -0.5f,       0.0f, -1.0f, 0.0f,
-    0.5f, -0.5f, -0.5f,        0.0f, -1.0f, 0.0f,
-    -0.5f, -0.5f, 0.5f,        0.0f, -1.0f, 0.0f,
-    -0.5f, -0.5f, 0.5f,        0.0f, -1.0f, 0.0f,
-    0.5f, -0.5f, -0.5f,        0.0f, -1.0f, 0.0f,
-    0.5f, -0.5f, 0.5f,         0.0f, -1.0f, 0.0f,
-    
-    0.5f, 0.5f, 0.5f,          0.0f, 0.0f, 1.0f,
-    -0.5f, 0.5f, 0.5f,         0.0f, 0.0f, 1.0f,
-    0.5f, -0.5f, 0.5f,         0.0f, 0.0f, 1.0f,
-    0.5f, -0.5f, 0.5f,         0.0f, 0.0f, 1.0f,
-    -0.5f, 0.5f, 0.5f,         0.0f, 0.0f, 1.0f,
-    -0.5f, -0.5f, 0.5f,        0.0f, 0.0f, 1.0f,
-    
-    0.5f, -0.5f, -0.5f,        0.0f, 0.0f, -1.0f,
-    -0.5f, -0.5f, -0.5f,       0.0f, 0.0f, -1.0f,
-    0.5f, 0.5f, -0.5f,         0.0f, 0.0f, -1.0f,
-    0.5f, 0.5f, -0.5f,         0.0f, 0.0f, -1.0f,
-    -0.5f, -0.5f, -0.5f,       0.0f, 0.0f, -1.0f,
-    -0.5f, 0.5f, -0.5f,        0.0f, 0.0f, -1.0f
-};
-
 @interface ViewController () {
     GLuint _program;
     
@@ -90,9 +24,6 @@ GLfloat gCubeVertexData[216] =
 - (void)tearDownGL;
 
 - (BOOL)loadShaders;
-- (BOOL)compileShader:(GLuint *)shader type:(GLenum)type file:(NSString *)file;
-- (BOOL)linkProgram:(GLuint)prog;
-- (BOOL)validateProgram:(GLuint)prog;
 @end
 
 @implementation ViewController
@@ -180,12 +111,13 @@ Sprite *bg;
 {
     float aspect = fabsf(self.view.bounds.size.width / self.view.bounds.size.height);
     GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0f), aspect, 0.1f, 100.0f);
-    projectionMatrix = GLKMatrix4MakeFrustum(0.0, 1.0, 1.0, 0.0, 1.0, 100.0f);
+    projectionMatrix = GLKMatrix4MakeOrtho(0.0, 1024.0, 768.0, 0.0, -10.0, 10.0);
 //    GLKMatrix4 baseModelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, -4.0f);
 //    baseModelViewMatrix = GLKMatrix4Rotate(baseModelViewMatrix, _rotation, 0.0f, 1.0f, 0.0f);
     
     // Compute the model view matrix for the object rendered with ES2
-    GLKMatrix4 modelViewMatrix = GLKMatrix4MakeTranslation(_rotation, 0.0f, -2.0f);
+//    GLKMatrix4 modelViewMatrix = GLKMatrix4MakeTranslation(0.5 * floor(_rotation), 0.0f, 0.0f);
+      GLKMatrix4 modelViewMatrix = GLKMatrix4Identity;
 //    modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, _rotatio0, 1.0f, 1.0f, 1.0f);
 //    modelViewMatrix = GLKMatrix4Multiply(baseModelViewMatrix, modelViewMatrix);
     
@@ -193,7 +125,8 @@ Sprite *bg;
     
     _modelViewProjectionMatrix = GLKMatrix4Multiply(projectionMatrix, modelViewMatrix);
     
-    _rotation += self.timeSinceLastUpdate * 0.5f;
+//   _rotation += self.timeSinceLastUpdate * 0.5f;
+    _rotation += 1.0;
 }
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
