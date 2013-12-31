@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import <GLKit/GLKit.h>
 
+#import "Sprite.h"
+
 @interface ViewController : GLKViewController
 
 @end

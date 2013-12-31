@@ -10,21 +10,8 @@
 
 @interface ShaderEffect()
 @property GLuint program;
+@property NSDictionary * uniforms;
 @end
-
-// Attribute index.
-enum
-{
-    ATTRIB_VERTEX,
-    ATTRIB_TEXCOORD,
-    NUM_ATTRIBUTES
-};
-
-struct uniform {
-    GLuint index;
-    int type;
-    const char* name;
-};
 
 @implementation ShaderEffect
 
@@ -56,8 +43,6 @@ struct uniform {
     
     GLuint vertShader, fragShader;
     
-    GLuint _program;
-    
     // Create shader program.
     _program = glCreateProgram();
     
@@ -75,20 +60,22 @@ struct uniform {
     
     // Bind attribute locations.
     // This needs to be done prior to linking.
-    __block int index = NUM_ATTRIBUTES;
     
-    glBindAttribLocation(_program, ATTRIB_VERTEX, "position");
-    glBindAttribLocation(_program, ATTRIB_TEXCOORD, "texCoord");
     
+    glBindAttribLocation(_program, GLKVertexAttribPosition,  "position");
+    glBindAttribLocation(_program, GLKVertexAttribNormal,    "normal");
+    glBindAttribLocation(_program, GLKVertexAttribColor,     "color");
+    glBindAttribLocation(_program, GLKVertexAttribTexCoord0, "texCoord0");
+    glBindAttribLocation(_program, GLKVertexAttribTexCoord1, "texCoord1");
+    
+    __block int index = GLKVertexAttribTexCoord1 + 1;
     for (NSString* attribName in attributes) {
-        NSDictionary *dict = [attributes objectForKey:attribName ];
-        NSString *type = [dict objectForKey:@"type"];
+        NSDictionary *dict = [attributes objectForKey:attribName];
         glBindAttribLocation(_program, index++, [attribName UTF8String]);
     }
     
     // Link program.
     if (![ShaderEffect linkProgram:_program]) {
-        [NSException raise:@"Failed to link program" format:@"%d", _program];
         if (vertShader) {
             glDeleteShader(vertShader);
             vertShader = 0;
@@ -101,15 +88,7 @@ struct uniform {
             glDeleteProgram(_program);
             _program = 0;
         }
-        
-        return NO;
-    }
-    
-    // Get uniform locations.
-    for (NSString* uniformName in uniforms) {
-        NSDictionary *dict = [uniforms objectForKey:uniformName ];
-        NSString *type = [dict objectForKey:@"type"];
-        glGetUniformLocation(_program, [uniformName UTF8String]);
+        [NSException raise:@"Failed to link program" format:@"%d", _program];
     }
     
     // Release vertex and fragment shaders.
@@ -125,10 +104,9 @@ struct uniform {
     return self;
 }
 
-- (void) setUniform:(NSString *) name withValue:(id) value {
-    
+- (GLint) getUniformLocation:(NSString *) name {
+    return glGetUniformLocation(_program, [name UTF8String]);
 }
-
 
 + (BOOL)compileShader:(GLuint *)shader type:(GLenum)type file:(NSString *)file {
     
@@ -137,7 +115,7 @@ struct uniform {
     
     source = (GLchar *)[[NSString stringWithContentsOfFile:file encoding:NSUTF8StringEncoding error:nil] UTF8String];
     if (!source) {
-        NSLog(@"Failed to load vertex shader");
+        NSLog(@"Failed to load vertex shader: %@", file);
         return NO;
     }
     
@@ -165,7 +143,32 @@ struct uniform {
     return YES;
 }
 
-- (void) prepareToDraw {
+
+- (BOOL)validateProgram
+{
+    GLint logLength, status;
     
+    glValidateProgram(_program);
+    glGetProgramiv(_program, GL_INFO_LOG_LENGTH, &logLength);
+    if (logLength > 0) {
+        GLchar *log = (GLchar *)malloc(logLength);
+        glGetProgramInfoLog(_program, logLength, &logLength, log);
+        NSLog(@"Program validate log:\n%s", log);
+        free(log);
+    }
+    
+    glGetProgramiv(_program, GL_VALIDATE_STATUS, &status);
+    if (status == 0) {
+        return NO;
+    }
+    
+    return YES;
+}
+
+
+- (void) prepareToDraw {
+    glUseProgram(_program);
+//    glUniformMatrix4fv(0xffee, 1, 0, _modelViewProjectionMatrix.m);
+//    glUniformMatrix3fv(0xffee, 1, 0, _normalMatrix.m);
 }
 @end

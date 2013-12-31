@@ -1,0 +1,27 @@
+body {
+  background: #06c url('bg.jpg') no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  font-family: Helvetica;
+}
+
+html, body {
+  padding: 0;
+  margin: 0;
+}
+
+.page {
+  background: url('grid.png') center;
+  height: 100%;
+}
+
+.hero-unit {
+  color: white;
+  text-shadow: 0 4px 10px black;
+  width: 400px;
+  margin: auto;
+  text-align: center;
+  font-size: 80px;
+}

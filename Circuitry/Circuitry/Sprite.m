@@ -10,4 +10,130 @@
 
 @implementation Sprite
 
+
+typedef struct {
+    float Position[3];
+    float TexCoord1[2];
+} Vertex;
+
+
+ShaderEffect *shader;
+GLKTextureInfo *texture;
+GLuint uTexture;
+GLuint uModelViewProjectMatrix;
+
+GLuint _quadVertexBuffer;
+GLuint _quadIndexBuffer;
+
+
+
+static Vertex QuadVertices[] = {
+    {{1, -1, 1}, {1, 0}},
+    {{1, 1, 1}, {1, 1}},
+    {{-1, 1, 1}, {0, 1}},
+    {{-1, -1, 1}, {0, 0}}
+};
+
+const GLushort QuadIndices[] = {
+    0, 1, 2,
+    2, 3, 0
+};
+
+
+
++ (void)setContext: (EAGLContext*) context {
+    NSLog(@"init!!");
+    if (!shader) {
+        
+        NSDictionary *uniforms = @{@"opacity": @1.0};
+        
+        NSString *vertShader = [[NSBundle mainBundle] pathForResource:@"Sprite" ofType:@"vsh"];
+        NSString *fragShader = [[NSBundle mainBundle] pathForResource:@"Sprite" ofType:@"fsh"];
+        
+        // compile shader program:
+        shader = [[ShaderEffect alloc] initWithVertexSource:vertShader withFragmentSource:fragShader withUniforms:uniforms withAttributes:@{}];
+        
+        // uniform locations:
+        uModelViewProjectMatrix = [shader getUniformLocation:@"modelViewProjectionMatrix"];
+        uTexture                = [shader getUniformLocation:@"texture"];
+        
+        
+        
+        glGenBuffers(1, &_quadIndexBuffer);
+        glGenBuffers(1, &_quadVertexBuffer);
+        
+        glEnableVertexAttribArray(GLKVertexAttribPosition);
+        glEnableVertexAttribArray(GLKVertexAttribTexCoord0);
+        
+        glBindBuffer(GL_ARRAY_BUFFER, _quadVertexBuffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(QuadVertices), QuadVertices, GL_STATIC_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _quadIndexBuffer);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(QuadIndices), QuadIndices, GL_STATIC_DRAW);
+        
+    }
+    
+}
++ (GLKTextureInfo *) textureWithContentsOfFile: (NSString *) fileName {
+    NSError* error = nil;
+    
+    int mipmap_levels = 0;
+   
+    NSDictionary* options = [NSDictionary dictionaryWithObjectsAndKeys:
+                             [NSNumber numberWithBool: mipmap_levels > 0], GLKTextureLoaderGenerateMipmaps,
+                            [NSNumber numberWithBool:YES], GLKTextureLoaderApplyPremultiplication,
+                             nil
+                             ];
+   
+    GLKTextureInfo* info = [GLKTextureLoader textureWithContentsOfFile: fileName options: options error: &error];
+    if (error || !info) {
+        return nil;
+    }
+    return info;
+}
+
+- (Sprite *) initWithTexture: (GLKTextureInfo *) textureInfo atX: (int) x Y:(int) y width:(int)w height: (int) h {
+    
+    // check sizes:
+    if (x < 0 || y < 0 || w > textureInfo.width || h > textureInfo.height) return nil;
+    
+    // TODO: set position, size etc.
+    
+    
+    texture = textureInfo;
+    
+    return self;
+}
+
+
+- (Sprite *) initWithTexture: (GLKTextureInfo *) textureInfo {
+    return [self initWithTexture:textureInfo atX:0 Y:0 width:textureInfo.width height:textureInfo.height];
+}
+
+- (void) drawAtPoint: (CGPoint) point withTransform:(GLKMatrix4) modelViewProjectionMatrix {
+    
+    // use program
+    [shader prepareToDraw];
+    
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_SRC_COLOR);
+    
+    int i = 0;
+    // Use the texture @i
+    glActiveTexture(GL_TEXTURE0 + i);
+    glBindTexture(GL_TEXTURE_2D, texture.name);
+    glUniform1i(uTexture, i);
+    
+    GLKVector4 _color = {1.0, 1.0, 1.0, 1.0};
+    
+    glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, Position));
+    glVertexAttribPointer(GLKVertexAttribTexCoord0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, TexCoord1));
+    
+    glUniformMatrix4fv(uModelViewProjectMatrix, 1, 0, modelViewProjectionMatrix.m);
+    glVertexAttrib4fv(GLKVertexAttribColor, _color.v);
+    
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
+}
+
+
 @end
