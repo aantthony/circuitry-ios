@@ -37,7 +37,7 @@
                 </panGestureRecognizer>
                 <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="Iiq-nz-5qG">
                     <connections>
-                        <action selector="handleLongPressGesture:" destination="BV1-FR-VrT" id="dC0-Xk-yYb"/>
+                        <action selector="handleLongPressGesture:" destination="BV1-FR-VrT" id="eqr-dK-yws"/>
                     </connections>
                 </pongPressGestureRecognizer>
             </objects>

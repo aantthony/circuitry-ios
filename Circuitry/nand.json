@@ -1,0 +1,37 @@
+{
+  "name": "NAND Gate",
+  "version": "1.0.0",
+  "description": "Sample",
+  "author": "Anthony Foster",
+  "engines": {
+    "circuitry": ">=0.0"
+  },
+  "license": "Copyright",
+  "dependencies": {
+
+  },
+  "items": [
+    {
+      "type": "in",
+      "id": "51332",
+      "pos": [0,0,0],
+      "name": "A",
+      "in": 0,
+      "out": 1,
+      "outputs": [
+        ["34"]
+      ]
+    },
+    {
+      "type": "out",
+      "id": "55"
+    },
+    {
+      "type": "xor",
+      "id": "34",
+      "outputs": [
+        ["55"]
+      ]
+    }
+  ]
+}

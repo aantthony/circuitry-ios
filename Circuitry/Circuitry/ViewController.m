@@ -1,11 +1,3 @@
-//
-//  ViewController.m
-//  Circuitry
-//
-//  Created by Anthony Foster on 9/11/2013.
-//  Copyright (c) 2013 Circuitry. All rights reserved.
-//
-
 #import "ViewController.h"
 
 @interface ViewController () {
@@ -18,9 +10,11 @@
     GLuint _vertexArray;
     GLuint _vertexBuffer;
     
-    Viewport *_viewport;
 }
 @property (strong, nonatomic) EAGLContext *context;
+
+@property Circuit *circuit;
+@property Viewport *viewport;
 
 - (void)setupGL;
 - (void)tearDownGL;
@@ -47,7 +41,11 @@
     [self setupGL];
     _viewport = [[Viewport alloc] initWithContext:self.context];
     
-//    [[[UIAlertView alloc] initWithTitle:@"Title" message:@"test" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
+    NSURL *path = [[NSBundle mainBundle] URLForResource:@"nand" withExtension:@"json"];
+    NSInputStream *stream = [NSInputStream inputStreamWithURL:path];
+    [stream open];
+    _circuit = [Circuit circuitWithStream: stream];
+    [[[UIAlertView alloc] initWithTitle:_circuit.name message:_circuit.description delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
 }
 
 - (void)dealloc

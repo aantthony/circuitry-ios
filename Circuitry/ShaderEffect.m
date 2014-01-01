@@ -8,9 +8,10 @@
 
 #import "ShaderEffect.h"
 
-@interface ShaderEffect()
-@property GLuint program;
-@property NSDictionary * uniforms;
+@interface ShaderEffect() {
+    GLuint _program;
+    NSDictionary * _uniforms;
+}
 @end
 
 @implementation ShaderEffect
