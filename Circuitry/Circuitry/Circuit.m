@@ -31,6 +31,8 @@ void *srealloc(void * d, size_t c) {
     return realloc(d, c);
 }
 
+
+#pragma mark - Initialisation
 - (id) init {
     if ((self = [super init])){
         _needsUpdateCount = 0;
@@ -95,6 +97,9 @@ CircuitProcess *getProcessById(Circuit *c, NSString *_id) {
     return p;
 }
 
+#pragma mark - Simulation (written in C)
+
+
 CircuitObject *getObjectById(Circuit *c, int id) {
     for(int i = 0 ; i < c->_itemsCount; i++) {
         CircuitObject *o = &c->_items[i];
@@ -149,22 +154,6 @@ CircuitObject * addItem(Circuit *c, CircuitProcess *type) {
 }
 
 
-+ (Circuit *) circuitWithStream:(NSInputStream *) stream {
-    NSError *err;
-    
-    id object = [NSJSONSerialization JSONObjectWithStream:stream options:0 error:&err];
-    if (err) [NSException exceptionWithName:err.localizedDescription reason:err.localizedFailureReason userInfo:@{}];
-    
-    return [[Circuit alloc] initWithObject:object];
-}
-
-+ (Circuit *) circuitWithJSON:(NSData *) data {
-    NSError *err;
-    
-    id object = [NSJSONSerialization JSONObjectWithData:data options:0 error:&err];
-    if (err) [NSException exceptionWithName:err.localizedDescription reason:err.localizedFailureReason userInfo:@{}];
-    return [[Circuit alloc] initWithObject:object];
-}
 
 
 CircuitLink *makeLink(Circuit *c) {
@@ -201,6 +190,60 @@ CircuitLink *addLink(Circuit *c, CircuitObject *object, int index, CircuitObject
     link->targetIndex = targetIndex;
     
     return link;
+}
+
+int simulate(Circuit *c, int ticks) {
+    int nAffected = 0;
+    for(int i = 0; i < ticks; i++) {
+        int updatingCount = c->_needsUpdateCount;
+        nAffected += updatingCount;
+        CircuitObject **updating = c->_needsUpdate;
+        c->_needsUpdate = c->_needsUpdate2;
+        c->_needsUpdateCount = 0;
+        
+        for(int i = 0; i < updatingCount; i++) {
+            CircuitObject *o = updating[i];
+            int oldOut = o->out;
+            if (o->type->calculate == NULL) {
+                // this doesn't actually need to be updated
+                continue;
+            }
+            int newOut = o->type->calculate(o->in);
+            if (oldOut != newOut) {
+                
+                o->out = newOut;
+                int jm = o->type->numOutputs;
+                for(int j = 0; j < jm; j++) {
+                    int p = 1 << j;
+                    int a = p & newOut, b = p & oldOut;
+                    if (a != b) linkNeedsUpdate(c, o, j);
+                }
+            }
+        }
+        
+        c->_needsUpdate2 = updating;
+        c->_needsUpdateCount = 0;
+    }
+    return nAffected;
+}
+
+#pragma mark - Loading
+
++ (Circuit *) circuitWithStream:(NSInputStream *) stream {
+    NSError *err;
+    
+    id object = [NSJSONSerialization JSONObjectWithStream:stream options:0 error:&err];
+    if (err) [NSException exceptionWithName:err.localizedDescription reason:err.localizedFailureReason userInfo:@{}];
+    
+    return [[Circuit alloc] initWithObject:object];
+}
+
++ (Circuit *) circuitWithJSON:(NSData *) data {
+    NSError *err;
+    
+    id object = [NSJSONSerialization JSONObjectWithData:data options:0 error:&err];
+    if (err) [NSException exceptionWithName:err.localizedDescription reason:err.localizedFailureReason userInfo:@{}];
+    return [[Circuit alloc] initWithObject:object];
 }
 
 - (Circuit *) initWithObject: (id) object {
@@ -245,6 +288,9 @@ CircuitLink *addLink(Circuit *c, CircuitObject *object, int index, CircuitObject
     return self;
 }
 
+
+#pragma mark - public
+
 - (void)enumerateObjectsUsingBlock:(void (^)(CircuitObject *object, BOOL *stop))block {
     BOOL stop = NO;
     for(int i = 0 ; i < _itemsCount; i++) {
@@ -255,38 +301,7 @@ CircuitLink *addLink(Circuit *c, CircuitObject *object, int index, CircuitObject
 }
 
 - (int) simulate: (int) ticks {
-    int nAffected = 0;
-    for(int i = 0; i < ticks; i++) {
-        int updatingCount = _needsUpdateCount;
-        nAffected += updatingCount;
-        CircuitObject **updating = _needsUpdate;
-        _needsUpdate = _needsUpdate2;
-        _needsUpdateCount = 0;
-
-        for(int i = 0; i < updatingCount; i++) {
-            CircuitObject *o = updating[i];
-            int oldOut = o->out;
-            if (o->type->calculate == NULL) {
-                // this doesn't actually need to be updated
-                continue;
-            }
-            int newOut = o->type->calculate(o->in);
-            if (oldOut != newOut) {
-                
-                o->out = newOut;
-                int jm = o->type->numOutputs;
-                for(int j = 0; j < jm; j++) {
-                    int p = 1 << j;
-                    int a = p & newOut, b = p & oldOut;
-                    if (a != b) linkNeedsUpdate(self, o, j);
-                }
-            }
-        }
-        
-        _needsUpdate2 = updating;
-        _needsUpdateCount = 0;
-    }
-    return nAffected;
+    return simulate(self, ticks);
 }
 
 @end
