@@ -16,4 +16,8 @@
 
 - (void) setScale: (float) scale;
 - (float) scale;
+
+
+- (CircuitObject*) findCircuitObjectAtPosition: (CGPoint) pos;
+
 @end

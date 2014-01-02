@@ -57,6 +57,38 @@ Sprite *gateAND;
     _viewProjectionMatrix = GLKMatrix4Multiply(_projectionMatrix, _viewMatrix);
 }
 
+
+- (CircuitObject*) findCircuitObjectAtPosition: (CGPoint) screenPos {
+    
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    
+    GLKVector3 positionInWindowNear = GLKVector3Make(screenPos.x, viewport[3] - screenPos.y, 0.0f);
+
+    bool success;
+    
+    GLKVector3 pos = GLKMathUnproject(positionInWindowNear, _viewMatrix, _projectionMatrix, viewport, &success);
+
+    if (!success) return NULL;
+    
+    __block CircuitObject *o = NULL;
+    
+    [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
+        float width = 204.0;
+        float height = 100.0;
+        GLKVector3 oPos = *(GLKVector3 *)&object->pos;
+        if (pos.x > oPos.x && pos.y > oPos.y) {
+            if (pos.x < oPos.x + width && pos.y < oPos.y + height) { 
+                o = object;
+                *stop = YES;
+            }
+        }
+    }];
+    
+    return o;
+}
+
+
 - (void) translate: (GLKVector3) translate {
     _translate.x += translate.x;
     _translate.y += translate.y;
@@ -70,7 +102,6 @@ Sprite *gateAND;
 }
 
 - (float) scale {
-    NSLog(@"get scale");
     return _scale.x;
 }
 

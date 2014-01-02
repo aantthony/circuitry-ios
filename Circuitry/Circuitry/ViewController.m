@@ -144,15 +144,6 @@
 }
 
 
-- (CircuitObject*) findCircuitObjectAtPosition: (GLKVector3) pos {
-    __block CircuitObject *o;
-    [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
-        o = object;
-        *stop = YES;
-    }];
-    return o;
-}
-
 #pragma mark -  Gesture methods
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
@@ -160,18 +151,28 @@
 	if ( [gestureRecognizer isKindOfClass:[UIPinchGestureRecognizer class]] ) {
 		beginGestureScale = _viewport.scale;
 	}
+    if ([gestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]]) {
+        UILongPressGestureRecognizer *recogniser = (UILongPressGestureRecognizer *)gestureRecognizer;
+        CGPoint location = [recogniser locationInView:self.view];
+        CircuitObject *o;
+        
+        if ((o = [_viewport findCircuitObjectAtPosition:location])) {
+            return YES;
+        }
+        
+        return NO;
+    }
 	return YES;
 }
 
-- (IBAction) handlePanGesture:(UIPanGestureRecognizer *)recognizer {
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    if ([gestureRecognizer isKindOfClass:[UIPinchGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) return YES;
     
-    CircuitObject *o = [self findCircuitObjectAtPosition:GLKVector3Make(recognizer.view.center.x, recognizer.view.center.y, 0.0)];
-    if (!o) return;
-    CGPoint translation = [recognizer translationInView:self.view];
-    
-//    o->pos.x += translation.x;
-//    o->pos.y += translation.y;
+    return NO;
+}
 
+- (IBAction) handlePanGesture:(UIPanGestureRecognizer *)recognizer {
+    CGPoint translation = [recognizer translationInView:self.view];
     [_viewport translate: GLKVector3Make(translation.x, translation.y, 0.0)];
     [recognizer setTranslation:CGPointMake(0, 0) inView:self.view];
 }
