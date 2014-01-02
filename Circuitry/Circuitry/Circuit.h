@@ -1,5 +1,4 @@
 #import <Foundation/Foundation.h>
-#import <GLKit/GLKit.h>
 
 struct CircuitObject;
 typedef struct CircuitObject CircuitObject;
@@ -26,7 +25,7 @@ struct CircuitObject {
     int out;
     CircuitProcess *type;
     
-    GLKVector3 pos;
+    union { struct {float x, y, z;}; struct {float v[3];}; } pos;
     
     char *name;
     CircuitLink **outputs;
@@ -44,5 +43,7 @@ struct CircuitObject {
 
 + (Circuit *) circuitWithStream:(NSInputStream *) stream;
 - (Circuit *) initWithObject: (id) object;
+
+- (int) simulate: (int) ticks;
 
 @end

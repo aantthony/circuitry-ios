@@ -25,7 +25,9 @@ Sprite *bg, *bgTest;
     }
     return self;
 }
-
+- (void)update {
+    [_circuit simulate: 1];
+}
 - (void) draw {
 //    [bgTest drawAtPoint: GLKVector3Make(0.0, 0.0, 0.0) withTransform: _modelViewProjectionMatrix];
     [bg drawAtPoint: GLKVector3Make(0.0, 0.0, 0.0) withTransform: _modelViewProjectionMatrix];

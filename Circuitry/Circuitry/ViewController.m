@@ -45,6 +45,7 @@
     NSInputStream *stream = [NSInputStream inputStreamWithURL:path];
     [stream open];
     _circuit = [Circuit circuitWithStream: stream];
+    _viewport.circuit = _circuit;
     [[[UIAlertView alloc] initWithTitle:_circuit.name message:_circuit.description delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
 }
 
@@ -121,6 +122,7 @@
     
 //   _rotation += self.timeSinceLastUpdate * 0.5f;
     _rotation += 1.0;
+    [_viewport update];
 }
 
 

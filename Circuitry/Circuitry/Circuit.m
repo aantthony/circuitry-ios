@@ -117,6 +117,7 @@ void needsUpdate(Circuit *c, CircuitObject *object) {
 
 void linkNeedsUpdate(Circuit *c, CircuitObject *object, int sourceIndex) {
     CircuitLink *link = object->outputs[sourceIndex];
+    if (!link) return;
     do {
         needsUpdate(c, link->target);
     } while ((link = link->nextSibling));
@@ -138,7 +139,7 @@ CircuitObject * addItem(Circuit *c, CircuitProcess *type) {
     o->in = 0;
     o->out = 0;
     o->type = type;
-    o->pos = GLKVector3Make(0.0, 0.0, 0.0);
+    o->pos.x = o->pos.y = o->pos.z = 0.0;
     o->name = "";
     o->outputs = scalloc(o->type->numOutputs, sizeof(CircuitLink *));
     
@@ -241,14 +242,14 @@ CircuitLink *addLink(Circuit *c, CircuitObject *object, int index, CircuitObject
         }
     }];
     
-    // debug
-    [self simulate:1];
     return self;
 }
 
-- (void) simulate: (int) ticks {
+- (int) simulate: (int) ticks {
+    int nAffected = 0;
     for(int i = 0; i < ticks; i++) {
         int updatingCount = _needsUpdateCount;
+        nAffected += updatingCount;
         CircuitObject **updating = _needsUpdate;
         _needsUpdate = _needsUpdate2;
         _needsUpdateCount = 0;
@@ -276,6 +277,7 @@ CircuitLink *addLink(Circuit *c, CircuitObject *object, int index, CircuitObject
         _needsUpdate2 = updating;
         _needsUpdateCount = 0;
     }
+    return nAffected;
 }
 
 @end
