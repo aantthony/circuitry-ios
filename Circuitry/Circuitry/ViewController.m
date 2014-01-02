@@ -131,8 +131,7 @@
     glClearColor(0.0, 0.0, 0.0, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glDepthFunc(GL_LEQUAL);
- 
-//    [bgTest drawAtPoint: GLKVector3Make(0.0, 0.0, 0.0) withTransform: _modelViewProjectionMatrix];
+
     [_viewport draw];
 }
 
@@ -144,11 +143,27 @@
 }
 
 
+- (CircuitObject*) findCircuitObjectAtPosition: (GLKVector3) pos {
+    __block CircuitObject *o;
+    [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
+        o = object;
+        *stop = YES;
+    }];
+    return o;
+}
 
 #pragma mark -  Gesture methods
 
-- (IBAction) handlePanGesture:(UIGestureRecognizer *)gestureRecognizer {
-    NSLog(@"pan");
+- (IBAction) handlePanGesture:(UIPanGestureRecognizer *)gestureRecognizer {
+    
+    CircuitObject *o = [self findCircuitObjectAtPosition:GLKVector3Make(gestureRecognizer.view.center.x, gestureRecognizer.view.center.y, 0.0)];
+    if (!o) return;
+    CGPoint translation = [gestureRecognizer translationInView:self.view];
+    
+    o->pos.x += translation.x;
+    o->pos.y += translation.y;
+    
+    [gestureRecognizer setTranslation:CGPointMake(0, 0) inView:self.view];
 }
 
 - (IBAction) handlePinchGesture:(UIGestureRecognizer *)gestureRecognizer {
@@ -163,16 +178,16 @@
 #pragma mark -  UIResponder methods
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    NSLog(@"begin");
+//    NSLog(@"begin");
 }
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    NSLog(@"moved");
+//    NSLog(@"moved");
 }
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     NSLog(@"ended");
 }
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
-    NSLog(@"cancelled");
+//    NSLog(@"cancelled");
 }
 
 @end

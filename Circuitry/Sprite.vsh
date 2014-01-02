@@ -1,6 +1,6 @@
 uniform mat4 modelViewProjectionMatrix;
 uniform vec2 size;
-uniform vec2 pos;
+uniform vec3 pos;
 
 attribute vec4 position;
 attribute vec4 color;
@@ -14,5 +14,5 @@ void main()
 //    vec2 size = vec2(1024.0, 768.0);
     vTexCoord0 = texCoord0;
     vColor = color;
-    gl_Position = modelViewProjectionMatrix * (position * vec4(size, 1.0, 1.0));
+    gl_Position = modelViewProjectionMatrix * (vec4(pos, 0.0) + position * vec4(size, 1.0, 1.0));
 }

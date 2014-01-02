@@ -7,7 +7,7 @@
         <!--GLKit View Controller-->
         <scene sceneID="tXr-a1-R10">
             <objects>
-                <glkViewController preferredFramesPerSecond="30" id="BV1-FR-VrT" customClass="ViewController" sceneMemberID="viewController">
+                <glkViewController preferredFramesPerSecond="60" id="BV1-FR-VrT" customClass="ViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="zAf-WF-YrM"/>
                         <viewControllerLayoutGuide type="bottom" id="4IW-dR-L7m"/>
@@ -32,7 +32,7 @@
                 </pinchGestureRecognizer>
                 <panGestureRecognizer minimumNumberOfTouches="1" id="Lik-9B-5DK">
                     <connections>
-                        <action selector="handlePanGesture:" destination="BV1-FR-VrT" id="K1z-cW-pMm"/>
+                        <action selector="handlePanGesture:" destination="BV1-FR-VrT" id="Ybr-vc-l9m"/>
                     </connections>
                 </panGestureRecognizer>
                 <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="Iiq-nz-5qG">

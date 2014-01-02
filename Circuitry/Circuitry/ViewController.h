@@ -15,7 +15,7 @@
 @interface ViewController : GLKViewController <UIGestureRecognizerDelegate>
 
 
-- (IBAction) handlePanGesture:(UIGestureRecognizer *)gestureRecognizer;
+- (IBAction) handlePanGesture:(UIPanGestureRecognizer *)gestureRecognizer;
 
 - (IBAction) handlePinchGesture:(UIGestureRecognizer *)gestureRecognizer;
 

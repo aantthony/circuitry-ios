@@ -39,7 +39,6 @@ const GLushort QuadIndices[] = {
 static GLuint _vertexArray;
 
 + (void)setContext: (EAGLContext*) context {
-    NSLog(@"init!!");
     if (!shader) {
         
         NSDictionary *uniforms = @{@"opacity": @1.0};
@@ -153,7 +152,7 @@ static GLuint _vertexArray;
     
     glUniformMatrix4fv(uModelViewProjectMatrix, 1, 0, modelViewProjectionMatrix.m);
     glUniform2f(uSize, size.x, size.y);
-    glUniform2f(uPos,  pos.x,  pos.y);
+    glUniform3f(uPos,  pos.x,  pos.y, 0.0);
     glVertexAttrib4fv(GLKVertexAttribColor, _color.v);
     
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
