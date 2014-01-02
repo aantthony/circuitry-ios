@@ -1,3 +1,5 @@
+// TODO: Open source this on github
+
 #import <GLKit/GLKit.h>
 
 @interface ShaderEffect : NSObject <GLKNamedEffect>
