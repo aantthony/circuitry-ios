@@ -3,21 +3,48 @@
 @interface Circuit()
 @property CircuitObject **needsUpdate;
 @property CircuitObject **needsUpdate2;
+@property CircuitLink   *links;
 @property int needsUpdateCount;
 @property int needsUpdateSize;
 @property int itemsSize;
+@property int linksSize;
+@property int linksCount;
+
+@property(readonly) int itemsCount;
+@property CircuitObject *items;
+
 @end
 @implementation Circuit
+
+
+void *smalloc(size_t c) {
+    NSLog(@"Allocate %0.1f MB\n", c / 1000000.0);
+    return malloc(c);
+}
+void *scalloc(size_t c, size_t b) {
+    NSLog(@"Allocate %0.1f MB\n", (c * b) / 1000000.0);
+    return calloc(c, b);
+}
+
+void *srealloc(void * d, size_t c) {
+    NSLog(@"ReAllocate %0.1f MB\n", c / 1000000.0);
+    return realloc(d, c);
+}
 
 - (id) init {
     if ((self = [super init])){
         _needsUpdateCount = 0;
         _needsUpdateSize = 100000;
-        _needsUpdate  = malloc(sizeof(void *) * _needsUpdateSize);
-        _needsUpdate2 = malloc(sizeof(void *) * _needsUpdateSize);
+        _needsUpdate  = smalloc(sizeof(void *) * _needsUpdateSize);
+        _needsUpdate2 = smalloc(sizeof(void *) * _needsUpdateSize);
         
+        _itemsCount = 0;
         _itemsSize = 100000;
-        _items = malloc((sizeof(CircuitObject) * _itemsSize));
+        _items = smalloc((sizeof(CircuitObject) * _itemsSize));
+        
+        _linksCount = 0;
+        _linksSize = 100000;
+        _links = smalloc((sizeof(CircuitLink) * _linksSize));
     }
     return self;
 }
@@ -29,60 +56,91 @@ int NOT  (int x) { return !x; }
 int NOR  (int x) { return !x; }
 int OR   (int x) { return x; }
 
+CircuitProcess defaultGates[] = {
+    {"in",  0, 1, NULL },
+    {"out", 1, 0, NULL },
+    {"or",  2, 0, OR },
+    {"not", 1, 1, NOT },
+    {"nor", 2, 1, NOR },
+    {"xor", 2, 1, XOR },
+    {"and", 2, 1, AND },
+    {"nand", 2, 1, NAND }
+};
+
+NSValue *valueForGate(CircuitProcess *process) {
+    return [NSValue valueWithPointer:process];
+}
+
 NSDictionary *processesById;
 
 + (void) initialize {
-    processesById = [[NSDictionary alloc] initWithObjectsAndKeys:
-                     [NSValue value:&(CircuitProcess){"or",  2, 1, OR  } withObjCType:@encode(CircuitProcess *)] , @"or",
-                     [NSValue value:&(CircuitProcess){"not", 1, 1, NOT } withObjCType:@encode(CircuitProcess *)] , @"not",
-                     [NSValue value:&(CircuitProcess){"nor", 2, 1, NOR } withObjCType:@encode(CircuitProcess *)] , @"nor",
-                     [NSValue value:&(CircuitProcess){"xor", 2, 1, XOR } withObjCType:@encode(CircuitProcess *)] , @"xor",
-                     [NSValue value:&(CircuitProcess){"and", 2, 1, AND } withObjCType:@encode(CircuitProcess *)] , @"and",
-                     [NSValue value:&(CircuitProcess){"nand",2, 1, NAND} withObjCType:@encode(CircuitProcess *)] , @"nand",
-                     nil];
+    processesById = @{
+                      @"in": valueForGate(&defaultGates[0]),
+                      @"out": valueForGate(&defaultGates[1]),
+                      @"or": valueForGate(&defaultGates[2]),
+                      @"not": valueForGate(&defaultGates[3]),
+                      @"nor": valueForGate(&defaultGates[4]),
+                      @"xor": valueForGate(&defaultGates[5]),
+                      @"and": valueForGate(&defaultGates[6]),
+                      @"nand": valueForGate(&defaultGates[7])
+                      };
 }
 
-CircuitProcess *getProcessById(Circuit *c, NSString *id) {
+CircuitProcess *getProcessById(Circuit *c, NSString *_id) {
     CircuitProcess *p;
-    [[processesById objectForKey:id] getValue:&p];
+    id data = [processesById objectForKey:_id];
+    if (!data) [NSException raise:@"Could not find object type" format:@"Object type \"%@\" does not exist.", _id, nil];
+    p = [data pointerValue];
+    NSLog(@"getProcessById: \"%@\" gate has %d outputs...", _id, p->numOutputs);
     return p;
 }
 
 CircuitObject *getObjectById(Circuit *c, int id) {
-    for(int i = 0 ; i < c->_numItems; i++) {
+    for(int i = 0 ; i < c->_itemsCount; i++) {
         CircuitObject *o = &c->_items[i];
         if (o->id == id) return o;
     }
     return NULL;
 }
 void needsUpdate(Circuit *c, CircuitObject *object) {
+    for(int i = 0; i < c->_needsUpdateCount; i++) {
+        if (c->_needsUpdate[i] == object) return;
+    }
     c->_needsUpdateCount++;
     if (c->_needsUpdateCount > c->_needsUpdateSize) {
         c->_needsUpdateSize *= 2;
-        realloc(c.needsUpdate,  sizeof(void *) * c->_needsUpdateSize);
-        realloc(c.needsUpdate2, sizeof(void *) * c->_needsUpdateSize);
+        realloc(&c->_needsUpdate,  sizeof(void *) * c->_needsUpdateSize);
+        realloc(&c->_needsUpdate2, sizeof(void *) * c->_needsUpdateSize);
     }
     c.needsUpdate[c->_needsUpdateCount - 1] = object;
 }
 
-CircuitObject * addItem(Circuit *c) {
-    int id = c->_numItems;
-    c->_numItems++;
+void linkNeedsUpdate(Circuit *c, CircuitObject *object, int sourceIndex) {
+    CircuitLink *link = object->outputs[sourceIndex];
+    do {
+        needsUpdate(c, link->target);
+    } while ((link = link->nextSibling));
+}
+
+CircuitObject * addItem(Circuit *c, CircuitProcess *type) {
+    int id = 0;
+
+    c->_itemsCount++;
     
-    if (c->_numItems > c->_itemsSize) {
+    if (c->_itemsCount > c->_itemsSize) {
         c->_itemsSize *= 2;
-        realloc(c.items, sizeof(void *) * c->_itemsSize);
+        srealloc(&c->_items, sizeof(CircuitObject) * c->_itemsSize);
     }
     
-    CircuitObject * o = &c.items[id];
+    CircuitObject * o = &c->_items[c->_itemsCount - 1];
     
     o->id = id;
     o->in = 0;
     o->out = 0;
-    o->type = NULL;
+    o->type = type;
     o->pos = GLKVector3Make(0.0, 0.0, 0.0);
     o->name = "";
-//    o->outputs = malloc(sizeof(CircuitObject *) * );
+    o->outputs = scalloc(o->type->numOutputs, sizeof(CircuitLink *));
     
     needsUpdate(c, o);
     
@@ -107,8 +165,41 @@ CircuitObject * addItem(Circuit *c) {
     return [[Circuit alloc] initWithObject:object];
 }
 
-void addLink(Circuit *c, CircuitObject *object, int index, CircuitObject *target, int targetIndex) {
+
+CircuitLink *makeLink(Circuit *c) {
     
+    c->_linksCount++;
+    
+    if (c->_linksCount > c->_linksSize) {
+        c->_linksSize *= 2;
+        srealloc(&c->_links, sizeof(CircuitLink) * c->_linksSize);
+    }
+    
+    CircuitLink *link = &c->_links[c->_linksCount - 1];
+    link->nextSibling = NULL;
+    link->sourceIndex = -1;
+    link->targetIndex = -1;
+    return link;
+}
+
+CircuitLink *addLink(Circuit *c, CircuitObject *object, int index, CircuitObject *target, int targetIndex) {
+    CircuitLink *prev = object->outputs[index];
+    CircuitLink *link;
+    if (index >= object->type->numOutputs) {
+        [NSException raise:@"Invalid Link" format:@"Attempted to create link from outlet #%d, but there are only %d outlets for \"%s\" objects.", index, object->type->numOutputs, object->type->id
+         ];
+    }
+    if (!prev) {
+        link = object->outputs[index] = makeLink(c);
+    } else {
+        while (prev->nextSibling && (prev = prev->nextSibling)) {}
+        link = prev->nextSibling = makeLink(c);
+    }
+    link->target = target;
+    link->sourceIndex = index;
+    link->targetIndex = targetIndex;
+    
+    return link;
 }
 
 - (Circuit *) initWithObject: (id) object {
@@ -120,7 +211,9 @@ void addLink(Circuit *c, CircuitObject *object, int index, CircuitObject *target
     
     NSArray *items = [object objectForKey:@"items"];
     [items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        CircuitObject *o = addItem(self);
+        NSString *type = [obj valueForKey:@"type"];
+        CircuitProcess *process = getProcessById(self, type);
+        CircuitObject *o = addItem(self, process);
         o->id  = [[obj valueForKey:@"id"] intValue];
     }];
     
@@ -141,9 +234,6 @@ void addLink(Circuit *c, CircuitObject *object, int index, CircuitObject *target
             }];
         }];
         
-        NSString *type = [obj valueForKey:@"type"];
-        o->type = getProcessById(self, type);
-        
         // set position:
         NSArray *pos = [obj valueForKey:@"pos"];
         for(int i = 0; i < 3; i++) {
@@ -151,27 +241,40 @@ void addLink(Circuit *c, CircuitObject *object, int index, CircuitObject *target
         }
     }];
     
+    // debug
+    [self simulate:1];
     return self;
 }
 
 - (void) simulate: (int) ticks {
     for(int i = 0; i < ticks; i++) {
-        int _needsUpdate2Count = 0;
-        for(int i = 0; i < _needsUpdateCount; i++) {
-            CircuitObject *o = &_items[i];
+        int updatingCount = _needsUpdateCount;
+        CircuitObject **updating = _needsUpdate;
+        _needsUpdate = _needsUpdate2;
+        _needsUpdateCount = 0;
+
+        for(int i = 0; i < updatingCount; i++) {
+            CircuitObject *o = updating[i];
             int oldOut = o->out;
+            if (o->type->calculate == NULL) {
+                // this doesn't actually need to be updated
+                continue;
+            }
             int newOut = o->type->calculate(o->in);
             if (oldOut != newOut) {
-                //            int nOutputs = o->
-                //            _needsUpdate2Count++;
+                
+                o->out = newOut;
+                int jm = o->type->numOutputs;
+                for(int j = 0; j < jm; j++) {
+                    int p = 1 << j;
+                    int a = p & newOut, b = p & oldOut;
+                    if (a != b) linkNeedsUpdate(self, o, j);
+                }
             }
         }
         
-        if ((_needsUpdateCount = _needsUpdate2Count)) {
-            CircuitObject **tmp = _needsUpdate;
-            _needsUpdate = _needsUpdate2;
-            _needsUpdate2 = tmp;
-        }
+        _needsUpdate2 = updating;
+        _needsUpdateCount = 0;
     }
 }
 

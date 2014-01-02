@@ -42,9 +42,6 @@ struct CircuitObject {
 @property NSString *license;
 @property NSMutableDictionary *dependencies;
 
-@property(readonly) int numItems;
-@property CircuitObject *items;
-
 + (Circuit *) circuitWithStream:(NSInputStream *) stream;
 - (Circuit *) initWithObject: (id) object;
 
