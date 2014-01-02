@@ -245,6 +245,15 @@ CircuitLink *addLink(Circuit *c, CircuitObject *object, int index, CircuitObject
     return self;
 }
 
+- (void)enumerateObjectsUsingBlock:(void (^)(CircuitObject *object, BOOL *stop))block {
+    BOOL stop = NO;
+    for(int i = 0 ; i < _itemsCount; i++) {
+        if (&_items[i] == NULL) continue;
+        block(&_items[i], &stop);
+        if (stop) break;
+    }
+}
+
 - (int) simulate: (int) ticks {
     int nAffected = 0;
     for(int i = 0; i < ticks; i++) {

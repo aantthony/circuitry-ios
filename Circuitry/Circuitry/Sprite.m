@@ -17,6 +17,8 @@ ShaderEffect *shader;
 
 GLuint uTexture;
 GLuint uModelViewProjectMatrix;
+GLuint uSize;
+GLuint uPos;
 
 GLuint _quadVertexBuffer;
 GLuint _quadIndexBuffer;
@@ -51,6 +53,8 @@ static GLuint _vertexArray;
         // uniform locations:
         uModelViewProjectMatrix = [shader getUniformLocation:@"modelViewProjectionMatrix"];
         uTexture                = [shader getUniformLocation:@"texture"];
+        uSize                   = [shader getUniformLocation:@"size"];
+        uPos                    = [shader getUniformLocation:@"pos"];
         
 //        glGenVertexArraysOES(1, &_vertexArray);
         glBindVertexArrayOES(_vertexArray);
@@ -107,7 +111,16 @@ static GLuint _vertexArray;
     return [self initWithTexture:texture atX:0 Y:0 width:texture.width height:texture.height];
 }
 
-- (void) drawAtPoint: (GLKVector3) point withTransform:(GLKMatrix4) modelViewProjectionMatrix {
+- (void) drawWithSize: (GLKVector2) size withTransform:(GLKMatrix4) modelViewProjectionMatrix {
+    return [self drawAtPoint:GLKVector3Make(0.0, 0.0, 0.0) withSize: size withTransform:modelViewProjectionMatrix];
+}
+- (void) drawAtPoint: (GLKVector3) pos withTransform:(GLKMatrix4) modelViewProjectionMatrix {
+    return [self drawAtPoint:pos withSize:GLKVector2Make(_texture.width / 2, _texture.height / 2) withTransform:modelViewProjectionMatrix];
+}
+- (void) drawWithTransform: (GLKMatrix4) modelViewProjectionMatrix {
+    return [self drawAtPoint:GLKVector3Make(0.0, 0.0, 0.0) withTransform:modelViewProjectionMatrix];
+}
+- (void) drawAtPoint: (GLKVector3) pos withSize: (GLKVector2) size withTransform:(GLKMatrix4) modelViewProjectionMatrix {
     
     // use program
     [shader prepareToDraw];
@@ -117,7 +130,9 @@ static GLuint _vertexArray;
     
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE, GL_SRC_COLOR);
+    glEnable(GL_ALPHA_BITS);
+    
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     glEnableVertexAttribArray(GLKVertexAttribPosition);
     glEnableVertexAttribArray(GLKVertexAttribTexCoord0);
@@ -137,6 +152,8 @@ static GLuint _vertexArray;
     glVertexAttribPointer(GLKVertexAttribTexCoord0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, TexCoord1));
     
     glUniformMatrix4fv(uModelViewProjectMatrix, 1, 0, modelViewProjectionMatrix.m);
+    glUniform2f(uSize, size.x, size.y);
+    glUniform2f(uPos,  pos.x,  pos.y);
     glVertexAttrib4fv(GLKVertexAttribColor, _color.v);
     
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);

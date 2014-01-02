@@ -7,6 +7,7 @@
 @implementation Viewport
 
 Sprite *bg, *bgTest;
+Sprite *gateAND;
 
 - (id) initWithContext: (EAGLContext*) context {
     if (self = [super init]) {
@@ -22,6 +23,8 @@ Sprite *bg, *bgTest;
         bgTest = [[Sprite alloc] initWithTexture:texture];
         bg = [[Sprite alloc] initWithTexture:bgTexture];
            
+        gateAND = [[Sprite alloc] initWithTexture:[Sprite textureWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"gate-test" ofType:@"png"]]];
+                   
     }
     return self;
 }
@@ -30,8 +33,13 @@ Sprite *bg, *bgTest;
 }
 - (void) draw {
 //    [bgTest drawAtPoint: GLKVector3Make(0.0, 0.0, 0.0) withTransform: _modelViewProjectionMatrix];
-    [bg drawAtPoint: GLKVector3Make(0.0, 0.0, 0.0) withTransform: _modelViewProjectionMatrix];
+    [bg drawWithTransform:_modelViewProjectionMatrix];
     _grid.modelViewProjectionMatrix = _modelViewProjectionMatrix;
     [_grid draw];
+
+    [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
+        GLKVector3 pos = *(GLKVector3*) &object->pos;
+        [gateAND drawAtPoint:pos withTransform:_modelViewProjectionMatrix];
+    }];
 }
 @end

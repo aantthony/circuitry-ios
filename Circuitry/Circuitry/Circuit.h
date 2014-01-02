@@ -46,4 +46,6 @@ struct CircuitObject {
 
 - (int) simulate: (int) ticks;
 
+- (void)enumerateObjectsUsingBlock:(void (^)(CircuitObject *object, BOOL *stop))block;
+
 @end
