@@ -58,18 +58,21 @@ Sprite *gateAND;
 }
 
 
-- (CircuitObject*) findCircuitObjectAtPosition: (CGPoint) screenPos {
+- (GLKVector3) unProject: (CGPoint) screenPos {
     
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
     
     GLKVector3 positionInWindowNear = GLKVector3Make(screenPos.x, viewport[3] - screenPos.y, 0.0f);
-
+    
     bool success;
     
     GLKVector3 pos = GLKMathUnproject(positionInWindowNear, _viewMatrix, _projectionMatrix, viewport, &success);
+    
+    return pos;
+}
 
-    if (!success) return NULL;
+- (CircuitObject*) findCircuitObjectAtPosition: (GLKVector3) pos {
     
     __block CircuitObject *o = NULL;
     
@@ -86,6 +89,9 @@ Sprite *gateAND;
     }];
     
     return o;
+}
+- (CircuitObject*) findCircuitObjectAtScreenPosition: (CGPoint) screenPos {
+    return [self findCircuitObjectAtPosition:[self unProject:screenPos]];
 }
 
 

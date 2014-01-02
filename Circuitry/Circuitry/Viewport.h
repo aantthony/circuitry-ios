@@ -18,6 +18,6 @@
 - (float) scale;
 
 
-- (CircuitObject*) findCircuitObjectAtPosition: (CGPoint) pos;
-
+- (CircuitObject*) findCircuitObjectAtPosition: (GLKVector3) pos;
+- (GLKVector3) unProject: (CGPoint) screenPos;
 @end

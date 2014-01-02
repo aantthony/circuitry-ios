@@ -21,6 +21,8 @@
 
 - (IBAction) handleLongPressGesture:(UILongPressGestureRecognizer *) recognizer;
 
+- (CircuitObject*) findCircuitObjectAtPosition: (GLKVector3) pos;
+
 - (BOOL) gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer;
 
 @end

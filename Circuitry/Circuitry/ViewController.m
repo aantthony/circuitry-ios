@@ -12,6 +12,9 @@
     
     float beginGestureScale;
     
+    CircuitObject *beginLongPressGestureObject;
+    GLKVector3 beginLongPressGestureOffset;
+    
 }
 @property (strong, nonatomic) EAGLContext *context;
 
@@ -153,10 +156,12 @@
 	}
     if ([gestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]]) {
         UILongPressGestureRecognizer *recogniser = (UILongPressGestureRecognizer *)gestureRecognizer;
-        CGPoint location = [recogniser locationInView:self.view];
-        CircuitObject *o;
-        
-        if ((o = [_viewport findCircuitObjectAtPosition:location])) {
+        GLKVector3 position = [_viewport unProject:[recogniser locationInView:self.view]];
+
+        if ((beginLongPressGestureObject = [_viewport findCircuitObjectAtPosition:position])) {
+            GLKVector3 objectPosition = *(GLKVector3 *) &beginLongPressGestureObject->pos;
+            
+            beginLongPressGestureOffset = GLKVector3Subtract(objectPosition, position);
             return YES;
         }
         
@@ -181,7 +186,20 @@
     _viewport.scale = beginGestureScale * recognizer.scale;
 }
 - (IBAction) handleLongPressGesture:(UIGestureRecognizer *)recognizer {
-    NSLog(@"long press");
+//    CircuitObject *o = [_viewport findCircuitObjectAtPosition: [recognizer locationInView:self.view]];
+//    
+    if (!beginLongPressGestureObject) return; // wtf?
+    
+    CircuitObject *object = beginLongPressGestureObject;
+    
+    GLKVector3 curPos = [_viewport unProject: [recognizer locationInView:self.view]];
+    
+    GLKVector3 newPos = GLKVector3Add(curPos, beginLongPressGestureOffset);
+    
+    object->pos.x = newPos.x;
+    object->pos.y = newPos.y;
+    object->pos.z = newPos.z;
+    
 }
 
 
