@@ -30,7 +30,6 @@
 		9288062418725AB20096A1CA /* Sprite.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 92880620187243800096A1CA /* Sprite.vsh */; };
 		9288062518725AB20096A1CA /* Sprite.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 928806221872438E0096A1CA /* Sprite.fsh */; };
 		928BBFA218727C4000EF6DDF /* testbg.png in Resources */ = {isa = PBXBuildFile; fileRef = 928BBFA118727C4000EF6DDF /* testbg.png */; };
-		92A28A581872B4DD00F0D934 /* Circuit.c in Sources */ = {isa = PBXBuildFile; fileRef = 92A28A571872B4DD00F0D934 /* Circuit.c */; };
 		92A28A5B187428BE00F0D934 /* nand.json in Resources */ = {isa = PBXBuildFile; fileRef = 92A28A5A187428BE00F0D934 /* nand.json */; };
 		92A28A5E187433E800F0D934 /* Circuit.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A28A5D187433E800F0D934 /* Circuit.m */; };
 		92A4F86D187289F300EEB367 /* Viewport.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A4F86C187289F300EEB367 /* Viewport.m */; };
@@ -82,7 +81,6 @@
 		92880620187243800096A1CA /* Sprite.vsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = Sprite.vsh; sourceTree = "<group>"; };
 		928806221872438E0096A1CA /* Sprite.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = Sprite.fsh; sourceTree = "<group>"; };
 		928BBFA118727C4000EF6DDF /* testbg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testbg.png; sourceTree = "<group>"; };
-		92A28A571872B4DD00F0D934 /* Circuit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Circuit.c; sourceTree = "<group>"; };
 		92A28A5A187428BE00F0D934 /* nand.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = nand.json; sourceTree = "<group>"; };
 		92A28A5C187433E800F0D934 /* Circuit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Circuit.h; path = Circuitry/Circuit.h; sourceTree = "<group>"; };
 		92A28A5D187433E800F0D934 /* Circuit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Circuit.m; path = Circuitry/Circuit.m; sourceTree = "<group>"; };
@@ -132,7 +130,6 @@
 				92A28A5C187433E800F0D934 /* Circuit.h */,
 				92A28A5D187433E800F0D934 /* Circuit.m */,
 				92A28A59187428A600F0D934 /* Circuits */,
-				92A28A571872B4DD00F0D934 /* Circuit.c */,
 				92A4F86E18728A1F00EEB367 /* Drawable.h */,
 				92A4F86F18728A1F00EEB367 /* Drawable.m */,
 				9288061F187243460096A1CA /* Shaders */,
@@ -355,7 +352,6 @@
 				92A28A5E187433E800F0D934 /* Circuit.m in Sources */,
 				92A4F86D187289F300EEB367 /* Viewport.m in Sources */,
 				92D90E3D1838E9CD00387FAC /* Grid.vsh in Sources */,
-				92A28A581872B4DD00F0D934 /* Circuit.c in Sources */,
 				92D90E3B1838D7AB00387FAC /* Grid.m in Sources */,
 				92880621187243800096A1CA /* Sprite.vsh in Sources */,
 				9204C392182E2F5C006A008D /* ViewController.m in Sources */,
