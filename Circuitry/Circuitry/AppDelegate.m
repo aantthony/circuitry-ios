@@ -1,5 +1,8 @@
 #import "AppDelegate.h"
 
+#import <AFNetworking/AFNetworking.h>
+#import <AFNetworking/AFHTTPSessionManager.h>
+
 @interface AppDelegate() {
     
 }
@@ -7,13 +10,12 @@
 @end
 @implementation AppDelegate
 
-NSDictionary *config;
-
-
 + (NSDictionary *) sharedConfiguration
 {    
-    static dispatch_once_t onceConfigToken = 0;
-    dispatch_once(&onceConfigToken, ^{
+    static dispatch_once_t onceToken = 0;
+    static NSDictionary *config;
+    
+    dispatch_once(&onceToken, ^{
         NSBundle *bundle = [NSBundle mainBundle];
         NSString *environment = [[bundle infoDictionary] objectForKey:@"Configuration"];
         config = [[NSDictionary dictionaryWithContentsOfFile:[bundle pathForResource:@"Configurations" ofType:@"plist"]] objectForKey:environment];
@@ -22,8 +24,25 @@ NSDictionary *config;
     return config;
 }
 
++ (AFHTTPRequestOperationManager *) api {
+    static dispatch_once_t onceToken = 0;
+    static AFHTTPRequestOperationManager * manager;
+    
+    dispatch_once(&onceToken, ^{
+        NSURL *baseURL = [NSURL URLWithString:[[AppDelegate sharedConfiguration] objectForKey:@"APIEndpoint"]];
+        manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL: baseURL];
+    });
+    
+    return manager;
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [AppDelegate.api GET:@"/debug" parameters:nil success:^(AFHTTPRequestOperation *operation, NSDictionary *res) {
+        NSLog(@"JSON: %@", res);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+    }];
     return YES;
 }
 							

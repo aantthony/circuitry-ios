@@ -12,7 +12,7 @@
 	<key>Debug</key>
 	<dict>
 		<key>APIEndpoint</key>
-		<string>http://api.circuitry.io/v1</string>
+		<string>http://equation.io</string>
 		<key>LoggingEnabled</key>
 		<true/>
 	</dict>
