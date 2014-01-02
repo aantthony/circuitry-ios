@@ -6,10 +6,14 @@
 
 @interface Viewport : Drawable
 
-@property GLKMatrix4 modelViewProjectionMatrix;
 @property Circuit *circuit;
 
 - (id) initWithContext: (EAGLContext*) context;
 - (void)update;
 
+- (void) translate: (GLKVector3) translate;
+- (void) setProjectionMatrix: (GLKMatrix4) projectionMatrix;
+
+- (void) setScale: (float) scale;
+- (float) scale;
 @end

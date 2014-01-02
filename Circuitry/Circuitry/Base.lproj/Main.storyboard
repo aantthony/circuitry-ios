@@ -27,17 +27,20 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
                 <pinchGestureRecognizer id="prC-OQ-El9">
                     <connections>
-                        <action selector="handlePinchGesture:" destination="BV1-FR-VrT" id="oyj-yv-OQe"/>
+                        <action selector="handlePinchGesture:" destination="BV1-FR-VrT" id="bXE-H6-tub"/>
+                        <outlet property="delegate" destination="BV1-FR-VrT" id="6zc-41-x6o"/>
                     </connections>
                 </pinchGestureRecognizer>
                 <panGestureRecognizer minimumNumberOfTouches="1" id="Lik-9B-5DK">
                     <connections>
                         <action selector="handlePanGesture:" destination="BV1-FR-VrT" id="Ybr-vc-l9m"/>
+                        <outlet property="delegate" destination="BV1-FR-VrT" id="T3N-8K-s5j"/>
                     </connections>
                 </panGestureRecognizer>
                 <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="Iiq-nz-5qG">
                     <connections>
-                        <action selector="handleLongPressGesture:" destination="BV1-FR-VrT" id="eqr-dK-yws"/>
+                        <action selector="handleLongPressGesture:" destination="BV1-FR-VrT" id="JGL-6I-S6C"/>
+                        <outlet property="delegate" destination="BV1-FR-VrT" id="QNi-yo-lz2"/>
                     </connections>
                 </pongPressGestureRecognizer>
             </objects>

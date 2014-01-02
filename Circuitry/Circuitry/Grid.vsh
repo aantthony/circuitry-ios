@@ -1,9 +1,9 @@
-attribute vec4 position;
-
+uniform mat4 gridMatrix;
 uniform mat4 modelViewProjectionMatrix;
+
+attribute vec4 position;
 
 void main()
 {
-    // TODO: transform coordinates
-    gl_Position = modelViewProjectionMatrix * position;
+    gl_Position = modelViewProjectionMatrix * gridMatrix * position;
 }

@@ -121,7 +121,7 @@ static GLuint _vertexArray;
 - (void) drawWithTransform: (GLKMatrix4) modelViewProjectionMatrix {
     return [self drawAtPoint:GLKVector3Make(0.0, 0.0, 0.0) withTransform:modelViewProjectionMatrix];
 }
-- (void) drawAtPoint: (GLKVector3) pos withSize: (GLKVector2) size withTransform:(GLKMatrix4) modelViewProjectionMatrix {
+- (void) drawAtPoint: (GLKVector3) pos withSize: (GLKVector2) size withTransform:(GLKMatrix4) viewProjectionMatrix {
     
     // use program
     [shader prepareToDraw];
@@ -152,7 +152,7 @@ static GLuint _vertexArray;
     glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, Position));
     glVertexAttribPointer(GLKVertexAttribTexCoord0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, TexCoord1));
     
-    glUniformMatrix4fv(uModelViewProjectMatrix, 1, 0, modelViewProjectionMatrix.m);
+    glUniformMatrix4fv(uModelViewProjectMatrix, 1, 0, viewProjectionMatrix.m);
     glUniform2f(uSize, size.x, size.y);
     glUniform3f(uPos,  pos.x,  pos.y, 0.0);
     glVertexAttrib4fv(GLKVertexAttribColor, _color.v);

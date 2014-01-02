@@ -10,6 +10,8 @@
     GLuint _vertexArray;
     GLuint _vertexBuffer;
     
+    float beginGestureScale;
+    
 }
 @property (strong, nonatomic) EAGLContext *context;
 
@@ -46,7 +48,7 @@
     [stream open];
     _circuit = [Circuit circuitWithStream: stream];
     _viewport.circuit = _circuit;
-    [[[UIAlertView alloc] initWithTitle:_circuit.name message:_circuit.description delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
+//    [[[UIAlertView alloc] initWithTitle:_circuit.name message:_circuit.description delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
 }
 
 - (void)dealloc
@@ -118,8 +120,8 @@
     _normalMatrix = GLKMatrix3InvertAndTranspose(GLKMatrix4GetMatrix3(modelViewMatrix), NULL);
     
     _modelViewProjectionMatrix = GLKMatrix4Multiply(projectionMatrix, modelViewMatrix);
-    _viewport.modelViewProjectionMatrix = _modelViewProjectionMatrix;
-    
+
+    [_viewport setProjectionMatrix:_modelViewProjectionMatrix];
 //   _rotation += self.timeSinceLastUpdate * 0.5f;
     _rotation += 1.0;
     [_viewport update];
@@ -131,7 +133,6 @@
     glClearColor(0.0, 0.0, 0.0, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glDepthFunc(GL_LEQUAL);
-
     [_viewport draw];
 }
 
@@ -154,22 +155,31 @@
 
 #pragma mark -  Gesture methods
 
-- (IBAction) handlePanGesture:(UIPanGestureRecognizer *)gestureRecognizer {
-    
-    CircuitObject *o = [self findCircuitObjectAtPosition:GLKVector3Make(gestureRecognizer.view.center.x, gestureRecognizer.view.center.y, 0.0)];
-    if (!o) return;
-    CGPoint translation = [gestureRecognizer translationInView:self.view];
-    
-    o->pos.x += translation.x;
-    o->pos.y += translation.y;
-    
-    [gestureRecognizer setTranslation:CGPointMake(0, 0) inView:self.view];
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+	if ( [gestureRecognizer isKindOfClass:[UIPinchGestureRecognizer class]] ) {
+		beginGestureScale = _viewport.scale;
+	}
+	return YES;
 }
 
-- (IBAction) handlePinchGesture:(UIGestureRecognizer *)gestureRecognizer {
-    NSLog(@"pinch!");
+- (IBAction) handlePanGesture:(UIPanGestureRecognizer *)recognizer {
+    
+    CircuitObject *o = [self findCircuitObjectAtPosition:GLKVector3Make(recognizer.view.center.x, recognizer.view.center.y, 0.0)];
+    if (!o) return;
+    CGPoint translation = [recognizer translationInView:self.view];
+    
+//    o->pos.x += translation.x;
+//    o->pos.y += translation.y;
+
+    [_viewport translate: GLKVector3Make(translation.x, translation.y, 0.0)];
+    [recognizer setTranslation:CGPointMake(0, 0) inView:self.view];
 }
-- (IBAction) handleLongPressGesture:(UIGestureRecognizer *)gestureRecognizer {
+
+- (IBAction) handlePinchGesture:(UIPinchGestureRecognizer *)recognizer {
+    _viewport.scale = beginGestureScale * recognizer.scale;
+}
+- (IBAction) handleLongPressGesture:(UIGestureRecognizer *)recognizer {
     NSLog(@"long press");
 }
 

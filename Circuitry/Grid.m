@@ -2,6 +2,10 @@
 
 @interface Grid() {
     ShaderEffect *_shader;
+    GLKMatrix4 _gridMatrix;
+    float tx;
+    float ty;
+    float sx;
 }
 
 @end
@@ -11,6 +15,7 @@
 
 // Uniform locations:
 GLint _uModelViewProjectMatrix;
+GLint _uGridMatrix;
 
 // Buffer names:
 GLuint _vertexBuffer;
@@ -19,16 +24,34 @@ GLuint _indexBuffer;
 int nVerts;
 int nLines;
 
+- (void) recalculateGridMatrix {
+    _gridMatrix = GLKMatrix4Multiply(
+                                     GLKMatrix4MakeTranslation(tx, ty, 0.0),
+                                     GLKMatrix4MakeScale(sx, sx, 1.0));
+}
+- (void) setScale: (GLKVector3) scale translate:(GLKVector3) translate {
+    float factor = floor(log2f(scale.x));
+    sx = 60.0 / exp2f(factor);
+    tx = -translate.x + fmodf(translate.x, sx);
+    ty = -translate.y + fmodf(translate.y, sx);
+    [self recalculateGridMatrix];
+}
+
 - (id) init {
     
-    int width = 1024;
-    int height = 768;
+    float gridWidth = 1.0;
+    float gridHeight = 1.0;
     
-    float gridWidth = 60.0;
-    float gridHeight = 60.0;
+    int nX = 32;
+    int nY = 32;
     
-    int nX = ceil(width / gridWidth) + 1;
-    int nY = ceil(height / gridHeight) + 1;
+    sx = 60.0;
+    tx = ty = 0.0;
+    
+    _gridMatrix = GLKMatrix4Multiply(
+                                     GLKMatrix4MakeTranslation(tx, ty, 0.0),
+                                     GLKMatrix4MakeScale(sx, sx, 1.0));
+
     
     nVerts = (nY * nX);
     
@@ -72,6 +95,7 @@ int nLines;
     _shader = [[ShaderEffect alloc] initWithVertexSource:vertShader withFragmentSource:fragShader withUniforms:nil withAttributes:nil];
     
     _uModelViewProjectMatrix = [_shader getUniformLocation:@"modelViewProjectionMatrix"];
+    _uGridMatrix = [_shader getUniformLocation:@"gridMatrix"];
     
     glGenBuffers(1, &_indexBuffer);
     glGenBuffers(1, &_vertexBuffer);
@@ -93,6 +117,13 @@ int nLines;
 - (void) dealloc {
 }
 - (void) draw {
+    
+    
+    _gridMatrix = GLKMatrix4Multiply(
+                                     GLKMatrix4MakeTranslation(tx, ty, 0.0),
+                                     GLKMatrix4MakeScale(sx, sx, 1.0));
+    
+    
     [_shader prepareToDraw];
 
     glEnableVertexAttribArray(GLKVertexAttribPosition);
@@ -114,8 +145,8 @@ int nLines;
                           3 * sizeof(GLfloat),     // how many bytes per vertex (3 floats per vertex)
                           0);                      // offset to the first coordinate, in this case 0 
     
-    glUniformMatrix4fv(_uModelViewProjectMatrix, 1, 0, _modelViewProjectionMatrix.m);
-    
+    glUniformMatrix4fv(_uModelViewProjectMatrix, 1, 0, _viewProjectionMatrix.m);
+    glUniformMatrix4fv(_uGridMatrix, 1, 0, _gridMatrix.m);
     glDrawElements(GL_LINES, nLines * 2, GL_UNSIGNED_SHORT, 0);
     
     glDisable(GL_ALPHA_BITS);
