@@ -1,5 +1,8 @@
 #import "Viewport.h"
 
+#import "Grid.h"
+#import "Sprite.h"
+
 @interface Viewport() {
     GLKMatrix4 _viewMatrix;
     GLKMatrix4 _viewProjectionMatrix;
@@ -57,19 +60,18 @@ Sprite *gateAND;
     _viewProjectionMatrix = GLKMatrix4Multiply(_projectionMatrix, _viewMatrix);
 }
 
-
-- (GLKVector3) unProject: (CGPoint) screenPos {
+- (GLKVector3) unproject: (CGPoint) screenPos {
+    return [self unproject:screenPos z: 0.0]; // NEAR
+//    return [self unProject:screenPos z: 1.0]; // FAR
+}
+- (GLKVector3) unproject: (CGPoint) screenPos z: (float) z {
     
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
     
-    GLKVector3 positionInWindowNear = GLKVector3Make(screenPos.x, viewport[3] - screenPos.y, 0.0f);
+    GLKVector3 positionInWindowNear = GLKVector3Make(screenPos.x, viewport[3] - screenPos.y, z);
     
-    bool success;
-    
-    GLKVector3 pos = GLKMathUnproject(positionInWindowNear, _viewMatrix, _projectionMatrix, viewport, &success);
-    
-    return pos;
+    return GLKMathUnproject(positionInWindowNear, _viewMatrix, _projectionMatrix, viewport, NULL);
 }
 
 - (CircuitObject*) findCircuitObjectAtPosition: (GLKVector3) pos {
@@ -91,7 +93,7 @@ Sprite *gateAND;
     return o;
 }
 - (CircuitObject*) findCircuitObjectAtScreenPosition: (CGPoint) screenPos {
-    return [self findCircuitObjectAtPosition:[self unProject:screenPos]];
+    return [self findCircuitObjectAtPosition:[self unproject:screenPos]];
 }
 
 

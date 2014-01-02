@@ -1,11 +1,3 @@
-//
-//  ShaderEffect.h
-//  Circuitry
-//
-//  Created by Anthony Foster on 16/11/2013.
-//  Copyright (c) 2013 Circuitry. All rights reserved.
-//
-
 #import <GLKit/GLKit.h>
 
 @interface ShaderEffect : NSObject <GLKNamedEffect>
@@ -19,7 +11,6 @@
 
 - (GLint) getUniformLocation:(NSString *) name;
 
-- (GLKEffectProperty *) getProperty:(NSString *) name;
-- (void) setProperty: (GLKEffectProperty *)property withFloat:(float) value;
+//- (GLKEffectProperty *) getFloatProperty:(NSString *) name;
 
 @end

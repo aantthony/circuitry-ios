@@ -23,6 +23,7 @@
 		9204C39D182E2F5C006A008D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9204C377182E2F5C006A008D /* UIKit.framework */; };
 		9204C3A5182E2F5C006A008D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9204C3A3182E2F5C006A008D /* InfoPlist.strings */; };
 		9204C3A7182E2F5C006A008D /* CircuitryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9204C3A6182E2F5C006A008D /* CircuitryTests.m */; };
+		923056A118759577005AE348 /* Configurations.plist in Resources */ = {isa = PBXBuildFile; fileRef = 923056A018759577005AE348 /* Configurations.plist */; };
 		9288061B187210180096A1CA /* Shader.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 9204C38E182E2F5C006A008D /* Shader.vsh */; };
 		9288061E1872136A0096A1CA /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = 9288061D1872136A0096A1CA /* background.png */; };
 		92880621187243800096A1CA /* Sprite.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 92880620187243800096A1CA /* Sprite.vsh */; };
@@ -79,6 +80,7 @@
 		9204C3A4182E2F5C006A008D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9204C3A6182E2F5C006A008D /* CircuitryTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CircuitryTests.m; sourceTree = "<group>"; };
 		9208B106187565390038A52A /* Circuitry.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Circuitry.entitlements; sourceTree = "<group>"; };
+		923056A018759577005AE348 /* Configurations.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Configurations.plist; sourceTree = "<group>"; };
 		9288061D1872136A0096A1CA /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
 		92880620187243800096A1CA /* Sprite.vsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = Sprite.vsh; sourceTree = "<group>"; };
 		928806221872438E0096A1CA /* Sprite.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = Sprite.fsh; sourceTree = "<group>"; };
@@ -200,6 +202,7 @@
 				9204C380182E2F5C006A008D /* InfoPlist.strings */,
 				9204C383182E2F5C006A008D /* main.m */,
 				9204C385182E2F5C006A008D /* Circuitry-Prefix.pch */,
+				923056A018759577005AE348 /* Configurations.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -334,6 +337,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				92A4F871187295EF00EEB367 /* Grid.vsh in Resources */,
+				923056A118759577005AE348 /* Configurations.plist in Resources */,
 				92A4F872187295EF00EEB367 /* Grid.fsh in Resources */,
 				9288062418725AB20096A1CA /* Sprite.vsh in Resources */,
 				9288062518725AB20096A1CA /* Sprite.fsh in Resources */,

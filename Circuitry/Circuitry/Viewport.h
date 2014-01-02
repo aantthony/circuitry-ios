@@ -1,7 +1,6 @@
-#import "Drawable.h"
+#import <GLKit/GLKit.h>
 
-#import "Grid.h"
-#import "Sprite.h"
+#import "Drawable.h"
 #import "Circuit.h"
 
 @interface Viewport : Drawable
@@ -17,7 +16,6 @@
 - (void) setScale: (float) scale;
 - (float) scale;
 
-
 - (CircuitObject*) findCircuitObjectAtPosition: (GLKVector3) pos;
-- (GLKVector3) unProject: (CGPoint) screenPos;
+- (GLKVector3) unproject: (CGPoint) screenPos;
 @end

@@ -1,5 +1,8 @@
 #import "ViewController.h"
 
+#import "Viewport.h"
+#import "Circuit.h"
+
 @interface ViewController () {
     GLuint _program;
     
@@ -156,8 +159,9 @@
 	}
     if ([gestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]]) {
         UILongPressGestureRecognizer *recogniser = (UILongPressGestureRecognizer *)gestureRecognizer;
-        GLKVector3 position = [_viewport unProject:[recogniser locationInView:self.view]];
+        GLKVector3 position = [_viewport unproject:[recogniser locationInView:self.view]];
 
+        // only accept long presses on circuit objects:
         if ((beginLongPressGestureObject = [_viewport findCircuitObjectAtPosition:position])) {
             GLKVector3 objectPosition = *(GLKVector3 *) &beginLongPressGestureObject->pos;
             
@@ -171,6 +175,7 @@
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    // TODO: test this
     if ([gestureRecognizer isKindOfClass:[UIPinchGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) return YES;
     
     return NO;
@@ -186,13 +191,11 @@
     _viewport.scale = beginGestureScale * recognizer.scale;
 }
 - (IBAction) handleLongPressGesture:(UIGestureRecognizer *)recognizer {
-//    CircuitObject *o = [_viewport findCircuitObjectAtPosition: [recognizer locationInView:self.view]];
-//    
     if (!beginLongPressGestureObject) return; // wtf?
     
     CircuitObject *object = beginLongPressGestureObject;
     
-    GLKVector3 curPos = [_viewport unProject: [recognizer locationInView:self.view]];
+    GLKVector3 curPos = [_viewport unproject: [recognizer locationInView:self.view]];
     
     GLKVector3 newPos = GLKVector3Add(curPos, beginLongPressGestureOffset);
     
@@ -207,16 +210,16 @@
 #pragma mark -  UIResponder methods
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-//    NSLog(@"begin");
+
 }
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-//    NSLog(@"moved");
+
 }
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    NSLog(@"ended");
+
 }
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
-//    NSLog(@"cancelled");
+
 }
 
 @end

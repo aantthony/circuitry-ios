@@ -1,4 +1,5 @@
 #import "Grid.h"
+#import "ShaderEffect.h"
 
 @interface Grid() {
     ShaderEffect *_shader;

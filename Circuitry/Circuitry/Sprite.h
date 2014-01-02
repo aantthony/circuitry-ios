@@ -1,6 +1,5 @@
 #import <Foundation/Foundation.h>
 #import <GLKit/GLKit.h>
-#import "ShaderEffect.h"
 
 @interface Sprite : NSObject
 

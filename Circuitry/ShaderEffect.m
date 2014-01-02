@@ -1,11 +1,3 @@
-//
-//  ShaderEffect.m
-//  Circuitry
-//
-//  Created by Anthony Foster on 16/11/2013.
-//  Copyright (c) 2013 Circuitry. All rights reserved.
-//
-
 #import "ShaderEffect.h"
 
 @interface ShaderEffect() {
@@ -71,7 +63,7 @@
     
     __block int index = GLKVertexAttribTexCoord1 + 1;
     for (NSString* attribName in attributes) {
-        NSDictionary *dict = [attributes objectForKey:attribName];
+//        NSDictionary *dict = [attributes objectForKey:attribName];
         glBindAttribLocation(_program, index++, [attribName UTF8String]);
     }
     

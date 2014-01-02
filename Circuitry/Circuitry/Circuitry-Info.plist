@@ -32,6 +32,8 @@
 	</array>
 	<key>UIStatusBarHidden</key>
 	<true/>
+	<key>Configuration</key>
+	<string>${CONFIGURATION}</string>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

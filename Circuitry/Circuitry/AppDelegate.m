@@ -1,18 +1,29 @@
-//
-//  AppDelegate.m
-//  Circuitry
-//
-//  Created by Anthony Foster on 9/11/2013.
-//  Copyright (c) 2013 Circuitry. All rights reserved.
-//
-
 #import "AppDelegate.h"
 
+@interface AppDelegate() {
+    
+}
+
+@end
 @implementation AppDelegate
+
+NSDictionary *config;
+
+
++ (NSDictionary *) sharedConfiguration
+{    
+    static dispatch_once_t onceConfigToken = 0;
+    dispatch_once(&onceConfigToken, ^{
+        NSBundle *bundle = [NSBundle mainBundle];
+        NSString *environment = [[bundle infoDictionary] objectForKey:@"Configuration"];
+        config = [[NSDictionary dictionaryWithContentsOfFile:[bundle pathForResource:@"Configurations" ofType:@"plist"]] objectForKey:environment];
+    });
+    
+    return config;
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
     return YES;
 }
 							

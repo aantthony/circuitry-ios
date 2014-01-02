@@ -1,4 +1,5 @@
 #import "Sprite.h"
+#import "ShaderEffect.h"
 
 @interface Sprite()
 @property GLKTextureInfo *texture;
