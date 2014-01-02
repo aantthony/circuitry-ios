@@ -8,13 +8,16 @@
 
 @implementation Grid
 
-GLuint _uModelViewProjectMatrix;
+
+// Uniform locations:
+GLint _uModelViewProjectMatrix;
+
+// Buffer names:
+GLuint _vertexBuffer;
+GLuint _indexBuffer;
 
 int nVerts;
 int nLines;
-
-GLuint _vertexBuffer;
-GLuint _indexBuffer;
 
 - (id) init {
     
@@ -75,6 +78,7 @@ GLuint _indexBuffer;
     
     glEnableVertexAttribArray(GLKVertexAttribPosition);
 
+    // push data to GPU:
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, nVerts * sizeof(GLfloat) * 3, verts, GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexBuffer);

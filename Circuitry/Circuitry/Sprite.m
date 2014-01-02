@@ -15,11 +15,13 @@ typedef struct {
 
 ShaderEffect *shader;
 
-GLuint uTexture;
-GLuint uModelViewProjectMatrix;
-GLuint uSize;
-GLuint uPos;
+// uniform locations:
+GLint uTexture;
+GLint uModelViewProjectMatrix;
+GLint uSize;
+GLint uPos;
 
+// buffer names:
 GLuint _quadVertexBuffer;
 GLuint _quadIndexBuffer;
 
@@ -84,10 +86,10 @@ static GLuint _vertexArray;
                             [NSNumber numberWithBool:YES], GLKTextureLoaderApplyPremultiplication,
                              nil
                              ];
-   
+
     GLKTextureInfo* info = [GLKTextureLoader textureWithContentsOfFile: fileName options: options error: &error];
-    if (error || !info) {
-        return nil;
+    if (error) {
+        [[NSException exceptionWithName:error.localizedDescription reason:error.localizedFailureReason userInfo:@{}] raise];
     }
     return info;
 }
