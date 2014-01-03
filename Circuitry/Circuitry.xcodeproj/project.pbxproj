@@ -23,6 +23,9 @@
 		9204C39D182E2F5C006A008D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9204C377182E2F5C006A008D /* UIKit.framework */; };
 		9204C3A5182E2F5C006A008D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9204C3A3182E2F5C006A008D /* InfoPlist.strings */; };
 		9204C3A7182E2F5C006A008D /* CircuitryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9204C3A6182E2F5C006A008D /* CircuitryTests.m */; };
+		9218F7381876978A00742F99 /* LinkBezier.m in Sources */ = {isa = PBXBuildFile; fileRef = 9218F7371876978A00742F99 /* LinkBezier.m */; };
+		9218F73A1876981900742F99 /* LinkBezier.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 9218F7391876981900742F99 /* LinkBezier.fsh */; };
+		9218F73C1876982100742F99 /* LinkBezier.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 9218F73B1876982100742F99 /* LinkBezier.vsh */; };
 		923056A118759577005AE348 /* Configurations.plist in Resources */ = {isa = PBXBuildFile; fileRef = 923056A018759577005AE348 /* Configurations.plist */; };
 		9288061B187210180096A1CA /* Shader.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 9204C38E182E2F5C006A008D /* Shader.vsh */; };
 		9288061E1872136A0096A1CA /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = 9288061D1872136A0096A1CA /* background.png */; };
@@ -81,6 +84,10 @@
 		9204C3A4182E2F5C006A008D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9204C3A6182E2F5C006A008D /* CircuitryTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CircuitryTests.m; sourceTree = "<group>"; };
 		9208B106187565390038A52A /* Circuitry.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Circuitry.entitlements; sourceTree = "<group>"; };
+		9218F7361876978A00742F99 /* LinkBezier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkBezier.h; sourceTree = "<group>"; };
+		9218F7371876978A00742F99 /* LinkBezier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LinkBezier.m; sourceTree = "<group>"; };
+		9218F7391876981900742F99 /* LinkBezier.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = LinkBezier.fsh; sourceTree = "<group>"; };
+		9218F73B1876982100742F99 /* LinkBezier.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = LinkBezier.vsh; sourceTree = "<group>"; };
 		923056A018759577005AE348 /* Configurations.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Configurations.plist; sourceTree = "<group>"; };
 		9288061D1872136A0096A1CA /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = background.png; path = ../background.png; sourceTree = "<group>"; };
 		92880620187243800096A1CA /* Sprite.vsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; name = Sprite.vsh; path = ../Sprite.vsh; sourceTree = "<group>"; };
@@ -216,6 +223,17 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		9218F735187696A100742F99 /* LinkBezier */ = {
+			isa = PBXGroup;
+			children = (
+				9218F7361876978A00742F99 /* LinkBezier.h */,
+				9218F7371876978A00742F99 /* LinkBezier.m */,
+				9218F7391876981900742F99 /* LinkBezier.fsh */,
+				9218F73B1876982100742F99 /* LinkBezier.vsh */,
+			);
+			name = LinkBezier;
+			sourceTree = "<group>";
+		};
 		927D1A131875A97000457367 /* Sprite */ = {
 			isa = PBXGroup;
 			children = (
@@ -271,6 +289,7 @@
 		927D1A181875A9B400457367 /* OpenGL Views */ = {
 			isa = PBXGroup;
 			children = (
+				9218F735187696A100742F99 /* LinkBezier */,
 				92A4F86E18728A1F00EEB367 /* Drawable.h */,
 				92A4F86F18728A1F00EEB367 /* Drawable.m */,
 				9204C390182E2F5C006A008D /* ViewController.h */,
@@ -452,6 +471,7 @@
 				92A4F86D187289F300EEB367 /* Viewport.m in Sources */,
 				92D90E3D1838E9CD00387FAC /* Grid.vsh in Sources */,
 				92D90E3B1838D7AB00387FAC /* Grid.m in Sources */,
+				9218F73C1876982100742F99 /* LinkBezier.vsh in Sources */,
 				92880621187243800096A1CA /* Sprite.vsh in Sources */,
 				9204C392182E2F5C006A008D /* ViewController.m in Sources */,
 				9204C388182E2F5C006A008D /* AppDelegate.m in Sources */,
@@ -459,6 +479,8 @@
 				92A4F87018728A1F00EEB367 /* Drawable.m in Sources */,
 				9288061B187210180096A1CA /* Shader.vsh in Sources */,
 				92D90E3F1838E9D700387FAC /* Grid.fsh in Sources */,
+				9218F73A1876981900742F99 /* LinkBezier.fsh in Sources */,
+				9218F7381876978A00742F99 /* LinkBezier.m in Sources */,
 				92D90E381837836500387FAC /* ShaderEffect.m in Sources */,
 				9204C384182E2F5C006A008D /* main.m in Sources */,
 			);

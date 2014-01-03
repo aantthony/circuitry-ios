@@ -123,8 +123,6 @@ int nLines;
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexBuffer);
     glEnable(GL_BLEND);
-    glEnable(GL_ALPHA_BITS);
-
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glLineWidth(1.0);
     
@@ -140,8 +138,6 @@ int nLines;
     glUniformMatrix4fv(_uModelViewProjectMatrix, 1, 0, _viewProjectionMatrix.m);
     glUniformMatrix4fv(_uGridMatrix, 1, 0, _gridMatrix.m);
     glDrawElements(GL_LINES, nLines * 2, GL_UNSIGNED_SHORT, 0);
-    
-    glDisable(GL_ALPHA_BITS);
     glDisableVertexAttribArray(GLKVertexAttribPosition);
 }
 

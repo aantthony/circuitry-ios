@@ -11,6 +11,8 @@
 
 -(ShaderEffect *) initWithVertexSource: (NSString *)vertShaderPathname withFragmentSource:(NSString *)fragShaderPathname withUniforms:(NSDictionary *)uniforms withAttributes:(NSDictionary *)attributes;
 
++ (void) checkError;
+
 - (GLint) getUniformLocation:(NSString *) name;
 
 //- (GLKEffectProperty *) getFloatProperty:(NSString *) name;

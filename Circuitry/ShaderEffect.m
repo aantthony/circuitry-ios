@@ -97,6 +97,22 @@
     return self;
 }
 
++ (void) checkError {
+    int err;
+    if((err = glGetError()) != GL_NO_ERROR) {
+        NSDictionary *names = @{
+                                @GL_INVALID_ENUM: @"GL_INVALID_ENUM",
+                                 @GL_INVALID_VALUE: @"GL_INVALID_VALUE",
+                                 @GL_INVALID_OPERATION: @"GL_INVALID_OPERATION",
+                                 @GL_INVALID_FRAMEBUFFER_OPERATION: @"GL_INVALID_FRAMEBUFFER_OPERATION",
+                                 @GL_OUT_OF_MEMORY: @"GL_OUT_OF_MEMORY",
+                                 @GL_STACK_UNDERFLOW: @"GL_STACK_UNDERFLOW",
+                                 @GL_STACK_OVERFLOW: @"GL_STACK_OVERFLOW"
+                                 };
+        [NSException raise:@"OpenGL Error" format:@"%@ (%d)", [names objectForKey:[NSNumber numberWithInt:err]], err];
+    }
+}
+
 - (GLint) getUniformLocation:(NSString *) name {
     return glGetUniformLocation(_program, [name UTF8String]);
 }

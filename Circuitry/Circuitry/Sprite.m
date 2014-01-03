@@ -108,7 +108,6 @@ static GLuint _vertexArray;
     return self;
 }
 
-
 - (Sprite *) initWithTexture: (GLKTextureInfo *) texture {
     return [self initWithTexture:texture atX:0 Y:0 width:texture.width height:texture.height];
 }
@@ -123,45 +122,34 @@ static GLuint _vertexArray;
     return [self drawAtPoint:GLKVector3Make(0.0, 0.0, 0.0) withTransform:modelViewProjectionMatrix];
 }
 - (void) drawAtPoint: (GLKVector3) pos withSize: (GLKVector2) size withTransform:(GLKMatrix4) viewProjectionMatrix {
-    
     // use program
     [shader prepareToDraw];
-    
     // TODO: maybe this should be part of ShaderEffect, but I can't find any documenation for glBindVertexArrayOES so for now it is here:
 //    glBindVertexArrayOES(_vertexArray);
-    
-    glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
-    glEnable(GL_ALPHA_BITS);
+//    glEnable(GL_ALPHA_BITS);
     
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
     glEnableVertexAttribArray(GLKVertexAttribPosition);
     glEnableVertexAttribArray(GLKVertexAttribTexCoord0);
     
     glBindBuffer(GL_ARRAY_BUFFER, _quadVertexBuffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _quadIndexBuffer);
-    
     int i = 0;
     // Use the texture @i
     glActiveTexture(GL_TEXTURE0 + i);
     glBindTexture(GL_TEXTURE_2D, _texture.name);
     glUniform1i(uTexture, i);
-    
     GLKVector4 _color = {1.0, 1.0, 1.0, 1.0};
-    
     glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, Position));
     glVertexAttribPointer(GLKVertexAttribTexCoord0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, TexCoord1));
-    
     glUniformMatrix4fv(uModelViewProjectMatrix, 1, 0, viewProjectionMatrix.m);
     glUniform2f(uSize, size.x, size.y);
     glUniform3f(uPos,  pos.x,  pos.y, 0.0);
     glVertexAttrib4fv(GLKVertexAttribColor, _color.v);
-    
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
     
     glDisableVertexAttribArray(GLKVertexAttribPosition);
-    
     glDisableVertexAttribArray(GLKVertexAttribTexCoord0);
 }
 

@@ -109,7 +109,6 @@ Sprite *gateAND;
     
     _grid.viewProjectionMatrix = _viewProjectionMatrix;
     [_grid draw];
-
     [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
         GLKVector3 pos = *(GLKVector3*) &object->pos;
         [gateAND drawAtPoint:pos withTransform: _viewProjectionMatrix];

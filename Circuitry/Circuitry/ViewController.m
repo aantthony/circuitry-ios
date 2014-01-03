@@ -56,12 +56,13 @@
     view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
     
     [self setupGL];
+    [self checkError];
     _viewport = [[Viewport alloc] initWithContext:self.context];
-    
+    [self checkError];
     GLKTextureInfo *bgTexture = [Sprite textureWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"background" ofType:@"png"]];
-    
+    [self checkError];
     bg = [[Sprite alloc] initWithTexture:bgTexture];
-    
+    [self checkError];
     
     NSURL *path = [[NSBundle mainBundle] URLForResource:@"nand" withExtension:@"json"];
     NSInputStream *stream = [NSInputStream inputStreamWithURL:path];
@@ -101,9 +102,9 @@
 - (void)setupGL
 {
     [EAGLContext setCurrentContext:self.context];
-    
+    [self checkError];
     [self loadShaders];
-    
+    [self checkError];
     glEnable(GL_DEPTH_TEST);
     
 }
@@ -111,7 +112,7 @@
 - (void)tearDownGL
 {
     [EAGLContext setCurrentContext:self.context];
-    
+    [self checkError];
 //    glDeleteBuffers(1, &_vertexBuffer);
 //    glDeleteVertexArraysOES(1, &_vertexArray);
     
@@ -125,6 +126,7 @@
 
 - (void)update
 {
+    [self checkError];
     float aspect = fabsf(self.view.bounds.size.width / self.view.bounds.size.height);
     GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0f), aspect, 0.1f, 100.0f);
     CGRect boundary = self.view.bounds;
@@ -164,14 +166,33 @@
     [_viewport update];
 }
 
+- (void) checkError {
+    int err;
+    if((err = glGetError()) != GL_NO_ERROR) {
+        NSDictionary *names = @{
+                                 @GL_INVALID_ENUM: @"GL_INVALID_ENUM",
+                                 @GL_INVALID_VALUE: @"GL_INVALID_VALUE",
+                                 @GL_INVALID_OPERATION: @"GL_INVALID_OPERATION",
+                                 @GL_INVALID_FRAMEBUFFER_OPERATION: @"GL_INVALID_FRAMEBUFFER_OPERATION",
+                                 @GL_OUT_OF_MEMORY: @"GL_OUT_OF_MEMORY",
+                                 @GL_STACK_UNDERFLOW: @"GL_STACK_UNDERFLOW",
+                                 @GL_STACK_OVERFLOW: @"GL_STACK_OVERFLOW"
+                                 };
+        [NSException raise:@"OpenGL Error" format:@"%@ (%d)", [names objectForKey:[NSNumber numberWithInt:err]], err];
+    }
+}
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
+    [self checkError];
     glClearColor(0.0, 0.0, 0.0, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glDepthFunc(GL_LEQUAL);
+    [self checkError];
     [bg drawWithSize:GLKVector2Make(rect.size.width, rect.size.height) withTransform:_modelViewProjectionMatrix];
+    [self checkError];
     [_viewport draw];
+    [self checkError];
 }
 
 #pragma mark -  OpenGL ES 2 shader compilation
