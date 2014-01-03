@@ -2,6 +2,7 @@
 
 #import "Viewport.h"
 #import "Circuit.h"
+#import "Sprite.h"
 
 @interface ViewController () {
     GLuint _program;
@@ -20,6 +21,9 @@
     GLKVector3 beginLongPressGestureOffset;
     
     BOOL isAnimatingScaleToSnap;
+    
+    
+    Sprite *bg, *bgTest;
     
 }
 @property (strong, nonatomic) EAGLContext *context;
@@ -53,6 +57,14 @@
     
     [self setupGL];
     _viewport = [[Viewport alloc] initWithContext:self.context];
+    
+    GLKTextureInfo *texture = [Sprite textureWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"testbg" ofType:@"png"]];
+    
+    GLKTextureInfo *bgTexture = [Sprite textureWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"background" ofType:@"png"]];
+    
+    bgTest = [[Sprite alloc] initWithTexture:texture];
+    bg = [[Sprite alloc] initWithTexture:bgTexture];
+    
     
     NSURL *path = [[NSBundle mainBundle] URLForResource:@"nand" withExtension:@"json"];
     NSInputStream *stream = [NSInputStream inputStreamWithURL:path];
@@ -118,7 +130,8 @@
 {
     float aspect = fabsf(self.view.bounds.size.width / self.view.bounds.size.height);
     GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0f), aspect, 0.1f, 100.0f);
-    projectionMatrix = GLKMatrix4MakeOrtho(0.0, 1024.0, 768.0, 0.0, -10.0, 10.0);
+    CGRect boundary = self.view.bounds;
+    projectionMatrix = GLKMatrix4MakeOrtho(0.0, boundary.size.width, boundary.size.height, 0.0, -10.0, 10.0);
 //    GLKMatrix4 baseModelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, -4.0f);
 //    baseModelViewMatrix = GLKMatrix4Rotate(baseModelViewMatrix, _rotation, 0.0f, 1.0f, 0.0f);
     
@@ -160,6 +173,7 @@
     glClearColor(0.0, 0.0, 0.0, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glDepthFunc(GL_LEQUAL);
+    [bg drawWithSize:GLKVector2Make(rect.size.width, rect.size.height) withTransform:_modelViewProjectionMatrix];
     [_viewport draw];
 }
 

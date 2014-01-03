@@ -15,7 +15,6 @@
 
 @implementation Viewport
 
-Sprite *bg, *bgTest;
 Sprite *gateAND;
 
 - (id) initWithContext: (EAGLContext*) context {
@@ -32,13 +31,6 @@ Sprite *gateAND;
     
     [Sprite setContext: context];
     
-    GLKTextureInfo *texture = [Sprite textureWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"testbg" ofType:@"png"]];
-    
-    GLKTextureInfo *bgTexture = [Sprite textureWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"background" ofType:@"png"]];
-    
-    bgTest = [[Sprite alloc] initWithTexture:texture];
-    bg = [[Sprite alloc] initWithTexture:bgTexture];
-       
     gateAND = [[Sprite alloc] initWithTexture:[Sprite textureWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"gate-test" ofType:@"png"]]];
     
     return self;
@@ -114,7 +106,7 @@ Sprite *gateAND;
 }
 
 - (void) draw {
-    [bg drawWithTransform: _projectionMatrix];
+    
     _grid.viewProjectionMatrix = _viewProjectionMatrix;
     [_grid draw];
 
