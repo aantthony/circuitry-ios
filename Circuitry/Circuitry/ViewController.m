@@ -6,6 +6,7 @@
 @interface ViewController () {
     GLuint _program;
     
+    IBOutlet UIPinchGestureRecognizer *_pinchGestureRecognizer;
     GLKMatrix4 _modelViewProjectionMatrix;
     GLKMatrix3 _normalMatrix;
     float _rotation;
@@ -17,6 +18,8 @@
     
     CircuitObject *beginLongPressGestureObject;
     GLKVector3 beginLongPressGestureOffset;
+    
+    BOOL isAnimatingScaleToSnap;
     
 }
 @property (strong, nonatomic) EAGLContext *context;
@@ -36,6 +39,8 @@
 {
     [super viewDidLoad];
     
+    isAnimatingScaleToSnap = NO;
+    beginGestureScale = 0.0;
     self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
 
     if (!self.context) {
@@ -126,8 +131,24 @@
     _normalMatrix = GLKMatrix3InvertAndTranspose(GLKMatrix4GetMatrix3(modelViewMatrix), NULL);
     
     _modelViewProjectionMatrix = GLKMatrix4Multiply(projectionMatrix, modelViewMatrix);
+    
+    if (!isAnimatingScaleToSnap && beginGestureScale != 0.0 && !_pinchGestureRecognizer.numberOfTouches) {
+        beginGestureScale = 0.0;
+        isAnimatingScaleToSnap = YES;
+    }
 
     [_viewport setProjectionMatrix:_modelViewProjectionMatrix];
+    if (isAnimatingScaleToSnap) {
+        float lEnd = round(log2f(_viewport.scale));
+        if (lEnd > 2.0) lEnd = 2.0; // maximum zoom
+        float lNow = log2f(_viewport.scale);
+        float k = 0.1;
+        if (fabsf(lEnd - lNow) < 0.001) {
+            k = 1.0;
+            isAnimatingScaleToSnap = NO;
+        }
+        _viewport.scale = exp2f(lNow + (lEnd - lNow) * k);
+    }
 //   _rotation += self.timeSinceLastUpdate * 0.5f;
     _rotation += 1.0;
     [_viewport update];
@@ -158,6 +179,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
 	if ( [gestureRecognizer isKindOfClass:[UIPinchGestureRecognizer class]] ) {
+        isAnimatingScaleToSnap = NO;
 		beginGestureScale = _viewport.scale;
 	}
     if ([gestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]]) {
@@ -168,7 +190,6 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         // only accept long presses on circuit objects:
         if ((beginLongPressGestureObject = [_viewport findCircuitObjectAtPosition:position])) {
             GLKVector3 objectPosition = *(GLKVector3 *) &beginLongPressGestureObject->pos;
-            
             beginLongPressGestureOffset = GLKVector3Subtract(objectPosition, position);
             return YES;
         }

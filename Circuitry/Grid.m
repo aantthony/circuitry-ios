@@ -31,7 +31,7 @@ int nLines;
                                      GLKMatrix4MakeScale(sx, sx, 1.0));
 }
 - (void) setScale: (GLKVector3) scale translate:(GLKVector3) translate {
-    float factor = floor(log2f(scale.x));
+    float factor = round(log2f(scale.x));
     sx = 60.0 / exp2f(factor);
     tx = -translate.x + fmodf(translate.x, sx);
     ty = -translate.y + fmodf(translate.y, sx);

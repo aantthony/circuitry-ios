@@ -23,6 +23,9 @@
                         </connections>
                     </glkView>
                     <keyCommands/>
+                    <connections>
+                        <outlet property="pinchGestureRecognizer" destination="prC-OQ-El9" id="tZZ-eO-MgU"/>
+                    </connections>
                 </glkViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
                 <pinchGestureRecognizer id="prC-OQ-El9">
