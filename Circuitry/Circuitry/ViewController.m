@@ -149,6 +149,9 @@
     return YES;
 }
 
+CGPoint PX(float contentScaleFactor, CGPoint pt) {
+    return CGPointMake(contentScaleFactor * pt.x, contentScaleFactor * pt.y);
+}
 
 #pragma mark -  Gesture methods
 
@@ -159,7 +162,8 @@
 	}
     if ([gestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]]) {
         UILongPressGestureRecognizer *recogniser = (UILongPressGestureRecognizer *)gestureRecognizer;
-        GLKVector3 position = [_viewport unproject:[recogniser locationInView:self.view]];
+        ;
+        GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [recogniser locationInView:self.view])];
 
         // only accept long presses on circuit objects:
         if ((beginLongPressGestureObject = [_viewport findCircuitObjectAtPosition:position])) {
@@ -195,7 +199,7 @@
     
     CircuitObject *object = beginLongPressGestureObject;
     
-    GLKVector3 curPos = [_viewport unproject: [recognizer locationInView:self.view]];
+    GLKVector3 curPos = [_viewport unproject: PX(self.view.contentScaleFactor, [recognizer locationInView:self.view])];
     
     GLKVector3 newPos = GLKVector3Add(curPos, beginLongPressGestureOffset);
     

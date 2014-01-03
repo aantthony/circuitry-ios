@@ -1,7 +1,7 @@
 #import "AppDelegate.h"
 
 #import <AFNetworking/AFNetworking.h>
-#import <AFNetworking/AFHTTPSessionManager.h>
+//#import <AFNetworking/AFHTTPSessionManager.h>
 
 @interface AppDelegate() {
     
