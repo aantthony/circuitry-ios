@@ -1,13 +1,5 @@
-//
-//  LinkBezier.h
-//  Circuitry
-//
-//  Created by Anthony Foster on 3/01/2014.
-//  Copyright (c) 2014 Circuitry. All rights reserved.
-//
-
-#import <Foundation/Foundation.h>
-
+#import <GLKit/GLKit.h>
 @interface LinkBezier : NSObject
 - (id) init;
+- (void) drawFrom: (GLKVector2) A to: (GLKVector2) B withColor1:(GLKVector3)color1 color2: (GLKVector3) color2 withTransform:(GLKMatrix4) viewProjectionMatrix;
 @end

@@ -26,6 +26,8 @@
 		9218F7381876978A00742F99 /* LinkBezier.m in Sources */ = {isa = PBXBuildFile; fileRef = 9218F7371876978A00742F99 /* LinkBezier.m */; };
 		9218F73A1876981900742F99 /* LinkBezier.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 9218F7391876981900742F99 /* LinkBezier.fsh */; };
 		9218F73C1876982100742F99 /* LinkBezier.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 9218F73B1876982100742F99 /* LinkBezier.vsh */; };
+		9218F73D1876AB7C00742F99 /* LinkBezier.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9218F7391876981900742F99 /* LinkBezier.fsh */; };
+		9218F73E1876AB7C00742F99 /* LinkBezier.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 9218F73B1876982100742F99 /* LinkBezier.vsh */; };
 		923056A118759577005AE348 /* Configurations.plist in Resources */ = {isa = PBXBuildFile; fileRef = 923056A018759577005AE348 /* Configurations.plist */; };
 		9288061B187210180096A1CA /* Shader.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 9204C38E182E2F5C006A008D /* Shader.vsh */; };
 		9288061E1872136A0096A1CA /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = 9288061D1872136A0096A1CA /* background.png */; };
@@ -403,6 +405,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9218F73D1876AB7C00742F99 /* LinkBezier.fsh in Resources */,
+				9218F73E1876AB7C00742F99 /* LinkBezier.vsh in Resources */,
 				92A4F871187295EF00EEB367 /* Grid.vsh in Resources */,
 				923056A118759577005AE348 /* Configurations.plist in Resources */,
 				92A4F872187295EF00EEB367 /* Grid.fsh in Resources */,

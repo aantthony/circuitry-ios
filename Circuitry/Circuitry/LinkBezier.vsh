@@ -1,13 +1,11 @@
-#version 130
-
 uniform mat4 modelViewProjectionMatrix;
 
 uniform vec2 A;
 uniform vec2 B;
 
-attribute int position;
+attribute float position;
 
-varying lowp vec4 vColor;
+varying lowp float v;
 
 /*
  
@@ -23,21 +21,21 @@ varying lowp vec4 vColor;
  */
 
 vec2 unpacked (float t) {
-    float dx = (B.x - A.x) / 2;
+    float dx = (B.x - A.x) / 2.0;
     float yT = mix(A.y, B.y, t);
     return mix(
         vec2(
-            mix(A.x + dx * t, A.x + dx),
+            mix(A.x + dx * t, A.x + dx, t),
             mix(A.y, yT, t)
         ),
         mix(
             vec2(A.x + dx, yT),
-            vec2(B.x + dx * (t - 1.0), B.y)
-            t),               
+            vec2(B.x + dx * (t - 1.0), B.y),
+            t),   
         t
     );
 }
-vec2 lowp bezier(lowp vec2 a, lowp vec2 b, lowp vec2 c, lowp vec2 d, lowp float t) {
+vec2 bezier(vec2 a, vec2 b, vec2 c, vec2 d, float t) {
     return mix(
         mix(mix(a, b, t), mix(b, c, t),t),
         mix(mix(b, c, t), mix(c, d, t), t),
@@ -45,11 +43,20 @@ vec2 lowp bezier(lowp vec2 a, lowp vec2 b, lowp vec2 c, lowp vec2 d, lowp float 
     );
 }
 
+
+float dx = (B.x - A.x) / 2.0;
+
+#define NVERTS 64.0
+
 void main()
 {
-    vTexCoord0 = texCoord0;
-    vColor = color;
-    vec2 p = unpacked(position / 256.0);
-
-    gl_Position = modelViewProjectionMatrix * vec4(p, 0.0, 1.0);
+    v = 0.0;
+    float rem = mod(position, 2.0);
+    float displacement = (rem >= 1.0) ? 1.0 : -1.0;
+    v = max(displacement, 0.0);
+    float t = (position - rem) / NVERTS;
+    vec2 z = bezier(A, vec2(A.x + dx, A.y), vec2(A.x + dx, B.y), B, t);
+    vec2 dz = 5.0 * displacement * normalize(z - bezier(A, vec2(A.x + dx, A.y), vec2(A.x + dx, B.y), B, t - 1.0 / NVERTS));
+    
+    gl_Position = modelViewProjectionMatrix * vec4(z + vec2(dz.y, -dz.x), 0.0, 1.0);
 }

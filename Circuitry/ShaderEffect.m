@@ -121,10 +121,9 @@
     
     GLint status;
     const GLchar *source;
-    
     source = (GLchar *)[[NSString stringWithContentsOfFile:file encoding:NSUTF8StringEncoding error:nil] UTF8String];
     if (!source) {
-        NSLog(@"Failed to load vertex shader: %@", file);
+        [NSException raise:@"Failed to load vertex shader" format:@"url: %@", file];
         return NO;
     }
     
@@ -138,7 +137,7 @@
     if (logLength > 0) {
         GLchar *log = (GLchar *)malloc(logLength);
         glGetShaderInfoLog(*shader, logLength, &logLength, log);
-        NSLog(@"Shader compile log:\n%s", log);
+        NSLog(@"%@ shader (%@) compile log:\n%s", type == GL_FRAGMENT_SHADER ? @"Fragment" : @"Vertex", file, log);
         free(log);
     }
 #endif
