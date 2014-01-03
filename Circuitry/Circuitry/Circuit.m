@@ -246,6 +246,47 @@ int simulate(Circuit *c, int ticks) {
     return [[Circuit alloc] initWithObject:object];
 }
 
+- (NSData *) toJSON {
+    NSError *err;
+    
+    NSMutableArray *items = [NSMutableArray arrayWithCapacity:_itemsCount];
+    [self enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
+
+        NSMutableArray *outputs = [NSMutableArray arrayWithCapacity:object->type->numOutputs];
+        for(int i = 0; i < object->type->numOutputs; i++) {
+            NSMutableArray *linksFromOutlet = [NSMutableArray array];
+            CircuitLink *link = object->outputs[i];
+            while (link) {
+                [linksFromOutlet addObject:@[@(link->target->id), @(link->targetIndex)]];
+                link = link->nextSibling;
+            }
+            [outputs addObject:linksFromOutlet];
+        }
+        
+        [items addObject:@{
+                           @"type": [NSString stringWithUTF8String:object->type->id],
+                           @"id": @(object->id),
+                           @"pos": @[@(object->pos.x), @(object->pos.y), @(object->pos.z)],
+                           @"name": object->name ? [NSString stringWithUTF8String:object->name] : @"",
+                           @"in": @(object->in),
+                           @"out": @(object->out),
+                           @"outputs": outputs
+                           }];
+    }];
+    
+    NSData *data = [NSJSONSerialization dataWithJSONObject:@{
+                                              @"name": _name,
+                                              @"version": _version,
+                                              @"description": _description,
+                                              @"author": _author,
+                                              @"license": _license,
+                                              @"items": items
+                                              } options:0 error:&err];
+    
+    if (err) [NSException exceptionWithName:err.localizedDescription reason:err.localizedFailureReason userInfo:@{}];
+    return data;
+}
+
 - (Circuit *) initWithObject: (id) object {
     self = [self init];
     NSArray *fields = @[@"name", @"version", @"description", @"author",  @"license"];
