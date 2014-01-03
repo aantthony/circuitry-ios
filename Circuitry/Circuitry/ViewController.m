@@ -23,7 +23,7 @@
     BOOL isAnimatingScaleToSnap;
     
     
-    Sprite *bg, *bgTest;
+    Sprite *bg;
     
 }
 @property (strong, nonatomic) EAGLContext *context;
@@ -58,11 +58,8 @@
     [self setupGL];
     _viewport = [[Viewport alloc] initWithContext:self.context];
     
-    GLKTextureInfo *texture = [Sprite textureWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"testbg" ofType:@"png"]];
-    
     GLKTextureInfo *bgTexture = [Sprite textureWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"background" ofType:@"png"]];
     
-    bgTest = [[Sprite alloc] initWithTexture:texture];
     bg = [[Sprite alloc] initWithTexture:bgTexture];
     
     
@@ -227,7 +224,22 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 }
 
 - (IBAction) handlePinchGesture:(UIPinchGestureRecognizer *)recognizer {
+    
+    CGPoint screenPos = PX(self.view.contentScaleFactor, [recognizer locationInView:self.view]);
+    GLKVector3 aPos = [_viewport unproject: screenPos];
     _viewport.scale = beginGestureScale * recognizer.scale;
+    GLKVector3 bPos = [_viewport unproject: screenPos];
+    
+    // We want modelViewMatrix * curPos = newModelViewMatrix * curPos
+    
+    // A v = B v.. so what is B...
+    [_viewport translate: GLKVector3Make(_viewport.scale * (bPos.x - aPos.x), _viewport.scale * (bPos.y - aPos.y), 0.0)];
+    
+//#define LOG_TEST 0
+#ifdef LOG_TEST
+    GLKVector3 cPos = [_viewport unproject: PX(self.view.contentScaleFactor, [recognizer locationInView:self.view])];
+    NSLog(@"((%.2f, %.2f : %.2f) , (%.2f, %.2f : %.2f))", aPos.x, cPos.x, aPos.x - cPos.x , aPos.y, cPos.y, aPos.y - cPos.y);
+#endif
 }
 - (IBAction) handleLongPressGesture:(UIGestureRecognizer *)recognizer {
     if (!beginLongPressGestureObject) return; // wtf?
