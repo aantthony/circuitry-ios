@@ -33,8 +33,8 @@ int nLines;
 - (void) setScale: (GLKVector3) scale translate:(GLKVector3) translate {
     float factor = round(log2f(scale.x));
     sx = 60.0 / exp2f(factor);
-    tx = -translate.x + fmodf(translate.x, sx);
-    ty = -translate.y + fmodf(translate.y, sx);
+    tx = -translate.x / scale.x + fmodf(translate.x / scale.x, sx) - sx;
+    ty = -translate.y / scale.x + fmodf(translate.y / scale.x, sx) - sx;
     [self recalculateGridMatrix];
 }
 
@@ -49,11 +49,8 @@ int nLines;
     sx = 60.0;
     tx = ty = 0.0;
     
-    _gridMatrix = GLKMatrix4Multiply(
-                                     GLKMatrix4MakeTranslation(tx, ty, 0.0),
-                                     GLKMatrix4MakeScale(sx, sx, 1.0));
+    [self recalculateGridMatrix];
 
-    
     nVerts = (nY * nX);
     
     nLines = nY * (nX - 1) + nX * (nY - 1);
@@ -118,12 +115,6 @@ int nLines;
 - (void) dealloc {
 }
 - (void) draw {
-    
-    
-    _gridMatrix = GLKMatrix4Multiply(
-                                     GLKMatrix4MakeTranslation(tx, ty, 0.0),
-                                     GLKMatrix4MakeScale(sx, sx, 1.0));
-    
     
     [_shader prepareToDraw];
 
