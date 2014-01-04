@@ -63,7 +63,7 @@ static GLint uModelViewProjectMatrix;
         uModelViewProjectMatrix = [shader getUniformLocation:@"modelViewProjectionMatrix"];
         uTexture                = [shader getUniformLocation:@"texture"];
         [ShaderEffect checkError];
-        return;
+
         aSource = [shader getAttributeLocation:@"source"];
         [ShaderEffect checkError];
 
@@ -73,7 +73,6 @@ static GLint uModelViewProjectMatrix;
 
         glGenBuffers(1, &_indexBuffer);
         glGenBuffers(1, &_vertexBuffer);
-        
         
         glEnableVertexAttribArray(aSource);
         glEnableVertexAttribArray(aTranslate);
@@ -85,8 +84,9 @@ static GLint uModelViewProjectMatrix;
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexBuffer);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(batchedSpriteIndices), batchedSpriteIndices, GL_STATIC_DRAW);
         
+        glDisableVertexAttribArray(aSource);
+        glDisableVertexAttribArray(aTranslate);
         
-        return;
     }
     
 }
@@ -100,21 +100,18 @@ static GLint uModelViewProjectMatrix;
     _instances = malloc(sizeof(BatchedSpriteInstance) * capacity);
     
     
-    glGenBuffers(1, &_instanceBuffer);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, _instanceBuffer);
     for(int i = 0; i < _capacity; i++) {
-        _instances[i].x = _instances[i].y = 0.0;
+        _instances[i].x = (rand() / (float)RAND_MAX) * 32024.0;
+        _instances[i].y = (rand() / (float)RAND_MAX) * 32024.0;
         _instances[i].u = _instances[i].v = 0.0;
         _instances[i].width = 208.0;
         _instances[i].height = 104.0;
     }
     
-    // TODO: pass NULL, not _instances!
-    glBufferData(GL_ARRAY_BUFFER, sizeof(BatchedSpriteInstance) * _capacity, _instances, GL_STATIC_DRAW);
     
-    glEnableVertexAttribArray(aSource);
-    glEnableVertexAttribArray(aTranslate);
+    glGenBuffers(1, &_instanceBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, _instanceBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(BatchedSpriteInstance) * _capacity, _instances, GL_STATIC_DRAW);
     
     return self;
 }
@@ -128,6 +125,9 @@ static GLint uModelViewProjectMatrix;
     [ShaderEffect checkError];
     glEnableVertexAttribArray(GLKVertexAttribPosition);
     glEnableVertexAttribArray(GLKVertexAttribTexCoord0);
+    glEnableVertexAttribArray(aSource);
+    glEnableVertexAttribArray(aTranslate);
+    
     [ShaderEffect checkError];
     const GLvoid *indices = 0;
     GLsizei instanceCount = _capacity;
@@ -141,6 +141,9 @@ static GLint uModelViewProjectMatrix;
     glUniform1i(uTexture, i);
     
     
+    glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexBuffer);
+    
     [ShaderEffect checkError];
     glUniformMatrix4fv(uModelViewProjectMatrix, 1, 0, viewProjectionMatrix.m);
     
@@ -151,25 +154,30 @@ static GLint uModelViewProjectMatrix;
     glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(SharedSpriteVertexData), (const GLvoid *) offsetof(SharedSpriteVertexData, position));
     glVertexAttribPointer(GLKVertexAttribTexCoord0, 2, GL_FLOAT, GL_FALSE, sizeof(SharedSpriteVertexData), (const GLvoid *) offsetof(SharedSpriteVertexData, texCoord0));
     
-    glVertexAttribPointer(aTranslate, 2, GL_UNSIGNED_SHORT, GL_FALSE, sizeof(BatchedSpriteInstance), (const GLvoid *) offsetof(BatchedSpriteInstance, x));
     
-    glVertexAttribPointer(aSource, 4, GL_UNSIGNED_SHORT, GL_FALSE, sizeof(BatchedSpriteInstance), (const GLvoid *) offsetof(BatchedSpriteInstance, u));
+    glBindBuffer(GL_ARRAY_BUFFER, _instanceBuffer);
+    
+    glVertexAttribPointer(aTranslate, 2, GL_FLOAT, GL_FALSE, sizeof(BatchedSpriteInstance), (const GLvoid *) offsetof(BatchedSpriteInstance, x));
+    
+    glVertexAttribPointer(aSource, 4, GL_FLOAT, GL_FALSE, sizeof(BatchedSpriteInstance), (const GLvoid *) offsetof(BatchedSpriteInstance, u));
     
     [ShaderEffect checkError];
     glVertexAttribDivisorEXT(aSource, 1);
     glVertexAttribDivisorEXT(aTranslate, 1);
 
-    glDrawElementsInstancedEXT(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices, instanceCount);
-    
-    glDisableVertexAttribArray(GLKVertexAttribPosition);
-    glDisableVertexAttribArray(GLKVertexAttribTexCoord0);
+    //glDrawElements(GL_LINE_STRIP, 6, GL_UNSIGNED_SHORT, 0);
     
     
-    glVertexAttribDivisorEXT(GLKVertexAttribPosition, 0);
-    glVertexAttribDivisorEXT(GLKVertexAttribTexCoord0, 0);
+    glDrawElementsInstancedEXT(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0, instanceCount);
     
     glVertexAttribDivisorEXT(aSource, 0);
     glVertexAttribDivisorEXT(aTranslate, 0);
+    
+    glDisableVertexAttribArray(GLKVertexAttribPosition);
+    glDisableVertexAttribArray(GLKVertexAttribTexCoord0);
+    glDisableVertexAttribArray(aSource);
+    glDisableVertexAttribArray(aTranslate);
+    
     
     [ShaderEffect checkError];
 }

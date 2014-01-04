@@ -40,7 +40,7 @@
     [BatchedSprite setContext: context];
     [ShaderEffect checkError];
     
-    _gateSprites = [[BatchedSprite alloc] initWithTexture:tex capacity:10];
+    _gateSprites = [[BatchedSprite alloc] initWithTexture:tex capacity:5000];
     
     bezier = [[LinkBezier alloc] init];
     
@@ -153,10 +153,9 @@ static int test = 1;
         [gateAND drawAtPoint:pos withTransform: _viewProjectionMatrix];
     }];
     [ShaderEffect checkError];
-    [_gateSprites instances];
-    if (test)    [_gateSprites drawWithTransform:_viewProjectionMatrix];
     
-    if (test) test = !test;
+    [_gateSprites drawWithTransform:_viewProjectionMatrix];
+
     [ShaderEffect checkError];
 }
 @end

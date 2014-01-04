@@ -3,8 +3,8 @@
 #import "ShaderEffect.h"
 
 typedef struct {
-    GLushort x, y;
-    GLushort u, v, width, height;
+    float x, y;
+    float u, v, width, height;
 } BatchedSpriteInstance;
 
 @interface BatchedSprite : NSObject
