@@ -14,17 +14,17 @@ typedef struct {
 } Vertex;
 
 
-ShaderEffect *shader;
+static ShaderEffect *shader;
 
 // uniform locations:
-GLint uTexture;
-GLint uModelViewProjectMatrix;
-GLint uSize;
-GLint uPos;
+static GLint uTexture;
+static GLint uModelViewProjectMatrix;
+static GLint uSize;
+static GLint uPos;
 
 // buffer names:
-GLuint _quadVertexBuffer;
-GLuint _quadIndexBuffer;
+static GLuint _quadVertexBuffer;
+static GLuint _quadIndexBuffer;
 
 static Vertex QuadVertices[] = {
     {{1, 0, 0}, {1, 0}},
@@ -33,7 +33,7 @@ static Vertex QuadVertices[] = {
     {{0, 0, 0}, {0, 0}}
 };
 
-const GLushort QuadIndices[] = {
+static const GLushort QuadIndices[] = {
     0, 1, 2,
     2, 3, 0
 };
@@ -135,11 +135,13 @@ static GLuint _vertexArray;
     
     glBindBuffer(GL_ARRAY_BUFFER, _quadVertexBuffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _quadIndexBuffer);
+    
     int i = 0;
     // Use the texture @i
     glActiveTexture(GL_TEXTURE0 + i);
     glBindTexture(GL_TEXTURE_2D, _texture.name);
     glUniform1i(uTexture, i);
+    
     GLKVector4 _color = {1.0, 1.0, 1.0, 1.0};
     glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, Position));
     glVertexAttribPointer(GLKVertexAttribTexCoord0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, TexCoord1));

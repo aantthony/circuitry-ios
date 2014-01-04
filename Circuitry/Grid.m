@@ -15,15 +15,15 @@
 
 
 // Uniform locations:
-GLint _uModelViewProjectMatrix;
-GLint _uGridMatrix;
+static GLint _uModelViewProjectMatrix;
+static GLint _uGridMatrix;
 
 // Buffer names:
-GLuint _vertexBuffer;
-GLuint _indexBuffer;
+static GLuint _vertexBuffer;
+static GLuint _indexBuffer;
 
-int nVerts;
-int nLines;
+static int nVerts;
+static int nLines;
 
 - (void) recalculateGridMatrix {
     _gridMatrix = GLKMatrix4Multiply(

@@ -4,15 +4,17 @@
 
 typedef struct {
     GLushort x, y;
-    GLubyte u, v;
-    GLubyte width, height;
+    GLushort u, v, width, height;
 } BatchedSpriteInstance;
 
 @interface BatchedSprite : NSObject
 
-- (id) initWithCapacity:(int) capacity;
-- (BatchedSpriteInstance *) instances;
-@property(readonly) int capacity;
-- (void) flush;
++ (void)setContext: (EAGLContext*) context;
 
+- (id) initWithTexture:(GLKTextureInfo *)texture capacity:(int) capacity;
+
+- (BatchedSpriteInstance *) instances;
+- (void) drawWithTransform: (GLKMatrix4) viewProjectionMatrix;
+
+@property(readonly) int capacity;
 @end

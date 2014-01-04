@@ -3,6 +3,7 @@
 #import "Grid.h"
 #import "LinkBezier.h"
 #import "Sprite.h"
+#import "BatchedSprite.h"
 
 @interface Viewport() {
     GLKMatrix4 _viewMatrix;
@@ -11,13 +12,13 @@
     GLKVector3 _translate;
     GLKVector3 _scale;
     LinkBezier *bezier;
+    BatchedSprite *_gateSprites;
+    Sprite *gateAND;
 }
 @property Grid *grid;
 @end
 
 @implementation Viewport
-
-Sprite *gateAND;
 
 - (id) initWithContext: (EAGLContext*) context {
     self = [self init];
@@ -31,7 +32,15 @@ Sprite *gateAND;
     
     [self recalculateMatrices];
     
+    GLKTextureInfo *tex = [Sprite textureWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"gate-test" ofType:@"png"]];
+    
+    [ShaderEffect checkError];
     [Sprite setContext: context];
+    [ShaderEffect checkError];
+    [BatchedSprite setContext: context];
+    [ShaderEffect checkError];
+    
+    _gateSprites = [[BatchedSprite alloc] initWithTexture:tex capacity:10];
     
     bezier = [[LinkBezier alloc] init];
     
@@ -109,6 +118,8 @@ Sprite *gateAND;
     return _scale.x;
 }
 
+static int test = 1;
+
 - (void) draw {
     
     GLKVector3 active1 = GLKVector3Make(0.1960784314, 1.0, 0.3098039216);
@@ -141,5 +152,11 @@ Sprite *gateAND;
         GLKVector3 pos = *(GLKVector3*) &object->pos;
         [gateAND drawAtPoint:pos withTransform: _viewProjectionMatrix];
     }];
+    [ShaderEffect checkError];
+    [_gateSprites instances];
+    if (test)    [_gateSprites drawWithTransform:_viewProjectionMatrix];
+    
+    if (test) test = !test;
+    [ShaderEffect checkError];
 }
 @end
