@@ -159,7 +159,23 @@
             k = 1.0;
             isAnimatingScaleToSnap = NO;
         }
+        
+        
+        
+        // TODO: this is a bit of a hack. Clean up the translate / scale math so that isn't so disgusting:
+        CGPoint screenPos = PX(self.view.contentScaleFactor, CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2));
+        GLKVector3 aPos = [_viewport unproject: screenPos];
         _viewport.scale = exp2f(lNow + (lEnd - lNow) * k);
+        GLKVector3 bPos = [_viewport unproject: screenPos];
+        
+        // We want modelViewMatrix * curPos = newModelViewMatrix * curPos
+        
+        // A v = B v.. so what is B...
+        [_viewport translate: GLKVector3Make(_viewport.scale * (bPos.x - aPos.x), _viewport.scale * (bPos.y - aPos.y), 0.0)];
+    
+        
+        
+        
     }
 //   _rotation += self.timeSinceLastUpdate * 0.5f;
     _rotation += 1.0;
