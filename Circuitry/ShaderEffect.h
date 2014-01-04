@@ -14,6 +14,7 @@
 + (void) checkError;
 
 - (GLint) getUniformLocation:(NSString *) name;
+- (GLint) getAttributeLocation:(NSString *) name;
 
 //- (GLKEffectProperty *) getFloatProperty:(NSString *) name;
 

@@ -117,6 +117,10 @@
     return glGetUniformLocation(_program, [name UTF8String]);
 }
 
+- (GLint) getAttributeLocation:(NSString *) name {
+    return glGetAttribLocation(_program, [name UTF8String]);
+}
+
 + (BOOL)compileShader:(GLuint *)shader type:(GLenum)type file:(NSString *)file {
     
     GLint status;
