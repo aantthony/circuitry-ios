@@ -21,6 +21,7 @@
                             <outletCollection property="gestureRecognizers" destination="Lik-9B-5DK" appends="YES" id="b3U-am-cLw"/>
                             <outletCollection property="gestureRecognizers" destination="Iiq-nz-5qG" appends="YES" id="P8W-OB-20w"/>
                             <outletCollection property="gestureRecognizers" destination="bcv-fM-YDa" appends="YES" id="a1y-v9-JZR"/>
+                            <outletCollection property="gestureRecognizers" destination="66T-he-oQr" appends="YES" id="HSC-Gp-Uy5"/>
                         </connections>
                     </glkView>
                     <keyCommands/>
@@ -52,6 +53,28 @@
                         <action selector="handleTapGesture:" destination="BV1-FR-VrT" id="NML-NO-wVg"/>
                     </connections>
                 </tapGestureRecognizer>
+                <tapGestureRecognizer numberOfTouchesRequired="2" id="66T-he-oQr">
+                    <connections>
+                        <action selector="handleTapGesture:" destination="BV1-FR-VrT" id="e4n-T8-uaX"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="9Oh-iu-Wsn">
+            <objects>
+                <viewController id="HXd-DS-SAO" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="cGe-GO-mFW"/>
+                        <viewControllerLayoutGuide type="bottom" id="6em-Ah-ht1"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="dae-BY-dsT">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Gaa-uB-9XY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
         </scene>
     </scenes>

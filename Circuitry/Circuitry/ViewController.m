@@ -281,18 +281,20 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 }
 
 - (IBAction) handleTapGesture:(UITapGestureRecognizer *)sender {
-    
     // TODO: try not handling the tap gesture when there is nothing to tap.
-    
-    // world space coordinates
-    GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [sender locationInView:self.view])];
-    
-    CircuitObject *object = [_viewport findCircuitObjectAtPosition:position];
-    
-    if (!object) return;
-    if (object->type == [_circuit findProcessById:@"in"]) {
-        object->out = !object->out;
-        [_circuit didUpdateObject:object];
+    for(int i = 0; i < sender.numberOfTouches; i++) {
+        CGPoint screenPos = [sender locationOfTouch:i inView:self.view];
+        
+        // world space coordinates
+        GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, screenPos)];
+        
+        CircuitObject *object = [_viewport findCircuitObjectAtPosition:position];
+        
+        if (!object) return;
+        if (object->type == [_circuit findProcessById:@"in"]) {
+            object->out = !object->out;
+            [_circuit didUpdateObject:object];
+        }
     }
     
 }
