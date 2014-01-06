@@ -11,10 +11,11 @@ typedef struct {
 
 + (void)setContext: (EAGLContext*) context;
 
+// capacity * BatchedSpriteInstance worth of vram
 - (id) initWithTexture:(GLKTextureInfo *)texture capacity:(int) capacity;
 
-- (BatchedSpriteInstance *) instances;
-- (void) drawWithTransform: (GLKMatrix4) viewProjectionMatrix;
+- (void) drawIndices:(int)start count:(int)count WithTransform: (GLKMatrix4) viewProjectionMatrix;
 
-@property(readonly) int capacity;
+- (void) buffer:(const GLvoid *)data FromIndex:(int)start count:(int)count;
+
 @end

@@ -1,7 +1,6 @@
 #import "BatchedSprite.h"
 
 @interface BatchedSprite() {
-    BatchedSpriteInstance *_instances;
     GLKTextureInfo *_texture;
     GLuint _instanceBuffer;
 }
@@ -96,30 +95,24 @@ static GLint uModelViewProjectMatrix;
     
     _texture = texture;
     
-    _capacity = capacity;
-    _instances = malloc(sizeof(BatchedSpriteInstance) * capacity);
-    
-    
-    for(int i = 0; i < _capacity; i++) {
-        _instances[i].x = (rand() / (float)RAND_MAX) * 32024.0;
-        _instances[i].y = (rand() / (float)RAND_MAX) * 32024.0;
-        _instances[i].u = _instances[i].v = 0.0;
-        _instances[i].width = 208.0;
-        _instances[i].height = 104.0;
-    }
-    
-    
     glGenBuffers(1, &_instanceBuffer);
+    
     glBindBuffer(GL_ARRAY_BUFFER, _instanceBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(BatchedSpriteInstance) * _capacity, _instances, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, capacity * sizeof(BatchedSpriteInstance), NULL, GL_STATIC_DRAW);
     
     return self;
 }
-- (BatchedSpriteInstance *) instances {
-    return _instances;
+
+- (void) buffer:(const GLvoid *)data FromIndex:(int)start count:(int)count {
+    glBindBuffer(GL_ARRAY_BUFFER, _instanceBuffer);
+    
+    [ShaderEffect checkError];
+    size_t offset = start * sizeof(BatchedSpriteInstance);
+    glBufferSubData(GL_ARRAY_BUFFER, offset, count * sizeof(BatchedSpriteInstance), data);
+    [ShaderEffect checkError];
 }
 
-- (void) drawWithTransform: (GLKMatrix4) viewProjectionMatrix {
+- (void) drawIndices:(int)start count:(int)count WithTransform: (GLKMatrix4) viewProjectionMatrix {
     [shader prepareToDraw];
 
     [ShaderEffect checkError];
@@ -127,10 +120,6 @@ static GLint uModelViewProjectMatrix;
     glEnableVertexAttribArray(GLKVertexAttribTexCoord0);
     glEnableVertexAttribArray(aSource);
     glEnableVertexAttribArray(aTranslate);
-    
-    [ShaderEffect checkError];
-    const GLvoid *indices = 0;
-    GLsizei instanceCount = _capacity;
     
     [ShaderEffect checkError];
     
@@ -148,8 +137,6 @@ static GLint uModelViewProjectMatrix;
     glUniformMatrix4fv(uModelViewProjectMatrix, 1, 0, viewProjectionMatrix.m);
     
     [ShaderEffect checkError];
-    //glVertexAttribDivisorEXT(GLKVertexAttribPosition, 6);
-    //glVertexAttribDivisorEXT(GLKVertexAttribTexCoord0, 6);
     
     glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(SharedSpriteVertexData), (const GLvoid *) offsetof(SharedSpriteVertexData, position));
     glVertexAttribPointer(GLKVertexAttribTexCoord0, 2, GL_FLOAT, GL_FALSE, sizeof(SharedSpriteVertexData), (const GLvoid *) offsetof(SharedSpriteVertexData, texCoord0));
@@ -167,8 +154,7 @@ static GLint uModelViewProjectMatrix;
 
     //glDrawElements(GL_LINE_STRIP, 6, GL_UNSIGNED_SHORT, 0);
     
-    
-    glDrawElementsInstancedEXT(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0, instanceCount);
+    glDrawElementsInstancedEXT(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0, count);
     
     glVertexAttribDivisorEXT(aSource, 0);
     glVertexAttribDivisorEXT(aTranslate, 0);

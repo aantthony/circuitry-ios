@@ -14,6 +14,9 @@
     LinkBezier *bezier;
     BatchedSprite *_gateSprites;
     Sprite *gateAND;
+    BatchedSpriteInstance *_instances;
+    int _capacity;
+    int _count;
 }
 @property Grid *grid;
 @end
@@ -40,8 +43,22 @@
     [BatchedSprite setContext: context];
     [ShaderEffect checkError];
     
-    _gateSprites = [[BatchedSprite alloc] initWithTexture:tex capacity:5000];
+    _capacity = 10000;
     
+    _gateSprites = [[BatchedSprite alloc] initWithTexture:tex capacity:_capacity];
+    
+    _instances = malloc(sizeof(BatchedSpriteInstance) * _capacity);
+    
+    for(int i = 0; i < _capacity; i++) {
+        _instances[i].u = _instances[i].v = 0.0;
+        _instances[i].width = 208.0;
+        _instances[i].height = 104.0;
+    }
+    
+    [ShaderEffect checkError];
+    [_gateSprites buffer:_instances FromIndex:0 count:_capacity];
+    
+    [ShaderEffect checkError];
     bezier = [[LinkBezier alloc] init];
     
     gateAND = [[Sprite alloc] initWithTexture:[Sprite textureWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"gate-test" ofType:@"png"]]];
@@ -118,8 +135,21 @@
     return _scale.x;
 }
 
-static int test = 1;
-
+- (void) bufferSprites {
+    
+    __block int i = 0;
+    
+    [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
+        GLKVector3 pos = *(GLKVector3*) &object->pos;
+        BatchedSpriteInstance *instance = &_instances[i++];
+        instance->x = pos.x;
+        instance->y = pos.y;
+    }];
+    
+    _count = i;
+    
+    [_gateSprites buffer:_instances FromIndex:0 count:_count];
+}
 - (void) draw {
     
     GLKVector3 active1 = GLKVector3Make(0.1960784314, 1.0, 0.3098039216);
@@ -147,14 +177,11 @@ static int test = 1;
                 
     }];
     
+    [self bufferSprites];
     
-    [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
-        GLKVector3 pos = *(GLKVector3*) &object->pos;
-        [gateAND drawAtPoint:pos withTransform: _viewProjectionMatrix];
-    }];
     [ShaderEffect checkError];
     
-    [_gateSprites drawWithTransform:_viewProjectionMatrix];
+    [_gateSprites drawIndices:0 count:_count WithTransform:_viewProjectionMatrix];
 
     [ShaderEffect checkError];
 }
