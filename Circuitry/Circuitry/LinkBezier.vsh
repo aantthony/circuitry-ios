@@ -46,7 +46,7 @@ vec2 bezier(vec2 a, vec2 b, vec2 c, vec2 d, float t) {
 
 float dx = (B.x - A.x) / 2.0;
 
-#define NVERTS 64.0
+#define NVERTSM2 62.0
 
 void main()
 {
@@ -54,9 +54,9 @@ void main()
     float rem = mod(position, 2.0);
     float displacement = (rem >= 1.0) ? 1.0 : -1.0;
     v = max(displacement, 0.0);
-    float t = (position - rem) / NVERTS;
+    float t = (position - rem) / NVERTSM2;
     vec2 z = bezier(A, vec2(A.x + dx, A.y), vec2(A.x + dx, B.y), B, t);
-    vec2 dz = 5.0 * displacement * normalize(z - bezier(A, vec2(A.x + dx, A.y), vec2(A.x + dx, B.y), B, t - 1.0 / NVERTS));
+    vec2 dz = 5.0 * displacement * normalize(z - bezier(A, vec2(A.x + dx, A.y), vec2(A.x + dx, B.y), B, t - 1.0 / NVERTSM2));
     
     gl_Position = modelViewProjectionMatrix * vec4(z + vec2(dz.y, -dz.x), 0.0, 1.0);
 }
