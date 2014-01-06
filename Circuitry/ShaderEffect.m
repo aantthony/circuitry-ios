@@ -61,12 +61,6 @@
     glBindAttribLocation(_program, GLKVertexAttribTexCoord0, "texCoord0");
     glBindAttribLocation(_program, GLKVertexAttribTexCoord1, "texCoord1");
     
-    __block int index = GLKVertexAttribTexCoord1 + 1;
-    for (NSString* attribName in attributes) {
-//        NSDictionary *dict = [attributes objectForKey:attribName];
-        glBindAttribLocation(_program, index++, [attribName UTF8String]);
-    }
-    
     // Link program.
     if (![ShaderEffect linkProgram:_program]) {
         if (vertShader) {
