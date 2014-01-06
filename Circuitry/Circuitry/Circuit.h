@@ -29,6 +29,7 @@ struct CircuitObject {
     
     char *name;
     CircuitLink **outputs;
+    CircuitLink **inputs;
 };
 
 @interface Circuit : NSObject

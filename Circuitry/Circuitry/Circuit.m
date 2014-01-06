@@ -162,7 +162,8 @@ CircuitObject * addItem(Circuit *c, CircuitProcess *type) {
     o->type = type;
     o->pos.x = o->pos.y = o->pos.z = 0.0;
     o->name = "";
-    o->outputs = scalloc(o->type->numOutputs, sizeof(CircuitLink *));
+    o->outputs = scalloc(o->type->numOutputs + o->type->numInputs, sizeof(CircuitLink *));
+    o->inputs = o->outputs + o->type->numOutputs;
     
     needsUpdate(c, o);
     
@@ -191,10 +192,16 @@ CircuitLink *makeLink(Circuit *c) {
 CircuitLink *addLink(Circuit *c, CircuitObject *object, int index, CircuitObject *target, int targetIndex) {
     CircuitLink *prev = object->outputs[index];
     CircuitLink *link;
+
+    // For debugging. Really the Objective C code should be separate.
     if (index >= object->type->numOutputs) {
         [NSException raise:@"Invalid Link" format:@"Attempted to create link from outlet #%d, but there are only %d outlets for \"%s\" objects.", index, object->type->numOutputs, object->type->id
          ];
     }
+    if (target->inputs[targetIndex] != NULL) {
+        [NSException raise:@"Invalid Link" format:@"Attempted to create link to inlet #%d, but there is already an attachment there", targetIndex];
+    }
+    
     if (!prev) {
         link = object->outputs[index] = makeLink(c);
     } else {
@@ -204,6 +211,7 @@ CircuitLink *addLink(Circuit *c, CircuitObject *object, int index, CircuitObject
     link->target = target;
     link->sourceIndex = index;
     link->targetIndex = targetIndex;
+    link->target->inputs[targetIndex] = link;
     
     return link;
 }
