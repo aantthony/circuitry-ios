@@ -20,6 +20,7 @@
                             <outletCollection property="gestureRecognizers" destination="prC-OQ-El9" appends="YES" id="gyb-jh-9Md"/>
                             <outletCollection property="gestureRecognizers" destination="Lik-9B-5DK" appends="YES" id="b3U-am-cLw"/>
                             <outletCollection property="gestureRecognizers" destination="Iiq-nz-5qG" appends="YES" id="P8W-OB-20w"/>
+                            <outletCollection property="gestureRecognizers" destination="bcv-fM-YDa" appends="YES" id="a1y-v9-JZR"/>
                         </connections>
                     </glkView>
                     <keyCommands/>
@@ -46,6 +47,11 @@
                         <outlet property="delegate" destination="BV1-FR-VrT" id="QNi-yo-lz2"/>
                     </connections>
                 </pongPressGestureRecognizer>
+                <tapGestureRecognizer id="bcv-fM-YDa">
+                    <connections>
+                        <action selector="handleTapGesture:" destination="BV1-FR-VrT" id="NML-NO-wVg"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
         </scene>
     </scenes>

@@ -66,7 +66,7 @@
     return self;
 }
 - (void)update {
-    [_circuit simulate: 1];
+
 }
 
 - (void) setProjectionMatrix: (GLKMatrix4) projectionMatrix {

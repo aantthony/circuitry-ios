@@ -179,6 +179,7 @@
     }
 //   _rotation += self.timeSinceLastUpdate * 0.5f;
     _rotation += 1.0;
+    [_circuit simulate:4096];
     [_viewport update];
 }
 
@@ -277,6 +278,23 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     GLKVector3 cPos = [_viewport unproject: PX(self.view.contentScaleFactor, [recognizer locationInView:self.view])];
     NSLog(@"((%.2f, %.2f : %.2f) , (%.2f, %.2f : %.2f))", aPos.x, cPos.x, aPos.x - cPos.x , aPos.y, cPos.y, aPos.y - cPos.y);
 #endif
+}
+
+- (IBAction) handleTapGesture:(UITapGestureRecognizer *)sender {
+    
+    // TODO: try not handling the tap gesture when there is nothing to tap.
+    
+    // world space coordinates
+    GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [sender locationInView:self.view])];
+    
+    CircuitObject *object = [_viewport findCircuitObjectAtPosition:position];
+    
+    if (!object) return;
+    if (object->type == [_circuit findProcessById:@"in"]) {
+        object->out = !object->out;
+        [_circuit didUpdateObject:object];
+    }
+    
 }
 - (IBAction) handleLongPressGesture:(UIGestureRecognizer *)recognizer {
     if (!beginLongPressGestureObject) return; // wtf?

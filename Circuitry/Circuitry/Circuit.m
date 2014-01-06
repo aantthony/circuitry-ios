@@ -56,12 +56,12 @@ int AND  (int x) { return x == 3;}
 int NAND (int x) { return x != 3;}
 int NOT  (int x) { return !x; }
 int NOR  (int x) { return !x; }
-int OR   (int x) { return x; }
+int OR   (int x) { return !!x; }
 
 CircuitProcess defaultGates[] = {
     {"in",  0, 1, NULL },
     {"out", 1, 0, NULL },
-    {"or",  2, 0, OR },
+    {"or",  2, 1, OR },
     {"not", 1, 1, NOT },
     {"nor", 2, 1, NOR },
     {"xor", 2, 1, XOR },
@@ -93,8 +93,11 @@ CircuitProcess *getProcessById(Circuit *c, NSString *_id) {
     id data = [processesById objectForKey:_id];
     if (!data) [NSException raise:@"Could not find object type" format:@"Object type \"%@\" does not exist.", _id, nil];
     p = [data pointerValue];
-    NSLog(@"getProcessById: \"%@\" gate has %d outputs...", _id, p->numOutputs);
     return p;
+}
+
+- (CircuitProcess *) findProcessById:(NSString *)_id {
+    return getProcessById(self, _id);
 }
 
 #pragma mark - Simulation (written in C)
@@ -120,12 +123,25 @@ void needsUpdate(Circuit *c, CircuitObject *object) {
     c.needsUpdate[c->_needsUpdateCount - 1] = object;
 }
 
-void linkNeedsUpdate(Circuit *c, CircuitObject *object, int sourceIndex) {
-    CircuitLink *link = object->outputs[sourceIndex];
-    if (!link) return;
-    do {
+void linksNeedsUpdate(Circuit *c, CircuitLink * link) {
+    while(link) {
         needsUpdate(c, link->target);
-    } while ((link = link->nextSibling));
+        link = link->nextSibling;
+    }
+}
+
+
+// Add items to the event queue:
+- (void) didUpdateObject:(CircuitObject *)object {
+    needsUpdate(self, object);
+}
+
+- (void) didUpdateObject:(CircuitObject *)object outlet:(int) sourceIndex {
+    linksNeedsUpdate(self, object->outputs[sourceIndex]);
+}
+
+- (void) didUpdateLinks:(CircuitLink *) link {
+    linksNeedsUpdate(self, link);
 }
 
 CircuitObject * addItem(Circuit *c, CircuitProcess *type) {
@@ -192,37 +208,81 @@ CircuitLink *addLink(Circuit *c, CircuitObject *object, int index, CircuitObject
     return link;
 }
 
+/*
+ Logic circuit simulation
+ 
+ - How it works
+ 
+    Each Circuit object maintains a double buffer (which is swapped every "tick") which is a list of gates which have been queued for re-calculation (calculating inputs based on outputs)
+    The simulation will first do the recalcution, nulling out the buffer for gates which have not changed.
+    Then it goes through that buffer again, skipping the nulls, and copies the ouputs to the connected gates, and queues them back into the loop if their inputs have changed. So it's an event loop.
+    This continues until the number of ticks reaches the `ticks` argument.
+ 
+    Return value: number of gates changed
+ */
+ 
 int simulate(Circuit *c, int ticks) {
     int nAffected = 0;
     for(int i = 0; i < ticks; i++) {
         int updatingCount = c->_needsUpdateCount;
+        if (!updatingCount) return nAffected;
         nAffected += updatingCount;
         CircuitObject **updating = c->_needsUpdate;
-        c->_needsUpdate = c->_needsUpdate2;
-        c->_needsUpdateCount = 0;
         
         for(int i = 0; i < updatingCount; i++) {
             CircuitObject *o = updating[i];
             int oldOut = o->out;
+            
             if (o->type->calculate == NULL) {
                 // this doesn't actually need to be updated
+//                updating[i] = NULL;
                 continue;
             }
             int newOut = o->type->calculate(o->in);
+            // printf("     %s: gate with input: 0x%x  =  0x%x\n", o->type->id, o->in, o->out);
             if (oldOut != newOut) {
-                
                 o->out = newOut;
-                int jm = o->type->numOutputs;
-                for(int j = 0; j < jm; j++) {
-                    int p = 1 << j;
-                    int a = p & newOut, b = p & oldOut;
-                    if (a != b) linkNeedsUpdate(c, o, j);
+            } else {
+                updating[i] = NULL;
+            }
+        }
+        
+        c->_needsUpdate = c->_needsUpdate2;
+        c->_needsUpdateCount = 0;
+        
+        // copy outputs of the recently recalculated gates to the inputs of those connected
+        for(int i = 0; i < updatingCount; i++) {
+            CircuitObject *o = updating[i];
+            if (!o) continue;
+            // printf("Copying output from %s gate 0x%x\n", o->type->id, o->out);
+            int newOut = o->out;
+
+            int jm = o->type->numOutputs;
+            for(int j = 0; j < jm; j++) {
+                int p = 1 << j;
+                //int a = p & newOut, b = p & oldOut;
+                //if (a != b) linksNeedsUpdate(c, o->outputs[j]);
+                
+                int a = !!(p & newOut);
+                // printf("Outlet %d, place %d\n", j, a);
+                CircuitLink *link = o->outputs[j];
+                while(link) {
+                    // printf("Write %d to %s gate\n", a, link->target->type->id);
+                    int oldIn = link->target->in;
+                    int mask = 1 << link->targetIndex;
+                    int oldBit = !!(oldIn & mask);
+                    if (oldBit != a) {
+                        link->target->in = oldIn & ~ mask;
+                        if (a) link->target->in |= mask;
+                        // printf("Now that %s gate has input 0x%x\n", link->target->type->id, link->target->in);
+                        needsUpdate(c, link->target);
+                    } else break;
+                    link = link->nextSibling;
                 }
             }
         }
         
         c->_needsUpdate2 = updating;
-        c->_needsUpdateCount = 0;
     }
     return nAffected;
 }

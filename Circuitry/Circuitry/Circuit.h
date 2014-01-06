@@ -44,8 +44,14 @@ struct CircuitObject {
 + (Circuit *) circuitWithStream:(NSInputStream *) stream;
 - (Circuit *) initWithObject: (id) object;
 
+- (CircuitProcess *) findProcessById:(NSString *)_id;
+
+- (void) didUpdateObject:(CircuitObject *)object outlet:(int) sourceIndex;
+- (void) didUpdateObject:(CircuitObject *)object;
+- (void) didUpdateLinks:(CircuitLink *) link;
+
 - (int) simulate: (int) ticks;
 
-- (void)enumerateObjectsUsingBlock:(void (^)(CircuitObject *object, BOOL *stop))block;
+- (void) enumerateObjectsUsingBlock:(void (^)(CircuitObject *object, BOOL *stop))block;
 
 @end
