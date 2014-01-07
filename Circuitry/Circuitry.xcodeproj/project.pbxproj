@@ -48,7 +48,6 @@
 		92A4F87018728A1F00EEB367 /* Drawable.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A4F86F18728A1F00EEB367 /* Drawable.m */; };
 		92A4F871187295EF00EEB367 /* Grid.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 92D90E3C1838E9CD00387FAC /* Grid.vsh */; };
 		92A4F872187295EF00EEB367 /* Grid.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 92D90E3E1838E9D700387FAC /* Grid.fsh */; };
-		92BE29EF187C0048001DCC59 /* circuit.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 92BE29EE187C0048001DCC59 /* circuit.atlas */; };
 		92D90E321837807000387FAC /* Sprite.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E311837807000387FAC /* Sprite.m */; };
 		92D90E381837836500387FAC /* ShaderEffect.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E371837836500387FAC /* ShaderEffect.m */; };
 		92D90E3B1838D7AB00387FAC /* Grid.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E3A1838D7AB00387FAC /* Grid.m */; };
@@ -113,7 +112,6 @@
 		92A4F86C187289F300EEB367 /* Viewport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Viewport.m; sourceTree = "<group>"; };
 		92A4F86E18728A1F00EEB367 /* Drawable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Drawable.h; path = ../Drawable.h; sourceTree = "<group>"; };
 		92A4F86F18728A1F00EEB367 /* Drawable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Drawable.m; path = ../Drawable.m; sourceTree = "<group>"; };
-		92BE29EE187C0048001DCC59 /* circuit.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = circuit.atlas; sourceTree = "<group>"; };
 		92D90E301837807000387FAC /* Sprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sprite.h; sourceTree = "<group>"; };
 		92D90E311837807000387FAC /* Sprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sprite.m; sourceTree = "<group>"; };
 		92D90E361837836500387FAC /* ShaderEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShaderEffect.h; path = ../ShaderEffect.h; sourceTree = "<group>"; };
@@ -306,7 +304,6 @@
 		927D1A181875A9B400457367 /* OpenGL Views */ = {
 			isa = PBXGroup;
 			children = (
-				92BE29EE187C0048001DCC59 /* circuit.atlas */,
 				9218F735187696A100742F99 /* LinkBezier */,
 				92A4F86E18728A1F00EEB367 /* Drawable.h */,
 				92A4F86F18728A1F00EEB367 /* Drawable.m */,
@@ -435,7 +432,6 @@
 				92A28A601875487500F0D934 /* gate-test.png in Resources */,
 				92A28A5B187428BE00F0D934 /* nand.json in Resources */,
 				9288061E1872136A0096A1CA /* background.png in Resources */,
-				92BE29EF187C0048001DCC59 /* circuit.atlas in Resources */,
 				9204C382182E2F5C006A008D /* InfoPlist.strings in Resources */,
 				9204C38B182E2F5C006A008D /* Main.storyboard in Resources */,
 			);
