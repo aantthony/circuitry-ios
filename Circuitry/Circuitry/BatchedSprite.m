@@ -3,6 +3,8 @@
 @interface BatchedSprite() {
     GLKTextureInfo *_texture;
     GLuint _instanceBuffer;
+    
+    float _tWidth, _tHeight;
 }
 
 @end
@@ -30,6 +32,7 @@ static const GLushort batchedSpriteIndices[] = {
 // uniform locations:
 static GLint uTexture;
 static GLint uModelViewProjectMatrix;
+static GLint uTextureSize;
 
 // attribute locations:
 static GLint aSource;
@@ -61,6 +64,8 @@ static GLint uModelViewProjectMatrix;
         // uniform locations:
         uModelViewProjectMatrix = [shader getUniformLocation:@"modelViewProjectionMatrix"];
         uTexture                = [shader getUniformLocation:@"texture"];
+        uTextureSize            = [shader getUniformLocation:@"textureSize"];
+        
         [ShaderEffect checkError];
 
         aSource = [shader getAttributeLocation:@"source"];
@@ -99,7 +104,8 @@ static GLint uModelViewProjectMatrix;
     
     glBindBuffer(GL_ARRAY_BUFFER, _instanceBuffer);
     glBufferData(GL_ARRAY_BUFFER, capacity * sizeof(BatchedSpriteInstance), NULL, GL_STATIC_DRAW);
-    
+    _tWidth = texture.width;
+    _tHeight = texture.height;
     return self;
 }
 
@@ -136,6 +142,8 @@ static GLint uModelViewProjectMatrix;
     [ShaderEffect checkError];
     glUniformMatrix4fv(uModelViewProjectMatrix, 1, 0, viewProjectionMatrix.m);
     
+    glUniform2f(uTextureSize, _tWidth, _tHeight);
+    
     [ShaderEffect checkError];
     
     glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(SharedSpriteVertexData), (const GLvoid *) offsetof(SharedSpriteVertexData, position));
@@ -146,7 +154,7 @@ static GLint uModelViewProjectMatrix;
     
     glVertexAttribPointer(aTranslate, 2, GL_FLOAT, GL_FALSE, sizeof(BatchedSpriteInstance), (const GLvoid *) offsetof(BatchedSpriteInstance, x));
     
-    glVertexAttribPointer(aSource, 4, GL_FLOAT, GL_FALSE, sizeof(BatchedSpriteInstance), (const GLvoid *) offsetof(BatchedSpriteInstance, u));
+    glVertexAttribPointer(aSource, 4, GL_FLOAT, GL_FALSE, sizeof(BatchedSpriteInstance), (const GLvoid *) offsetof(BatchedSpriteInstance, tex.x));
     
     [ShaderEffect checkError];
     glVertexAttribDivisorEXT(aSource, 1);

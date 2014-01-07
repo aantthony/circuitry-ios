@@ -13,7 +13,7 @@
     GLKVector3 _scale;
     LinkBezier *bezier;
     BatchedSprite *_gateSprites;
-    Sprite *gateAND;
+
     BatchedSpriteInstance *_instances;
     int _capacity;
     int _count;
@@ -22,6 +22,18 @@
 @end
 
 @implementation Viewport
+
+static SpriteTexturePos gateBackgroundHeight1;
+static SpriteTexturePos gateBackgroundHeight2;
+    
+SpriteTexturePos texturePos(NSDictionary *atlasJson, NSString *name) {
+    SpriteTexturePos pos;
+    pos.x = [atlasJson[name][@"x"] floatValue];
+    pos.y = [atlasJson[name][@"y"] floatValue];
+    pos.width = [atlasJson[name][@"width"] floatValue];
+    pos.height = [atlasJson[name][@"height"] floatValue];
+    return pos;
+}
 
 - (id) initWithContext: (EAGLContext*) context {
     self = [self init];
@@ -35,7 +47,6 @@
     
     [self recalculateMatrices];
     
-    GLKTextureInfo *tex = [Sprite textureWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"gate-test" ofType:@"png"]];
     
     [ShaderEffect checkError];
     [Sprite setContext: context];
@@ -45,14 +56,27 @@
     
     _capacity = 10000;
     
+    NSURL *atlasPng = [[NSBundle mainBundle] URLForResource:@"circuit-atlas" withExtension:@"png"];
+    NSURL *atlasJson = [[NSBundle mainBundle] URLForResource:@"circuit-atlas" withExtension:@"json"];
+
+    NSInputStream *stream = [NSInputStream inputStreamWithURL:atlasJson];
+    [stream open];
+    
+    NSError *err;
+    NSDictionary *atlas = [NSJSONSerialization JSONObjectWithStream:stream options:0 error:&err];
+    if (err) [NSException exceptionWithName:err.description reason:err.localizedFailureReason userInfo:@{}];
+    
+    GLKTextureInfo *tex = [Sprite textureWithContentsOfURL:atlasPng];
+    
     _gateSprites = [[BatchedSprite alloc] initWithTexture:tex capacity:_capacity];
     
     _instances = malloc(sizeof(BatchedSpriteInstance) * _capacity);
     
+    gateBackgroundHeight1 = texturePos(atlas, @"single@2x");
+    gateBackgroundHeight2 = texturePos(atlas, @"double@2x");
+    
     for(int i = 0; i < _capacity; i++) {
-        _instances[i].u = _instances[i].v = 0.0;
-        _instances[i].width = 208.0;
-        _instances[i].height = 104.0;
+        _instances[i].tex = gateBackgroundHeight2;
     }
     
     [ShaderEffect checkError];
@@ -60,8 +84,6 @@
     
     [ShaderEffect checkError];
     bezier = [[LinkBezier alloc] init];
-    
-    gateAND = [[Sprite alloc] initWithTexture:[Sprite textureWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"gate-test" ofType:@"png"]]];
     
     return self;
 }

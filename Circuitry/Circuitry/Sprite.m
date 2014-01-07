@@ -77,7 +77,7 @@ static GLuint _vertexArray;
     }
     
 }
-+ (GLKTextureInfo *) textureWithContentsOfFile: (NSString *) fileName {
++ (GLKTextureInfo *) textureWithContentsOfURL: (NSURL *) url {
     NSError* error = nil;
     
     int mipmap_levels = 0;
@@ -88,7 +88,8 @@ static GLuint _vertexArray;
                              nil
                              ];
 
-    GLKTextureInfo* info = [GLKTextureLoader textureWithContentsOfFile: fileName options: options error: &error];
+    GLKTextureInfo* info = [GLKTextureLoader textureWithContentsOfURL:url options:options error: &error];
+
     if (error) {
         [[NSException exceptionWithName:error.localizedDescription reason:error.localizedFailureReason userInfo:@{}] raise];
     }

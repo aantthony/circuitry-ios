@@ -2,9 +2,14 @@
 #import <GLKit/GLKit.h>
 #import "ShaderEffect.h"
 
+
+typedef struct {
+    float x, y, width, height;
+} SpriteTexturePos;
+
 typedef struct {
     float x, y;
-    float u, v, width, height;
+    SpriteTexturePos tex;
 } BatchedSpriteInstance;
 
 @interface BatchedSprite : NSObject

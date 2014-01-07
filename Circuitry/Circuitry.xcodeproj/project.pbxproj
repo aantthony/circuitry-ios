@@ -53,8 +53,24 @@
 		92D90E3B1838D7AB00387FAC /* Grid.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E3A1838D7AB00387FAC /* Grid.m */; };
 		92D90E3D1838E9CD00387FAC /* Grid.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E3C1838E9CD00387FAC /* Grid.vsh */; };
 		92D90E3F1838E9D700387FAC /* Grid.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E3E1838E9D700387FAC /* Grid.fsh */; };
+		92DE44AE187C153F00014CB9 /* circuit.image-atlas in Resources */ = {isa = PBXBuildFile; fileRef = 92DE44AD187C153F00014CB9 /* circuit.image-atlas */; };
 		CBCFD569C58147F5B4C87DD5 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB58C125A61B4A21B04D8C5D /* libPods.a */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXBuildRule section */
+		92BE2A3D187C0EDE001DCC59 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.image-atlas";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)-atlas.png",
+				"$(DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)-atlas.json",
+			);
+			script = "cd \"$SRCROOT/tools\"\necho $PWD\nexport PATH=\"/usr/local/bin:$PATH\"\nnpm install --production\nnode ./spritesheet.js \"$INPUT_FILE_PATH\" \"$DERIVED_FILE_DIR/$INPUT_FILE_BASE-atlas.png\" > \"$DERIVED_FILE_DIR/$INPUT_FILE_BASE-atlas.json\"\n";
+		};
+/* End PBXBuildRule section */
 
 /* Begin PBXContainerItemProxy section */
 		9204C39E182E2F5C006A008D /* PBXContainerItemProxy */ = {
@@ -120,6 +136,7 @@
 		92D90E3A1838D7AB00387FAC /* Grid.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Grid.m; path = ../Grid.m; sourceTree = "<group>"; };
 		92D90E3C1838E9CD00387FAC /* Grid.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Grid.vsh; sourceTree = "<group>"; };
 		92D90E3E1838E9D700387FAC /* Grid.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Grid.fsh; sourceTree = "<group>"; };
+		92DE44AD187C153F00014CB9 /* circuit.image-atlas */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "circuit.image-atlas"; sourceTree = "<group>"; };
 		9B4B111902D943CCB431DEB6 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		EB58C125A61B4A21B04D8C5D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -189,6 +206,7 @@
 		9204C37D182E2F5C006A008D /* Circuitry */ = {
 			isa = PBXGroup;
 			children = (
+				92DE44AD187C153F00014CB9 /* circuit.image-atlas */,
 				927D1A191875A9F000457367 /* Models */,
 				927D1A181875A9B400457367 /* OpenGL Views */,
 				927D1A151875A98F00457367 /* ShaderEffect */,
@@ -346,6 +364,7 @@
 				6A68470BA0224B4483CAB8C2 /* Copy Pods Resources */,
 			);
 			buildRules = (
+				92BE2A3D187C0EDE001DCC59 /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
@@ -419,6 +438,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9232B6761878436E00E45C7E /* BatchedSprite.vsh in Resources */,
+				92DE44AE187C153F00014CB9 /* circuit.image-atlas in Resources */,
 				9232B6771878436E00E45C7E /* BatchedSprite.fsh in Resources */,
 				9218F73D1876AB7C00742F99 /* LinkBezier.fsh in Resources */,
 				9218F73E1876AB7C00742F99 /* LinkBezier.vsh in Resources */,

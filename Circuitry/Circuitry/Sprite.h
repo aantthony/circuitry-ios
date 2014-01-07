@@ -5,7 +5,7 @@
 
 + (void)setContext: (EAGLContext*) context;
 
-+ (GLKTextureInfo *) textureWithContentsOfFile: (NSString *) fileName;
++ (GLKTextureInfo *) textureWithContentsOfURL: (NSURL *) url;
 
 - (Sprite *) initWithTexture: (GLKTextureInfo *) texture atX: (int) x Y:(int) y width:(int)w height: (int) h;
 

@@ -59,7 +59,7 @@
     [self checkError];
     _viewport = [[Viewport alloc] initWithContext:self.context];
     [self checkError];
-    GLKTextureInfo *bgTexture = [Sprite textureWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"background" ofType:@"png"]];
+    GLKTextureInfo *bgTexture = [Sprite textureWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"background" withExtension:@"png"]];
     [self checkError];
     bg = [[Sprite alloc] initWithTexture:bgTexture];
     [self checkError];
