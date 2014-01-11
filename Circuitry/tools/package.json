@@ -9,7 +9,6 @@
   "author": "",
   "license": "BSD-2-Clause",
   "dependencies": {
-    "grunt-cli": "~0.1.11",
-    "node-spritesheet": "~0.4.2"
+    "node-spritesheet": "git://github.com/aantthony/node-spritesheet.git"
   }
 }

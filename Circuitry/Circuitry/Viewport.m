@@ -123,8 +123,8 @@ SpriteTexturePos texturePos(NSDictionary *atlasJson, NSString *name) {
     __block CircuitObject *o = NULL;
     
     [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
-        float width = 204.0;
-        float height = 100.0;
+        float width = gateBackgroundHeight2.width;
+        float height = gateBackgroundHeight2.height;
         GLKVector3 oPos = *(GLKVector3 *)&object->pos;
         if (pos.x > oPos.x && pos.y > oPos.y) {
             if (pos.x < oPos.x + width && pos.y < oPos.y + height) { 
