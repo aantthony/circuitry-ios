@@ -34,6 +34,7 @@
 		9232B6551878353A00E45C7E /* BatchedSprite.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 9232B6541878353A00E45C7E /* BatchedSprite.fsh */; };
 		9232B6761878436E00E45C7E /* BatchedSprite.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 9232B6521878140500E45C7E /* BatchedSprite.vsh */; };
 		9232B6771878436E00E45C7E /* BatchedSprite.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9232B6541878353A00E45C7E /* BatchedSprite.fsh */; };
+		9269EF71188107DE00C8804D /* SocketClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 9269EF70188107DE00C8804D /* SocketClient.m */; };
 		9288061B187210180096A1CA /* Shader.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 9204C38E182E2F5C006A008D /* Shader.vsh */; };
 		9288061E1872136A0096A1CA /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = 9288061D1872136A0096A1CA /* background.png */; };
 		92880621187243800096A1CA /* Sprite.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 92880620187243800096A1CA /* Sprite.vsh */; };
@@ -116,6 +117,8 @@
 		9232B65018780CFE00E45C7E /* BatchedSprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BatchedSprite.m; sourceTree = "<group>"; };
 		9232B6521878140500E45C7E /* BatchedSprite.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = BatchedSprite.vsh; sourceTree = "<group>"; };
 		9232B6541878353A00E45C7E /* BatchedSprite.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = BatchedSprite.fsh; sourceTree = "<group>"; };
+		9269EF6F188107DE00C8804D /* SocketClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocketClient.h; sourceTree = "<group>"; };
+		9269EF70188107DE00C8804D /* SocketClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocketClient.m; sourceTree = "<group>"; };
 		9288061D1872136A0096A1CA /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = background.png; path = ../background.png; sourceTree = "<group>"; };
 		92880620187243800096A1CA /* Sprite.vsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; name = Sprite.vsh; path = ../Sprite.vsh; sourceTree = "<group>"; };
 		928806221872438E0096A1CA /* Sprite.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; name = Sprite.fsh; path = ../Sprite.fsh; sourceTree = "<group>"; };
@@ -218,6 +221,8 @@
 				9204C38E182E2F5C006A008D /* Shader.vsh */,
 				9204C393182E2F5C006A008D /* Images.xcassets */,
 				9204C37E182E2F5C006A008D /* Supporting Files */,
+				9269EF6F188107DE00C8804D /* SocketClient.h */,
+				9269EF70188107DE00C8804D /* SocketClient.m */,
 			);
 			path = Circuitry;
 			sourceTree = "<group>";
@@ -511,6 +516,7 @@
 				92A4F86D187289F300EEB367 /* Viewport.m in Sources */,
 				92D90E3D1838E9CD00387FAC /* Grid.vsh in Sources */,
 				92D90E3B1838D7AB00387FAC /* Grid.m in Sources */,
+				9269EF71188107DE00C8804D /* SocketClient.m in Sources */,
 				9232B6551878353A00E45C7E /* BatchedSprite.fsh in Sources */,
 				9218F73C1876982100742F99 /* LinkBezier.vsh in Sources */,
 				92880621187243800096A1CA /* Sprite.vsh in Sources */,

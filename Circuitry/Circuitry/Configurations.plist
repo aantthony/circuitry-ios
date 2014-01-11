@@ -7,12 +7,12 @@
 		<key>LoggingEnabled</key>
 		<false/>
 		<key>APIEndpoint</key>
-		<string>http://api.circuitry.io/v1</string>
+		<string>http://localhost:8000/v1</string>
 	</dict>
 	<key>Debug</key>
 	<dict>
 		<key>APIEndpoint</key>
-		<string>http://equation.io</string>
+		<string>http://10.0.1.16:8000/v1</string>
 		<key>LoggingEnabled</key>
 		<true/>
 	</dict>

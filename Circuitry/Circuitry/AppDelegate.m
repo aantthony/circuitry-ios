@@ -2,16 +2,17 @@
 
 #import <AFNetworking/AFNetworking.h>
 //#import <AFNetworking/AFHTTPSessionManager.h>
+#import "SocketClient.h"
 
 @interface AppDelegate() {
-    
-}
 
+}
+@property SocketClient *client;
 @end
 @implementation AppDelegate
 
 + (NSDictionary *) sharedConfiguration
-{    
+{
     static dispatch_once_t onceToken = 0;
     static NSDictionary *config;
     
@@ -24,21 +25,27 @@
     return config;
 }
 
+
 + (AFHTTPRequestOperationManager *) api {
     static dispatch_once_t onceToken = 0;
     static AFHTTPRequestOperationManager * manager;
     
     dispatch_once(&onceToken, ^{
-        NSURL *baseURL = [NSURL URLWithString:[[AppDelegate sharedConfiguration] objectForKey:@"APIEndpoint"]];
-        manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL: baseURL];
+        manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL: [AppDelegate baseURL]];
     });
     
     return manager;
 }
 
++ (NSURL *) baseURL {
+    return [NSURL URLWithString:[[AppDelegate sharedConfiguration] objectForKey:@"APIEndpoint"]];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [AppDelegate.api GET:@"/debug" parameters:nil success:^(AFHTTPRequestOperation *operation, NSDictionary *res) {
+    _client = [[SocketClient alloc] init];
+    
+    [AppDelegate.api GET:@"debug" parameters:nil success:^(AFHTTPRequestOperation *operation, NSDictionary *res) {
         NSLog(@"JSON: %@", res);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error);

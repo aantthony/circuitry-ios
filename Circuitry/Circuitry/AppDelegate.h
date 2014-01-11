@@ -6,7 +6,7 @@
 @property (strong, nonatomic) UIWindow *window;
 
 + (NSDictionary *) sharedConfiguration;
-
++ (NSURL *) baseURL;
 + (AFHTTPRequestOperationManager *) api;
 
 @end
