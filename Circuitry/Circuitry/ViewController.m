@@ -302,7 +302,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         CircuitObject *object = [_viewport findCircuitObjectAtPosition:position];
         
         if (!object) return;
-        if (object->type == [_circuit findProcessById:@"in"]) {
+        if (object->type == [_circuit getProcessById:@"in"]) {
             object->out = !object->out;
             [_circuit didUpdateObject:object];
         }

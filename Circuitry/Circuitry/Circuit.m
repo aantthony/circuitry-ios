@@ -33,25 +33,6 @@ void *srealloc(void * d, size_t c) {
 }
 
 
-#pragma mark - Initialisation
-- (id) init {
-    if ((self = [super init])){
-        _needsUpdateCount = 0;
-        _needsUpdateSize = 100000;
-        _needsUpdate  = smalloc(sizeof(void *) * _needsUpdateSize);
-        _needsUpdate2 = smalloc(sizeof(void *) * _needsUpdateSize);
-        
-        _itemsCount = 0;
-        _itemsSize = 100000;
-        _items = smalloc((sizeof(CircuitObject) * _itemsSize));
-        _largestItemID = 0;
-        
-        _linksCount = 0;
-        _linksSize = 100000;
-        _links = smalloc((sizeof(CircuitLink) * _linksSize));
-    }
-    return self;
-}
 
 int XOR  (int x) { return x == 1 || x == 2;}
 int AND  (int x) { return x == 3;}
@@ -71,12 +52,31 @@ CircuitProcess defaultGates[] = {
     {"nand", 2, 1, NAND }
 };
 
+#pragma mark - Initialisation
 NSValue *valueForGate(CircuitProcess *process) {
     return [NSValue valueWithPointer:process];
 }
 
 NSDictionary *processesById;
 
+- (id) init {
+    if ((self = [super init])){
+        _needsUpdateCount = 0;
+        _needsUpdateSize = 100000;
+        _needsUpdate  = smalloc(sizeof(void *) * _needsUpdateSize);
+        _needsUpdate2 = smalloc(sizeof(void *) * _needsUpdateSize);
+        
+        _itemsCount = 0;
+        _itemsSize = 100000;
+        _items = smalloc((sizeof(CircuitObject) * _itemsSize));
+        _largestItemID = 0;
+        
+        _linksCount = 0;
+        _linksSize = 100000;
+        _links = smalloc((sizeof(CircuitLink) * _linksSize));
+    }
+    return self;
+}
 + (void) initialize {
     processesById = @{
                       @"in": valueForGate(&defaultGates[0]),
@@ -90,16 +90,12 @@ NSDictionary *processesById;
                       };
 }
 
-CircuitProcess *getProcessById(Circuit *c, NSString *_id) {
+- (CircuitProcess *) getProcessById:(NSString *)_id {
     CircuitProcess *p;
     id data = [processesById objectForKey:_id];
     if (!data) [NSException raise:@"Could not find object type" format:@"Object type \"%@\" does not exist.", _id, nil];
     p = [data pointerValue];
     return p;
-}
-
-- (CircuitProcess *) findProcessById:(NSString *)_id {
-    return getProcessById(self, _id);
 }
 
 #pragma mark - Simulation (written in C)
@@ -132,19 +128,6 @@ void linksNeedsUpdate(Circuit *c, CircuitLink * link) {
     }
 }
 
-
-// Add items to the event queue:
-- (void) didUpdateObject:(CircuitObject *)object {
-    needsUpdate(self, object);
-}
-
-- (void) didUpdateObject:(CircuitObject *)object outlet:(int) sourceIndex {
-    linksNeedsUpdate(self, object->outputs[sourceIndex]);
-}
-
-- (void) didUpdateLinks:(CircuitLink *) link {
-    linksNeedsUpdate(self, link);
-}
 
 CircuitObject * addObject(Circuit *c, CircuitProcess *type) {
     int id = 0;
@@ -341,7 +324,7 @@ int simulate(Circuit *c, int ticks) {
     id object = [NSJSONSerialization JSONObjectWithStream:stream options:0 error:&err];
     if (err) [NSException exceptionWithName:err.localizedDescription reason:err.localizedFailureReason userInfo:@{}];
     
-    return [[Circuit alloc] initWithObject:object];
+    return [[Circuit alloc] initWithDictionary:object];
 }
 
 + (Circuit *) circuitWithJSON:(NSData *) data {
@@ -349,7 +332,7 @@ int simulate(Circuit *c, int ticks) {
     
     id object = [NSJSONSerialization JSONObjectWithData:data options:0 error:&err];
     if (err) [NSException exceptionWithName:err.localizedDescription reason:err.localizedFailureReason userInfo:@{}];
-    return [[Circuit alloc] initWithObject:object];
+    return [[Circuit alloc] initWithDictionary:object];
 }
 
 - (NSData *) toJSON {
@@ -393,23 +376,7 @@ int simulate(Circuit *c, int ticks) {
     return data;
 }
 
-- (CircuitObject *) addObject: (CircuitProcess*) process {
-    CircuitObject *o = addObject(self, process);
-    o->id  = ++_largestItemID;
-    
-    return o;
-}
-
-- (void) removeObject:(CircuitObject *) object {
-    removeObject(self, object);
-}
-
-- (void) removeLink:(CircuitLink *)link {
-    removeLink(self, link);
-}
-
-
-- (Circuit *) initWithObject: (id) object {
+- (Circuit *) initWithDictionary: (id) object {
     self = [self init];
     NSArray *fields = @[@"name", @"version", @"description", @"author",  @"license"];
     [fields enumerateObjectsUsingBlock:^(id key, NSUInteger idx, BOOL *stop) {
@@ -419,7 +386,7 @@ int simulate(Circuit *c, int ticks) {
     NSArray *items = [object objectForKey:@"items"];
     [items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         NSString *type = [obj valueForKey:@"type"];
-        CircuitProcess *process = getProcessById(self, type);
+        CircuitProcess *process = [self getProcessById: type];
         CircuitObject *o = addObject(self, process);
         o->id  = [[obj valueForKey:@"id"] intValue];
         if (o->id > _largestItemID) {
@@ -455,7 +422,7 @@ int simulate(Circuit *c, int ticks) {
 }
 
 
-#pragma mark - public
+#pragma mark - accessors
 
 - (void)enumerateObjectsUsingBlock:(void (^)(CircuitObject *object, BOOL *stop))block {
     BOOL stop = NO;
@@ -466,6 +433,48 @@ int simulate(Circuit *c, int ticks) {
     }
 }
 
+
+
+#pragma mark - circuit modification
+
+- (CircuitObject *) addObject: (CircuitProcess*) process {
+    CircuitObject *o = addObject(self, process);
+    o->id  = ++_largestItemID;
+    
+    return o;
+}
+
+- (void) removeObject:(CircuitObject *) object {
+    removeObject(self, object);
+}
+
+- (void) removeLink:(CircuitLink *)link {
+    removeLink(self, link);
+}
+
+- (CircuitLink *) addLink:(CircuitObject *)object index: (int)sourceIndex to:(CircuitObject *)target index:(int)targetIndex {
+    return addLink(self, object, sourceIndex, target, targetIndex);
+}
+
+
+
+#pragma mark - circuit object and link modification notification
+
+// Add items to the event queue:
+- (void) didUpdateObject:(CircuitObject *)object {
+    needsUpdate(self, object);
+}
+
+- (void) didUpdateObject:(CircuitObject *)object outlet:(int) sourceIndex {
+    linksNeedsUpdate(self, object->outputs[sourceIndex]);
+}
+
+- (void) didUpdateLinks:(CircuitLink *) link {
+    linksNeedsUpdate(self, link);
+}
+
+
+#pragma mark - simulation
 - (int) simulate: (int) ticks {
     return simulate(self, ticks);
 }

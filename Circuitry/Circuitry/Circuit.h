@@ -44,14 +44,19 @@ struct CircuitObject {
 @property NSMutableDictionary *dependencies;
 
 + (Circuit *) circuitWithStream:(NSInputStream *) stream;
-- (Circuit *) initWithObject: (id) object;
-- (CircuitObject *) addObject: (CircuitProcess*) process;
+- (Circuit *) initWithDictionary: (NSDictionary *) dictionary;
 
-- (CircuitProcess *) findProcessById:(NSString *)_id;
+- (CircuitProcess *) getProcessById:(NSString *)_id;
 
 - (void) didUpdateObject:(CircuitObject *)object outlet:(int) sourceIndex;
 - (void) didUpdateObject:(CircuitObject *)object;
 - (void) didUpdateLinks:(CircuitLink *) link;
+
+- (CircuitLink *) addLink:(CircuitObject *)object index: (int)sourceIndex to:(CircuitObject *)target index:(int)targetIndex;
+- (void) removeLink:(CircuitLink *)link;
+
+- (CircuitObject *) addObject: (CircuitProcess*) process;
+- (void) removeObject:(CircuitObject *) object;
 
 - (int) simulate: (int) ticks;
 
