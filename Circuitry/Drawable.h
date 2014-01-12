@@ -1,5 +1,7 @@
 #import <Foundation/Foundation.h>
+#import <GLKit/GLKit.h>
 
 @interface Drawable : NSObject
-- (void) draw;
+- (void) drawWithStack:(GLKMatrixStackRef) stack;
+
 @end

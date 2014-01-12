@@ -3,6 +3,7 @@
 
 @interface ViewController : GLKViewController <UIGestureRecognizerDelegate>
 
+//@property (, nonatomic) GLKMatrix4 _modelViewProjectionMatrix;\
 
 - (IBAction) handlePanGesture:(UIPanGestureRecognizer *) recognizer;
 

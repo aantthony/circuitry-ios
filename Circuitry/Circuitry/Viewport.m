@@ -187,7 +187,7 @@ SpriteTexturePos texturePos(NSDictionary *atlasJson, NSString *name) {
     
     [_gateSprites buffer:_instances FromIndex:0 count:_count];
 }
-- (void) draw {
+- (void) drawWithStack:(GLKMatrixStackRef) stack {
     
     GLKVector3 active1 = GLKVector3Make(0.1960784314, 1.0, 0.3098039216);
     GLKVector3 active2 = GLKVector3Make(0.0, 0.0, 0.0);
@@ -195,8 +195,16 @@ SpriteTexturePos texturePos(NSDictionary *atlasJson, NSString *name) {
     GLKVector3 inactive1 = GLKVector3Make(1.0, 1.0, 1.0);
     GLKVector3 inactive2 = GLKVector3Make(0.2, 0.2, 0.2);
     
-    _grid.viewProjectionMatrix = _viewProjectionMatrix;
-    [_grid draw];
+    _viewMatrix = GLKMatrix4Multiply(
+                                     GLKMatrix4MakeTranslation(_translate.x, _translate.y, _translate.z),
+                                     GLKMatrix4MakeScale(_scale.x, _scale.y, _scale.z));
+    
+    _viewProjectionMatrix = GLKMatrix4Multiply(_projectionMatrix, _viewMatrix);
+    
+    GLKMatrixStackPush(stack);
+    GLKMatrixStackMultiplyMatrix4(stack, _viewMatrix);
+    
+    [_grid drawWithStack:stack];
     [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
         for(int sourceIndex = 0; sourceIndex < object->type->numOutputs; sourceIndex++) {
             CircuitLink *link = object->outputs[sourceIndex];
@@ -221,5 +229,6 @@ SpriteTexturePos texturePos(NSDictionary *atlasJson, NSString *name) {
     [_gateSprites drawIndices:0 count:_count WithTransform:_viewProjectionMatrix];
 
     [ShaderEffect checkError];
+    GLKMatrixStackPop(stack);
 }
 @end

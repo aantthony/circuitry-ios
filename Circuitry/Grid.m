@@ -3,7 +3,6 @@
 
 @interface Grid() {
     ShaderEffect *_shader;
-    GLKMatrix4 _gridMatrix;
     float tx;
     float ty;
     float sx;
@@ -25,17 +24,11 @@ static GLuint _indexBuffer;
 static int nVerts;
 static int nLines;
 
-- (void) recalculateGridMatrix {
-    _gridMatrix = GLKMatrix4Multiply(
-                                     GLKMatrix4MakeTranslation(tx, ty, 0.0),
-                                     GLKMatrix4MakeScale(sx, sx, 1.0));
-}
 - (void) setScale: (GLKVector3) scale translate:(GLKVector3) translate {
     float factor = round(log2f(scale.x));
     sx = 60.0 / exp2f(factor);
     tx = -translate.x / scale.x + fmodf(translate.x / scale.x, sx) - sx;
     ty = -translate.y / scale.x + fmodf(translate.y / scale.x, sx) - sx;
-    [self recalculateGridMatrix];
 }
 
 - (id) init {
@@ -48,8 +41,6 @@ static int nLines;
     
     sx = 60.0;
     tx = ty = 0.0;
-    
-    [self recalculateGridMatrix];
 
     nVerts = (nY * nX);
     
@@ -114,11 +105,16 @@ static int nLines;
 
 - (void) dealloc {
 }
-- (void) draw {
+- (void) drawWithStack:(GLKMatrixStackRef) stack {
     
     [_shader prepareToDraw];
 
     glEnableVertexAttribArray(GLKVertexAttribPosition);
+    
+    GLKMatrix4 _gridMatrix = GLKMatrix4Multiply(
+                       GLKMatrix4MakeTranslation(tx, ty, 0.0),
+                       GLKMatrix4MakeScale(sx, sx, 1.0));
+    
 
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexBuffer);
@@ -135,7 +131,7 @@ static int nLines;
                           3 * sizeof(GLfloat),     // how many bytes per vertex (3 floats per vertex)
                           0);                      // offset to the first coordinate, in this case 0 
     
-    glUniformMatrix4fv(_uModelViewProjectMatrix, 1, 0, _viewProjectionMatrix.m);
+    glUniformMatrix4fv(_uModelViewProjectMatrix, 1, 0, GLKMatrixStackGetMatrix4(stack).m);
     glUniformMatrix4fv(_uGridMatrix, 1, 0, _gridMatrix.m);
     glDrawElements(GL_LINES, nLines * 2, GL_UNSIGNED_SHORT, 0);
     glDisableVertexAttribArray(GLKVertexAttribPosition);

@@ -12,6 +12,8 @@
     GLKMatrix3 _normalMatrix;
     float _rotation;
     
+    GLKMatrixStackRef _stack;
+    
     GLuint _vertexArray;
     GLuint _vertexBuffer;
     
@@ -102,6 +104,8 @@
 - (void)setupGL
 {
     [EAGLContext setCurrentContext:self.context];
+    
+    _stack = GLKMatrixStackCreate(NULL);
     [self checkError];
     [self loadShaders];
     [self checkError];
@@ -144,12 +148,12 @@
     
     _modelViewProjectionMatrix = GLKMatrix4Multiply(projectionMatrix, modelViewMatrix);
     
+    [_viewport setProjectionMatrix:_modelViewProjectionMatrix];
     if (!isAnimatingScaleToSnap && beginGestureScale != 0.0 && !_pinchGestureRecognizer.numberOfTouches) {
         beginGestureScale = 0.0;
         isAnimatingScaleToSnap = YES;
     }
 
-    [_viewport setProjectionMatrix:_modelViewProjectionMatrix];
     if (isAnimatingScaleToSnap) {
         float lEnd = round(log2f(_viewport.scale));
         if (lEnd > 2.0) lEnd = 2.0; // maximum zoom
@@ -159,8 +163,6 @@
             k = 1.0;
             isAnimatingScaleToSnap = NO;
         }
-        
-        
         
         // TODO: this is a bit of a hack. Clean up the translate / scale math so that isn't so disgusting:
         CGPoint screenPos = PX(self.view.contentScaleFactor, CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2));
@@ -172,9 +174,6 @@
         
         // A v = B v.. so what is B...
         [_viewport translate: GLKVector3Make(_viewport.scale * (bPos.x - aPos.x), _viewport.scale * (bPos.y - aPos.y), 0.0)];
-    
-        
-        
         
     }
 //   _rotation += self.timeSinceLastUpdate * 0.5f;
@@ -207,9 +206,10 @@
     glDisable(GL_DEPTH_TEST);
     glDepthMask(0);
     [self checkError];
+    GLKMatrixStackLoadMatrix4(_stack, _modelViewProjectionMatrix);
     [bg drawWithSize:GLKVector2Make(rect.size.width, rect.size.height) withTransform:_modelViewProjectionMatrix];
     [self checkError];
-    [_viewport draw];
+    [_viewport drawWithStack:_stack];
     [self checkError];
 }
 

@@ -2,7 +2,7 @@
 
 @implementation Drawable
 
-- (void) draw {
+- (void) drawWithStack:(GLKMatrixStackRef) stack {
     [NSException raise:@"Invoked abstract method" format:@"Invoked abstract method"]; 
 }
 
