@@ -8,9 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import "Toolbelt.h"
+#import "Drawable.h"
+#import "Viewport.h"
 
-@interface HUD : NSObject
+@interface HUD : Drawable
 
 @property (strong, nonatomic) Toolbelt *toolbelt;
+@property (strong, nonatomic) Viewport *viewPort;
 
 @end

@@ -16,6 +16,7 @@ struct CircuitLink {
     CircuitLink *nextSibling;
     int sourceIndex;
     int targetIndex;
+    CircuitObject *source;
     CircuitObject *target;
 };
 
@@ -44,6 +45,7 @@ struct CircuitObject {
 
 + (Circuit *) circuitWithStream:(NSInputStream *) stream;
 - (Circuit *) initWithObject: (id) object;
+- (CircuitObject *) addObject: (CircuitProcess*) process;
 
 - (CircuitProcess *) findProcessById:(NSString *)_id;
 

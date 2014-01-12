@@ -12,6 +12,7 @@
 
 @property(readonly) int itemsCount;
 @property CircuitObject *items;
+@property NSInteger largestItemID;
 
 @end
 @implementation Circuit
@@ -43,6 +44,7 @@ void *srealloc(void * d, size_t c) {
         _itemsCount = 0;
         _itemsSize = 100000;
         _items = smalloc((sizeof(CircuitObject) * _itemsSize));
+        _largestItemID = 0;
         
         _linksCount = 0;
         _linksSize = 100000;
@@ -144,7 +146,7 @@ void linksNeedsUpdate(Circuit *c, CircuitLink * link) {
     linksNeedsUpdate(self, link);
 }
 
-CircuitObject * addItem(Circuit *c, CircuitProcess *type) {
+CircuitObject * addObject(Circuit *c, CircuitProcess *type) {
     int id = 0;
 
     c->_itemsCount++;
@@ -170,6 +172,19 @@ CircuitObject * addItem(Circuit *c, CircuitProcess *type) {
     return o;
 }
 
+void removeObject(Circuit *c, CircuitObject *o) {
+    for(int i = 0; i < o->type->numOutputs; i++) {
+        while(o->outputs[i]) {
+            removeLink(c, o->outputs[i]);
+        }
+    }
+    for(int i = 0; i < o->type->numInputs; i++) {
+        removeLink(c, o->inputs[i]);
+    }
+    
+    free(o->outputs);
+}
+
 
 
 
@@ -187,6 +202,28 @@ CircuitLink *makeLink(Circuit *c) {
     link->sourceIndex = -1;
     link->targetIndex = -1;
     return link;
+}
+
+void removeLink(Circuit *c, CircuitLink *link) {
+    if (link->target->in & 1<<link->targetIndex) {
+        needsUpdate(c, link->target);
+    }
+    CircuitLink *prevSibling = link->source->outputs[link->sourceIndex];
+    if (prevSibling == link) {
+        prevSibling = NULL;
+        link->source->outputs[link->sourceIndex] = link->nextSibling;
+    } else {
+        while(prevSibling) {
+            if (prevSibling->nextSibling == link) break;
+            prevSibling = prevSibling->nextSibling;
+        }
+        prevSibling->nextSibling = link->nextSibling;
+    }
+    
+    if (link->target) {
+        link->target->inputs[link->targetIndex] = NULL;
+    }
+    memset(link, 0, sizeof(CircuitLink));
 }
 
 CircuitLink *addLink(Circuit *c, CircuitObject *object, int index, CircuitObject *target, int targetIndex) {
@@ -208,6 +245,7 @@ CircuitLink *addLink(Circuit *c, CircuitObject *object, int index, CircuitObject
         while (prev->nextSibling && (prev = prev->nextSibling)) {}
         link = prev->nextSibling = makeLink(c);
     }
+    link->source = object;
     link->target = target;
     link->sourceIndex = index;
     link->targetIndex = targetIndex;
@@ -355,6 +393,22 @@ int simulate(Circuit *c, int ticks) {
     return data;
 }
 
+- (CircuitObject *) addObject: (CircuitProcess*) process {
+    CircuitObject *o = addObject(self, process);
+    o->id  = ++_largestItemID;
+    
+    return o;
+}
+
+- (void) removeObject:(CircuitObject *) object {
+    removeObject(self, object);
+}
+
+- (void) removeLink:(CircuitLink *)link {
+    removeLink(self, link);
+}
+
+
 - (Circuit *) initWithObject: (id) object {
     self = [self init];
     NSArray *fields = @[@"name", @"version", @"description", @"author",  @"license"];
@@ -366,8 +420,11 @@ int simulate(Circuit *c, int ticks) {
     [items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         NSString *type = [obj valueForKey:@"type"];
         CircuitProcess *process = getProcessById(self, type);
-        CircuitObject *o = addItem(self, process);
+        CircuitObject *o = addObject(self, process);
         o->id  = [[obj valueForKey:@"id"] intValue];
+        if (o->id > _largestItemID) {
+            _largestItemID = o->id;
+        }
     }];
     
     [items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {

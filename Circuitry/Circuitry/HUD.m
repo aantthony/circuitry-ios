@@ -15,8 +15,15 @@
 
 @implementation HUD
 
-- (void) draw {
-    [_toolbelt draw];
+- (id) init {
+    self = [super init];
+
+    _toolbelt = [[Toolbelt alloc] init];
+    return self;
+}
+
+- (void) drawWithStack:(GLKMatrixStackRef)stack {
+    [_toolbelt drawWithStack:stack];
 }
 
 @end

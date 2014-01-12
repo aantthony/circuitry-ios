@@ -3,6 +3,7 @@
 #import "Viewport.h"
 #import "Circuit.h"
 #import "Sprite.h"
+#import "HUD.h"
 
 @interface ViewController () {
     GLuint _program;
@@ -23,6 +24,7 @@
     GLKVector3 beginLongPressGestureOffset;
     
     BOOL isAnimatingScaleToSnap;
+    BOOL toolbeltTouchIntercept;
     
     
     Sprite *bg;
@@ -32,6 +34,7 @@
 
 @property Circuit *circuit;
 @property Viewport *viewport;
+@property HUD *hud;
 
 - (void)setupGL;
 - (void)tearDownGL;
@@ -46,6 +49,7 @@
     [super viewDidLoad];
     
     isAnimatingScaleToSnap = NO;
+    toolbeltTouchIntercept = NO;
     beginGestureScale = 0.0;
     self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
 
@@ -60,6 +64,9 @@
     [self setupGL];
     [self checkError];
     _viewport = [[Viewport alloc] initWithContext:self.context];
+    _hud = [[HUD alloc] init];
+    _hud.viewPort = _viewport;
+    
     [self checkError];
     GLKTextureInfo *bgTexture = [Sprite textureWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"background" withExtension:@"png"]];
     [self checkError];
@@ -210,6 +217,7 @@
     [bg drawWithSize:GLKVector2Make(rect.size.width, rect.size.height) withTransform:_modelViewProjectionMatrix];
     [self checkError];
     [_viewport drawWithStack:_stack];
+    [_hud drawWithStack:_stack];
     [self checkError];
 }
 
@@ -246,6 +254,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         
         return NO;
     }
+
 	return YES;
 }
 
@@ -255,6 +264,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     
     return NO;
 }
+
 
 - (IBAction) handlePanGesture:(UIPanGestureRecognizer *)recognizer {
     CGPoint translation = [recognizer translationInView:self.view];

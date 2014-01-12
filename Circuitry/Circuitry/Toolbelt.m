@@ -7,6 +7,8 @@
 //
 
 #import "Toolbelt.h"
+#import "Sprite.h"
+#import "Circuit.h"
 
 @interface GateObject : NSObject
     @property NSString *id;
@@ -28,6 +30,8 @@
 
 @interface Toolbelt () {}
     @property (strong, nonatomic) NSArray *gates;
+    @property (strong, nonatomic) Sprite *sprite;
+    @property (strong, nonatomic) Sprite *gateSprite;
 
 @end
 
@@ -36,10 +40,16 @@
 - (id) init {
     self = [super init];
     self.gates = [NSArray arrayWithObjects:[GateObject gateObjectWithId: @"xor" count: 20], nil];
+    GLKTextureInfo *texture = [Sprite textureWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"Toolbelt@2x" withExtension:@"png"]];
+    _sprite = [[Sprite alloc] initWithTexture:texture];
+    GLKTextureInfo *gateTexture = [Sprite textureWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"OR-gate@2x" withExtension:@"png"]];
+    _gateSprite = [[Sprite alloc] initWithTexture:gateTexture];
     return self;
 }
 
-- (void) draw {
+- (void) drawWithStack:(GLKMatrixStackRef)stack {
+    [_sprite drawAtPoint:GLKVector3Make(128, 700, 0) withTransform:GLKMatrixStackGetMatrix4(stack)];
+    [_gateSprite drawAtPoint:GLKVector3Make(145, 720, 0) withTransform:GLKMatrixStackGetMatrix4(stack)];
     
 }
 

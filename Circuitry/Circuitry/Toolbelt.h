@@ -7,9 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Drawable.h"
 
-@interface Toolbelt : NSObject
-
-- (void) draw;
+@interface Toolbelt : Drawable
 
 @end
