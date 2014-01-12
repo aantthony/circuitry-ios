@@ -135,6 +135,8 @@ static GLint uModelViewProjectMatrix;
     glBindTexture(GL_TEXTURE_2D, _texture.name);
     glUniform1i(uTexture, i);
     
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexBuffer);

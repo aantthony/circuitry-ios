@@ -73,7 +73,7 @@
 				"$(DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)-atlas.png",
 				"$(DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)-atlas.json",
 			);
-			script = "cd \"$SRCROOT/tools\"\necho $PWD\nexport PATH=\"/usr/local/bin:$PATH\"\nnpm install --production\nnode ./spritesheet.js \"$INPUT_FILE_PATH\" \"temp.png\" > \"$DERIVED_FILE_DIR/$INPUT_FILE_BASE-atlas.json\"\necho Compressing png...\n$DEVELOPER_TOOLS_DIR/../usr/bin/xcrun -sdk iphoneos pngcrush -iphone temp.png \"$DERIVED_FILE_DIR/$INPUT_FILE_BASE-atlas.png\"\necho delete temp files\nrm temp.png\n";
+			script = "cd \"$SRCROOT/tools\"\necho $PWD\nexport PATH=\"/usr/local/bin:$PATH\"\nnpm install --production\nnode ./spritesheet.js \"$INPUT_FILE_PATH\" \"temp.png\" > \"$DERIVED_FILE_DIR/$INPUT_FILE_BASE-atlas.json\"\necho Compressing png...\n$DEVELOPER_TOOLS_DIR/../usr/bin/xcrun -sdk iphoneos pngcrush -iphone temp.png \"$DERIVED_FILE_DIR/$INPUT_FILE_BASE-atlas.png\"\n# $DEVELOPER_TOOLS_DIR/../usr/bin/xcrun -sdk iphoneos pngcrush -revert-iphone-optimizations \"$DERIVED_FILE_DIR/$INPUT_FILE_BASE-atlas.png\" \"$DERIVED_FILE_DIR/$INPUT_FILE_BASE-atlas.png\"\necho delete temp files\nrm temp.png\n";
 		};
 /* End PBXBuildRule section */
 

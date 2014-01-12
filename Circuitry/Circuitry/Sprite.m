@@ -84,7 +84,7 @@ static GLuint _vertexArray;
    
     NSDictionary* options = [NSDictionary dictionaryWithObjectsAndKeys:
                              [NSNumber numberWithBool: mipmap_levels > 0], GLKTextureLoaderGenerateMipmaps,
-                            [NSNumber numberWithBool:YES], GLKTextureLoaderApplyPremultiplication,
+                            [NSNumber numberWithBool:NO], GLKTextureLoaderApplyPremultiplication,
                              nil
                              ];
 
