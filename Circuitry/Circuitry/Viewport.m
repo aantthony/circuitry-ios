@@ -25,6 +25,12 @@
 
 static SpriteTexturePos gateBackgroundHeight1;
 static SpriteTexturePos gateBackgroundHeight2;
+static SpriteTexturePos gateOutletInactive;
+static SpriteTexturePos gateOutletActive;
+
+
+static SpriteTexturePos textureWholeDebug = {0,0,512,512};
+
     
 SpriteTexturePos texturePos(NSDictionary *atlasJson, NSString *name) {
     SpriteTexturePos pos;
@@ -74,6 +80,8 @@ SpriteTexturePos texturePos(NSDictionary *atlasJson, NSString *name) {
     
     gateBackgroundHeight1 = texturePos(atlas, @"single@2x");
     gateBackgroundHeight2 = texturePos(atlas, @"double@2x");
+    gateOutletInactive = texturePos(atlas, @"inactive@2x");
+    gateOutletActive = texturePos(atlas, @"active@2x");
     
     for(int i = 0; i < _capacity; i++) {
         _instances[i].tex = gateBackgroundHeight2;
@@ -166,6 +174,14 @@ SpriteTexturePos texturePos(NSDictionary *atlasJson, NSString *name) {
         BatchedSpriteInstance *instance = &_instances[i++];
         instance->x = pos.x;
         instance->y = pos.y;
+        
+        for(int o = 0; o < object->type->numOutputs; o++) {
+            BatchedSpriteInstance *outlet = &_instances[i++];
+            outlet->x = pos.x - 40.0;
+            outlet->y = pos.y - 40.0 + i * 20.0;
+            outlet->tex = (object->out & 1 << o) ? gateOutletActive : gateOutletInactive;
+            outlet->tex =textureWholeDebug;
+        }
     }];
     
     _count = i;
