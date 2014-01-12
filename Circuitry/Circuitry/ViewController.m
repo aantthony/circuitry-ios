@@ -59,9 +59,9 @@
     [self checkError];
     _viewport = [[Viewport alloc] initWithContext:self.context];
     [self checkError];
-//    GLKTextureInfo *bgTexture = [Sprite textureWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"background" withExtension:@"png"]];
+    GLKTextureInfo *bgTexture = [Sprite textureWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"background" withExtension:@"png"]];
     [self checkError];
-//    bg = [[Sprite alloc] initWithTexture:bgTexture];
+    bg = [[Sprite alloc] initWithTexture:bgTexture];
     [self checkError];
     
     NSURL *path = [[NSBundle mainBundle] URLForResource:@"nand" withExtension:@"json"];
@@ -206,9 +206,8 @@
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glDisable(GL_DEPTH_TEST);
     glDepthMask(0);
-//    glDepthFunc(GL_LEQUAL);
     [self checkError];
-//    [bg drawWithSize:GLKVector2Make(rect.size.width, rect.size.height) withTransform:_modelViewProjectionMatrix];
+    [bg drawWithSize:GLKVector2Make(rect.size.width, rect.size.height) withTransform:_modelViewProjectionMatrix];
     [self checkError];
     [_viewport draw];
     [self checkError];

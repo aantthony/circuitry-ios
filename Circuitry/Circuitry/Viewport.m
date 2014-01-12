@@ -177,10 +177,9 @@ SpriteTexturePos texturePos(NSDictionary *atlasJson, NSString *name) {
         
         for(int o = 0; o < object->type->numOutputs; o++) {
             BatchedSpriteInstance *outlet = &_instances[i++];
-            outlet->x = pos.x - 40.0;
-            outlet->y = pos.y - 40.0 + i * 20.0;
+            outlet->x = pos.x + instance->tex.width - 40.0;
+            outlet->y = pos.y + 20.0 + o * 20.0;
             outlet->tex = (object->out & 1 << o) ? gateOutletActive : gateOutletInactive;
-            outlet->tex =textureWholeDebug;
         }
     }];
     
