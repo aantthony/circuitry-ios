@@ -56,7 +56,7 @@ void main()
     v = max(displacement, 0.0);
     float t = (position - rem) / NVERTSM2;
     vec2 z = bezier(A, vec2(A.x + dx, A.y), vec2(A.x + dx, B.y), B, t);
-    vec2 dz = 5.0 * displacement * normalize(z - bezier(A, vec2(A.x + dx, A.y), vec2(A.x + dx, B.y), B, t - 1.0 / NVERTSM2));
+    vec2 dz = 8.0 * displacement * normalize(z - bezier(A, vec2(A.x + dx, A.y), vec2(A.x + dx, B.y), B, t - 1.0 / NVERTSM2));
     
     gl_Position = modelViewProjectionMatrix * vec4(z + vec2(dz.y, -dz.x), 0.0, 1.0);
 }

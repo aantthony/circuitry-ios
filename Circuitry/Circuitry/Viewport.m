@@ -27,10 +27,8 @@ static SpriteTexturePos gateBackgroundHeight1;
 static SpriteTexturePos gateBackgroundHeight2;
 static SpriteTexturePos gateOutletInactive;
 static SpriteTexturePos gateOutletActive;
-
-
-static SpriteTexturePos textureWholeDebug = {0,0,512,512};
-
+static SpriteTexturePos gateOutletActiveConnected;
+static SpriteTexturePos gateOutletInactiveConnected;
     
 SpriteTexturePos texturePos(NSDictionary *atlasJson, NSString *name) {
     SpriteTexturePos pos;
@@ -82,6 +80,8 @@ SpriteTexturePos texturePos(NSDictionary *atlasJson, NSString *name) {
     gateBackgroundHeight2 = texturePos(atlas, @"double@2x");
     gateOutletInactive = texturePos(atlas, @"inactive@2x");
     gateOutletActive = texturePos(atlas, @"active@2x");
+    gateOutletActiveConnected = texturePos(atlas, @"activeconnected@2x");
+    gateOutletInactiveConnected = texturePos(atlas, @"inactiveconnected@2x");
     
     for(int i = 0; i < _capacity; i++) {
         _instances[i].tex = gateBackgroundHeight2;
@@ -165,6 +165,29 @@ SpriteTexturePos texturePos(NSDictionary *atlasJson, NSString *name) {
     return _scale.x;
 }
 
+GLKVector3 offsetForOutlet(CircuitProcess *process, int index) {
+    GLKVector3 res;
+    res.x = gateBackgroundHeight2.width - 50.0;
+    if (process->numOutputs % 2 == 1) {
+        res.y = 22.0 + 40.0 + index * 80.0;
+    } else {
+        res.y = 22.0 + index * 80.0;
+    }
+    return res;
+}
+
+GLKVector3 offsetForInlet(CircuitProcess *process, int index) {
+    
+    GLKVector3 res;
+    res.x = 20.0;
+    if (process->numInputs % 2 == 1) {
+        res.y = 22.0 + 40.0 + index * 80.0;
+    } else {
+        res.y = 22.0 + index * 80.0;
+    }
+    return res;
+}
+
 - (void) bufferSprites {
     
     __block int i = 0;
@@ -177,9 +200,18 @@ SpriteTexturePos texturePos(NSDictionary *atlasJson, NSString *name) {
         
         for(int o = 0; o < object->type->numOutputs; o++) {
             BatchedSpriteInstance *outlet = &_instances[i++];
-            outlet->x = pos.x + instance->tex.width - 40.0;
-            outlet->y = pos.y + 20.0 + o * 20.0;
-            outlet->tex = (object->out & 1 << o) ? gateOutletActive : gateOutletInactive;
+            GLKVector3 dotPos = offsetForOutlet(object->type, o);
+            outlet->x = pos.x + dotPos.x;
+            outlet->y = pos.y + dotPos.y;
+            outlet->tex = (object->out & 1 << o) ? (object->outputs[o] ? gateOutletActiveConnected : gateOutletActive) : (object->outputs[o] ? gateOutletInactiveConnected : gateOutletInactive);
+        }
+        for(int o = 0; o < object->type->numInputs; o++) {
+            BatchedSpriteInstance *outlet = &_instances[i++];
+            
+            GLKVector3 dotPos = offsetForInlet(object->type, o);
+            outlet->x = pos.x + dotPos.x;
+            outlet->y = pos.y + dotPos.y;
+            outlet->tex = (object->in & 1 << o) ? (object->inputs[o] ? gateOutletActiveConnected : gateOutletActive) : (object->inputs[o] ? gateOutletInactiveConnected : gateOutletInactive);
         }
     }];
     
@@ -205,14 +237,17 @@ SpriteTexturePos texturePos(NSDictionary *atlasJson, NSString *name) {
     GLKMatrixStackMultiplyMatrix4(stack, _viewMatrix);
     
     [_grid drawWithStack:stack];
+    int radius = gateOutletActive.width / 2;
     [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
         for(int sourceIndex = 0; sourceIndex < object->type->numOutputs; sourceIndex++) {
             CircuitLink *link = object->outputs[sourceIndex];
             
             while(link) {
                 
-                GLKVector2 A = GLKVector2Make(object->pos.x + 180.0, object->pos.y + 40.0 + sourceIndex * 40.0);
-                GLKVector2 B = GLKVector2Make(link->target->pos.x + 20.0, link->target->pos.y + 40.0 + link->targetIndex * 40.0);
+                GLKVector3 dotPos = offsetForOutlet(object->type, sourceIndex);
+                GLKVector2 A = GLKVector2Make(object->pos.x + dotPos.x + radius, object->pos.y + dotPos.y + radius);
+                dotPos = offsetForInlet(link->target->type, link->targetIndex);
+                GLKVector2 B = GLKVector2Make(link->target->pos.x + dotPos.x + radius, link->target->pos.y + dotPos.y + radius);
                 bool isActive = object->out & 1 << sourceIndex;
                 [bezier drawFrom:A to:B withColor1:isActive ? active1 : inactive1 color2:isActive ? active2 : inactive2 withTransform:_viewProjectionMatrix];
                 
