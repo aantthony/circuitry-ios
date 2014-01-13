@@ -18,10 +18,10 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="prC-OQ-El9" appends="YES" id="gyb-jh-9Md"/>
-                            <outletCollection property="gestureRecognizers" destination="Lik-9B-5DK" appends="YES" id="b3U-am-cLw"/>
-                            <outletCollection property="gestureRecognizers" destination="Iiq-nz-5qG" appends="YES" id="P8W-OB-20w"/>
                             <outletCollection property="gestureRecognizers" destination="bcv-fM-YDa" appends="YES" id="a1y-v9-JZR"/>
                             <outletCollection property="gestureRecognizers" destination="66T-he-oQr" appends="YES" id="HSC-Gp-Uy5"/>
+                            <outletCollection property="gestureRecognizers" destination="T8i-XA-rcG" appends="YES" id="wZG-53-zYx"/>
+                            <outletCollection property="gestureRecognizers" destination="q8S-aQ-v8R" appends="YES" id="w0l-eT-tG5"/>
                         </connections>
                     </glkView>
                     <keyCommands/>
@@ -30,24 +30,18 @@
                     </connections>
                 </glkViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="q8S-aQ-v8R">
+                    <connections>
+                        <action selector="handlePanGesture:" destination="BV1-FR-VrT" id="LjT-LL-tBj"/>
+                        <outlet property="delegate" destination="BV1-FR-VrT" id="dKr-r7-t0d"/>
+                    </connections>
+                </panGestureRecognizer>
                 <pinchGestureRecognizer id="prC-OQ-El9">
                     <connections>
                         <action selector="handlePinchGesture:" destination="BV1-FR-VrT" id="bXE-H6-tub"/>
                         <outlet property="delegate" destination="BV1-FR-VrT" id="6zc-41-x6o"/>
                     </connections>
                 </pinchGestureRecognizer>
-                <panGestureRecognizer minimumNumberOfTouches="1" id="Lik-9B-5DK">
-                    <connections>
-                        <action selector="handlePanGesture:" destination="BV1-FR-VrT" id="Ybr-vc-l9m"/>
-                        <outlet property="delegate" destination="BV1-FR-VrT" id="T3N-8K-s5j"/>
-                    </connections>
-                </panGestureRecognizer>
-                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.025000000000000001" id="Iiq-nz-5qG">
-                    <connections>
-                        <action selector="handleLongPressGesture:" destination="BV1-FR-VrT" id="JGL-6I-S6C"/>
-                        <outlet property="delegate" destination="BV1-FR-VrT" id="QNi-yo-lz2"/>
-                    </connections>
-                </pongPressGestureRecognizer>
                 <tapGestureRecognizer id="bcv-fM-YDa">
                     <connections>
                         <action selector="handleTapGesture:" destination="BV1-FR-VrT" id="NML-NO-wVg"/>
@@ -58,6 +52,12 @@
                         <action selector="handleTapGesture:" destination="BV1-FR-VrT" id="e4n-T8-uaX"/>
                     </connections>
                 </tapGestureRecognizer>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="T8i-XA-rcG" customClass="DragGateGestureRecognizer">
+                    <connections>
+                        <action selector="handleDragGateGesture:" destination="BV1-FR-VrT" id="7JD-Wz-CCI"/>
+                        <outlet property="delegate" destination="BV1-FR-VrT" id="Uk0-53-9Mk"/>
+                    </connections>
+                </panGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-19" y="-354"/>
         </scene>

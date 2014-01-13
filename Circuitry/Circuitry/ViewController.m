@@ -4,6 +4,7 @@
 #import "Circuit.h"
 #import "Sprite.h"
 #import "HUD.h"
+#import "DragGateGestureRecognizer.h"
 
 @interface ViewController () {
     GLuint _program;
@@ -240,8 +241,8 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         isAnimatingScaleToSnap = NO;
 		beginGestureScale = _viewport.scale;
 	}
-    if ([gestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]]) {
-        UILongPressGestureRecognizer *recogniser = (UILongPressGestureRecognizer *)gestureRecognizer;
+    if ([gestureRecognizer isKindOfClass:[DragGateGestureRecognizer class]]) {
+        DragGateGestureRecognizer *recogniser = (DragGateGestureRecognizer *)gestureRecognizer;
         ;
         GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [recogniser locationInView:self.view])];
 
@@ -253,6 +254,15 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         }
         
         return NO;
+    } else if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+        // pan
+        UIPanGestureRecognizer *recogniser = (UIPanGestureRecognizer *)gestureRecognizer;
+        ;
+        GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [recogniser locationInView:self.view])];
+        if ([_viewport findCircuitObjectAtPosition:position]) {
+            return NO;
+        }
+        return YES;
     }
 
 	return YES;
@@ -270,6 +280,20 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     CGPoint translation = [recognizer translationInView:self.view];
     [_viewport translate: GLKVector3Make(translation.x, translation.y, 0.0)];
     [recognizer setTranslation:CGPointMake(0, 0) inView:self.view];
+}
+
+- (IBAction)handleDragGateGesture:(UIPanGestureRecognizer *)sender {
+    if (!beginLongPressGestureObject) return; // wtf?
+    
+    CircuitObject *object = beginLongPressGestureObject;
+    
+    GLKVector3 curPos = [_viewport unproject: PX(self.view.contentScaleFactor, [sender locationInView:self.view])];
+    
+    GLKVector3 newPos = GLKVector3Add(curPos, beginLongPressGestureOffset);
+    
+    object->pos.x = newPos.x;
+    object->pos.y = newPos.y;
+    object->pos.z = newPos.z;
 }
 
 - (IBAction) handlePinchGesture:(UIPinchGestureRecognizer *)recognizer {
@@ -307,20 +331,6 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
             [_circuit didUpdateObject:object];
         }
     }
-    
-}
-- (IBAction) handleLongPressGesture:(UIGestureRecognizer *)recognizer {
-    if (!beginLongPressGestureObject) return; // wtf?
-    
-    CircuitObject *object = beginLongPressGestureObject;
-    
-    GLKVector3 curPos = [_viewport unproject: PX(self.view.contentScaleFactor, [recognizer locationInView:self.view])];
-    
-    GLKVector3 newPos = GLKVector3Add(curPos, beginLongPressGestureOffset);
-    
-    object->pos.x = newPos.x;
-    object->pos.y = newPos.y;
-    object->pos.z = newPos.z;
     
 }
 

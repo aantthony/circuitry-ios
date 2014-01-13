@@ -6,6 +6,7 @@
 //@property (, nonatomic) GLKMatrix4 _modelViewProjectionMatrix;\
 
 - (IBAction) handlePanGesture:(UIPanGestureRecognizer *) recognizer;
+- (IBAction)handleDragGateGesture:(UIPanGestureRecognizer *)sender;
 
 - (IBAction) handlePinchGesture:(UIPinchGestureRecognizer *) recognizer;
 
