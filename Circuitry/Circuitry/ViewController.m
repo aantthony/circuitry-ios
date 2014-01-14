@@ -246,9 +246,10 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         DragGateGestureRecognizer *recogniser = (DragGateGestureRecognizer *)gestureRecognizer;
         ;
         GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [recogniser locationInView:self.view])];
-
         // only accept long presses on circuit objects:
-        if ((beginLongPressGestureObject = [_viewport findCircuitObjectAtPosition:position])) {
+        CircuitObject *o;
+        if ((o = [_viewport findCircuitObjectAtPosition:position])) {
+            beginLongPressGestureObject = o;
             GLKVector3 objectPosition = *(GLKVector3 *) &beginLongPressGestureObject->pos;
             beginLongPressGestureOffset = GLKVector3Subtract(objectPosition, position);
             return YES;
@@ -261,6 +262,15 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         if (!CGRectContainsPoint(_hud.toolbelt.bounds, location)) {
             return NO;
         }
+        CircuitObject *o = [_circuit addObject:[_circuit getProcessById:@"xor"]];
+        
+        GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [gestureRecognizer locationInView:self.view])];
+        
+        beginLongPressGestureObject = o;
+        o->pos.x = position.x - 200.0;
+        o->pos.y = position.y - 100.0;
+        GLKVector3 objectPosition = *(GLKVector3 *) &beginLongPressGestureObject->pos;
+        beginLongPressGestureOffset = GLKVector3Subtract(objectPosition, position);
         return YES;
     } else if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
         // pan
@@ -277,6 +287,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    if ([gestureRecognizer isKindOfClass:[CreateGatePanGestureRecognizer class]] || [otherGestureRecognizer isKindOfClass:[CreateGatePanGestureRecognizer class]]) return NO;
     // TODO: test this
     if ([gestureRecognizer isKindOfClass:[UIPinchGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) return YES;
     
@@ -291,22 +302,28 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 }
 
 - (IBAction)handleDragGateGesture:(UIPanGestureRecognizer *)sender {
-    if (!beginLongPressGestureObject) return; // wtf?
+    if (!beginLongPressGestureObject) {
+        NSLog(@"wtf %@", sender);
+        return;
+    }
     
     CircuitObject *object = beginLongPressGestureObject;
     
-    if ([sender numberOfTouches] < 1) return;
+    if ([sender numberOfTouches] != 1) {
+        sender.enabled = NO;
+        sender.enabled = YES;
+        return;
+    }
     GLKVector3 curPos = [_viewport unproject: PX(self.view.contentScaleFactor, [sender locationOfTouch:0 inView:self.view])];
     
     GLKVector3 newPos = GLKVector3Add(curPos, beginLongPressGestureOffset);
-    
     object->pos.x = newPos.x;
     object->pos.y = newPos.y;
     object->pos.z = newPos.z;
 }
 
 - (IBAction)handleCreateGateGesture:(UIPanGestureRecognizer *)sender {
-    
+    return [self handleDragGateGesture:sender];
 }
 
 - (IBAction) handlePinchGesture:(UIPinchGestureRecognizer *)recognizer {
