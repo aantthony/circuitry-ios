@@ -6,6 +6,7 @@
 #import "HUD.h"
 #import "DragGateGestureRecognizer.h"
 #import "CreateGatePanGestureRecognizer.h"
+#import "CreateLinkGestureRecognizer.h"
 
 @interface ViewController () {
     GLuint _program;
@@ -242,6 +243,21 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         isAnimatingScaleToSnap = NO;
 		beginGestureScale = _viewport.scale;
 	}
+    if ([gestureRecognizer isKindOfClass:[CreateLinkGestureRecognizer class]]) {
+        GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [gestureRecognizer locationInView:self.view])];
+        
+        CircuitObject *o;
+        if ((o = [_viewport findCircuitObjectAtPosition:position])) {
+            
+            _viewport.currentEditingLink = NULL;
+            _viewport.currentEditingLinkSource = o;
+            _viewport.currentEditingLinkSourceIndex = 0;
+            _viewport.currentEditingLinkTargetPosition = position;
+            return YES;
+        }
+
+        return NO;
+    }
     if ([gestureRecognizer isKindOfClass:[DragGateGestureRecognizer class]]) {
         DragGateGestureRecognizer *recogniser = (DragGateGestureRecognizer *)gestureRecognizer;
         ;
@@ -324,6 +340,48 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 
 - (IBAction)handleCreateGateGesture:(UIPanGestureRecognizer *)sender {
     return [self handleDragGateGesture:sender];
+}
+
+- (IBAction)handleCreateLinkGesture:(UILongPressGestureRecognizer *)sender {
+    if (sender.state == UIGestureRecognizerStateEnded) {
+        _viewport.currentEditingLinkSource = NULL;
+        _viewport.currentEditingLinkTarget = NULL;
+    }
+    if (!_viewport.currentEditingLinkSource || [sender numberOfTouches] != 1) {
+        sender.enabled = NO;
+        sender.enabled = YES;
+        return;
+    }
+    GLKVector3 curPos = [_viewport unproject: PX(self.view.contentScaleFactor, [sender locationOfTouch:0 inView:self.view])];
+
+    CircuitObject *target;
+    if ((target = [_viewport findCircuitObjectAtPosition:curPos])) {
+        
+        int targetIndex = 0;
+        while(targetIndex < target->type->numInputs && target->inputs[targetIndex]) {
+            if (target == _viewport.currentEditingLinkTarget && targetIndex == _viewport.currentEditingLinkTargetIndex) {
+                // nothings changed
+                return;
+            }
+            targetIndex++;
+        }
+        if (targetIndex < target->type->numInputs) {
+            
+            _viewport.currentEditingLinkTarget = target;
+            
+            _viewport.currentEditingLinkTargetIndex = targetIndex;
+            CircuitLink *newLink = [_circuit addLink:_viewport.currentEditingLinkSource index:_viewport.currentEditingLinkSourceIndex to:target index:targetIndex];
+            _viewport.currentEditingLink = newLink;
+        }
+        
+    } else {
+        if (_viewport.currentEditingLink) {
+           [_circuit removeLink:_viewport.currentEditingLink];
+            _viewport.currentEditingLink = NULL;
+            _viewport.currentEditingLinkTarget = NULL;
+        }
+    }
+    _viewport.currentEditingLinkTargetPosition = curPos;
 }
 
 - (IBAction) handlePinchGesture:(UIPinchGestureRecognizer *)recognizer {

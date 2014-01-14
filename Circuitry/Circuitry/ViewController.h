@@ -10,6 +10,8 @@
 
 - (IBAction)handleCreateGateGesture:(UIPanGestureRecognizer *)sender;
 
+- (IBAction)handleCreateLinkGesture:(UILongPressGestureRecognizer *)sender;
+
 - (IBAction) handlePinchGesture:(UIPinchGestureRecognizer *) recognizer;
 
 - (IBAction) handleTapGesture:(UITapGestureRecognizer *)sender;

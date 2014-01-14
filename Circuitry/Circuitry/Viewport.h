@@ -18,4 +18,13 @@
 
 - (CircuitObject*) findCircuitObjectAtPosition: (GLKVector3) pos;
 - (GLKVector3) unproject: (CGPoint) screenPos;
+
+
+@property CircuitLink *currentEditingLink;
+@property CircuitObject *currentEditingLinkSource;
+@property CircuitObject *currentEditingLinkTarget;
+@property int currentEditingLinkSourceIndex;
+@property int currentEditingLinkTargetIndex;
+@property GLKVector3 currentEditingLinkTargetPosition;
+
 @end

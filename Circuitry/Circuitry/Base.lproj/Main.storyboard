@@ -23,6 +23,7 @@
                             <outletCollection property="gestureRecognizers" destination="T8i-XA-rcG" appends="YES" id="wZG-53-zYx"/>
                             <outletCollection property="gestureRecognizers" destination="q8S-aQ-v8R" appends="YES" id="w0l-eT-tG5"/>
                             <outletCollection property="gestureRecognizers" destination="7bN-zV-gIM" appends="YES" id="3Sa-so-PtL"/>
+                            <outletCollection property="gestureRecognizers" destination="h4l-Nq-EiU" appends="YES" id="HxE-bB-5P9"/>
                         </connections>
                     </glkView>
                     <keyCommands/>
@@ -65,6 +66,12 @@
                         <outlet property="delegate" destination="BV1-FR-VrT" id="20d-CD-9T5"/>
                     </connections>
                 </panGestureRecognizer>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.25" id="h4l-Nq-EiU" customClass="CreateLinkGestureRecognizer">
+                    <connections>
+                        <action selector="handleCreateLinkGesture:" destination="BV1-FR-VrT" id="Qlg-8g-Ac5"/>
+                        <outlet property="delegate" destination="BV1-FR-VrT" id="14P-8p-1B8"/>
+                    </connections>
+                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-19" y="-354"/>
         </scene>

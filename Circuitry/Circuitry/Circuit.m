@@ -218,6 +218,9 @@ CircuitLink *addLink(Circuit *c, CircuitObject *object, int index, CircuitObject
         [NSException raise:@"Invalid Link" format:@"Attempted to create link from outlet #%d, but there are only %d outlets for \"%s\" objects.", index, object->type->numOutputs, object->type->id
          ];
     }
+    if (targetIndex >= target->type->numInputs) {
+        [NSException raise:@"Invalid Link" format:@"Attempted to create link to inlet #%d, but the object only has #%d inlets", targetIndex, target->type->numInputs];
+    }
     if (target->inputs[targetIndex] != NULL) {
         [NSException raise:@"Invalid Link" format:@"Attempted to create link to inlet #%d, but there is already an attachment there", targetIndex];
     }
@@ -233,6 +236,20 @@ CircuitLink *addLink(Circuit *c, CircuitObject *object, int index, CircuitObject
     link->sourceIndex = index;
     link->targetIndex = targetIndex;
     link->target->inputs[targetIndex] = link;
+    
+    // set value
+    
+    int mask = 1 << link->targetIndex;
+    int oldIn = link->target->in;
+    int oldBit = !!(oldIn & mask);
+    int curIn = !!(link->source->out & 1 <<link->sourceIndex);
+    if (!oldBit && curIn) {
+        link->target->in = oldIn | mask;
+        needsUpdate(c, link->target);
+    } else if (oldBit && !curIn) {
+        link->target->in = oldIn & ~mask;
+        needsUpdate(c, link->target);
+    }
     
     return link;
 }

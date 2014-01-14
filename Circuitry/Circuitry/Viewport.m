@@ -204,7 +204,9 @@ GLKVector3 offsetForInlet(CircuitProcess *process, int index) {
             GLKVector3 dotPos = offsetForOutlet(object->type, o);
             outlet->x = pos.x + dotPos.x;
             outlet->y = pos.y + dotPos.y;
-            outlet->tex = (object->out & 1 << o) ? (object->outputs[o] ? gateOutletActiveConnected : gateOutletActive) : (object->outputs[o] ? gateOutletInactiveConnected : gateOutletInactive);
+            BOOL isConnected = object->outputs[o] != NULL;
+            if (object == _currentEditingLinkSource && o == _currentEditingLinkSourceIndex) isConnected = YES;
+            outlet->tex = (object->out & 1 << o) ? (isConnected ? gateOutletActiveConnected : gateOutletActive) : (isConnected ? gateOutletInactiveConnected : gateOutletInactive);
         }
         for(int o = 0; o < object->type->numInputs; o++) {
             BatchedSpriteInstance *outlet = &_instances[i++];
@@ -212,7 +214,9 @@ GLKVector3 offsetForInlet(CircuitProcess *process, int index) {
             GLKVector3 dotPos = offsetForInlet(object->type, o);
             outlet->x = pos.x + dotPos.x;
             outlet->y = pos.y + dotPos.y;
-            outlet->tex = (object->in & 1 << o) ? (object->inputs[o] ? gateOutletActiveConnected : gateOutletActive) : (object->inputs[o] ? gateOutletInactiveConnected : gateOutletInactive);
+            BOOL isConnected = object->inputs[o] != NULL;
+            if (object == _currentEditingLinkTarget && o == _currentEditingLinkTargetIndex) isConnected = YES;
+            outlet->tex = (object->in & 1 << o) ? (isConnected ? gateOutletActiveConnected : gateOutletActive) : (isConnected ? gateOutletInactiveConnected : gateOutletInactive);
         }
     }];
     
@@ -258,6 +262,16 @@ GLKVector3 offsetForInlet(CircuitProcess *process, int index) {
         }
                 
     }];
+    
+    if (_currentEditingLinkSource && !_currentEditingLink) {
+        CircuitObject *object = _currentEditingLinkSource;
+        GLKVector3 dotPos = offsetForOutlet(object->type, _currentEditingLinkSourceIndex);
+        GLKVector2 A = GLKVector2Make(object->pos.x + dotPos.x + radius, object->pos.y + dotPos.y + radius);
+        GLKVector2 B = GLKVector2Make(_currentEditingLinkTargetPosition.x + radius, _currentEditingLinkTargetPosition.y + radius);
+        bool isActive = object->out & 1 << _currentEditingLinkSourceIndex;
+        [bezier drawFrom:A to:B withColor1:isActive ? active1 : inactive1 color2:isActive ? active2 : inactive2  active:isActive withTransform:_viewProjectionMatrix];
+        
+    }
     
     [self bufferSprites];
     
