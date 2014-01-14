@@ -42,8 +42,9 @@ SpriteTexturePos texturePos(NSDictionary *atlasJson, NSString *name) {
 - (id) initWithContext: (EAGLContext*) context {
     self = [self init];
         
+    float initialScale = 0.5;
     _translate = GLKVector3Make(0.0, 0.0, 0.0);
-    _scale     = GLKVector3Make(1.0, 1.0, 1.0);
+    _scale     = GLKVector3Make(initialScale, initialScale, initialScale);
     
     _grid = [[Grid alloc] init];
     
@@ -68,7 +69,7 @@ SpriteTexturePos texturePos(NSDictionary *atlasJson, NSString *name) {
     
     NSError *err;
     NSDictionary *atlas = [NSJSONSerialization JSONObjectWithStream:stream options:0 error:&err];
-    if (err) [NSException exceptionWithName:err.description reason:err.localizedFailureReason userInfo:@{}];
+    if (err) [[NSException exceptionWithName:err.description reason:err.localizedFailureReason userInfo:@{}] raise];
     
     GLKTextureInfo *tex = [Sprite textureWithContentsOfURL:atlasPng];
     
@@ -249,7 +250,8 @@ GLKVector3 offsetForInlet(CircuitProcess *process, int index) {
                 dotPos = offsetForInlet(link->target->type, link->targetIndex);
                 GLKVector2 B = GLKVector2Make(link->target->pos.x + dotPos.x + radius, link->target->pos.y + dotPos.y + radius);
                 bool isActive = object->out & 1 << sourceIndex;
-                [bezier drawFrom:A to:B withColor1:isActive ? active1 : inactive1 color2:isActive ? active2 : inactive2 withTransform:_viewProjectionMatrix];
+                [bezier drawFrom:A to:B withColor1:isActive ? active1 : inactive1 color2:isActive ? active2 : inactive2  active:isActive withTransform:_viewProjectionMatrix];
+
                 
                 link = link->nextSibling;
             }

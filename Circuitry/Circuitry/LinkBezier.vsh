@@ -2,6 +2,8 @@ uniform mat4 modelViewProjectionMatrix;
 
 uniform vec2 A;
 uniform vec2 B;
+uniform float time;
+uniform bool active;
 
 attribute float position;
 
@@ -56,7 +58,9 @@ void main()
     v = max(displacement, 0.0);
     float t = (position - rem) / NVERTSM2;
     vec2 z = bezier(A, vec2(A.x + dx, A.y), vec2(A.x + dx, B.y), B, t);
-    vec2 dz = 8.0 * displacement * normalize(z - bezier(A, vec2(A.x + dx, A.y), vec2(A.x + dx, B.y), B, t - 1.0 / NVERTSM2));
+    float radius = 8.0;
+    if (active) radius += 2.0 * sin(40.0 * time - 30.0 * t);
+    vec2 dz = radius * displacement * normalize(z - bezier(A, vec2(A.x + dx, A.y), vec2(A.x + dx, B.y), B, t - 1.0 / NVERTSM2));
     
     gl_Position = modelViewProjectionMatrix * vec4(z + vec2(dz.y, -dz.x), 0.0, 1.0);
 }

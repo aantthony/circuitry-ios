@@ -18,6 +18,8 @@
     GLint uColor2;
     GLint uA;
     GLint uB;
+    GLint uTime;
+    GLint uActive;
     int nVerts;
 }
 
@@ -49,6 +51,8 @@ typedef struct {
     uColor2 = [shader getUniformLocation:@"color2"];
     uA = [shader getUniformLocation:@"A"];
     uB = [shader getUniformLocation:@"B"];
+    uTime = [shader getUniformLocation:@"time"];
+    uActive = [shader getUniformLocation:@"active"];
 //    return self;
     glGenBuffers(1, &_vertexBuffer);
     [ShaderEffect checkError];
@@ -59,8 +63,11 @@ typedef struct {
     return self;
 }
 
-- (void) drawFrom: (GLKVector2) A to: (GLKVector2) B withColor1:(GLKVector3)color1 color2: (GLKVector3) color2 withTransform:(GLKMatrix4) viewProjectionMatrix {
+- (void) drawFrom: (GLKVector2) A to: (GLKVector2) B withColor1:(GLKVector3)color1 color2: (GLKVector3) color2 active:(BOOL)isActive withTransform:(GLKMatrix4) viewProjectionMatrix {
     [ShaderEffect checkError];
+    
+    static float t = 0.0;
+    t += 0.01;
     [shader prepareToDraw];
     [ShaderEffect checkError];
     glEnableVertexAttribArray(GLKVertexAttribPosition);
@@ -75,6 +82,8 @@ typedef struct {
     glUniform2f(uB, B.x, B.y);
     glUniform3f(uColor1, color1.r, color1.g, color1.b);
     glUniform3f(uColor2, color2.r, color2.g, color2.b);
+    glUniform1f(uTime, t);
+    glUniform1i(uActive, isActive);
 //    glUniform3f(uWireColor, 0.1960784314, 1.0, 3098039216);
     [ShaderEffect checkError];
     [ShaderEffect checkError];
