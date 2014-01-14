@@ -53,6 +53,10 @@
     
 }
 
+- (CGRect) bounds {
+    return CGRectMake(128, 700, 1534 / 2, 136 / 2);
+}
+
 
 
 @end

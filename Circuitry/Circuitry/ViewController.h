@@ -8,6 +8,8 @@
 - (IBAction) handlePanGesture:(UIPanGestureRecognizer *) recognizer;
 - (IBAction)handleDragGateGesture:(UIPanGestureRecognizer *)sender;
 
+- (IBAction)handleCreateGateGesture:(UIPanGestureRecognizer *)sender;
+
 - (IBAction) handlePinchGesture:(UIPinchGestureRecognizer *) recognizer;
 
 - (IBAction) handleTapGesture:(UITapGestureRecognizer *)sender;

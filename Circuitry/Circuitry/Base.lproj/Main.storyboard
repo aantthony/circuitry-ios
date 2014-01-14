@@ -22,6 +22,7 @@
                             <outletCollection property="gestureRecognizers" destination="66T-he-oQr" appends="YES" id="HSC-Gp-Uy5"/>
                             <outletCollection property="gestureRecognizers" destination="T8i-XA-rcG" appends="YES" id="wZG-53-zYx"/>
                             <outletCollection property="gestureRecognizers" destination="q8S-aQ-v8R" appends="YES" id="w0l-eT-tG5"/>
+                            <outletCollection property="gestureRecognizers" destination="7bN-zV-gIM" appends="YES" id="3Sa-so-PtL"/>
                         </connections>
                     </glkView>
                     <keyCommands/>
@@ -58,6 +59,12 @@
                         <outlet property="delegate" destination="BV1-FR-VrT" id="Uk0-53-9Mk"/>
                     </connections>
                 </panGestureRecognizer>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="7bN-zV-gIM" customClass="CreateGatePanGestureRecognizer">
+                    <connections>
+                        <action selector="handleCreateGateGesture:" destination="BV1-FR-VrT" id="I1w-wN-plg"/>
+                        <outlet property="delegate" destination="BV1-FR-VrT" id="20d-CD-9T5"/>
+                    </connections>
+                </panGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-19" y="-354"/>
         </scene>
@@ -78,6 +85,23 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gaa-uB-9XY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1150" y="-362"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="Aed-LX-mf7">
+            <objects>
+                <viewController id="ajT-me-5U1" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="j9D-Ye-cOn"/>
+                        <viewControllerLayoutGuide type="bottom" id="MOE-71-YyI"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="nlj-lA-CuL">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XA1-mf-Ec9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

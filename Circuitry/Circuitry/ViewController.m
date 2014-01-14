@@ -5,6 +5,7 @@
 #import "Sprite.h"
 #import "HUD.h"
 #import "DragGateGestureRecognizer.h"
+#import "CreateGatePanGestureRecognizer.h"
 
 @interface ViewController () {
     GLuint _program;
@@ -254,6 +255,13 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         }
         
         return NO;
+    } else if ([gestureRecognizer isKindOfClass:[CreateGatePanGestureRecognizer class]]) {
+        // only starts if the finger is on the toolbelt
+        CGPoint location = [gestureRecognizer locationInView:self.view];
+        if (!CGRectContainsPoint(_hud.toolbelt.bounds, location)) {
+            return NO;
+        }
+        return YES;
     } else if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
         // pan
         UIPanGestureRecognizer *recogniser = (UIPanGestureRecognizer *)gestureRecognizer;
@@ -287,13 +295,18 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     
     CircuitObject *object = beginLongPressGestureObject;
     
-    GLKVector3 curPos = [_viewport unproject: PX(self.view.contentScaleFactor, [sender locationInView:self.view])];
+    if ([sender numberOfTouches] < 1) return;
+    GLKVector3 curPos = [_viewport unproject: PX(self.view.contentScaleFactor, [sender locationOfTouch:0 inView:self.view])];
     
     GLKVector3 newPos = GLKVector3Add(curPos, beginLongPressGestureOffset);
     
     object->pos.x = newPos.x;
     object->pos.y = newPos.y;
     object->pos.z = newPos.z;
+}
+
+- (IBAction)handleCreateGateGesture:(UIPanGestureRecognizer *)sender {
+    
 }
 
 - (IBAction) handlePinchGesture:(UIPinchGestureRecognizer *)recognizer {

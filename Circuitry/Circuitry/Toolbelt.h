@@ -10,5 +10,5 @@
 #import "Drawable.h"
 
 @interface Toolbelt : Drawable
-
+- (CGRect) bounds;
 @end
