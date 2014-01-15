@@ -46,13 +46,13 @@ typedef struct {
     shader = [[ShaderEffect alloc] initWithVertexSource:vertShader withFragmentSource:fragShader withUniforms:@{} withAttributes:@{}];
     [ShaderEffect checkError];
     
-    uModelViewProjectMatrix = [shader getUniformLocation:@"modelViewProjectionMatrix"];
-    uColor1 = [shader getUniformLocation:@"color1"];
-    uColor2 = [shader getUniformLocation:@"color2"];
-    uA = [shader getUniformLocation:@"A"];
-    uB = [shader getUniformLocation:@"B"];
-    uTime = [shader getUniformLocation:@"time"];
-    uActive = [shader getUniformLocation:@"active"];
+    uModelViewProjectMatrix = [shader uniformLocation:@"modelViewProjectionMatrix"];
+    uColor1 = [shader uniformLocation:@"color1"];
+    uColor2 = [shader uniformLocation:@"color2"];
+    uA = [shader uniformLocation:@"A"];
+    uB = [shader uniformLocation:@"B"];
+    uTime = [shader uniformLocation:@"time"];
+    uActive = [shader uniformLocation:@"active"];
 //    return self;
     glGenBuffers(1, &_vertexBuffer);
     [ShaderEffect checkError];

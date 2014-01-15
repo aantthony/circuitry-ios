@@ -53,10 +53,10 @@ static GLuint _vertexArray;
         shader = [[ShaderEffect alloc] initWithVertexSource:vertShader withFragmentSource:fragShader withUniforms:uniforms withAttributes:@{}];
         
         // uniform locations:
-        uModelViewProjectMatrix = [shader getUniformLocation:@"modelViewProjectionMatrix"];
-        uTexture                = [shader getUniformLocation:@"texture"];
-        uSize                   = [shader getUniformLocation:@"size"];
-        uPos                    = [shader getUniformLocation:@"pos"];
+        uModelViewProjectMatrix = [shader uniformLocation:@"modelViewProjectionMatrix"];
+        uTexture                = [shader uniformLocation:@"texture"];
+        uSize                   = [shader uniformLocation:@"size"];
+        uPos                    = [shader uniformLocation:@"pos"];
         
 //        glGenVertexArraysOES(1, &_vertexArray);
         glBindVertexArrayOES(_vertexArray);

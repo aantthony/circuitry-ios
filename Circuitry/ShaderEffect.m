@@ -107,11 +107,11 @@
     }
 }
 
-- (GLint) getUniformLocation:(NSString *) name {
+- (GLUniformLocation) uniformLocation:(NSString *) name {
     return glGetUniformLocation(_program, [name UTF8String]);
 }
 
-- (GLint) getAttributeLocation:(NSString *) name {
+- (GLAttributeLocation) attributeLocation:(NSString *) name {
     return glGetAttribLocation(_program, [name UTF8String]);
 }
 

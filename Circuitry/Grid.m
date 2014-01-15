@@ -83,8 +83,8 @@ static int nLines;
     }
     _shader = [[ShaderEffect alloc] initWithVertexSource:vertShader withFragmentSource:fragShader withUniforms:nil withAttributes:nil];
     
-    _uModelViewProjectMatrix = [_shader getUniformLocation:@"modelViewProjectionMatrix"];
-    _uGridMatrix = [_shader getUniformLocation:@"gridMatrix"];
+    _uModelViewProjectMatrix = [_shader uniformLocation:@"modelViewProjectionMatrix"];
+    _uGridMatrix = [_shader uniformLocation:@"gridMatrix"];
     
     glGenBuffers(1, &_indexBuffer);
     glGenBuffers(1, &_vertexBuffer);

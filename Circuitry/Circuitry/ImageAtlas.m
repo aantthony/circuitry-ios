@@ -9,7 +9,6 @@
 #import "ImageAtlas.h"
 
 @interface ImageAtlas() {
-    
 }
 @property NSDictionary *json;
 

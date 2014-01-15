@@ -62,17 +62,17 @@ static GLint uModelViewProjectMatrix;
 
         [ShaderEffect checkError];
         // uniform locations:
-        uModelViewProjectMatrix = [shader getUniformLocation:@"modelViewProjectionMatrix"];
-        uTexture                = [shader getUniformLocation:@"texture"];
-        uTextureSize            = [shader getUniformLocation:@"textureSize"];
+        uModelViewProjectMatrix = [shader uniformLocation:@"modelViewProjectionMatrix"];
+        uTexture                = [shader uniformLocation:@"texture"];
+        uTextureSize            = [shader uniformLocation:@"textureSize"];
         
         [ShaderEffect checkError];
 
-        aSource = [shader getAttributeLocation:@"source"];
+        aSource = [shader attributeLocation:@"source"];
         [ShaderEffect checkError];
 
 
-        aTranslate = [shader getAttributeLocation:@"translate"];
+        aTranslate = [shader attributeLocation:@"translate"];
 //        [ShaderEffect checkError];
 
         glGenBuffers(1, &_indexBuffer);

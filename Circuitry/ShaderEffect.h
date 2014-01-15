@@ -2,6 +2,9 @@
 
 #import <GLKit/GLKit.h>
 
+typedef GLint GLUniformLocation;
+typedef GLint GLAttributeLocation;
+
 @interface ShaderEffect : NSObject <GLKNamedEffect>
 
 @property (nonatomic, readonly)        GLKEffectPropertyTransform          *transform;                  // Identity Matrices
@@ -13,8 +16,8 @@
 
 + (void) checkError;
 
-- (GLint) getUniformLocation:(NSString *) name;
-- (GLint) getAttributeLocation:(NSString *) name;
+- (GLUniformLocation)   uniformLocation  :(NSString *) name;
+- (GLAttributeLocation) attributeLocation:(NSString *) name;
 
 //- (GLKEffectProperty *) getFloatProperty:(NSString *) name;
 
