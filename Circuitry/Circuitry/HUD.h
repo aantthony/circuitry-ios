@@ -10,8 +10,11 @@
 #import "Toolbelt.h"
 #import "Drawable.h"
 #import "Viewport.h"
+#import "ImageAtlas.h"
 
 @interface HUD : Drawable
+
+- (id) initWithAtlas:(ImageAtlas *)atlas;
 
 @property (strong, nonatomic) Toolbelt *toolbelt;
 @property (strong, nonatomic) Viewport *viewPort;

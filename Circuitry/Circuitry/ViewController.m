@@ -35,6 +35,7 @@
 }
 @property (strong, nonatomic) EAGLContext *context;
 
+@property ImageAtlas *atlas;
 @property Circuit *circuit;
 @property Viewport *viewport;
 @property HUD *hud;
@@ -66,8 +67,12 @@
     
     [self setupGL];
     [self checkError];
-    _viewport = [[Viewport alloc] initWithContext:self.context];
-    _hud = [[HUD alloc] init];
+    
+    
+    _atlas = [ImageAtlas imageAtlasWithName:@"circuit"];
+    
+    _viewport = [[Viewport alloc] initWithContext:self.context atlas: _atlas];
+    _hud = [[HUD alloc] initWithAtlas:_atlas];
     _hud.viewPort = _viewport;
     
     [self checkError];
@@ -261,6 +266,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
                 _viewport.currentEditingLinkTargetIndex = existing->targetIndex;
                 return YES;
             } else {
+                // TODO: find outlet index
                 // create new one
                 _viewport.currentEditingLink = NULL;
                 _viewport.currentEditingLinkSource = o;

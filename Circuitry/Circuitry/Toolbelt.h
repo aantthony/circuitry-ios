@@ -8,7 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import "Drawable.h"
+#import "ImageAtlas.h"
 
 @interface Toolbelt : Drawable
+
+- (id) initWithAtlas:(ImageAtlas *)atlas;
 - (CGRect) bounds;
 @end

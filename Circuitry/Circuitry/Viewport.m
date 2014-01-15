@@ -29,17 +29,8 @@ static SpriteTexturePos gateOutletInactive;
 static SpriteTexturePos gateOutletActive;
 static SpriteTexturePos gateOutletActiveConnected;
 static SpriteTexturePos gateOutletInactiveConnected;
-    
-SpriteTexturePos texturePos(NSDictionary *atlasJson, NSString *name) {
-    SpriteTexturePos pos;
-    pos.x = [atlasJson[name][@"x"] floatValue];
-    pos.y = [atlasJson[name][@"y"] floatValue];
-    pos.width = [atlasJson[name][@"width"] floatValue];
-    pos.height = [atlasJson[name][@"height"] floatValue];
-    return pos;
-}
 
-- (id) initWithContext: (EAGLContext*) context {
+- (id) initWithContext: (EAGLContext*) context atlas:(ImageAtlas *)atlas {
     self = [self init];
         
     float initialScale = 0.5;
@@ -61,28 +52,16 @@ SpriteTexturePos texturePos(NSDictionary *atlasJson, NSString *name) {
     
     _capacity = 10000;
     
-    NSURL *atlasPng = [[NSBundle mainBundle] URLForResource:@"circuit-atlas" withExtension:@"png"];
-    NSURL *atlasJson = [[NSBundle mainBundle] URLForResource:@"circuit-atlas" withExtension:@"json"];
-
-    NSInputStream *stream = [NSInputStream inputStreamWithURL:atlasJson];
-    [stream open];
-    
-    NSError *err;
-    NSDictionary *atlas = [NSJSONSerialization JSONObjectWithStream:stream options:0 error:&err];
-    if (err) [[NSException exceptionWithName:err.description reason:err.localizedFailureReason userInfo:@{}] raise];
-    
-    GLKTextureInfo *tex = [Sprite textureWithContentsOfURL:atlasPng];
-    
-    _gateSprites = [[BatchedSprite alloc] initWithTexture:tex capacity:_capacity];
+    _gateSprites = [[BatchedSprite alloc] initWithTexture:atlas.texture capacity:_capacity];
     
     _instances = malloc(sizeof(BatchedSpriteInstance) * _capacity);
     
-    gateBackgroundHeight1 = texturePos(atlas, @"single@2x");
-    gateBackgroundHeight2 = texturePos(atlas, @"double@2x");
-    gateOutletInactive = texturePos(atlas, @"inactive@2x");
-    gateOutletActive = texturePos(atlas, @"active@2x");
-    gateOutletActiveConnected = texturePos(atlas, @"activeconnected@2x");
-    gateOutletInactiveConnected = texturePos(atlas, @"inactiveconnected@2x");
+    gateBackgroundHeight1 = [atlas positionForSprite: @"single@2x"];
+    gateBackgroundHeight2 = [atlas positionForSprite: @"double@2x"];
+    gateOutletInactive = [atlas positionForSprite: @"inactive@2x"];
+    gateOutletActive = [atlas positionForSprite:  @"active@2x"];
+    gateOutletActiveConnected = [atlas positionForSprite: @"activeconnected@2x"];
+    gateOutletInactiveConnected = [atlas positionForSprite:  @"inactiveconnected@2x"];
     
     for(int i = 0; i < _capacity; i++) {
         _instances[i].tex = gateBackgroundHeight2;

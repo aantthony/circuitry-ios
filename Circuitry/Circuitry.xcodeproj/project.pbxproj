@@ -55,6 +55,7 @@
 		92A4F87018728A1F00EEB367 /* Drawable.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A4F86F18728A1F00EEB367 /* Drawable.m */; };
 		92A4F871187295EF00EEB367 /* Grid.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 92D90E3C1838E9CD00387FAC /* Grid.vsh */; };
 		92A4F872187295EF00EEB367 /* Grid.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 92D90E3E1838E9D700387FAC /* Grid.fsh */; };
+		92B269AF1886B175007E9866 /* ImageAtlas.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B269AE1886B175007E9866 /* ImageAtlas.m */; };
 		92D90E321837807000387FAC /* Sprite.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E311837807000387FAC /* Sprite.m */; };
 		92D90E381837836500387FAC /* ShaderEffect.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E371837836500387FAC /* ShaderEffect.m */; };
 		92D90E3B1838D7AB00387FAC /* Grid.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E3A1838D7AB00387FAC /* Grid.m */; };
@@ -148,6 +149,8 @@
 		92A4F86C187289F300EEB367 /* Viewport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Viewport.m; sourceTree = "<group>"; };
 		92A4F86E18728A1F00EEB367 /* Drawable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Drawable.h; path = ../Drawable.h; sourceTree = "<group>"; };
 		92A4F86F18728A1F00EEB367 /* Drawable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Drawable.m; path = ../Drawable.m; sourceTree = "<group>"; };
+		92B269AD1886B175007E9866 /* ImageAtlas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAtlas.h; sourceTree = "<group>"; };
+		92B269AE1886B175007E9866 /* ImageAtlas.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAtlas.m; sourceTree = "<group>"; };
 		92D90E301837807000387FAC /* Sprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sprite.h; sourceTree = "<group>"; };
 		92D90E311837807000387FAC /* Sprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sprite.m; sourceTree = "<group>"; };
 		92D90E361837836500387FAC /* ShaderEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShaderEffect.h; path = ../ShaderEffect.h; sourceTree = "<group>"; };
@@ -358,6 +361,8 @@
 				9288061D1872136A0096A1CA /* background.png */,
 				92A4F86B187289F300EEB367 /* Viewport.h */,
 				92A4F86C187289F300EEB367 /* Viewport.m */,
+				92B269AD1886B175007E9866 /* ImageAtlas.h */,
+				92B269AE1886B175007E9866 /* ImageAtlas.m */,
 			);
 			name = Viewport;
 			sourceTree = "<group>";
@@ -552,6 +557,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				928806231872438E0096A1CA /* Sprite.fsh in Sources */,
+				92B269AF1886B175007E9866 /* ImageAtlas.m in Sources */,
 				92A28A5E187433E800F0D934 /* Circuit.m in Sources */,
 				9232B65118780CFE00E45C7E /* BatchedSprite.m in Sources */,
 				9253C40C18854D0B00D2509C /* CreateLinkGestureRecognizer.m in Sources */,

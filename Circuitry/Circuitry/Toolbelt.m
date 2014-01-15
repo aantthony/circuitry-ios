@@ -37,7 +37,8 @@
 
 @implementation Toolbelt
 
-- (id) init {
+
+- (id) initWithAtlas:(ImageAtlas *)atlas {
     self = [super init];
     self.gates = [NSArray arrayWithObjects:[GateObject gateObjectWithId: @"xor" count: 20], nil];
     GLKTextureInfo *texture = [Sprite textureWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"Toolbelt@2x" withExtension:@"png"]];

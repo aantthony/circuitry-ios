@@ -15,10 +15,10 @@
 
 @implementation HUD
 
-- (id) init {
+- (id) initWithAtlas:(ImageAtlas *)atlas {
     self = [super init];
 
-    _toolbelt = [[Toolbelt alloc] init];
+    _toolbelt = [[Toolbelt alloc] initWithAtlas:atlas];
     return self;
 }
 

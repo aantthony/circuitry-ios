@@ -1,6 +1,8 @@
 #import <UIKit/UIKit.h>
 #import <GLKit/GLKit.h>
 
+#import "ImageAtlas.h"
+
 @interface ViewController : GLKViewController <UIGestureRecognizerDelegate>
 
 //@property (, nonatomic) GLKMatrix4 _modelViewProjectionMatrix;\

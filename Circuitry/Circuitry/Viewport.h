@@ -2,12 +2,13 @@
 
 #import "Drawable.h"
 #import "Circuit.h"
+#import "ImageAtlas.h"
 
 @interface Viewport : Drawable
 
 @property Circuit *circuit;
 
-- (id) initWithContext: (EAGLContext*) context;
+- (id) initWithContext: (EAGLContext*) context atlas:(ImageAtlas *)atlas;
 - (void)update;
 
 - (void) translate: (GLKVector3) translate;
