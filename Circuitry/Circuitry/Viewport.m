@@ -127,6 +127,22 @@ SpriteTexturePos texturePos(NSDictionary *atlasJson, NSString *name) {
     return GLKMathUnproject(positionInWindowNear, _viewMatrix, _projectionMatrix, viewport, NULL);
 }
 
+- (CircuitLink *) findCircuitLinkAtOffset: (GLKVector3) offset attachedToObject:(CircuitObject *)object {
+    
+    if (object->type->numInputs == 0) return NULL;
+    
+    CircuitLink * closest = NULL;
+    float dist = FLT_MAX;
+    for(int i = 0; i < object->type->numInputs; i++) { 
+        float d = GLKVector3Distance(offsetForInlet(object->type, i), offset);
+        if (d < dist) {
+            dist = d;
+            closest = object->inputs[i];
+        }
+    }
+    return closest;
+}
+
 - (CircuitObject*) findCircuitObjectAtPosition: (GLKVector3) pos {
     
     __block CircuitObject *o = NULL;
@@ -168,6 +184,7 @@ SpriteTexturePos texturePos(NSDictionary *atlasJson, NSString *name) {
 
 GLKVector3 offsetForOutlet(CircuitProcess *process, int index) {
     GLKVector3 res;
+    res.z = 0.0;
     res.x = gateBackgroundHeight2.width - 50.0;
     if (process->numOutputs % 2 == 1) {
         res.y = 22.0 + 40.0 + index * 80.0;
@@ -181,6 +198,7 @@ GLKVector3 offsetForInlet(CircuitProcess *process, int index) {
     
     GLKVector3 res;
     res.x = 20.0;
+    res.z = 0.0;
     if (process->numInputs % 2 == 1) {
         res.y = 22.0 + 40.0 + index * 80.0;
     } else {

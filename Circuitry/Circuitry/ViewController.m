@@ -249,11 +249,25 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         CircuitObject *o;
         if ((o = [_viewport findCircuitObjectAtPosition:position])) {
             
-            _viewport.currentEditingLink = NULL;
-            _viewport.currentEditingLinkSource = o;
-            _viewport.currentEditingLinkSourceIndex = 0;
-            _viewport.currentEditingLinkTargetPosition = position;
-            return YES;
+            GLKVector3 offset = GLKVector3Subtract(position, *(GLKVector3 *)&o->pos);
+            if (offset.x < 150.0) {
+                CircuitLink *existing = [_viewport findCircuitLinkAtOffset:offset attachedToObject:o];
+                if (!existing) return NO;
+                // edit an existing one
+                _viewport.currentEditingLink = existing;
+                _viewport.currentEditingLinkSource = existing->source;
+                _viewport.currentEditingLinkSourceIndex = existing->sourceIndex;
+                _viewport.currentEditingLinkTarget = existing->target;
+                _viewport.currentEditingLinkTargetIndex = existing->targetIndex;
+                return YES;
+            } else {
+                // create new one
+                _viewport.currentEditingLink = NULL;
+                _viewport.currentEditingLinkSource = o;
+                _viewport.currentEditingLinkSourceIndex = 0;
+                _viewport.currentEditingLinkTargetPosition = position;
+                return YES;
+            }
         }
 
         return NO;
