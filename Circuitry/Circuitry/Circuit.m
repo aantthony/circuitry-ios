@@ -206,6 +206,15 @@ void removeLink(Circuit *c, CircuitLink *link) {
     if (link->target) {
         link->target->inputs[link->targetIndex] = NULL;
     }
+    
+    
+    int mask = 1 << link->targetIndex;
+    int oldIn = link->target->in;
+    if (oldIn & mask) {
+        link->target->in = oldIn & ~mask;
+        needsUpdate(c, link->target);
+    }
+    
     memset(link, 0, sizeof(CircuitLink));
 }
 
