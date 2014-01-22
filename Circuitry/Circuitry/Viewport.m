@@ -106,20 +106,26 @@ static SpriteTexturePos gateOutletInactiveConnected;
     return GLKMathUnproject(positionInWindowNear, _viewMatrix, _projectionMatrix, viewport, NULL);
 }
 
-- (CircuitLink *) findCircuitLinkAtOffset: (GLKVector3) offset attachedToObject:(CircuitObject *)object {
+- (int) findInletIndexAtOffset:(GLKVector3) offset attachedToObject:(CircuitObject *)object {
     
-    if (object->type->numInputs == 0) return NULL;
+    if (object->type->numInputs == 0) return -1;
     
-    CircuitLink * closest = NULL;
+    int closest = -1;
     float dist = FLT_MAX;
     for(int i = 0; i < object->type->numInputs; i++) { 
         float d = GLKVector3Distance(offsetForInlet(object->type, i), offset);
         if (d < dist) {
             dist = d;
-            closest = object->inputs[i];
+            closest = i;
         }
     }
     return closest;
+}
+- (CircuitLink *) findCircuitLinkAtOffset: (GLKVector3) offset attachedToObject:(CircuitObject *)object {
+    int index = [self findInletIndexAtOffset:offset attachedToObject:object];
+    if (index == -1) return NULL;
+    
+    return object->inputs[index];
 }
 
 - (CircuitObject*) findCircuitObjectAtPosition: (GLKVector3) pos {

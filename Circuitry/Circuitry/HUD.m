@@ -23,7 +23,11 @@
 }
 
 - (void) drawWithStack:(GLKMatrixStackRef)stack {
+    GLKMatrixStackPush(stack);
+    float devicePixelRatio = 2.0;
+    GLKMatrixStackScale(stack,  1/ devicePixelRatio, 1/devicePixelRatio, 1/devicePixelRatio);
     [_toolbelt drawWithStack:stack];
+    GLKMatrixStackPop(stack);
 }
 
 @end

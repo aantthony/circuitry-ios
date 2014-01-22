@@ -377,22 +377,28 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     CircuitObject *target;
     if ((target = [_viewport findCircuitObjectAtPosition:curPos])) {
         
-        int targetIndex = 0;
-        while(targetIndex < target->type->numInputs && target->inputs[targetIndex]) {
-            if (target == _viewport.currentEditingLinkTarget && targetIndex == _viewport.currentEditingLinkTargetIndex) {
-                // nothings changed
-                return;
+        GLKVector3 offset = GLKVector3Subtract(curPos, *(GLKVector3 *)&target->pos);
+        
+        int targetIndex = [_viewport findInletIndexAtOffset:offset attachedToObject:target];
+        if (targetIndex != -1) {
+            while(targetIndex < target->type->numInputs && target->inputs[targetIndex]) {
+                if (target == _viewport.currentEditingLinkTarget && targetIndex == _viewport.currentEditingLinkTargetIndex) {
+                    // nothings changed
+                    return;
+                }
+                targetIndex++;
             }
-            targetIndex++;
+            if (targetIndex < target->type->numInputs) {
+                _viewport.currentEditingLinkTarget = target;
+                if (_viewport.currentEditingLink) {
+                    [_circuit removeLink:_viewport.currentEditingLink];
+                }
+                _viewport.currentEditingLinkTargetIndex = targetIndex;
+                CircuitLink *newLink = [_circuit addLink:_viewport.currentEditingLinkSource index:_viewport.currentEditingLinkSourceIndex to:target index:targetIndex];
+                _viewport.currentEditingLink = newLink;
+            }
         }
-        if (targetIndex < target->type->numInputs) {
-            
-            _viewport.currentEditingLinkTarget = target;
-            
-            _viewport.currentEditingLinkTargetIndex = targetIndex;
-            CircuitLink *newLink = [_circuit addLink:_viewport.currentEditingLinkSource index:_viewport.currentEditingLinkSourceIndex to:target index:targetIndex];
-            _viewport.currentEditingLink = newLink;
-        }
+        
         
     } else {
         if (_viewport.currentEditingLink) {

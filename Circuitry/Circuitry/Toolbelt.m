@@ -54,19 +54,29 @@
     _batcher = [[BatchedSprite alloc] initWithTexture:atlas.texture capacity:_capacity];
     
     _instances = malloc(sizeof(BatchedSpriteInstance) * _capacity);
-    
+    [self bufferInstances];
     return self;
+}
+
+- (void) bufferInstances {
+    for(int i = 0; i < 20; i++) {
+        BatchedSpriteInstance *instance = &_instances[i];
+        instance->tex = _spriteListItem;
+        instance->x = 0.0;
+        instance->y = i * _spriteListItem.height;
+    }
+    
+    [_batcher buffer:_instances FromIndex:0 count:20];
+
 }
 
 - (void) drawWithStack:(GLKMatrixStackRef)stack {
     [_sprite drawAtPoint:GLKVector3Make(128, 700, 0) withTransform:GLKMatrixStackGetMatrix4(stack)];
     [_gateSprite drawAtPoint:GLKVector3Make(145, 720, 0) withTransform:GLKMatrixStackGetMatrix4(stack)];
-    BatchedSpriteInstance *instance = &_instances[0];
-    instance->tex = _spriteListItem;
-    instance->x = 0.0;
-    instance->y = 0.0;
-    [_batcher buffer:_instances FromIndex:0 count:1];
-    [_batcher drawIndices:0 count:1 WithTransform:GLKMatrixStackGetMatrix4(stack)];
+    BatchedSpriteInstance *instance = &_instances[2];
+    instance->x = 20.0;
+    [_batcher buffer:_instances FromIndex:0 count:20];
+    [_batcher drawIndices:0 count:20 WithTransform:GLKMatrixStackGetMatrix4(stack)];
 }
 
 - (CGRect) bounds {

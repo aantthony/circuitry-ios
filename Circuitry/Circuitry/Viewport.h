@@ -17,6 +17,7 @@
 - (void) setScale: (float) scale;
 - (float) scale;
 
+- (int) findInletIndexAtOffset:(GLKVector3) offset attachedToObject:(CircuitObject *)object;
 - (CircuitLink *) findCircuitLinkAtOffset: (GLKVector3)offset attachedToObject:(CircuitObject *)object;
 - (CircuitObject*) findCircuitObjectAtPosition: (GLKVector3) pos;
 - (GLKVector3) unproject: (CGPoint) screenPos;
