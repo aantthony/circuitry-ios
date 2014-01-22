@@ -35,6 +35,7 @@ void *srealloc(void * d, size_t c) {
 
 
 int XOR  (int x) { return x == 1 || x == 2;}
+int XNOR (int x) { return x == 0 || x == 3;}
 int AND  (int x) { return x == 3;}
 int NAND (int x) { return x != 3;}
 int NOT  (int x) { return !x; }
@@ -48,8 +49,10 @@ CircuitProcess defaultGates[] = {
     {"not", 1, 1, NOT },
     {"nor", 2, 1, NOR },
     {"xor", 2, 1, XOR },
+    {"xnor", 2, 1, XOR },
     {"and", 2, 1, AND },
-    {"nand", 2, 1, NAND }
+    {"nand", 2, 1, NAND },
+    {"not", 1, 1, NOT }
 };
 
 #pragma mark - Initialisation
@@ -85,8 +88,10 @@ NSDictionary *processesById;
                       @"not": valueForGate(&defaultGates[3]),
                       @"nor": valueForGate(&defaultGates[4]),
                       @"xor": valueForGate(&defaultGates[5]),
-                      @"and": valueForGate(&defaultGates[6]),
-                      @"nand": valueForGate(&defaultGates[7])
+                      @"xnor": valueForGate(&defaultGates[6]),
+                      @"and": valueForGate(&defaultGates[7]),
+                      @"nand": valueForGate(&defaultGates[8]),
+                      @"not": valueForGate(&defaultGates[9])
                       };
 }
 

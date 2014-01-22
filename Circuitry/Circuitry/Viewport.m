@@ -29,6 +29,13 @@ static SpriteTexturePos gateOutletInactive;
 static SpriteTexturePos gateOutletActive;
 static SpriteTexturePos gateOutletActiveConnected;
 static SpriteTexturePos gateOutletInactiveConnected;
+static SpriteTexturePos symbolOR;
+static SpriteTexturePos symbolNOR;
+static SpriteTexturePos symbolXOR;
+static SpriteTexturePos symbolXNOR;
+static SpriteTexturePos symbolAND;
+static SpriteTexturePos symbolNAND;
+static SpriteTexturePos symbolNOT;
 
 - (id) initWithContext: (EAGLContext*) context atlas:(ImageAtlas *)atlas {
     self = [self init];
@@ -62,6 +69,13 @@ static SpriteTexturePos gateOutletInactiveConnected;
     gateOutletActive = [atlas positionForSprite:  @"active@2x"];
     gateOutletActiveConnected = [atlas positionForSprite: @"activeconnected@2x"];
     gateOutletInactiveConnected = [atlas positionForSprite:  @"inactiveconnected@2x"];
+    symbolOR = [atlas positionForSprite:@"symbol-or@2x"];
+    symbolNOR = [atlas positionForSprite:@"symbol-nor@2x"];
+    symbolXOR = [atlas positionForSprite:@"symbol-xor@2x"];
+    symbolXNOR = [atlas positionForSprite:@"symbol-xnor@2x"];
+    symbolAND = [atlas positionForSprite:@"symbol-and@2x"];
+    symbolNAND = [atlas positionForSprite:@"symbol-nand@2x"];
+    symbolNOT = [atlas positionForSprite:@"symbol-not@2x"];
     
     for(int i = 0; i < _capacity; i++) {
         _instances[i].tex = gateBackgroundHeight2;
@@ -167,14 +181,16 @@ static SpriteTexturePos gateOutletInactiveConnected;
     return _scale.x;
 }
 
+const float vSpacing = 35.0;
+
 GLKVector3 offsetForOutlet(CircuitProcess *process, int index) {
     GLKVector3 res;
     res.z = 0.0;
     res.x = gateBackgroundHeight2.width - 50.0;
     if (process->numOutputs % 2 == 1) {
-        res.y = 22.0 + 40.0 + index * 80.0;
+        res.y = 25.0 + vSpacing + index * vSpacing * 2.0;
     } else {
-        res.y = 22.0 + index * 80.0;
+        res.y = 25.0 + index * vSpacing * 2.0;
     }
     return res;
 }
@@ -185,11 +201,31 @@ GLKVector3 offsetForInlet(CircuitProcess *process, int index) {
     res.x = 20.0;
     res.z = 0.0;
     if (process->numInputs % 2 == 1) {
-        res.y = 22.0 + 40.0 + index * 80.0;
+        res.y = 25.0 + vSpacing + index * vSpacing * 2.0;
     } else {
-        res.y = 22.0 + index * 80.0;
+        res.y = 25.0 + index * vSpacing * 2.0;
     }
     return res;
+}
+
+- (SpriteTexturePos) textureForProcess:(CircuitProcess *)process {
+    CircuitProcess *OR  =[_circuit getProcessById:@"or"];
+    CircuitProcess *NOR =[_circuit getProcessById:@"nor"];
+    CircuitProcess *XOR =[_circuit getProcessById:@"xor"];
+    CircuitProcess *XNOR=[_circuit getProcessById:@"xnor"];
+    CircuitProcess *AND =[_circuit getProcessById:@"and"];
+    CircuitProcess *NAND=[_circuit getProcessById:@"nand"];
+    CircuitProcess *NOT =[_circuit getProcessById:@"not"];
+    
+    if (process == OR) return symbolOR;
+    else if (process == NOR) return symbolNOR;
+    else if (process == XOR) return symbolXOR;
+    else if (process == XNOR) return symbolXNOR;
+    else if (process == AND) return symbolAND;
+    else if (process == NAND) return symbolNAND;
+    else if (process == NOT) return symbolNOT;
+    else return symbolAND;
+
 }
 
 - (void) bufferSprites {
@@ -201,6 +237,11 @@ GLKVector3 offsetForInlet(CircuitProcess *process, int index) {
         BatchedSpriteInstance *instance = &_instances[i++];
         instance->x = pos.x;
         instance->y = pos.y;
+        
+        BatchedSpriteInstance *symbol = &_instances[i++];
+        symbol->x = pos.x + 14.0;
+        symbol->y = pos.y + 0.0;
+        symbol->tex = [self textureForProcess:object->type];
         
         for(int o = 0; o < object->type->numOutputs; o++) {
             BatchedSpriteInstance *outlet = &_instances[i++];
