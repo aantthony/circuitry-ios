@@ -89,7 +89,7 @@ static SpriteTexturePos symbolNOT;
     
     return self;
 }
-- (void)update {
+- (void) update: (NSTimeInterval) dt{
 
 }
 
@@ -146,7 +146,7 @@ static SpriteTexturePos symbolNOT;
     
     __block CircuitObject *o = NULL;
     
-    [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
+    [_circuit enumerateObjectsInReverseUsingBlock:^(CircuitObject *object, BOOL *stop) {
         float width = gateBackgroundHeight2.width;
         float height = gateBackgroundHeight2.height;
         GLKVector3 oPos = *(GLKVector3 *)&object->pos;

@@ -8,6 +8,8 @@
 #import "CreateGatePanGestureRecognizer.h"
 #import "CreateLinkGestureRecognizer.h"
 
+#import "ToolbeltItem.h"
+
 @interface ViewController () {
     GLuint _program;
     
@@ -26,9 +28,12 @@
     CircuitObject *beginLongPressGestureObject;
     GLKVector3 beginLongPressGestureOffset;
     
+    
     BOOL isAnimatingScaleToSnap;
     BOOL toolbeltTouchIntercept;
     
+    BOOL draggingOutFromToolbeltLockY;
+    CGPoint draggingOutFromToolbeltStart;
     
     Sprite *bg;
     
@@ -48,6 +53,45 @@
 
 @implementation ViewController
 
+- (void) configureToolbeltItems {
+    
+    NSMutableArray *items = [NSMutableArray array];
+    
+    
+    ToolbeltItem *item = [[ToolbeltItem alloc] init];
+    item.type = [_circuit getProcessById:@"in"];
+    [items addObject:item];
+    
+    item = [[ToolbeltItem alloc] init];
+    item.type = [_circuit getProcessById:@"or"];
+    [items addObject:item];
+    
+    item = [[ToolbeltItem alloc] init];
+    item.type = [_circuit getProcessById:@"and"];
+    [items addObject:item];
+    
+    item = [[ToolbeltItem alloc] init];
+    item.type = [_circuit getProcessById:@"not"];
+    [items addObject:item];
+    
+    item = [[ToolbeltItem alloc] init];
+    item.type = [_circuit getProcessById:@"nor"];
+    [items addObject:item];
+    
+    item = [[ToolbeltItem alloc] init];
+    item.type = [_circuit getProcessById:@"xor"];
+    [items addObject:item];
+    
+    item = [[ToolbeltItem alloc] init];
+    item.type = [_circuit getProcessById:@"nand"];
+    [items addObject:item];
+    
+    item = [[ToolbeltItem alloc] init];
+    item.type = [_circuit getProcessById:@"xnor"];
+    [items addObject:item];
+    
+    _hud.toolbelt.items = items;
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -68,13 +112,11 @@
     [self setupGL];
     [self checkError];
     
-    
     _atlas = [ImageAtlas imageAtlasWithName:@"circuit"];
     
     _viewport = [[Viewport alloc] initWithContext:self.context atlas: _atlas];
     _hud = [[HUD alloc] initWithAtlas:_atlas];
     _hud.viewPort = _viewport;
-    
     [self checkError];
     GLKTextureInfo *bgTexture = [Sprite textureWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"background" withExtension:@"png"]];
     [self checkError];
@@ -86,6 +128,8 @@
     [stream open];
     _circuit = [Circuit circuitWithStream: stream];
     _viewport.circuit = _circuit;
+    
+    [self configureToolbeltItems];
 //    [[[UIAlertView alloc] initWithTitle:_circuit.name message:_circuit.description delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
 }
 
@@ -191,10 +235,12 @@
         [_viewport translate: GLKVector3Make(_viewport.scale * (bPos.x - aPos.x), _viewport.scale * (bPos.y - aPos.y), 0.0)];
         
     }
-//   _rotation += self.timeSinceLastUpdate * 0.5f;
+    
+    float dt = self.timeSinceLastUpdate;
     _rotation += 1.0;
     [_circuit simulate:4096];
-    [_viewport update];
+    [_viewport update: dt];
+    [_hud update: dt];
 }
 
 - (void) checkError {
@@ -218,8 +264,10 @@
     [self checkError];
     glClearColor(0.0, 0.0, 0.0, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glDisable(GL_DEPTH_TEST);
-    glDepthMask(0);
+//    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+
     [self checkError];
     GLKMatrixStackLoadMatrix4(_stack, _modelViewProjectionMatrix);
     [bg drawWithSize:GLKVector2Make(rect.size.width, rect.size.height) withTransform:_modelViewProjectionMatrix];
@@ -298,15 +346,12 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         if (!CGRectContainsPoint(_hud.toolbelt.bounds, location)) {
             return NO;
         }
-        CircuitObject *o = [_circuit addObject:[_circuit getProcessById:@"xor"]];
         
-        GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [gestureRecognizer locationInView:self.view])];
+        CGPoint p = [gestureRecognizer locationInView:self.view];
+        p.x = 0.0;
         
-        beginLongPressGestureObject = o;
-        o->pos.x = position.x - 200.0;
-        o->pos.y = position.y - 100.0;
-        GLKVector3 objectPosition = *(GLKVector3 *) &beginLongPressGestureObject->pos;
-        beginLongPressGestureOffset = GLKVector3Subtract(objectPosition, position);
+        draggingOutFromToolbeltLockY = YES;
+        draggingOutFromToolbeltStart = p;
         return YES;
     } else if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
         // pan
@@ -359,7 +404,35 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 }
 
 - (IBAction)handleCreateGateGesture:(UIPanGestureRecognizer *)sender {
-    return [self handleDragGateGesture:sender];
+    
+    if (draggingOutFromToolbeltLockY) {
+        if ([sender numberOfTouches] != 1) {
+            sender.enabled = NO;
+            sender.enabled = YES;
+            return;
+        }
+        CGPoint p = [sender locationOfTouch:0 inView:self.view];
+        
+        CGPoint diff = CGPointMake(p.x - draggingOutFromToolbeltStart.x, p.y - draggingOutFromToolbeltStart.y);
+        if (diff.x > 100.0) {
+            GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, p)];
+            
+            draggingOutFromToolbeltLockY = NO;
+            CircuitObject *o = [_circuit addObject:[_circuit getProcessById:@"xor"]];
+            beginLongPressGestureObject = o;
+            o->pos.x = position.x;
+            o->pos.y = position.y - 100.0;
+            GLKVector3 objectPosition = *(GLKVector3 *) &beginLongPressGestureObject->pos;
+
+            beginLongPressGestureOffset = GLKVector3Subtract(objectPosition, position);
+            
+            beginLongPressGestureObject = o;
+        } else {
+            _hud.toolbelt.currentObjectX = diff.x;
+        }
+    } else {
+        [self handleDragGateGesture:sender];
+    }
 }
 
 - (IBAction)handleCreateLinkGesture:(UILongPressGestureRecognizer *)sender {
@@ -430,6 +503,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 }
 
 - (IBAction) handleTapGesture:(UITapGestureRecognizer *)sender {
+    BOOL hit = NO;
     // TODO: try not handling the tap gesture when there is nothing to tap.
     for(int i = 0; i < sender.numberOfTouches; i++) {
         CGPoint screenPos = [sender locationOfTouch:i inView:self.view];
@@ -439,13 +513,16 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         
         CircuitObject *object = [_viewport findCircuitObjectAtPosition:position];
         
-        if (!object) return;
+        if (!object) break;
         if (object->type == [_circuit getProcessById:@"in"]) {
+            hit = YES;
             object->out = !object->out;
             [_circuit didUpdateObject:object];
         }
     }
-    
+    if (!hit) {
+        self.hud.toolbelt.visible = !self.hud.toolbelt.visible;
+    }
 }
 
 

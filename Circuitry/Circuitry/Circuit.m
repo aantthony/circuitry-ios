@@ -463,7 +463,14 @@ int simulate(Circuit *c, int ticks) {
         if (stop) break;
     }
 }
-
+- (void) enumerateObjectsInReverseUsingBlock:(void (^)(CircuitObject *object, BOOL *stop))block {
+    BOOL stop = NO;
+    for(int i = _itemsCount - 1 ; i >= 0; i--) {
+        if (&_items[i] == NULL) continue;
+        block(&_items[i], &stop);
+        if (stop) break;
+    }
+}
 
 
 #pragma mark - circuit modification

@@ -9,7 +9,7 @@
 @property Circuit *circuit;
 
 - (id) initWithContext: (EAGLContext*) context atlas:(ImageAtlas *)atlas;
-- (void)update;
+- (void) update: (NSTimeInterval) dt;
 
 - (void) translate: (GLKVector3) translate;
 - (void) setProjectionMatrix: (GLKMatrix4) projectionMatrix;

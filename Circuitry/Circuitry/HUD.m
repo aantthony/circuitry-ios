@@ -9,8 +9,9 @@
 #import "HUD.h"
 #import "Toolbelt.h"
 
-@interface HUD() {}
-
+@interface HUD() {
+    Viewport *_viewport;
+}
 @end
 
 @implementation HUD
@@ -29,5 +30,13 @@
     [_toolbelt drawWithStack:stack];
     GLKMatrixStackPop(stack);
 }
+- (void) update: (NSTimeInterval) dt {
+    [_toolbelt update:dt];
+}
 
+
+- (void) setViewPort:(Viewport *)viewport {
+    _viewport = viewport;
+    _toolbelt.viewport = viewport;
+}
 @end
