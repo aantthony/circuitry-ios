@@ -30,8 +30,8 @@
     [_toolbelt drawWithStack:stack];
     GLKMatrixStackPop(stack);
 }
-- (void) update: (NSTimeInterval) dt {
-    [_toolbelt update:dt];
+- (int) update: (NSTimeInterval) dt {
+    return [_toolbelt update:dt];
 }
 
 

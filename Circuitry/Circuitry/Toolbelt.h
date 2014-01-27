@@ -19,7 +19,7 @@
 - (CGRect) bounds;
 - (BOOL) visible;
 - (void) setVisible:(BOOL) value;
-- (void) update: (NSTimeInterval) dt;
+- (int) update: (NSTimeInterval) dt;
 - (NSArray *) items;
 - (void) setItems:(NSArray *)items;
 - (void) setCurrentObjectX:(CGFloat) x;

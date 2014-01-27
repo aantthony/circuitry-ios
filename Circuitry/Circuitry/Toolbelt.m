@@ -27,6 +27,7 @@
     CGFloat _actualCurrentObjectFollowX;
     int _currentObjectIndex;
     BOOL _itemSelected;
+    BOOL _currentObjectXAnimating;
 }
 @property (strong, nonatomic) NSArray *gates;
 @property (strong, nonatomic) Sprite *sprite;
@@ -58,6 +59,7 @@ static SpriteTexturePos gateOutletInactive;
     _visibleAnimationOffsetX = 0.0;
     _actualCurrentObjectFollowX = _actualCurrentObjectX = 0.0;
     _visibleAnimating = NO;
+    _currentObjectXAnimating = NO;
     _instanceCount = 0;
     _items = [NSArray arrayWithObjects: nil];
     
@@ -206,6 +208,7 @@ static int i = 0;
 
 - (void) setCurrentObjectX:(CGFloat) x {
     _currentObjectX = x;
+    _currentObjectXAnimating = YES;
     [self updateDynamicInstances];
 }
 
@@ -217,6 +220,7 @@ static int i = 0;
         _currentObjectX = self.listWidth;
         _itemSelected = NO;
         [self updateDynamicInstances];
+        _currentObjectXAnimating = YES;
         return;
     }
     
@@ -225,6 +229,7 @@ static int i = 0;
         _currentObjectIndex = itemIndex;
         _actualCurrentObjectX = 0.0;
         _actualCurrentObjectFollowX = 0.0;
+        _currentObjectXAnimating = YES;
         [self updateDynamicInstances];
     }
 }
@@ -237,16 +242,32 @@ static int i = 0;
     return -1;
 }
 
-- (void) update: (NSTimeInterval) dt {
+- (int) update: (NSTimeInterval) dt {
+    int changes = 0;
     if (_visibleAnimating) {
         float targetX = _visible ? 0.0 : -350.0;
         _visibleAnimationOffsetX += 12.0 * dt * (targetX - _visibleAnimationOffsetX);
+        changes ++;
+        float diff = fabs(targetX - _visibleAnimationOffsetX);
+        if (diff < 0.1) {
+            _visibleAnimationOffsetX = targetX;
+            _visibleAnimating = NO;
+        }
     }
-    if (YES) {
+    if (_currentObjectXAnimating) {
+        changes++;
         _actualCurrentObjectX += 8.0 * dt * (_currentObjectX - _actualCurrentObjectX);
         _actualCurrentObjectFollowX += 5.0 * dt * (_currentObjectX - _actualCurrentObjectFollowX);
         [self updateDynamicInstances];
+        float diff = fabs(_currentObjectX - _actualCurrentObjectX) + fabs(_currentObjectX - _actualCurrentObjectFollowX);
+        if (diff < 0.1) {
+            _currentObjectXAnimating = NO;
+            _actualCurrentObjectX = _currentObjectX;
+            _actualCurrentObjectFollowX = _currentObjectX;
+            _currentObjectXAnimating = NO;
+        }
     }
+    return changes;
 }
 
 static float devicePixelRatio = 2.0;

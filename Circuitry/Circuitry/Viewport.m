@@ -116,8 +116,8 @@ static SpriteTexturePos symbolNOT;
     
     return self;
 }
-- (void) update: (NSTimeInterval) dt{
-
+- (int) update: (NSTimeInterval) dt{
+    return 0;
 }
 
 

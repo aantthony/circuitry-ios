@@ -7,7 +7,7 @@
 @interface Viewport : Drawable
 
 - (id) initWithContext: (EAGLContext*) context atlas:(ImageAtlas *)atlas;
-- (void) update: (NSTimeInterval) dt;
+- (int) update: (NSTimeInterval) dt;
 
 - (void) translate: (GLKVector3) translate;
 - (void) setProjectionMatrix: (GLKMatrix4) projectionMatrix;

@@ -38,6 +38,8 @@
     
     Sprite *bg;
     
+    BOOL animatingPan;
+    
 }
 @property (strong, nonatomic) EAGLContext *context;
 
@@ -101,6 +103,7 @@
     
     isAnimatingScaleToSnap = NO;
     toolbeltTouchIntercept = NO;
+    animatingPan = NO;
     beginGestureScale = 0.0;
     self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
 
@@ -244,13 +247,24 @@
     }
     
     [_viewport translate: GLKVector3Make(panVelocity.x * dt, panVelocity.y * dt, 0.0)];
-    // momentum deceleration / friction:
-    panVelocity.x -= panVelocity.x * dt * 10.0;
-    panVelocity.y -= panVelocity.y * dt * 10.0;
-
-    [_circuit simulate:4096];
-    [_viewport update: dt];
-    [_hud update: dt];
+    if (animatingPan) {
+        // momentum deceleration / friction:
+        panVelocity.x -= panVelocity.x * dt * 10.0;
+        panVelocity.y -= panVelocity.y * dt * 10.0;
+        if (fabs(panVelocity.x) < 0.01 && fabs(panVelocity.y) < 0.01) {
+            [self stopPanAnimation];
+        }
+    }
+    int changes = 0;
+    changes += [_circuit simulate:4096];
+    changes += [_viewport update: dt];
+    changes += [_hud update: dt];
+    NSLog(@"Changed!");
+    if (animatingPan || isAnimatingScaleToSnap || changes) {
+        self.paused = NO;
+    } else {
+        self.paused = YES;
+    }
 }
 
 - (void) checkError {
@@ -301,12 +315,13 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 
 - (void) stopPanAnimation {
     panVelocity = CGPointZero;
+    animatingPan = NO;
 }
 #pragma mark -  Gesture methods
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
-    
+    [self unpause];
     [self stopPanAnimation];
 	if ( [gestureRecognizer isKindOfClass:[UIPinchGestureRecognizer class]] ) {
         isAnimatingScaleToSnap = NO;
@@ -402,6 +417,9 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     return NO;
 }
 
+- (void) unpause {
+    self.paused = NO;
+}
 
 - (IBAction) handlePanGesture:(UIPanGestureRecognizer *)recognizer {
     CGPoint translation = [recognizer translationInView:self.view];
@@ -411,7 +429,9 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     if (recognizer.state == UIGestureRecognizerStateEnded) {
         // give it some momentum
         panVelocity = [recognizer velocityInView:self.view];
+        animatingPan = YES;
     }
+    [self unpause];
 }
 
 - (IBAction)handleDragGateGesture:(UIPanGestureRecognizer *)sender {
@@ -436,6 +456,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     object->pos.x = newPos.x;
     object->pos.y = newPos.y;
     object->pos.z = newPos.z;
+    [self unpause];
 }
 
 - (IBAction)handleCreateGateGesture:(UIPanGestureRecognizer *)sender {
@@ -480,6 +501,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         // the gate is out of the toolbelt:
         [self handleDragGateGesture:sender];
     }
+    [self unpause];
 }
 
 - (IBAction)handleCreateLinkGesture:(UILongPressGestureRecognizer *)sender {
@@ -487,6 +509,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         // If there is no active gate in creation, then just cancel.
         _viewport.currentEditingLinkSource = NULL;
         _viewport.currentEditingLinkTarget = NULL;
+        [self unpause];
         return;
     }
     if (!_viewport.currentEditingLinkSource || [sender numberOfTouches] != 1) {
@@ -494,6 +517,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         // This isn't ideal, but it is simpler to deal with for now.
         sender.enabled = NO;
         sender.enabled = YES;
+        [self unpause];
         return;
     }
     // world space:
@@ -540,6 +564,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     }
     // set the green wire to end at curPos (which is drawn by Viewport)
     _viewport.currentEditingLinkTargetPosition = curPos;
+    [self unpause];
 }
 
 - (IBAction) handlePinchGesture:(UIPinchGestureRecognizer *)recognizer {
@@ -554,6 +579,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     
     // A v = B v.. so what is B...
     [_viewport translate: GLKVector3Make(_viewport.scale * (bPos.x - aPos.x), _viewport.scale * (bPos.y - aPos.y), 0.0)];
+    [self unpause];
     
 //#define LOG_TEST 0
 #ifdef LOG_TEST
@@ -587,6 +613,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         // toggle the toolbelt (it animates)
         self.hud.toolbelt.visible = !self.hud.toolbelt.visible;
     }
+    [self unpause];
 }
 
 
@@ -596,6 +623,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     // cancel momentum
     [self stopPanAnimation];
+    [self unpause];
 }
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
 

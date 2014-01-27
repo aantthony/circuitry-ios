@@ -15,7 +15,7 @@
 @interface HUD : Drawable
 
 - (id) initWithAtlas:(ImageAtlas *)atlas;
-- (void) update: (NSTimeInterval) dt;
+- (int) update: (NSTimeInterval) dt;
 
 @property (strong, nonatomic) Toolbelt *toolbelt;
 - (void) setViewPort:(Viewport *)viewport;
