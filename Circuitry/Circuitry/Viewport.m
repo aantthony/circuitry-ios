@@ -13,10 +13,22 @@
     GLKVector3 _scale;
     LinkBezier *bezier;
     BatchedSprite *_gateSprites;
+    
+    Circuit *_circuit;
 
     BatchedSpriteInstance *_instances;
     int _capacity;
     int _count;
+    
+    CircuitProcess *OR  ;
+    CircuitProcess *IN  ;
+    CircuitProcess *OUT ;
+    CircuitProcess *NOR ;
+    CircuitProcess *XOR ;
+    CircuitProcess *XNOR;
+    CircuitProcess *AND ;
+    CircuitProcess *NAND;
+    CircuitProcess *NOT ;
 }
 @property Grid *grid;
 @end
@@ -29,6 +41,13 @@ static SpriteTexturePos gateOutletInactive;
 static SpriteTexturePos gateOutletActive;
 static SpriteTexturePos gateOutletActiveConnected;
 static SpriteTexturePos gateOutletInactiveConnected;
+static SpriteTexturePos switchOn;
+static SpriteTexturePos switchOff;
+static SpriteTexturePos switchPressed;
+
+static SpriteTexturePos ledOn;
+static SpriteTexturePos ledOff;
+
 static SpriteTexturePos symbolOR;
 static SpriteTexturePos symbolNOR;
 static SpriteTexturePos symbolXOR;
@@ -36,6 +55,7 @@ static SpriteTexturePos symbolXNOR;
 static SpriteTexturePos symbolAND;
 static SpriteTexturePos symbolNAND;
 static SpriteTexturePos symbolNOT;
+
 
 - (id) initWithContext: (EAGLContext*) context atlas:(ImageAtlas *)atlas {
     self = [self init];
@@ -76,7 +96,14 @@ static SpriteTexturePos symbolNOT;
     symbolAND = [atlas positionForSprite:@"symbol-and@2x"];
     symbolNAND = [atlas positionForSprite:@"symbol-nand@2x"];
     symbolNOT = [atlas positionForSprite:@"symbol-not@2x"];
+    switchOn = [atlas positionForSprite:@"switch-on"];
+    switchOff = [atlas positionForSprite:@"switch-off"];
+    switchPressed = [atlas positionForSprite:@"switch-press"];
     
+    
+    ledOn = [atlas positionForSprite:@"led-on"];
+    ledOff = [atlas positionForSprite:@"led-off"];
+        
     for(int i = 0; i < _capacity; i++) {
         _instances[i].tex = gateBackgroundHeight2;
     }
@@ -91,6 +118,24 @@ static SpriteTexturePos symbolNOT;
 }
 - (void) update: (NSTimeInterval) dt{
 
+}
+
+
+- (void) setCircuit:(Circuit *)circuit {
+    _circuit = circuit;
+    IN  =[_circuit getProcessById:@"in"];
+    OR  =[_circuit getProcessById:@"or"];
+    NOR =[_circuit getProcessById:@"nor"];
+    XOR =[_circuit getProcessById:@"xor"];
+    XNOR=[_circuit getProcessById:@"xnor"];
+    AND =[_circuit getProcessById:@"and"];
+    NAND=[_circuit getProcessById:@"nand"];
+    NOT =[_circuit getProcessById:@"not"];
+    OUT =[_circuit getProcessById:@"out"];
+}
+
+- (Circuit *) circuit {
+    return _circuit;
 }
 
 - (void) setProjectionMatrix: (GLKMatrix4) projectionMatrix {
@@ -209,13 +254,6 @@ GLKVector3 offsetForInlet(CircuitProcess *process, int index) {
 }
 
 - (SpriteTexturePos) textureForProcess:(CircuitProcess *)process {
-    CircuitProcess *OR  =[_circuit getProcessById:@"or"];
-    CircuitProcess *NOR =[_circuit getProcessById:@"nor"];
-    CircuitProcess *XOR =[_circuit getProcessById:@"xor"];
-    CircuitProcess *XNOR=[_circuit getProcessById:@"xnor"];
-    CircuitProcess *AND =[_circuit getProcessById:@"and"];
-    CircuitProcess *NAND=[_circuit getProcessById:@"nand"];
-    CircuitProcess *NOT =[_circuit getProcessById:@"not"];
     
     if (process == OR) return symbolOR;
     else if (process == NOR) return symbolNOR;
@@ -238,10 +276,27 @@ GLKVector3 offsetForInlet(CircuitProcess *process, int index) {
         instance->x = pos.x;
         instance->y = pos.y;
         
-        BatchedSpriteInstance *symbol = &_instances[i++];
-        symbol->x = pos.x + 9.0;
-        symbol->y = pos.y + 0.0;
-        symbol->tex = [self textureForProcess:object->type];
+        if (object->type == IN) {
+            instance->tex = object->out ? switchOn : switchOff;
+            instance->x -= 50.0;
+            instance->y -= 50.0;
+        } else if (object->type == OUT) {
+            instance->tex = gateBackgroundHeight2;
+            
+            
+            BatchedSpriteInstance *symbol = &_instances[i++];
+            symbol->x = pos.x + 70.0;
+            symbol->y = pos.y - 85.0;
+            symbol->tex = object->in ? ledOn : ledOff;
+            
+        } else {
+            instance->tex = gateBackgroundHeight2;
+            
+            BatchedSpriteInstance *symbol = &_instances[i++];
+            symbol->x = pos.x + 9.0;
+            symbol->y = pos.y + 0.0;
+            symbol->tex = [self textureForProcess:object->type];
+        }
         
         for(int o = 0; o < object->type->numOutputs; o++) {
             BatchedSpriteInstance *outlet = &_instances[i++];
@@ -252,6 +307,7 @@ GLKVector3 offsetForInlet(CircuitProcess *process, int index) {
             if (object == _currentEditingLinkSource && o == _currentEditingLinkSourceIndex) isConnected = YES;
             outlet->tex = (object->out & 1 << o) ? (isConnected ? gateOutletActiveConnected : gateOutletActive) : (isConnected ? gateOutletInactiveConnected : gateOutletInactive);
         }
+        
         for(int o = 0; o < object->type->numInputs; o++) {
             BatchedSpriteInstance *outlet = &_instances[i++];
             

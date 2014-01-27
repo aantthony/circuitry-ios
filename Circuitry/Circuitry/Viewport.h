@@ -6,8 +6,6 @@
 
 @interface Viewport : Drawable
 
-@property Circuit *circuit;
-
 - (id) initWithContext: (EAGLContext*) context atlas:(ImageAtlas *)atlas;
 - (void) update: (NSTimeInterval) dt;
 
@@ -22,6 +20,9 @@
 - (CircuitObject*) findCircuitObjectAtPosition: (GLKVector3) pos;
 - (GLKVector3) unproject: (CGPoint) screenPos;
 
+
+- (void) setCircuit:(Circuit *) circuit;
+- (Circuit *) circuit;
 
 @property CircuitLink *currentEditingLink;
 @property CircuitObject *currentEditingLinkSource;

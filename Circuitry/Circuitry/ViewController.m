@@ -548,7 +548,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
             [_circuit didUpdateObject:object];
         }
     }
-    if (!hit) {
+    if (!hit && sender.numberOfTouches == 1) {
         self.hud.toolbelt.visible = !self.hud.toolbelt.visible;
     }
 }
