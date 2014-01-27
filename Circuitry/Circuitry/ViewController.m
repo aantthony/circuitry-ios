@@ -251,7 +251,7 @@
         // momentum deceleration / friction:
         panVelocity.x -= panVelocity.x * dt * 10.0;
         panVelocity.y -= panVelocity.y * dt * 10.0;
-        if (fabs(panVelocity.x) < 0.01 && fabs(panVelocity.y) < 0.01) {
+        if (fabs(panVelocity.x) < 0.1 && fabs(panVelocity.y) < 0.1) {
             [self stopPanAnimation];
         }
     }
@@ -259,7 +259,7 @@
     changes += [_circuit simulate:4096];
     changes += [_viewport update: dt];
     changes += [_hud update: dt];
-    NSLog(@"Changed!");
+//    NSLog(@"Changed!");
     if (animatingPan || isAnimatingScaleToSnap || changes) {
         self.paused = NO;
     } else {
