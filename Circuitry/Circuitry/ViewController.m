@@ -28,6 +28,8 @@
     CircuitObject *beginLongPressGestureObject;
     GLKVector3 beginLongPressGestureOffset;
     
+    CGPoint panVelocity;
+    
     
     BOOL isAnimatingScaleToSnap;
     BOOL toolbeltTouchIntercept;
@@ -95,6 +97,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    panVelocity = CGPointMake(0.0, 0.0);
     
     isAnimatingScaleToSnap = NO;
     toolbeltTouchIntercept = NO;
@@ -190,6 +194,9 @@
 - (void)update
 {
     [self checkError];
+    
+    float dt = self.timeSinceLastUpdate;
+    
     float aspect = fabsf(self.view.bounds.size.width / self.view.bounds.size.height);
     GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0f), aspect, 0.1f, 100.0f);
     CGRect boundary = self.view.bounds;
@@ -236,7 +243,10 @@
         
     }
     
-    float dt = self.timeSinceLastUpdate;
+    [_viewport translate: GLKVector3Make(panVelocity.x * dt, panVelocity.y * dt, 0.0)];
+    panVelocity.x -= panVelocity.x * dt * 10.0;
+    panVelocity.y -= panVelocity.y * dt * 10.0;
+    
     _rotation += 1.0;
     [_circuit simulate:4096];
     [_viewport update: dt];
@@ -288,20 +298,26 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     return CGPointMake(contentScaleFactor * pt.x, contentScaleFactor * pt.y);
 }
 
+- (void) stopPanAnimation {
+    panVelocity = CGPointMake(0.0, 0.0);
+}
 #pragma mark -  Gesture methods
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
+    
+    [self stopPanAnimation];
 	if ( [gestureRecognizer isKindOfClass:[UIPinchGestureRecognizer class]] ) {
         isAnimatingScaleToSnap = NO;
 		beginGestureScale = _viewport.scale;
+        return YES;
 	}
+    
     if ([gestureRecognizer isKindOfClass:[CreateLinkGestureRecognizer class]]) {
         GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [gestureRecognizer locationInView:self.view])];
         
         CircuitObject *o;
         if ((o = [_viewport findCircuitObjectAtPosition:position])) {
-            
             GLKVector3 offset = GLKVector3Subtract(position, *(GLKVector3 *)&o->pos);
             if (offset.x < 150.0) {
                 CircuitLink *existing = [_viewport findCircuitLinkAtOffset:offset attachedToObject:o];
@@ -351,6 +367,9 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         p.x = 0.0;
         
         draggingOutFromToolbeltLockY = YES;
+        int index = [_hud.toolbelt indexAtPosition:p];
+        if (index == -1) return NO;
+        _hud.toolbelt.currentObjectIndex = index;
         draggingOutFromToolbeltStart = p;
         return YES;
     } else if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
@@ -380,6 +399,10 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     CGPoint translation = [recognizer translationInView:self.view];
     [_viewport translate: GLKVector3Make(translation.x, translation.y, 0.0)];
     [recognizer setTranslation:CGPointMake(0, 0) inView:self.view];
+    if (recognizer.state == UIGestureRecognizerStateEnded) {
+        CGPoint vel = [recognizer velocityInView:self.view];
+        panVelocity = vel;
+    }
 }
 
 - (IBAction)handleDragGateGesture:(UIPanGestureRecognizer *)sender {
@@ -414,11 +437,14 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         CGPoint p = [sender locationOfTouch:0 inView:self.view];
         
         CGPoint diff = CGPointMake(p.x - draggingOutFromToolbeltStart.x, p.y - draggingOutFromToolbeltStart.y);
-        if (diff.x > 100.0) {
+        if (diff.x > _hud.toolbelt.listWidth) {
             GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, p)];
             
             draggingOutFromToolbeltLockY = NO;
-            CircuitObject *o = [_circuit addObject:[_circuit getProcessById:@"xor"]];
+            
+            ToolbeltItem *item = _hud.toolbelt.items[_hud.toolbelt.currentObjectIndex];
+            
+            CircuitObject *o = [_circuit addObject:item.type];
             beginLongPressGestureObject = o;
             o->pos.x = position.x;
             o->pos.y = position.y - 100.0;
@@ -427,6 +453,8 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
             beginLongPressGestureOffset = GLKVector3Subtract(objectPosition, position);
             
             beginLongPressGestureObject = o;
+            
+            _hud.toolbelt.currentObjectIndex = -1;
         } else {
             _hud.toolbelt.currentObjectX = diff.x;
         }
@@ -530,7 +558,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 #pragma mark -  UIResponder methods
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-
+    [self stopPanAnimation];
 }
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
 

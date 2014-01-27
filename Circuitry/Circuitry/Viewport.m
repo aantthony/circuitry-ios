@@ -181,16 +181,16 @@ static SpriteTexturePos symbolNOT;
     return _scale.x;
 }
 
-const float vSpacing = 35.0;
+const float vSpacing = 33.0;
 
 GLKVector3 offsetForOutlet(CircuitProcess *process, int index) {
     GLKVector3 res;
     res.z = 0.0;
-    res.x = gateBackgroundHeight2.width - 50.0;
+    res.x = gateBackgroundHeight2.width - 45.0;
     if (process->numOutputs % 2 == 1) {
-        res.y = 25.0 + vSpacing + index * vSpacing * 2.0;
+        res.y = 30.0 + vSpacing + index * vSpacing * 2.0;
     } else {
-        res.y = 25.0 + index * vSpacing * 2.0;
+        res.y = 30.0 + index * vSpacing * 2.0;
     }
     return res;
 }
@@ -198,12 +198,12 @@ GLKVector3 offsetForOutlet(CircuitProcess *process, int index) {
 GLKVector3 offsetForInlet(CircuitProcess *process, int index) {
     
     GLKVector3 res;
-    res.x = 20.0;
+    res.x = 15.0;
     res.z = 0.0;
     if (process->numInputs % 2 == 1) {
-        res.y = 25.0 + vSpacing + index * vSpacing * 2.0;
+        res.y = 30.0 + vSpacing + index * vSpacing * 2.0;
     } else {
-        res.y = 25.0 + index * vSpacing * 2.0;
+        res.y = 30.0 + index * vSpacing * 2.0;
     }
     return res;
 }
@@ -239,7 +239,7 @@ GLKVector3 offsetForInlet(CircuitProcess *process, int index) {
         instance->y = pos.y;
         
         BatchedSpriteInstance *symbol = &_instances[i++];
-        symbol->x = pos.x + 14.0;
+        symbol->x = pos.x + 9.0;
         symbol->y = pos.y + 0.0;
         symbol->tex = [self textureForProcess:object->type];
         

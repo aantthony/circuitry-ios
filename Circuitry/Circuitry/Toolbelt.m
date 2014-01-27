@@ -12,25 +12,9 @@
 #import "BatchedSprite.h"
 #import "ToolbeltItem.h"
 
-@interface GateObject : NSObject
-@property NSString *id;
-@property NSInteger remaining;
-@property NSInteger maximum;
-
-+ (GateObject *) gateObjectWithId:(NSString *)id count:(NSInteger) count;
-@end
-
-@implementation GateObject
-+ (GateObject *) gateObjectWithId:(NSString *)id count:(NSInteger)count {
-    GateObject *o = [[GateObject alloc] init];
-    o.maximum = o.remaining = count;
-    o.id = id;
-    return o;
-}
-@end
-
 @interface Toolbelt () {
     SpriteTexturePos _spriteListItem;
+    SpriteTexturePos _spriteListItemB;
     BatchedSpriteInstance *_instances;
     int _capacity;
     BOOL _visible;
@@ -39,6 +23,10 @@
     NSArray *_items;
     int _instanceCount;
     CGFloat _currentObjectX;
+    CGFloat _actualCurrentObjectX;
+    CGFloat _actualCurrentObjectFollowX;
+    int _currentObjectIndex;
+    BOOL _itemSelected;
 }
 @property (strong, nonatomic) NSArray *gates;
 @property (strong, nonatomic) Sprite *sprite;
@@ -65,19 +53,24 @@ static SpriteTexturePos gateOutletInactive;
     [self bufferInstances];
 }
 - (id) initWithAtlas:(ImageAtlas *)atlas {
+    _currentObjectIndex = -1;
     _visible = YES;
     _visibleAnimationOffsetX = 0.0;
+    _actualCurrentObjectFollowX = _actualCurrentObjectX = 0.0;
     _visibleAnimating = NO;
     _instanceCount = 0;
     _items = [NSArray arrayWithObjects: nil];
     
+    _itemSelected = NO;
+    
     self = [super init];
-    self.gates = [NSArray arrayWithObjects:[GateObject gateObjectWithId: @"xor" count: 20], nil];
+
     GLKTextureInfo *texture = [Sprite textureWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"Toolbelt@2x" withExtension:@"png"]];
     _sprite = [[Sprite alloc] initWithTexture:texture];
     GLKTextureInfo *gateTexture = [Sprite textureWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"OR-gate@2x" withExtension:@"png"]];
     _gateSprite = [[Sprite alloc] initWithTexture:gateTexture];
     _spriteListItem = [atlas positionForSprite:@"listitem@2x"];
+    _spriteListItemB = [atlas positionForSprite:@"listitemb@2x"];
     
     symbolOR = [atlas positionForSprite:@"symbol-or@2x"];
     symbolNOR = [atlas positionForSprite:@"symbol-nor@2x"];
@@ -88,7 +81,7 @@ static SpriteTexturePos gateOutletInactive;
     symbolNOT = [atlas positionForSprite:@"symbol-not@2x"];
     gateOutletInactive = [atlas positionForSprite: @"inactive@2x"];
     
-    _capacity = 50;
+    _capacity = 100;
     
     _batcher = [[BatchedSprite alloc] initWithTexture:atlas.texture capacity:_capacity];
     
@@ -123,45 +116,77 @@ static SpriteTexturePos gateOutletInactive;
 GLKVector3 offsetForOutlet(CircuitProcess *process, int index);
 
 GLKVector3 offsetForInlet(CircuitProcess *process, int index);
+static int i = 0;
+- (void) drawAt:(ToolbeltItem *)obj index:(int) idx frameInstance:(BatchedSpriteInstance*)instance  {
+    
+    BatchedSpriteInstance *symbolI = &_instances[i++];
+    CircuitProcess *type = obj.type;
+    symbolI->tex = [self textureForProcess:obj.type];
+    symbolI->x = instance->x + 9.0;
+    symbolI->y = instance->y + 0.0;
+    
+    for(int ni = 0; ni < type->numInputs; ni++) {
+        BatchedSpriteInstance *inlet = &_instances[i++];
+        GLKVector3 dotPos = offsetForInlet(type, ni);
+        inlet->x = instance->x + dotPos.x;
+        inlet->y = instance->y + dotPos.y;
+        inlet->tex = gateOutletInactive;
+    }
+    
+    for(int ni = 0; ni < type->numOutputs; ni++) {
+        BatchedSpriteInstance *inlet = &_instances[i++];
+        GLKVector3 dotPos = offsetForOutlet(type, ni);
+        inlet->x = instance->x + dotPos.x;
+        inlet->y = instance->y + dotPos.y;
+        inlet->tex = gateOutletInactive;
+    }
+}
 
 - (void) bufferInstances {
-    __block int i = 0;
+    i = 0;
     [_items enumerateObjectsUsingBlock:^(ToolbeltItem *obj, NSUInteger idx, BOOL *stop) {
         BatchedSpriteInstance *instance = &_instances[i++];
         instance->tex = _spriteListItem;
         instance->x = 0.0;
         instance->y = idx * _spriteListItem.height;
-
     }];
     
     [_items enumerateObjectsUsingBlock:^(ToolbeltItem *obj, NSUInteger idx, BOOL *stop) {
         BatchedSpriteInstance *instance = &_instances[idx];
-        
-        BatchedSpriteInstance *symbolI = &_instances[i++];
-        CircuitProcess *type = obj.type;
-        symbolI->tex = [self textureForProcess:obj.type];
-        symbolI->x = 0.0;
-        symbolI->y = idx * _spriteListItem.height;
-        
-        for(int ni = 0; ni < type->numInputs; ni++) {
-            BatchedSpriteInstance *inlet = &_instances[i++];
-            GLKVector3 dotPos = offsetForInlet(type, ni);
-            inlet->x = instance->x + dotPos.x;
-            inlet->y = instance->y + dotPos.y;
-            inlet->tex = gateOutletInactive;
-        }
-        
-        for(int ni = 0; ni < type->numOutputs; ni++) {
-            BatchedSpriteInstance *inlet = &_instances[i++];
-            GLKVector3 dotPos = offsetForOutlet(type, ni);
-            inlet->x = instance->x + dotPos.x;
-            inlet->y = instance->y + dotPos.y;
-            inlet->tex = gateOutletInactive;
-        }
+        [self drawAt:obj index:idx frameInstance:instance];
     }];
+    
+    if (_currentObjectIndex != -1) {
+        
+        BatchedSpriteInstance *under = &_instances[i++];
+        under->tex = _spriteListItemB;
+        under->x = 0.0;
+        under->y = _currentObjectIndex * _spriteListItem.height;
+        
+        BatchedSpriteInstance *instance = &_instances[i++];
+        instance->tex = _spriteListItem;
+        instance->x = -_spriteListItem.width + _actualCurrentObjectFollowX * devicePixelRatio;;
+        instance->y = _currentObjectIndex * _spriteListItem.height;
+        [self drawAt:_items[_currentObjectIndex] index:_currentObjectIndex frameInstance:instance];
+        
+        
+        if (_itemSelected) {
+            BatchedSpriteInstance *instance = &_instances[i++];
+            instance->tex = _spriteListItem;
+            instance->x = _actualCurrentObjectX * devicePixelRatio;
+            instance->y = _currentObjectIndex * _spriteListItem.height;
+            
+            [self drawAt:_items[_currentObjectIndex] index:_currentObjectIndex frameInstance:instance];
+            
+        }
+    }
     _instanceCount = i;
     [_batcher buffer:_instances FromIndex:0 count:_instanceCount];
 
+}
+
+- (float) listWidth {
+    return _spriteListItem.width / devicePixelRatio;
 }
 
 - (BOOL) visible {
@@ -175,14 +200,52 @@ GLKVector3 offsetForInlet(CircuitProcess *process, int index);
     }
 }
 
+- (void) updateDynamicInstances {
+    [self bufferInstances];
+}
+
 - (void) setCurrentObjectX:(CGFloat) x {
     _currentObjectX = x;
+    [self updateDynamicInstances];
+}
+
+- (NSInteger) currentObjectIndex {
+    return _currentObjectIndex;
+}
+- (void) setCurrentObjectIndex:(NSInteger)itemIndex {
+    if (itemIndex == -1) {
+        _currentObjectX = self.listWidth;
+        _itemSelected = NO;
+        [self updateDynamicInstances];
+        return;
+    }
+    
+    if (itemIndex != _currentObjectIndex || !_itemSelected) {
+        _itemSelected = YES;
+        _currentObjectIndex = itemIndex;
+        _actualCurrentObjectX = 0.0;
+        _actualCurrentObjectFollowX = 0.0;
+        [self updateDynamicInstances];
+    }
+}
+
+- (int) indexAtPosition:(CGPoint) position {
+    int index = devicePixelRatio * position.y / _spriteListItem.height;
+    if (index >= 0 && index < _items.count) {
+        return index;
+    }
+    return -1;
 }
 
 - (void) update: (NSTimeInterval) dt {
     if (_visibleAnimating) {
         float targetX = _visible ? 0.0 : -350.0;
         _visibleAnimationOffsetX += 12.0 * dt * (targetX - _visibleAnimationOffsetX);
+    }
+    if (YES) {
+        _actualCurrentObjectX += 8.0 * dt * (_currentObjectX - _actualCurrentObjectX);
+        _actualCurrentObjectFollowX += 5.0 * dt * (_currentObjectX - _actualCurrentObjectFollowX);
+        [self updateDynamicInstances];
     }
 }
 
@@ -192,9 +255,7 @@ static float devicePixelRatio = 2.0;
     GLKMatrixStackPush(stack);
     GLKMatrixStackTranslate(stack, _visibleAnimationOffsetX, 0.0, 0.0);
 
-    BatchedSpriteInstance *instance = &_instances[2];
-    instance->x = devicePixelRatio * _currentObjectX;
-    [_batcher buffer:_instances FromIndex:0 count:20];
+//    [_batcher buffer:_instances FromIndex:0 count:20];
     [_batcher drawIndices:0 count:_instanceCount WithTransform:GLKMatrixStackGetMatrix4(stack)];
     GLKMatrixStackPop(stack);
 }

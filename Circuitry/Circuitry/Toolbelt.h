@@ -13,6 +13,8 @@
 
 @interface Toolbelt : Drawable
 
+@property Viewport *viewport;
+
 - (id) initWithAtlas:(ImageAtlas *)atlas;
 - (CGRect) bounds;
 - (BOOL) visible;
@@ -21,6 +23,10 @@
 - (NSArray *) items;
 - (void) setItems:(NSArray *)items;
 - (void) setCurrentObjectX:(CGFloat) x;
-@property Viewport *viewport;
+- (NSInteger) currentObjectIndex;
+- (void) setCurrentObjectIndex:(NSInteger)itemIndex;
+- (int) indexAtPosition:(CGPoint) position;
+
+- (float) listWidth;
 
 @end
