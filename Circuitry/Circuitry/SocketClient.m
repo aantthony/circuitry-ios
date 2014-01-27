@@ -16,27 +16,61 @@
 }
 @property SocketIO *socket;
 
+@property NSMutableArray *currentHandlers;
+
 @end
 @implementation SocketClient
 
-- (id) init {
+
++ (SocketClient *) sharedInstance {
+    static dispatch_once_t onceToken = 0;
+    static SocketClient *instance;
+    
+    dispatch_once(&onceToken, ^{
+        instance = [[SocketClient alloc] init];
+    });
+    
+    return instance;
+}
+
+- (id) initSharedInstance {
     self = [super init];
-    
+    _currentHandlers = [NSMutableArray array];
     _socket = [[SocketIO alloc] initWithDelegate:self];
+    [self connect:self];
+    return self;
+}
+
+- (void) sendEvent:(NSString *) eventName withData:(id)data {
+    [_socket sendEvent:eventName withData:data];
+}
+- (void) sendEvent:(NSString *)eventName withData:(id)data andAcknowledge:(void (^)(id err, id response))block {
+    [_currentHandlers addObject:block];
+    [_socket sendEvent:eventName withData:data andAcknowledge:^(id args) {
+        if (args[0] != [NSNull null]) return block(args[0], nil);
+        block(nil, args[1]);
+    }];
+}
+
+
+- (void) connect:(id)sender {
     NSURL *baseURL = [AppDelegate baseURL];
-    
     _socket.useSecure = [[baseURL scheme] isEqualToString:@"https"];
     [_socket connectToHost:[baseURL host] onPort:[[baseURL port] intValue]];
     _socket.delegate = self;
-    
-    return self;
 }
 
 - (void) socketIODidConnect:(SocketIO *)socket {
     NSLog(@"connected");
 }
 - (void) socketIODidDisconnect:(SocketIO *)socket disconnectedWithError:(NSError *)error {
-    NSLog(@"disconnect %@", error);
+    [_currentHandlers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        void (^ myblock)(id, id) = obj;
+        myblock(@{@"message":@"Connection to server lost."}, nil);
+    }];
+    [_currentHandlers removeAllObjects];
+    // let's try to reconnect:
+    [self connect:socket];
 }
 - (void) socketIO:(SocketIO *)socket didReceiveMessage:(SocketIOPacket *)packet {
     NSLog(@"message %@", packet);
@@ -56,6 +90,7 @@
 }
 - (void) socketIO:(SocketIO *)socket onError:(NSError *)error {
     NSLog(@"socket io error: %@", error);
+    [self performSelector:@selector(connect:) withObject:self afterDelay:3.0];
 }
 
 @end

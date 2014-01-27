@@ -41,7 +41,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    _client = [[SocketClient alloc] init];
+    _client = [SocketClient sharedInstance];
     
     [AppDelegate.api GET:@"debug" parameters:nil success:^(AFHTTPRequestOperation *operation, NSDictionary *res) {
         NSLog(@"JSON: %@", res);
