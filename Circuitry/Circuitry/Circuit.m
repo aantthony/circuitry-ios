@@ -113,12 +113,15 @@ CircuitObject *getObjectById(Circuit *c, int id) {
     }
     return NULL;
 }
+
+// Queue a gate for a re-calculation
 void needsUpdate(Circuit *c, CircuitObject *object) {
     for(int i = 0; i < c->_needsUpdateCount; i++) {
         if (c->_needsUpdate[i] == object) return;
     }
     c->_needsUpdateCount++;
     if (c->_needsUpdateCount > c->_needsUpdateSize) {
+        // dynamically increase array size:
         c->_needsUpdateSize *= 2;
         realloc(&c->_needsUpdate,  sizeof(void *) * c->_needsUpdateSize);
         realloc(&c->_needsUpdate2, sizeof(void *) * c->_needsUpdateSize);
@@ -126,6 +129,7 @@ void needsUpdate(Circuit *c, CircuitObject *object) {
     c.needsUpdate[c->_needsUpdateCount - 1] = object;
 }
 
+// Queue a link for a re-calculation (i.e, queue the links targets for recalculation)
 void linksNeedsUpdate(Circuit *c, CircuitLink * link) {
     while(link) {
         needsUpdate(c, link->target);
@@ -133,7 +137,7 @@ void linksNeedsUpdate(Circuit *c, CircuitLink * link) {
     }
 }
 
-
+// Create a new circuit object (and queue it for recalculation)
 CircuitObject * addObject(Circuit *c, CircuitProcess *type) {
     int id = 0;
 
@@ -160,6 +164,8 @@ CircuitObject * addObject(Circuit *c, CircuitProcess *type) {
     return o;
 }
 
+// Remove a circuit object (and the links into and out of it)
+// Automatically queues the outlet links targets for recalculation
 void removeObject(Circuit *c, CircuitObject *o) {
     for(int i = 0; i < o->type->numOutputs; i++) {
         while(o->outputs[i]) {
@@ -171,9 +177,9 @@ void removeObject(Circuit *c, CircuitObject *o) {
     }
     
     free(o->outputs);
+    // TODO: we need to know the index of _items for this:
+    // TODO: move the last object in _items to the the position of this object, and then fix all points to that last one
 }
-
-
 
 
 CircuitLink *makeLink(Circuit *c) {
@@ -192,6 +198,7 @@ CircuitLink *makeLink(Circuit *c) {
     return link;
 }
 
+// Remove a link from the circuit, and queue its target for recalculation
 void removeLink(Circuit *c, CircuitLink *link) {
     if (link->target->in & 1<<link->targetIndex) {
         needsUpdate(c, link->target);
@@ -221,8 +228,11 @@ void removeLink(Circuit *c, CircuitLink *link) {
     }
     
     memset(link, 0, sizeof(CircuitLink));
+    // TODO: we need to know the index of _items for this:
+    // TODO: instead of the memset, move the last link in _links to the the position of this object
 }
 
+// Add a link to the circuit (and will queue the targets recalculation if necessary). *All* links have a target. The half-made links in the Viewport are fakes.
 CircuitLink *addLink(Circuit *c, CircuitObject *object, int index, CircuitObject *target, int targetIndex) {
     CircuitLink *prev = object->outputs[index];
     CircuitLink *link;
@@ -258,12 +268,14 @@ CircuitLink *addLink(Circuit *c, CircuitObject *object, int index, CircuitObject
     int oldBit = !!(oldIn & mask);
     int curIn = !!(link->source->out & 1 <<link->sourceIndex);
     if (!oldBit && curIn) {
+        // it was turned on
         link->target->in = oldIn | mask;
         needsUpdate(c, link->target);
     } else if (oldBit && !curIn) {
+        // it was turned off
         link->target->in = oldIn & ~mask;
         needsUpdate(c, link->target);
-    }
+    } // otherwise it didn't change at all (and so no recalculations are required)
     
     return link;
 }
@@ -349,6 +361,7 @@ int simulate(Circuit *c, int ticks) {
 
 #pragma mark - Loading
 
+// Load a circuit from a JSON stream. (not ideal since NSJSONSerialization will still store the whole NSDictioanry in memory, but for now it is fine)
 + (Circuit *) circuitWithStream:(NSInputStream *) stream {
     NSError *err;
     
@@ -358,6 +371,7 @@ int simulate(Circuit *c, int ticks) {
     return [[Circuit alloc] initWithDictionary:object];
 }
 
+// Load a circuit from a utf8 json string
 + (Circuit *) circuitWithJSON:(NSData *) data {
     NSError *err;
     
@@ -366,6 +380,7 @@ int simulate(Circuit *c, int ticks) {
     return [[Circuit alloc] initWithDictionary:object];
 }
 
+// Serialize
 - (NSData *) toJSON {
     NSError *err;
     
@@ -498,19 +513,21 @@ int simulate(Circuit *c, int ticks) {
 
 #pragma mark - circuit object and link modification notification
 
-// Add items to the event queue:
+// Add items to the event queue: This needs to be called when an object is modified externally
 - (void) didUpdateObject:(CircuitObject *)object {
     needsUpdate(self, object);
 }
 
+// Add items to the event queue: This needs to be called when an objects output state is modified externally, but didUpdateObject is not called.
+// It is possible to just always call didUpdateObject, but this can be more efficent if you can be sure that only certain known links will change.
 - (void) didUpdateObject:(CircuitObject *)object outlet:(int) sourceIndex {
     linksNeedsUpdate(self, object->outputs[sourceIndex]);
 }
 
+// Does the same thing as didUpdateObject: outlet:
 - (void) didUpdateLinks:(CircuitLink *) link {
     linksNeedsUpdate(self, link);
 }
-
 
 #pragma mark - simulation
 - (int) simulate: (int) ticks {

@@ -16,7 +16,6 @@
     IBOutlet UIPinchGestureRecognizer *_pinchGestureRecognizer;
     GLKMatrix4 _modelViewProjectionMatrix;
     GLKMatrix3 _normalMatrix;
-    float _rotation;
     
     GLKMatrixStackRef _stack;
     
@@ -195,7 +194,8 @@
 {
     [self checkError];
     
-    float dt = self.timeSinceLastUpdate;
+    // time differnce in seconds (float)
+    NSTimeInterval dt = self.timeSinceLastUpdate;
     
     float aspect = fabsf(self.view.bounds.size.width / self.view.bounds.size.height);
     GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0f), aspect, 0.1f, 100.0f);
@@ -244,10 +244,10 @@
     }
     
     [_viewport translate: GLKVector3Make(panVelocity.x * dt, panVelocity.y * dt, 0.0)];
+    // momentum deceleration / friction:
     panVelocity.x -= panVelocity.x * dt * 10.0;
     panVelocity.y -= panVelocity.y * dt * 10.0;
-    
-    _rotation += 1.0;
+
     [_circuit simulate:4096];
     [_viewport update: dt];
     [_hud update: dt];
@@ -294,12 +294,13 @@
     return YES;
 }
 
+// Take a pt screen coordinate and translate it to pixel screen coordinates, because OpenGL only deals with pixels.
 CGPoint PX(float contentScaleFactor, CGPoint pt) {
     return CGPointMake(contentScaleFactor * pt.x, contentScaleFactor * pt.y);
 }
 
 - (void) stopPanAnimation {
-    panVelocity = CGPointMake(0.0, 0.0);
+    panVelocity = CGPointZero;
 }
 #pragma mark -  Gesture methods
 
@@ -314,15 +315,20 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 	}
     
     if ([gestureRecognizer isKindOfClass:[CreateLinkGestureRecognizer class]]) {
+        // Create a link from a gate, or move a link that is connected to a gate
+        
         GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [gestureRecognizer locationInView:self.view])];
         
         CircuitObject *o;
+        // find the object under the touch:
         if ((o = [_viewport findCircuitObjectAtPosition:position])) {
+            // calculate the offset (which will be used to determine which output to edit)
             GLKVector3 offset = GLKVector3Subtract(position, *(GLKVector3 *)&o->pos);
             if (offset.x < 150.0) {
+                // Left side: editing something connected to a gate (todo: don't make this guess, just use find attachment at index or something which finds either inlets or outlets, whichever is closer)
                 CircuitLink *existing = [_viewport findCircuitLinkAtOffset:offset attachedToObject:o];
                 if (!existing) return NO;
-                // edit an existing one
+                // edit an existing one:
                 _viewport.currentEditingLink = existing;
                 _viewport.currentEditingLinkSource = existing->source;
                 _viewport.currentEditingLinkSourceIndex = existing->sourceIndex;
@@ -330,8 +336,9 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
                 _viewport.currentEditingLinkTargetIndex = existing->targetIndex;
                 return YES;
             } else {
-                // TODO: find outlet index
-                // create new one
+                // Create a link from an existing gate
+                int index = [_viewport findOutletIndexAtOffset:offset attachedToObject:o];
+                if (index == -1) return NO;
                 _viewport.currentEditingLink = NULL;
                 _viewport.currentEditingLinkSource = o;
                 _viewport.currentEditingLinkSourceIndex = 0;
@@ -339,10 +346,11 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
                 return YES;
             }
         }
-
+        // not creating/editing a link:
         return NO;
     }
     if ([gestureRecognizer isKindOfClass:[DragGateGestureRecognizer class]]) {
+        // Drag a gate. This is done with a pan gesture recogniser that is only begins if the touch starts on top of a gate 
         DragGateGestureRecognizer *recogniser = (DragGateGestureRecognizer *)gestureRecognizer;
         ;
         GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [recogniser locationInView:self.view])];
@@ -354,7 +362,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
             beginLongPressGestureOffset = GLKVector3Subtract(objectPosition, position);
             return YES;
         }
-        
+        // Dragging the background, defer this to the other pan gesture recognizer.
         return NO;
     } else if ([gestureRecognizer isKindOfClass:[CreateGatePanGestureRecognizer class]]) {
         // only starts if the finger is on the toolbelt
@@ -373,7 +381,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         draggingOutFromToolbeltStart = p;
         return YES;
     } else if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
-        // pan
+        // drag view pan
         UIPanGestureRecognizer *recogniser = (UIPanGestureRecognizer *)gestureRecognizer;
         ;
         GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [recogniser locationInView:self.view])];
@@ -398,10 +406,11 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 - (IBAction) handlePanGesture:(UIPanGestureRecognizer *)recognizer {
     CGPoint translation = [recognizer translationInView:self.view];
     [_viewport translate: GLKVector3Make(translation.x, translation.y, 0.0)];
+    // this makes it so next time "handlePanGesture:" is called, translation will be relative to the last one. (ie. translation is a delta)
     [recognizer setTranslation:CGPointMake(0, 0) inView:self.view];
     if (recognizer.state == UIGestureRecognizerStateEnded) {
-        CGPoint vel = [recognizer velocityInView:self.view];
-        panVelocity = vel;
+        // give it some momentum
+        panVelocity = [recognizer velocityInView:self.view];
     }
 }
 
@@ -418,8 +427,11 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         sender.enabled = YES;
         return;
     }
+    
+    // world space position of touch:
     GLKVector3 curPos = [_viewport unproject: PX(self.view.contentScaleFactor, [sender locationOfTouch:0 inView:self.view])];
     
+    // This moves it so that the user can drag the gate from places other than the gates top left corner
     GLKVector3 newPos = GLKVector3Add(curPos, beginLongPressGestureOffset);
     object->pos.x = newPos.x;
     object->pos.y = newPos.y;
@@ -429,6 +441,8 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 - (IBAction)handleCreateGateGesture:(UIPanGestureRecognizer *)sender {
     
     if (draggingOutFromToolbeltLockY) {
+        // still dragging it out of the toolbelt
+        
         if ([sender numberOfTouches] != 1) {
             sender.enabled = NO;
             sender.enabled = YES;
@@ -440,9 +454,13 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         if (diff.x > _hud.toolbelt.listWidth) {
             GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, p)];
             
+            // the gate is out of the toolbelt, act the same as the normal drag gate gesture from now on:
             draggingOutFromToolbeltLockY = NO;
             
             ToolbeltItem *item = _hud.toolbelt.items[_hud.toolbelt.currentObjectIndex];
+            
+            
+            // Create a new gate object, and start dragging the gate (as if the drag gate gesture recognizer started)
             
             CircuitObject *o = [_circuit addObject:item.type];
             beginLongPressGestureObject = o;
@@ -459,20 +477,26 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
             _hud.toolbelt.currentObjectX = diff.x;
         }
     } else {
+        // the gate is out of the toolbelt:
         [self handleDragGateGesture:sender];
     }
 }
 
 - (IBAction)handleCreateLinkGesture:(UILongPressGestureRecognizer *)sender {
     if (sender.state == UIGestureRecognizerStateEnded) {
+        // If there is no active gate in creation, then just cancel.
         _viewport.currentEditingLinkSource = NULL;
         _viewport.currentEditingLinkTarget = NULL;
+        return;
     }
     if (!_viewport.currentEditingLinkSource || [sender numberOfTouches] != 1) {
+        // If the number of touches changes from 1, then cancel.
+        // This isn't ideal, but it is simpler to deal with for now.
         sender.enabled = NO;
         sender.enabled = YES;
         return;
     }
+    // world space:
     GLKVector3 curPos = [_viewport unproject: PX(self.view.contentScaleFactor, [sender locationOfTouch:0 inView:self.view])];
 
     CircuitObject *target;
@@ -482,6 +506,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         
         int targetIndex = [_viewport findInletIndexAtOffset:offset attachedToObject:target];
         if (targetIndex != -1) {
+            // if the one suggested by findInletIndexAtOffset is taken, go to the next in this while loop:
             while(targetIndex < target->type->numInputs && target->inputs[targetIndex]) {
                 if (target == _viewport.currentEditingLinkTarget && targetIndex == _viewport.currentEditingLinkTargetIndex) {
                     // nothings changed
@@ -489,11 +514,15 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
                 }
                 targetIndex++;
             }
+            
             if (targetIndex < target->type->numInputs) {
+                // Connect a link to the target at the index:
                 _viewport.currentEditingLinkTarget = target;
                 if (_viewport.currentEditingLink) {
+                    // if we are dragging a link out from another inlet, then delete that old link (we will create a new link to target instead of modifying the old one to make circuit simulation refreshes simpler)
                     [_circuit removeLink:_viewport.currentEditingLink];
                 }
+                // Create a new link and tell the viewport renderer that it is the one being edited:
                 _viewport.currentEditingLinkTargetIndex = targetIndex;
                 CircuitLink *newLink = [_circuit addLink:_viewport.currentEditingLinkSource index:_viewport.currentEditingLinkSourceIndex to:target index:targetIndex];
                 _viewport.currentEditingLink = newLink;
@@ -502,23 +531,26 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         
         
     } else {
+        // Couldn't find a gate under the touch, remove the link being dragged if one exists
         if (_viewport.currentEditingLink) {
            [_circuit removeLink:_viewport.currentEditingLink];
             _viewport.currentEditingLink = NULL;
             _viewport.currentEditingLinkTarget = NULL;
         }
     }
+    // set the green wire to end at curPos (which is drawn by Viewport)
     _viewport.currentEditingLinkTargetPosition = curPos;
 }
 
 - (IBAction) handlePinchGesture:(UIPinchGestureRecognizer *)recognizer {
-    
+    // Zoom:
     CGPoint screenPos = PX(self.view.contentScaleFactor, [recognizer locationInView:self.view]);
+    
     GLKVector3 aPos = [_viewport unproject: screenPos];
     _viewport.scale = beginGestureScale * recognizer.scale;
     GLKVector3 bPos = [_viewport unproject: screenPos];
     
-    // We want modelViewMatrix * curPos = newModelViewMatrix * curPos
+    // We want modelViewMatrix * curPos = newModelViewMatrix * curPos (i.e., scaling should not translate the center point of the gesture)
     
     // A v = B v.. so what is B...
     [_viewport translate: GLKVector3Make(_viewport.scale * (bPos.x - aPos.x), _viewport.scale * (bPos.y - aPos.y), 0.0)];
@@ -526,6 +558,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 //#define LOG_TEST 0
 #ifdef LOG_TEST
     GLKVector3 cPos = [_viewport unproject: PX(self.view.contentScaleFactor, [recognizer locationInView:self.view])];
+    // the difference should be (0,0,0)
     NSLog(@"((%.2f, %.2f : %.2f) , (%.2f, %.2f : %.2f))", aPos.x, cPos.x, aPos.x - cPos.x , aPos.y, cPos.y, aPos.y - cPos.y);
 #endif
 }
@@ -543,12 +576,15 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         
         if (!object) break;
         if (object->type == [_circuit getProcessById:@"in"]) {
+            // Toggle a switch:
             hit = YES;
             object->out = !object->out;
             [_circuit didUpdateObject:object];
         }
     }
     if (!hit && sender.numberOfTouches == 1) {
+        // hit the background or only hit gates which don't have any tap action.
+        // toggle the toolbelt (it animates)
         self.hud.toolbelt.visible = !self.hud.toolbelt.visible;
     }
 }
@@ -558,6 +594,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 #pragma mark -  UIResponder methods
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    // cancel momentum
     [self stopPanAnimation];
 }
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {

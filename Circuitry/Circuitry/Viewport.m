@@ -180,6 +180,26 @@ static SpriteTexturePos symbolNOT;
     }
     return closest;
 }
+
+
+- (int) findOutletIndexAtOffset:(GLKVector3) offset attachedToObject:(CircuitObject *)object {
+    
+    if (object->type->numOutputs == 0) return -1;
+    
+    int closest = -1;
+    float dist = FLT_MAX;
+    for(int i = 0; i < object->type->numOutputs; i++) { 
+        float d = GLKVector3Distance(offsetForOutlet(object->type, i), offset);
+        if (d < dist) {
+            dist = d;
+            closest = i;
+        }
+    }
+    return closest;
+}
+
+
+
 - (CircuitLink *) findCircuitLinkAtOffset: (GLKVector3) offset attachedToObject:(CircuitObject *)object {
     int index = [self findInletIndexAtOffset:offset attachedToObject:object];
     if (index == -1) return NULL;
