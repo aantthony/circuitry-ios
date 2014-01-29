@@ -267,6 +267,15 @@
     }
 }
 
+// Faster one-part variant, called from within a rotating animation block, for additional animations during rotation.
+// A subclass may override this method, or the two-part variants below, but not both.
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration NS_AVAILABLE_IOS(3_0) {
+    self.paused = NO;
+//    [self update];
+//    [EAGLContext setCurrentContext:self.context];
+//    [self glkView:self.view drawInRect:self.view.frame];
+}
+
 - (void) checkError {
     int err;
     if((err = glGetError()) != GL_NO_ERROR) {
@@ -527,8 +536,13 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     if ((target = [_viewport findCircuitObjectAtPosition:curPos])) {
         
         GLKVector3 offset = GLKVector3Subtract(curPos, *(GLKVector3 *)&target->pos);
+        int targetIndex = -1;
+        if (target == _viewport.currentEditingLinkSource && offset.x > 180.0) {
+            
+        } else {
+            targetIndex = [_viewport findInletIndexAtOffset:offset attachedToObject:target];
+        }
         
-        int targetIndex = [_viewport findInletIndexAtOffset:offset attachedToObject:target];
         if (targetIndex != -1) {
             // if the one suggested by findInletIndexAtOffset is taken, go to the next in this while loop:
             while(targetIndex < target->type->numInputs && target->inputs[targetIndex]) {
