@@ -93,7 +93,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		9204C370182E2F5C006A008D /* Circuitry.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Circuitry.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9204C370182E2F5C006A008D /* circuitry.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = circuitry.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9204C373182E2F5C006A008D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9204C375182E2F5C006A008D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		9204C377182E2F5C006A008D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -211,7 +211,7 @@
 		9204C371182E2F5C006A008D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9204C370182E2F5C006A008D /* Circuitry.app */,
+				9204C370182E2F5C006A008D /* circuitry.app */,
 				9204C399182E2F5C006A008D /* CircuitryTests.xctest */,
 			);
 			name = Products;
@@ -407,9 +407,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		9204C36F182E2F5C006A008D /* Circuitry */ = {
+		9204C36F182E2F5C006A008D /* circuitry */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9204C3AA182E2F5C006A008D /* Build configuration list for PBXNativeTarget "Circuitry" */;
+			buildConfigurationList = 9204C3AA182E2F5C006A008D /* Build configuration list for PBXNativeTarget "circuitry" */;
 			buildPhases = (
 				BC3AC6D7B3254235807EDC14 /* Check Pods Manifest.lock */,
 				9204C36C182E2F5C006A008D /* Sources */,
@@ -422,9 +422,9 @@
 			);
 			dependencies = (
 			);
-			name = Circuitry;
-			productName = Circuitry;
-			productReference = 9204C370182E2F5C006A008D /* Circuitry.app */;
+			name = circuitry;
+			productName = circuitry;
+			productReference = 9204C370182E2F5C006A008D /* circuitry.app */;
 			productType = "com.apple.product-type.application";
 		};
 		9204C398182E2F5C006A008D /* CircuitryTests */ = {
@@ -467,7 +467,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 9204C36B182E2F5C006A008D /* Build configuration list for PBXProject "Circuitry" */;
+			buildConfigurationList = 9204C36B182E2F5C006A008D /* Build configuration list for PBXProject "circuitry" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -480,7 +480,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				9204C36F182E2F5C006A008D /* Circuitry */,
+				9204C36F182E2F5C006A008D /* circuitry */,
 				9204C398182E2F5C006A008D /* CircuitryTests */,
 			);
 		};
@@ -605,7 +605,7 @@
 /* Begin PBXTargetDependency section */
 		9204C39F182E2F5C006A008D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 9204C36F182E2F5C006A008D /* Circuitry */;
+			target = 9204C36F182E2F5C006A008D /* circuitry */;
 			targetProxy = 9204C39E182E2F5C006A008D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -793,7 +793,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		9204C36B182E2F5C006A008D /* Build configuration list for PBXProject "Circuitry" */ = {
+		9204C36B182E2F5C006A008D /* Build configuration list for PBXProject "circuitry" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9204C3A8182E2F5C006A008D /* Debug */,
@@ -802,7 +802,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9204C3AA182E2F5C006A008D /* Build configuration list for PBXNativeTarget "Circuitry" */ = {
+		9204C3AA182E2F5C006A008D /* Build configuration list for PBXNativeTarget "circuitry" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9204C3AB182E2F5C006A008D /* Debug */,
