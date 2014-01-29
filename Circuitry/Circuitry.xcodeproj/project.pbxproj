@@ -458,7 +458,7 @@
 						DevelopmentTeam = 5X6237AEMK;
 						SystemCapabilities = {
 							com.apple.iCloud = {
-								enabled = 1;
+								enabled = 0;
 							};
 						};
 					};
@@ -467,7 +467,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 9204C36B182E2F5C006A008D /* Build configuration list for PBXProject "circuitry" */;
+			buildConfigurationList = 9204C36B182E2F5C006A008D /* Build configuration list for PBXProject "Circuitry" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -718,7 +718,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_ENTITLEMENTS = Circuitry/Circuitry.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -736,14 +735,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_ENTITLEMENTS = Circuitry/Circuitry.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Anthony Foster (5X6237AEMK)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Circuitry/Circuitry-Prefix.pch";
 				INFOPLIST_FILE = "Circuitry/Circuitry-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "BB844EA7-30D6-4023-A23A-1763AEC65C56";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -793,7 +791,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		9204C36B182E2F5C006A008D /* Build configuration list for PBXProject "circuitry" */ = {
+		9204C36B182E2F5C006A008D /* Build configuration list for PBXProject "Circuitry" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9204C3A8182E2F5C006A008D /* Debug */,
