@@ -4,7 +4,8 @@
 
 
 typedef struct {
-    float x, y, width, height;
+    float width, height;
+    float u, v, twidth, theight;
 } SpriteTexturePos;
 
 typedef struct {

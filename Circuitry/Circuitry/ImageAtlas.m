@@ -56,10 +56,12 @@
 
 - (SpriteTexturePos) positionForSprite:(NSString *)name {
     SpriteTexturePos pos;
-    pos.x = [_json[name][@"x"] floatValue];
-    pos.y = [_json[name][@"y"] floatValue];
-    pos.width = [_json[name][@"width"] floatValue];
-    pos.height = [_json[name][@"height"] floatValue];
+    pos.u = [_json[name][@"x"] floatValue];
+    pos.v = [_json[name][@"y"] floatValue];
+    pos.twidth = [_json[name][@"width"] floatValue];
+    pos.theight = [_json[name][@"height"] floatValue];
+    pos.width = pos.twidth;
+    pos.height = pos.theight;
     return pos;
 }
 @end

@@ -36,7 +36,7 @@ static GLint uTextureSize;
 
 // attribute locations:
 static GLint aSource;
-static GLint aTranslate;
+static GLint aTarget;
 
 // buffer names:
 static GLuint _vertexBuffer;
@@ -50,7 +50,7 @@ static GLint uModelViewProjectMatrix;
         
         NSDictionary *uniforms = @{@"opacity": @1.0};
         NSDictionary *attributes = @{
-                                     @"aTranslate": @{},
+                                     @"aTarget": @{},
                                      @"aSource": @{}
                                      };
         
@@ -72,25 +72,29 @@ static GLint uModelViewProjectMatrix;
         [ShaderEffect checkError];
 
 
-        aTranslate = [shader attributeLocation:@"translate"];
-//        [ShaderEffect checkError];
+        aTarget = [shader attributeLocation:@"target"];
+        [ShaderEffect checkError];
 
         glGenBuffers(1, &_indexBuffer);
         glGenBuffers(1, &_vertexBuffer);
-        
+        [ShaderEffect checkError];
         glEnableVertexAttribArray(aSource);
-        glEnableVertexAttribArray(aTranslate);
+        [ShaderEffect checkError];
+        glEnableVertexAttribArray(aTarget);
+        [ShaderEffect checkError];
         glEnableVertexAttribArray(GLKVertexAttribPosition);
         glEnableVertexAttribArray(GLKVertexAttribTexCoord0);
-        
+        [ShaderEffect checkError];
         glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
         glBufferData(GL_ARRAY_BUFFER, sizeof(batchedSpriteVertices), batchedSpriteVertices, GL_STATIC_DRAW);
+        [ShaderEffect checkError];
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexBuffer);
+        [ShaderEffect checkError];
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(batchedSpriteIndices), batchedSpriteIndices, GL_STATIC_DRAW);
-        
+        [ShaderEffect checkError];
         glDisableVertexAttribArray(aSource);
-        glDisableVertexAttribArray(aTranslate);
-        
+        glDisableVertexAttribArray(aTarget);
+        [ShaderEffect checkError];
     }
     
 }
@@ -125,7 +129,7 @@ static GLint uModelViewProjectMatrix;
     glEnableVertexAttribArray(GLKVertexAttribPosition);
     glEnableVertexAttribArray(GLKVertexAttribTexCoord0);
     glEnableVertexAttribArray(aSource);
-    glEnableVertexAttribArray(aTranslate);
+    glEnableVertexAttribArray(aTarget);
     
     [ShaderEffect checkError];
     
@@ -154,25 +158,24 @@ static GLint uModelViewProjectMatrix;
     
     glBindBuffer(GL_ARRAY_BUFFER, _instanceBuffer);
     
-    glVertexAttribPointer(aTranslate, 2, GL_FLOAT, GL_FALSE, sizeof(BatchedSpriteInstance), (const GLvoid *) offsetof(BatchedSpriteInstance, x));
-    
-    glVertexAttribPointer(aSource, 4, GL_FLOAT, GL_FALSE, sizeof(BatchedSpriteInstance), (const GLvoid *) offsetof(BatchedSpriteInstance, tex.x));
+    glVertexAttribPointer(aTarget, 4, GL_FLOAT, GL_FALSE, sizeof(BatchedSpriteInstance), (const GLvoid *) offsetof(BatchedSpriteInstance, x));
+    glVertexAttribPointer(aSource, 4, GL_FLOAT, GL_FALSE, sizeof(BatchedSpriteInstance), (const GLvoid *) offsetof(BatchedSpriteInstance, tex.u));
     
     [ShaderEffect checkError];
     glVertexAttribDivisorEXT(aSource, 1);
-    glVertexAttribDivisorEXT(aTranslate, 1);
+    glVertexAttribDivisorEXT(aTarget, 1);
 
     //glDrawElements(GL_LINE_STRIP, 6, GL_UNSIGNED_SHORT, 0);
     
     glDrawElementsInstancedEXT(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0, count);
     
     glVertexAttribDivisorEXT(aSource, 0);
-    glVertexAttribDivisorEXT(aTranslate, 0);
+    glVertexAttribDivisorEXT(aTarget, 0);
     
     glDisableVertexAttribArray(GLKVertexAttribPosition);
     glDisableVertexAttribArray(GLKVertexAttribTexCoord0);
     glDisableVertexAttribArray(aSource);
-    glDisableVertexAttribArray(aTranslate);
+    glDisableVertexAttribArray(aTarget);
     
     
     [ShaderEffect checkError];

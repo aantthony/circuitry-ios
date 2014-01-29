@@ -93,6 +93,10 @@
     item.type = [_circuit getProcessById:@"xnor"];
     [items addObject:item];
     
+    item = [[ToolbeltItem alloc] init];
+    item.type = [_circuit getProcessById:@"out"];
+    [items addObject:item];
+    
     _hud.toolbelt.items = items;
 }
 - (void)viewDidLoad
@@ -365,7 +369,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
                 if (index == -1) return NO;
                 _viewport.currentEditingLink = NULL;
                 _viewport.currentEditingLinkSource = o;
-                _viewport.currentEditingLinkSourceIndex = 0;
+                _viewport.currentEditingLinkSourceIndex = index;
                 _viewport.currentEditingLinkTargetPosition = position;
                 return YES;
             }

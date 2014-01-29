@@ -45,6 +45,10 @@ static SpriteTexturePos switchOn;
 static SpriteTexturePos switchOff;
 static SpriteTexturePos switchPressed;
 
+static SpriteTexturePos gateBackgroundTop;
+static SpriteTexturePos gateBackgroundMiddle;
+static SpriteTexturePos gateBackgroundBottom;
+
 static SpriteTexturePos ledOn;
 static SpriteTexturePos ledOff;
 
@@ -89,6 +93,13 @@ static SpriteTexturePos symbolNOT;
     gateOutletActive = [atlas positionForSprite:  @"active@2x"];
     gateOutletActiveConnected = [atlas positionForSprite: @"activeconnected@2x"];
     gateOutletInactiveConnected = [atlas positionForSprite:  @"inactiveconnected@2x"];
+    gateBackgroundTop = [atlas positionForSprite:@"gate-top"];
+    gateBackgroundMiddle = [atlas positionForSprite:@"gate-middle"];
+    
+    gateBackgroundMiddle.v+=1;
+    gateBackgroundMiddle.theight-=2;
+    
+    gateBackgroundBottom = [atlas positionForSprite:@"gate-bottom"];
     symbolOR = [atlas positionForSprite:@"symbol-or@2x"];
     symbolNOR = [atlas positionForSprite:@"symbol-nor@2x"];
     symbolXOR = [atlas positionForSprite:@"symbol-xor@2x"];
@@ -207,16 +218,26 @@ static SpriteTexturePos symbolNOT;
     return object->inputs[index];
 }
 
+CGSize sizeOfObject(CircuitObject *object) {
+    
+    if (expandDrawGate(object)) {
+        int middleHeight = vSpacing * 2 * MAX(object->type->numInputs, object->type->numOutputs);
+        return CGSizeMake(gateBackgroundHeight2.width, gateBackgroundTop.height + middleHeight + gateBackgroundBottom.height);
+    }
+    return CGSizeMake(gateBackgroundHeight2.width, gateBackgroundHeight2.height);
+}
+
 - (CircuitObject*) findCircuitObjectAtPosition: (GLKVector3) pos {
     
     __block CircuitObject *o = NULL;
     
     [_circuit enumerateObjectsInReverseUsingBlock:^(CircuitObject *object, BOOL *stop) {
-        float width = gateBackgroundHeight2.width;
-        float height = gateBackgroundHeight2.height;
+
         GLKVector3 oPos = *(GLKVector3 *)&object->pos;
+        
+        CGSize size = sizeOfObject(object);
         if (pos.x > oPos.x && pos.y > oPos.y) {
-            if (pos.x < oPos.x + width && pos.y < oPos.y + height) { 
+            if (pos.x < oPos.x + size.width && pos.y < oPos.y + size.height) { 
                 o = object;
                 *stop = YES;
             }
@@ -274,7 +295,6 @@ GLKVector3 offsetForInlet(CircuitProcess *process, int index) {
 }
 
 - (SpriteTexturePos) textureForProcess:(CircuitProcess *)process {
-    
     if (process == OR) return symbolOR;
     else if (process == NOR) return symbolNOR;
     else if (process == XOR) return symbolXOR;
@@ -282,8 +302,19 @@ GLKVector3 offsetForInlet(CircuitProcess *process, int index) {
     else if (process == AND) return symbolAND;
     else if (process == NAND) return symbolNAND;
     else if (process == NOT) return symbolNOT;
-    else return symbolAND;
+    else {
+        SpriteTexturePos pos;
+        pos.u = pos.v = pos.theight = pos.twidth = pos.width = pos.height = 0.0;
+        return pos;
+    };
 
+}
+
+BOOL expandDrawGate(CircuitObject *object) {
+    if (object->type->numOutputs > 2 || object->type->numInputs > 2) {
+        return YES;
+    }
+    return NO;
 }
 
 - (void) bufferSprites {
@@ -293,25 +324,43 @@ GLKVector3 offsetForInlet(CircuitProcess *process, int index) {
     [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
         GLKVector3 pos = *(GLKVector3*) &object->pos;
         BatchedSpriteInstance *instance = &_instances[i++];
-        instance->x = pos.x;
-        instance->y = pos.y;
+        
+        if (expandDrawGate(object)) {
+            BatchedSpriteInstance *top = &_instances[i++];
+            top->x = pos.x;
+            top->y = pos.y;
+            top->tex = gateBackgroundTop;
+            
+            BatchedSpriteInstance *middle = instance;
+            
+            instance = top;
+            middle->x = pos.x;
+            middle->y = pos.y + gateBackgroundTop.height - 1.0;
+            middle->tex = gateBackgroundMiddle;
+            middle->tex.height = vSpacing * 2 * MAX(object->type->numInputs, object->type->numOutputs) + 1.0;
+            
+            BatchedSpriteInstance *bottom = &_instances[i++];
+            bottom->x = pos.x;
+            bottom->y = middle->y + middle->tex.height - 1.0;
+            bottom->tex = gateBackgroundBottom;
+        } else {
+            instance->x = pos.x;
+            instance->y = pos.y;
+            instance->tex = gateBackgroundHeight2;    
+        }
+        
         
         if (object->type == IN) {
             instance->tex = object->out ? switchOn : switchOff;
             instance->x -= 50.0;
             instance->y -= 50.0;
         } else if (object->type == OUT) {
-            instance->tex = gateBackgroundHeight2;
-            
-            
             BatchedSpriteInstance *symbol = &_instances[i++];
             symbol->x = pos.x + 70.0;
             symbol->y = pos.y - 85.0;
             symbol->tex = object->in ? ledOn : ledOff;
             
-        } else {
-            instance->tex = gateBackgroundHeight2;
-            
+        } else {            
             BatchedSpriteInstance *symbol = &_instances[i++];
             symbol->x = pos.x + 9.0;
             symbol->y = pos.y + 0.0;
