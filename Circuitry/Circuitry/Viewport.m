@@ -273,7 +273,7 @@ GLKVector3 offsetForOutlet(CircuitProcess *process, int index) {
     GLKVector3 res;
     res.z = 0.0;
     res.x = gateBackgroundHeight2.width - 45.0;
-    if (process->numOutputs % 2 == 1) {
+    if (process->numOutputs == 1) {
         res.y = 30.0 + vSpacing + index * vSpacing * 2.0;
     } else {
         res.y = 30.0 + index * vSpacing * 2.0;

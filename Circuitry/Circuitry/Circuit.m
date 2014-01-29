@@ -41,6 +41,7 @@ int NAND (int x) { return x != 3;}
 int NOT  (int x) { return !x; }
 int NOR  (int x) { return !x; }
 int OR   (int x) { return !!x; }
+int ADD8 (int x) { return (x&255) + (x >> 8); }
 
 int BINDEC (int x) { return 1 << x; }
 
@@ -55,7 +56,8 @@ CircuitProcess defaultGates[] = {
     {"and", 2, 1, AND },
     {"nand", 2, 1, NAND },
     {"not", 1, 1, NOT },
-    {"bindec", 4, 16, BINDEC }
+    {"bindec", 4, 16, BINDEC },
+    {"add8", 16, 9, ADD8 }
 };
 
 #pragma mark - Initialisation
@@ -95,7 +97,8 @@ NSDictionary *processesById;
                       @"and": valueForGate(&defaultGates[7]),
                       @"nand": valueForGate(&defaultGates[8]),
                       @"not": valueForGate(&defaultGates[9]),
-                      @"bindec": valueForGate(&defaultGates[10])
+                      @"bindec": valueForGate(&defaultGates[10]),
+                      @"add8": valueForGate(&defaultGates[11])
                       };
 }
 
