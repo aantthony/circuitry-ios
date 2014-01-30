@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		92020C09189A54ED00B6D8F5 /* background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 92020C08189A54ED00B6D8F5 /* background.jpg */; };
+		92020C0B189A578200B6D8F5 /* circuit.image-atlas in Resources */ = {isa = PBXBuildFile; fileRef = 92DE44AD187C153F00014CB9 /* circuit.image-atlas */; };
 		9204C374182E2F5C006A008D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9204C373182E2F5C006A008D /* Foundation.framework */; };
 		9204C376182E2F5C006A008D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9204C375182E2F5C006A008D /* CoreGraphics.framework */; };
 		9204C378182E2F5C006A008D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9204C377182E2F5C006A008D /* UIKit.framework */; };
@@ -36,21 +38,16 @@
 		9232B6771878436E00E45C7E /* BatchedSprite.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9232B6541878353A00E45C7E /* BatchedSprite.fsh */; };
 		923C143818826D960017BAF3 /* HUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 923C143718826D960017BAF3 /* HUD.m */; };
 		923C143C18826F280017BAF3 /* Toolbelt.m in Sources */ = {isa = PBXBuildFile; fileRef = 923C143B18826F280017BAF3 /* Toolbelt.m */; };
-		923C143E18827E550017BAF3 /* Toolbelt@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 923C143D18827E550017BAF3 /* Toolbelt@2x.png */; };
-		923C1440188288950017BAF3 /* OR-gate@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 923C143F188288950017BAF3 /* OR-gate@2x.png */; };
 		9253C409188545EC00D2509C /* CreateGatePanGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9253C408188545EC00D2509C /* CreateGatePanGestureRecognizer.m */; };
 		9253C40C18854D0B00D2509C /* CreateLinkGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9253C40B18854D0B00D2509C /* CreateLinkGestureRecognizer.m */; };
 		9269EF71188107DE00C8804D /* SocketClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 9269EF70188107DE00C8804D /* SocketClient.m */; };
 		9288061B187210180096A1CA /* Shader.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 9204C38E182E2F5C006A008D /* Shader.vsh */; };
-		9288061E1872136A0096A1CA /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = 9288061D1872136A0096A1CA /* background.png */; };
 		92880621187243800096A1CA /* Sprite.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 92880620187243800096A1CA /* Sprite.vsh */; };
 		928806231872438E0096A1CA /* Sprite.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 928806221872438E0096A1CA /* Sprite.fsh */; };
 		9288062418725AB20096A1CA /* Sprite.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 92880620187243800096A1CA /* Sprite.vsh */; };
 		9288062518725AB20096A1CA /* Sprite.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 928806221872438E0096A1CA /* Sprite.fsh */; };
-		928BBFA218727C4000EF6DDF /* testbg.png in Resources */ = {isa = PBXBuildFile; fileRef = 928BBFA118727C4000EF6DDF /* testbg.png */; };
 		92A28A5B187428BE00F0D934 /* nand.json in Resources */ = {isa = PBXBuildFile; fileRef = 92A28A5A187428BE00F0D934 /* nand.json */; };
 		92A28A5E187433E800F0D934 /* Circuit.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A28A5D187433E800F0D934 /* Circuit.m */; };
-		92A28A601875487500F0D934 /* gate-test.png in Resources */ = {isa = PBXBuildFile; fileRef = 92A28A5F1875487500F0D934 /* gate-test.png */; };
 		92A4F86D187289F300EEB367 /* Viewport.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A4F86C187289F300EEB367 /* Viewport.m */; };
 		92A4F87018728A1F00EEB367 /* Drawable.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A4F86F18728A1F00EEB367 /* Drawable.m */; };
 		92A4F871187295EF00EEB367 /* Grid.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 92D90E3C1838E9CD00387FAC /* Grid.vsh */; };
@@ -61,7 +58,6 @@
 		92D90E3B1838D7AB00387FAC /* Grid.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E3A1838D7AB00387FAC /* Grid.m */; };
 		92D90E3D1838E9CD00387FAC /* Grid.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E3C1838E9CD00387FAC /* Grid.vsh */; };
 		92D90E3F1838E9D700387FAC /* Grid.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E3E1838E9D700387FAC /* Grid.fsh */; };
-		92DE44AE187C153F00014CB9 /* circuit.image-atlas in Resources */ = {isa = PBXBuildFile; fileRef = 92DE44AD187C153F00014CB9 /* circuit.image-atlas */; };
 		92E037BF188425E80047F736 /* DragGateGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 92E037BE188425E80047F736 /* DragGateGestureRecognizer.m */; };
 		92E304631894D6C100003157 /* ToolbeltItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 92E304621894D6C100003157 /* ToolbeltItem.m */; };
 		CBCFD569C58147F5B4C87DD5 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB58C125A61B4A21B04D8C5D /* libPods.a */; };
@@ -93,6 +89,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		92020C08189A54ED00B6D8F5 /* background.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = background.jpg; sourceTree = SOURCE_ROOT; };
 		9204C370182E2F5C006A008D /* circuitry.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = circuitry.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9204C373182E2F5C006A008D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9204C375182E2F5C006A008D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -130,22 +127,17 @@
 		923C143718826D960017BAF3 /* HUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HUD.m; sourceTree = "<group>"; };
 		923C143A18826F280017BAF3 /* Toolbelt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Toolbelt.h; sourceTree = "<group>"; };
 		923C143B18826F280017BAF3 /* Toolbelt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Toolbelt.m; sourceTree = "<group>"; };
-		923C143D18827E550017BAF3 /* Toolbelt@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Toolbelt@2x.png"; sourceTree = "<group>"; };
-		923C143F188288950017BAF3 /* OR-gate@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "OR-gate@2x.png"; path = "../../../../Desktop/OR-gate@2x.png"; sourceTree = "<group>"; };
 		9253C407188545EC00D2509C /* CreateGatePanGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateGatePanGestureRecognizer.h; sourceTree = "<group>"; };
 		9253C408188545EC00D2509C /* CreateGatePanGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateGatePanGestureRecognizer.m; sourceTree = "<group>"; };
 		9253C40A18854D0B00D2509C /* CreateLinkGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateLinkGestureRecognizer.h; sourceTree = "<group>"; };
 		9253C40B18854D0B00D2509C /* CreateLinkGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateLinkGestureRecognizer.m; sourceTree = "<group>"; };
 		9269EF6F188107DE00C8804D /* SocketClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocketClient.h; sourceTree = "<group>"; };
 		9269EF70188107DE00C8804D /* SocketClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocketClient.m; sourceTree = "<group>"; };
-		9288061D1872136A0096A1CA /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = background.png; path = ../background.png; sourceTree = "<group>"; };
 		92880620187243800096A1CA /* Sprite.vsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; name = Sprite.vsh; path = ../Sprite.vsh; sourceTree = "<group>"; };
 		928806221872438E0096A1CA /* Sprite.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; name = Sprite.fsh; path = ../Sprite.fsh; sourceTree = "<group>"; };
-		928BBFA118727C4000EF6DDF /* testbg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = testbg.png; path = ../testbg.png; sourceTree = "<group>"; };
 		92A28A5A187428BE00F0D934 /* nand.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = nand.json; sourceTree = "<group>"; };
 		92A28A5C187433E800F0D934 /* Circuit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Circuit.h; sourceTree = "<group>"; };
 		92A28A5D187433E800F0D934 /* Circuit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Circuit.m; sourceTree = "<group>"; };
-		92A28A5F1875487500F0D934 /* gate-test.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "gate-test.png"; path = "../gate-test.png"; sourceTree = "<group>"; };
 		92A4F86B187289F300EEB367 /* Viewport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Viewport.h; sourceTree = "<group>"; };
 		92A4F86C187289F300EEB367 /* Viewport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Viewport.m; sourceTree = "<group>"; };
 		92A4F86E18728A1F00EEB367 /* Drawable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Drawable.h; path = ../Drawable.h; sourceTree = "<group>"; };
@@ -234,8 +226,6 @@
 		9204C37D182E2F5C006A008D /* Circuitry */ = {
 			isa = PBXGroup;
 			children = (
-				923C143D18827E550017BAF3 /* Toolbelt@2x.png */,
-				923C143F188288950017BAF3 /* OR-gate@2x.png */,
 				92DE44AD187C153F00014CB9 /* circuit.image-atlas */,
 				927D1A191875A9F000457367 /* Models */,
 				927D1A181875A9B400457367 /* OpenGL Views */,
@@ -361,9 +351,6 @@
 		927D1A171875A9AA00457367 /* Viewport */ = {
 			isa = PBXGroup;
 			children = (
-				928BBFA118727C4000EF6DDF /* testbg.png */,
-				92A28A5F1875487500F0D934 /* gate-test.png */,
-				9288061D1872136A0096A1CA /* background.png */,
 				92A4F86B187289F300EEB367 /* Viewport.h */,
 				92A4F86C187289F300EEB367 /* Viewport.m */,
 				92B269AD1886B175007E9866 /* ImageAtlas.h */,
@@ -378,6 +365,7 @@
 				9218F735187696A100742F99 /* LinkBezier */,
 				92A4F86E18728A1F00EEB367 /* Drawable.h */,
 				92A4F86F18728A1F00EEB367 /* Drawable.m */,
+				92020C08189A54ED00B6D8F5 /* background.jpg */,
 				9204C390182E2F5C006A008D /* ViewController.h */,
 				9204C391182E2F5C006A008D /* ViewController.m */,
 				927D1A131875A97000457367 /* Sprite */,
@@ -492,22 +480,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				9232B6761878436E00E45C7E /* BatchedSprite.vsh in Resources */,
-				923C143E18827E550017BAF3 /* Toolbelt@2x.png in Resources */,
-				92DE44AE187C153F00014CB9 /* circuit.image-atlas in Resources */,
+				92020C0B189A578200B6D8F5 /* circuit.image-atlas in Resources */,
 				9232B6771878436E00E45C7E /* BatchedSprite.fsh in Resources */,
-				923C1440188288950017BAF3 /* OR-gate@2x.png in Resources */,
 				9218F73D1876AB7C00742F99 /* LinkBezier.fsh in Resources */,
 				9218F73E1876AB7C00742F99 /* LinkBezier.vsh in Resources */,
 				92A4F871187295EF00EEB367 /* Grid.vsh in Resources */,
+				92020C09189A54ED00B6D8F5 /* background.jpg in Resources */,
 				923056A118759577005AE348 /* Configurations.plist in Resources */,
 				92A4F872187295EF00EEB367 /* Grid.fsh in Resources */,
 				9288062418725AB20096A1CA /* Sprite.vsh in Resources */,
 				9288062518725AB20096A1CA /* Sprite.fsh in Resources */,
-				928BBFA218727C4000EF6DDF /* testbg.png in Resources */,
 				9204C394182E2F5C006A008D /* Images.xcassets in Resources */,
-				92A28A601875487500F0D934 /* gate-test.png in Resources */,
 				92A28A5B187428BE00F0D934 /* nand.json in Resources */,
-				9288061E1872136A0096A1CA /* background.png in Resources */,
 				9204C382182E2F5C006A008D /* InfoPlist.strings in Resources */,
 				9204C38B182E2F5C006A008D /* Main.storyboard in Resources */,
 			);

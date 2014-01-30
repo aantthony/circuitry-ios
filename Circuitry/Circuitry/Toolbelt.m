@@ -30,8 +30,6 @@
     BOOL _currentObjectXAnimating;
 }
 @property (strong, nonatomic) NSArray *gates;
-@property (strong, nonatomic) Sprite *sprite;
-@property (strong, nonatomic) Sprite *gateSprite;
 @property BatchedSprite *batcher;
 @end
 
@@ -67,10 +65,6 @@ static SpriteTexturePos gateOutletInactive;
     
     self = [super init];
 
-    GLKTextureInfo *texture = [Sprite textureWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"Toolbelt@2x" withExtension:@"png"]];
-    _sprite = [[Sprite alloc] initWithTexture:texture];
-    GLKTextureInfo *gateTexture = [Sprite textureWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"OR-gate@2x" withExtension:@"png"]];
-    _gateSprite = [[Sprite alloc] initWithTexture:gateTexture];
     _spriteListItem = [atlas positionForSprite:@"listitem@2x"];
     _spriteListItemB = [atlas positionForSprite:@"listitemb@2x"];
     

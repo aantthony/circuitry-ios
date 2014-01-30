@@ -128,7 +128,7 @@
     _hud = [[HUD alloc] initWithAtlas:_atlas];
     _hud.viewPort = _viewport;
     [self checkError];
-    GLKTextureInfo *bgTexture = [Sprite textureWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"background" withExtension:@"png"]];
+    GLKTextureInfo *bgTexture = [Sprite textureWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"background" withExtension:@"jpg"]];
     [self checkError];
     bg = [[Sprite alloc] initWithTexture:bgTexture];
     [self checkError];
