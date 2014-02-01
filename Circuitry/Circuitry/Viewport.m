@@ -417,15 +417,15 @@ BOOL expandDrawGate(CircuitObject *object) {
             CircuitLink *link = object->outputs[sourceIndex];
             
             while(link) {
-                
-                GLKVector3 dotPos = offsetForOutlet(object->type, sourceIndex);
-                GLKVector2 A = GLKVector2Make(object->pos.x + dotPos.x + radius, object->pos.y + dotPos.y + radius);
-                dotPos = offsetForInlet(link->target->type, link->targetIndex);
-                GLKVector2 B = GLKVector2Make(link->target->pos.x + dotPos.x + radius, link->target->pos.y + dotPos.y + radius);
-                bool isActive = object->out & 1 << sourceIndex;
-                [bezier drawFrom:A to:B withColor1:isActive ? active1 : inactive1 color2:isActive ? active2 : inactive2  active:isActive withTransform:_viewProjectionMatrix];
+                if (link->target != link->source) {
+                    GLKVector3 dotPos = offsetForOutlet(object->type, sourceIndex);
+                    GLKVector2 A = GLKVector2Make(object->pos.x + dotPos.x + radius, object->pos.y + dotPos.y + radius);
+                    dotPos = offsetForInlet(link->target->type, link->targetIndex);
+                    GLKVector2 B = GLKVector2Make(link->target->pos.x + dotPos.x + radius, link->target->pos.y + dotPos.y + radius);
+                    bool isActive = object->out & 1 << sourceIndex;
+                    [bezier drawFrom:A to:B withColor1:isActive ? active1 : inactive1 color2:isActive ? active2 : inactive2  active:isActive withTransform:_viewProjectionMatrix];
 
-                
+                }
                 link = link->nextSibling;
             }
         }
@@ -447,6 +447,26 @@ BOOL expandDrawGate(CircuitObject *object) {
     [ShaderEffect checkError];
     
     [_gateSprites drawIndices:0 count:_count WithTransform:_viewProjectionMatrix];
+    
+    [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
+        for(int sourceIndex = 0; sourceIndex < object->type->numOutputs; sourceIndex++) {
+            CircuitLink *link = object->outputs[sourceIndex];
+            
+            while(link) {
+                if (link->target == link->source) {
+                    
+                    GLKVector3 dotPos = offsetForOutlet(object->type, sourceIndex);
+                    GLKVector2 A = GLKVector2Make(object->pos.x + dotPos.x + radius, object->pos.y + dotPos.y + radius);
+                    dotPos = offsetForInlet(link->target->type, link->targetIndex);
+                    GLKVector2 B = GLKVector2Make(link->target->pos.x + dotPos.x + radius, link->target->pos.y + dotPos.y + radius);
+                    bool isActive = object->out & 1 << sourceIndex;
+                    [bezier drawFrom:A to:B withColor1:isActive ? active1 : inactive1 color2:isActive ? active2 : inactive2  active:isActive withTransform:_viewProjectionMatrix];
+                }
+                link = link->nextSibling;
+            }
+        }
+        
+    }];
 
     [ShaderEffect checkError];
     GLKMatrixStackPop(stack);
