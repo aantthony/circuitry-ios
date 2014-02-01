@@ -43,6 +43,10 @@
 {
     _client = [SocketClient sharedInstance];
     
+    [_client sendEvent:@"subscribe" withData:@"52d4f829c9aaf03423c13697" andAcknowledge:^(id err, id response) {
+        NSLog(@"ready");
+    }];
+    
     [AppDelegate.api GET:@"debug" parameters:nil success:^(AFHTTPRequestOperation *operation, NSDictionary *res) {
         NSLog(@"JSON: %@", res);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

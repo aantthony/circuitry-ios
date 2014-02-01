@@ -9,7 +9,9 @@ var outputImage = process.argv[3] || 'output.png';
 
 if (outputImage[0] != '/') outputImage = process.cwd() + '/' + outputImage;
 
-var files = fs.readdirSync(path).map(function (name) {
+var files = fs.readdirSync(path).filter(function (name) {
+  return /\.png$/.test(name);
+}).map(function (name) {
   return path + '/' + name;
 });
 

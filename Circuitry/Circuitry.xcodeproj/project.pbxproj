@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9200469C189D0178007124DA /* SevenSegmentDisplay.m in Sources */ = {isa = PBXBuildFile; fileRef = 9200469B189D0178007124DA /* SevenSegmentDisplay.m */; };
+		9200469F189D037F007124DA /* SevenSegmentDisplay.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 9200469E189D037F007124DA /* SevenSegmentDisplay.fsh */; };
+		920046A1189D0390007124DA /* SevenSegmentDisplay.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 920046A0189D0390007124DA /* SevenSegmentDisplay.vsh */; };
+		920046A2189D0A60007124DA /* SevenSegmentDisplay.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9200469E189D037F007124DA /* SevenSegmentDisplay.fsh */; };
+		920046A3189D0A60007124DA /* SevenSegmentDisplay.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 920046A0189D0390007124DA /* SevenSegmentDisplay.vsh */; };
 		92020C09189A54ED00B6D8F5 /* background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 92020C08189A54ED00B6D8F5 /* background.jpg */; };
 		92020C0B189A578200B6D8F5 /* circuit.image-atlas in Resources */ = {isa = PBXBuildFile; fileRef = 92DE44AD187C153F00014CB9 /* circuit.image-atlas */; };
 		9204C374182E2F5C006A008D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9204C373182E2F5C006A008D /* Foundation.framework */; };
@@ -74,7 +79,7 @@
 				"$(DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)-atlas.png",
 				"$(DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)-atlas.json",
 			);
-			script = "cd \"$SRCROOT/tools\"\necho $PWD\nexport PATH=\"/usr/local/bin:$PATH\"\nnpm install --production\nnode ./spritesheet.js \"$INPUT_FILE_PATH\" \"temp.png\" > \"$DERIVED_FILE_DIR/$INPUT_FILE_BASE-atlas.json\"\necho Compressing png...\n$DEVELOPER_TOOLS_DIR/../usr/bin/xcrun -sdk iphoneos pngcrush -iphone temp.png \"$DERIVED_FILE_DIR/$INPUT_FILE_BASE-atlas.png\"\n# $DEVELOPER_TOOLS_DIR/../usr/bin/xcrun -sdk iphoneos pngcrush -revert-iphone-optimizations \"$DERIVED_FILE_DIR/$INPUT_FILE_BASE-atlas.png\" \"$DERIVED_FILE_DIR/$INPUT_FILE_BASE-atlas.png\"\necho delete temp files\nrm temp.png\n";
+			script = "cd \"$SRCROOT/tools\"\necho $PWD\nexport PATH=\"/usr/local/bin:$PATH\"\nnpm install --production\nnode ./spritesheet.js \"$INPUT_FILE_PATH\" \"temp.png\" > \"$DERIVED_FILE_DIR/$INPUT_FILE_BASE-atlas.json\"\necho Compressing png...\n$DEVELOPER_TOOLS_DIR/../usr/bin/xcrun -sdk iphoneos pngcrush -iphone temp.png \"$DERIVED_FILE_DIR/$INPUT_FILE_BASE-atlas.png\"\n# $DEVELOPER_TOOLS_DIR/../usr/bin/xcrun -sdk iphoneos pngcrush -revert-iphone-optimizations \"$DERIVED_FILE_DIR/$INPUT_FILE_BASE-atlas.png\" \"$DERIVED_FILE_DIR/$INPUT_FILE_BASE-atlas.png\"\necho delete temp files\ncp temp.png ~/temp.png\nrm temp.png\n";
 		};
 /* End PBXBuildRule section */
 
@@ -89,6 +94,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9200469A189D0178007124DA /* SevenSegmentDisplay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SevenSegmentDisplay.h; sourceTree = "<group>"; };
+		9200469B189D0178007124DA /* SevenSegmentDisplay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SevenSegmentDisplay.m; sourceTree = "<group>"; };
+		9200469E189D037F007124DA /* SevenSegmentDisplay.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = SevenSegmentDisplay.fsh; sourceTree = "<group>"; };
+		920046A0189D0390007124DA /* SevenSegmentDisplay.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = SevenSegmentDisplay.vsh; sourceTree = "<group>"; };
 		92020C08189A54ED00B6D8F5 /* background.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = background.jpg; sourceTree = SOURCE_ROOT; };
 		9204C370182E2F5C006A008D /* circuitry.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = circuitry.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9204C373182E2F5C006A008D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -188,6 +197,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9200469D189D021D007124DA /* SevenSegmentDisplay */ = {
+			isa = PBXGroup;
+			children = (
+				9200469A189D0178007124DA /* SevenSegmentDisplay.h */,
+				9200469B189D0178007124DA /* SevenSegmentDisplay.m */,
+				9200469E189D037F007124DA /* SevenSegmentDisplay.fsh */,
+				920046A0189D0390007124DA /* SevenSegmentDisplay.vsh */,
+			);
+			name = SevenSegmentDisplay;
+			sourceTree = "<group>";
+		};
 		9204C367182E2F5C006A008D = {
 			isa = PBXGroup;
 			children = (
@@ -365,6 +385,7 @@
 				9218F735187696A100742F99 /* LinkBezier */,
 				92A4F86E18728A1F00EEB367 /* Drawable.h */,
 				92A4F86F18728A1F00EEB367 /* Drawable.m */,
+				9200469D189D021D007124DA /* SevenSegmentDisplay */,
 				92020C08189A54ED00B6D8F5 /* background.jpg */,
 				9204C390182E2F5C006A008D /* ViewController.h */,
 				9204C391182E2F5C006A008D /* ViewController.m */,
@@ -479,6 +500,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				920046A2189D0A60007124DA /* SevenSegmentDisplay.fsh in Resources */,
+				920046A3189D0A60007124DA /* SevenSegmentDisplay.vsh in Resources */,
 				9232B6761878436E00E45C7E /* BatchedSprite.vsh in Resources */,
 				92020C0B189A578200B6D8F5 /* circuit.image-atlas in Resources */,
 				9232B6771878436E00E45C7E /* BatchedSprite.fsh in Resources */,
@@ -559,11 +582,14 @@
 				9218F73C1876982100742F99 /* LinkBezier.vsh in Sources */,
 				92880621187243800096A1CA /* Sprite.vsh in Sources */,
 				9204C392182E2F5C006A008D /* ViewController.m in Sources */,
+				9200469F189D037F007124DA /* SevenSegmentDisplay.fsh in Sources */,
 				923C143818826D960017BAF3 /* HUD.m in Sources */,
+				920046A1189D0390007124DA /* SevenSegmentDisplay.vsh in Sources */,
 				9204C388182E2F5C006A008D /* AppDelegate.m in Sources */,
 				92D90E321837807000387FAC /* Sprite.m in Sources */,
 				92E304631894D6C100003157 /* ToolbeltItem.m in Sources */,
 				923C143C18826F280017BAF3 /* Toolbelt.m in Sources */,
+				9200469C189D0178007124DA /* SevenSegmentDisplay.m in Sources */,
 				92A4F87018728A1F00EEB367 /* Drawable.m in Sources */,
 				9288061B187210180096A1CA /* Shader.vsh in Sources */,
 				92D90E3F1838E9D700387FAC /* Grid.fsh in Sources */,

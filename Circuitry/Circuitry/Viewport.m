@@ -2,6 +2,7 @@
 
 #import "Grid.h"
 #import "LinkBezier.h"
+#import "SevenSegmentDisplay.h"
 #import "Sprite.h"
 #import "BatchedSprite.h"
 
@@ -29,6 +30,10 @@
     CircuitProcess *AND ;
     CircuitProcess *NAND;
     CircuitProcess *NOT ;
+    
+    CircuitProcess *SEG7 ;
+    
+    SevenSegmentDisplay *sevenSegment;
 }
 @property Grid *grid;
 @end
@@ -124,7 +129,9 @@ static SpriteTexturePos symbolNOT;
     
     [ShaderEffect checkError];
     bezier = [[LinkBezier alloc] init];
-    
+    [ShaderEffect checkError];
+    sevenSegment = [[SevenSegmentDisplay alloc] initWithTexture: atlas.texture component:[atlas positionForSprite:@"7seg"]];
+    [ShaderEffect checkError];
     return self;
 }
 - (int) update: (NSTimeInterval) dt{
@@ -143,6 +150,7 @@ static SpriteTexturePos symbolNOT;
     NAND=[_circuit getProcessById:@"nand"];
     NOT =[_circuit getProcessById:@"not"];
     OUT =[_circuit getProcessById:@"out"];
+    SEG7 =[_circuit getProcessById:@"7seg"];
 }
 
 - (Circuit *) circuit {
@@ -286,7 +294,7 @@ GLKVector3 offsetForInlet(CircuitProcess *process, int index) {
     GLKVector3 res;
     res.x = 15.0;
     res.z = 0.0;
-    if (process->numInputs % 2 == 1) {
+    if (process->numInputs == 1) {
         res.y = 30.0 + vSpacing + index * vSpacing * 2.0;
     } else {
         res.y = 30.0 + index * vSpacing * 2.0;
@@ -429,7 +437,6 @@ BOOL expandDrawGate(CircuitObject *object) {
                 link = link->nextSibling;
             }
         }
-                
     }];
     
     if (_currentEditingLinkSource && !_currentEditingLink) {
@@ -447,6 +454,15 @@ BOOL expandDrawGate(CircuitObject *object) {
     [ShaderEffect checkError];
     
     [_gateSprites drawIndices:0 count:_count WithTransform:_viewProjectionMatrix];
+    
+    
+    [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
+        
+        if (object->type == SEG7) {
+            GLKVector3 pos = *(GLKVector3*) &object->pos;
+            [sevenSegment drawAt:GLKVector3Make(pos.x + 40.0, pos.y + 40.0, 0.0) withInput:object->in withTransform:_viewProjectionMatrix];
+        }
+    }];
     
     [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
         for(int sourceIndex = 0; sourceIndex < object->type->numOutputs; sourceIndex++) {
@@ -467,6 +483,7 @@ BOOL expandDrawGate(CircuitObject *object) {
         }
         
     }];
+    
 
     [ShaderEffect checkError];
     GLKMatrixStackPop(stack);

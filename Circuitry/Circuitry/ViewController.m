@@ -97,6 +97,11 @@
     item.type = [_circuit getProcessById:@"out"];
     [items addObject:item];
     
+    
+    item = [[ToolbeltItem alloc] init];
+    item.type = [_circuit getProcessById:@"7seg"];
+    [items addObject:item];
+    
     _hud.toolbelt.items = items;
 }
 - (void)viewDidLoad
@@ -260,7 +265,7 @@
         }
     }
     int changes = 0;
-    changes += [_circuit simulate:4096];
+    changes += [_circuit simulate:512];
     changes += [_viewport update: dt];
     changes += [_hud update: dt];
 //    NSLog(@"Changed!");

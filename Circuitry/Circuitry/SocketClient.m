@@ -27,7 +27,7 @@
     static SocketClient *instance;
     
     dispatch_once(&onceToken, ^{
-        instance = [[SocketClient alloc] init];
+        instance = [[SocketClient alloc] initSharedInstance];
     });
     
     return instance;

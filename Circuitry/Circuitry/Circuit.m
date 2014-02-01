@@ -80,7 +80,8 @@ CircuitProcess defaultGates[] = {
     {"not", 1, 1, NOT },
     {"bindec", 4, 16, BINDEC },
     {"add8", 16, 9, ADD8 },
-    {"BIN7SEG", 4, 7, BIN7SEG }
+    {"BIN7SEG", 4, 7, BIN7SEG },
+    {"7SEG", 7, 0, NULL }
 };
 
 #pragma mark - Initialisation
@@ -122,7 +123,8 @@ NSDictionary *processesById;
                       @"not": valueForGate(&defaultGates[9]),
                       @"bindec": valueForGate(&defaultGates[10]),
                       @"add8": valueForGate(&defaultGates[11]),
-                      @"bin7seg": valueForGate(&defaultGates[12])
+                      @"bin7seg": valueForGate(&defaultGates[12]),
+                      @"7seg": valueForGate(&defaultGates[13])
                       };
 }
 
