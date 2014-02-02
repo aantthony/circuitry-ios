@@ -4,6 +4,11 @@
 @property CircuitObject **needsUpdate;
 @property CircuitObject **needsUpdate2;
 @property CircuitLink   *links;
+
+@property int clocksSize;
+@property int clocksCount;
+@property CircuitObject **clocks;
+
 @property int needsUpdateCount;
 @property int needsUpdateSize;
 @property int itemsSize;
@@ -34,17 +39,17 @@ void *srealloc(void * d, size_t c) {
 
 
 
-int XOR  (int x) { return x == 1 || x == 2;}
-int XNOR (int x) { return x == 0 || x == 3;}
-int AND  (int x) { return x == 3;}
-int NAND (int x) { return x != 3;}
-int NOT  (int x) { return !x; }
-int NOR  (int x) { return !x; }
-int OR   (int x) { return !!x; }
-int ADD8 (int x) { return (x&255) + (x >> 8); }
+int XOR  (int x, void *d) { return x == 1 || x == 2;}
+int XNOR (int x, void *d) { return x == 0 || x == 3;}
+int AND  (int x, void *d) { return x == 3;}
+int NAND (int x, void *d) { return x != 3;}
+int NOT  (int x, void *d) { return !x; }
+int NOR  (int x, void *d) { return !x; }
+int OR   (int x, void *d) { return !!x; }
+int ADD8 (int x, void *d) { return (x&255) + (x >> 8); }
 
-int BINDEC (int x) { return 1 << x; }
-int BIN7SEG(int x) {
+int BINDEC (int x, void *d) { return 1 << x; }
+int BIN7SEG(int x, void *d) {
     switch(x) {
         case 0: return 0b0111111;
         case 1: return 0b0000110;
@@ -81,8 +86,11 @@ CircuitProcess defaultGates[] = {
     {"bindec", 4, 16, BINDEC },
     {"add8", 16, 9, ADD8 },
     {"bin7seg", 4, 7, BIN7SEG },
-    {"7seg", 7, 0, NULL }
+    {"7seg", 7, 0, NULL },
+    {"clock", 0, 1, NULL }
 };
+
+CircuitProcess *clockType = &defaultGates[14];
 
 #pragma mark - Initialisation
 NSValue *valueForGate(CircuitProcess *process) {
@@ -95,8 +103,8 @@ NSDictionary *processesById;
     if ((self = [super init])){
         _needsUpdateCount = 0;
         _needsUpdateSize = 100000;
-        _needsUpdate  = smalloc(sizeof(void *) * _needsUpdateSize);
-        _needsUpdate2 = smalloc(sizeof(void *) * _needsUpdateSize);
+        _needsUpdate  = smalloc(sizeof(CircuitObject *) * _needsUpdateSize);
+        _needsUpdate2 = smalloc(sizeof(CircuitObject *) * _needsUpdateSize);
         
         _itemsCount = 0;
         _itemsSize = 100000;
@@ -106,6 +114,10 @@ NSDictionary *processesById;
         _linksCount = 0;
         _linksSize = 100000;
         _links = smalloc((sizeof(CircuitLink) * _linksSize));
+        
+        _clocksCount = 0;
+        _clocksSize = 512;
+        _clocks = smalloc(sizeof(CircuitObject *) * _clocksSize);
     }
     return self;
 }
@@ -124,7 +136,8 @@ NSDictionary *processesById;
                       @"bindec": valueForGate(&defaultGates[10]),
                       @"add8": valueForGate(&defaultGates[11]),
                       @"bin7seg": valueForGate(&defaultGates[12]),
-                      @"7seg": valueForGate(&defaultGates[13])
+                      @"7seg": valueForGate(&defaultGates[13]),
+                      @"clock": valueForGate(&defaultGates[14])
                       };
 }
 
@@ -191,6 +204,10 @@ CircuitObject * addObject(Circuit *c, CircuitProcess *type) {
     o->name = "";
     o->outputs = scalloc(o->type->numOutputs + o->type->numInputs, sizeof(CircuitLink *));
     o->inputs = o->outputs + o->type->numOutputs;
+    
+    if (type == clockType) {
+        c->_clocks[c->_clocksCount++] = o;
+    }
     
     needsUpdate(c, o);
     
@@ -329,6 +346,7 @@ CircuitLink *addLink(Circuit *c, CircuitObject *object, int index, CircuitObject
 int simulate(Circuit *c, int ticks) {
     int nAffected = 0;
     for(int i = 0; i < ticks; i++) {
+        
         int updatingCount = c->_needsUpdateCount;
         if (!updatingCount) return nAffected;
         nAffected += updatingCount;
@@ -343,7 +361,7 @@ int simulate(Circuit *c, int ticks) {
 //                updating[i] = NULL;
                 continue;
             }
-            int newOut = o->type->calculate(o->in);
+            int newOut = o->type->calculate(o->in, o->data);
             // printf("     %s: gate with input: 0x%x  =  0x%x\n", o->type->id, o->in, o->out);
             if (oldOut != newOut) {
                 o->out = newOut;
@@ -532,6 +550,15 @@ int simulate(Circuit *c, int ticks) {
     }
 }
 
+
+- (void)enumerateClocksUsingBlock:(void (^)(CircuitObject *object, BOOL *stop))block {
+    BOOL stop = NO;
+    for(int i = 0 ; i < _clocksCount; i++) {
+        if (_clocks[i] == NULL) continue;
+        block(_clocks[i], &stop);
+        if (stop) break;
+    }
+}
 
 #pragma mark - circuit modification
 

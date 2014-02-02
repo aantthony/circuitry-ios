@@ -9,7 +9,7 @@ struct CircuitProcess {
     const char *id;
     int numInputs;
     int numOutputs;
-    int (*calculate)(int);
+    int (*calculate)(int, void*);
 };
 
 struct CircuitLink {
@@ -25,6 +25,7 @@ struct CircuitObject {
     int in;
     int out;
     CircuitProcess *type;
+    void *data;
     
     union { struct {float x, y, z;}; struct {float v[3];}; } pos;
     
@@ -65,5 +66,7 @@ struct CircuitObject {
 
 - (void) enumerateObjectsUsingBlock:(void (^)(CircuitObject *object, BOOL *stop))block;
 - (void) enumerateObjectsInReverseUsingBlock:(void (^)(CircuitObject *object, BOOL *stop))block;
+
+- (void)enumerateClocksUsingBlock:(void (^)(CircuitObject *object, BOOL *stop))block;
 
 @end

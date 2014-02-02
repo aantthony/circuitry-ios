@@ -40,12 +40,13 @@
     
     BOOL animatingPan;
     
+    Circuit *_circuit;
+    
 }
 @property (strong, nonatomic) EAGLContext *context;
 
 @property CircuitDocument *doc;
 @property ImageAtlas *atlas;
-@property Circuit *circuit;
 @property Viewport *viewport;
 @property HUD *hud;
 
@@ -111,6 +112,12 @@
     item = [[ToolbeltItem alloc] init];
     item.type = [_circuit getProcessById:@"bin7seg"];
     [items addObject:item];
+    
+    
+    item = [[ToolbeltItem alloc] init];
+    item.type = [_circuit getProcessById:@"clock"];
+    [items addObject:item];
+
 
     _hud.toolbelt.items = items;
 }
@@ -158,7 +165,7 @@
     [self checkError];
         
     
-    NSURL *docURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Circuit1.json"];
+    NSURL *docURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Circuit2.json"];
     
     _doc = [[CircuitDocument alloc] initWithFileURL:docURL];
     NSLog(@"URL: %@", _doc.fileURL);
@@ -166,12 +173,8 @@
         [_doc openWithCompletionHandler:^(BOOL success){
             NSLog(@"opened document: %d, %@", success, _doc.fileURL);
             
-            _circuit = _doc.circuit;
-            _viewport.circuit = _circuit;
-            
+            self.circuit = _doc.circuit;
             [self configureToolbeltItems];
-            
-            [self unpause];
             
             if (!success) {
                 // Handle the error.
@@ -184,10 +187,7 @@
         NSURL *path = [[NSBundle mainBundle] URLForResource:@"nand" withExtension:@"json"];
         NSInputStream *stream = [NSInputStream inputStreamWithURL:path];
         [stream open];
-        _circuit = [Circuit circuitWithStream: stream];
-        _viewport.circuit = _circuit;
-        
-        _doc.circuit = _circuit;
+        self.circuit = [Circuit circuitWithStream: stream];
         
         [self configureToolbeltItems];
         
@@ -204,6 +204,36 @@
     
 //    [[[UIAlertView alloc] initWithTitle:_circuit.name message:_circuit.description delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
 }
+
+- (void) timerTick:(id) sender {
+    [_circuit enumerateClocksUsingBlock:^(CircuitObject *object, BOOL *stop) {
+        object->out = !object->out;
+        [_circuit didUpdateObject:object];
+    }];
+    [self unpause];
+}
+
+- (void) setCircuit:(Circuit *)circuit {
+    if (circuit != _circuit) {
+        _circuit = circuit;
+        
+        _viewport.circuit = _circuit;
+        
+        _doc.circuit = _circuit;
+        
+        
+        // setup timers:
+        NSTimer *_timer;
+        
+        _timer = [NSTimer scheduledTimerWithTimeInterval:0.005 target:self selector:@selector(timerTick:) userInfo:@{} repeats:YES];
+        
+        [self unpause];
+    }
+}
+
+//- (Circuit *) circuit {
+//    return _circuit;
+//}
 
 - (void)dealloc
 {    
