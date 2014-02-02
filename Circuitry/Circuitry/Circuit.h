@@ -44,6 +44,7 @@ struct CircuitObject {
 @property NSMutableDictionary *dependencies;
 
 - (NSData *) toJSON;
++ (Circuit *) circuitWithJSON:(NSData *) data;
 - (NSDictionary *) toDictionary;
 + (Circuit *) circuitWithStream:(NSInputStream *) stream;
 - (Circuit *) initWithDictionary: (NSDictionary *) dictionary;

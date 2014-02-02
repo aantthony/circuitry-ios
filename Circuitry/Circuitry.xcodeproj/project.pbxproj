@@ -42,7 +42,6 @@
 		9232B6761878436E00E45C7E /* BatchedSprite.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 9232B6521878140500E45C7E /* BatchedSprite.vsh */; };
 		9232B6771878436E00E45C7E /* BatchedSprite.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9232B6541878353A00E45C7E /* BatchedSprite.fsh */; };
 		923A0631189D2D660064834C /* CircuitDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 923A0630189D2D660064834C /* CircuitDocument.m */; };
-		923A0633189DDEAC0064834C /* Default@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 923A0632189DDEAC0064834C /* Default@2x~ipad.png */; };
 		923C143818826D960017BAF3 /* HUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 923C143718826D960017BAF3 /* HUD.m */; };
 		923C143C18826F280017BAF3 /* Toolbelt.m in Sources */ = {isa = PBXBuildFile; fileRef = 923C143B18826F280017BAF3 /* Toolbelt.m */; };
 		9253C409188545EC00D2509C /* CreateGatePanGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9253C408188545EC00D2509C /* CreateGatePanGestureRecognizer.m */; };
@@ -136,7 +135,6 @@
 		9232B6541878353A00E45C7E /* BatchedSprite.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = BatchedSprite.fsh; sourceTree = "<group>"; };
 		923A062F189D2D660064834C /* CircuitDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircuitDocument.h; sourceTree = "<group>"; };
 		923A0630189D2D660064834C /* CircuitDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircuitDocument.m; sourceTree = "<group>"; };
-		923A0632189DDEAC0064834C /* Default@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x~ipad.png"; sourceTree = "<group>"; };
 		923C143618826D960017BAF3 /* HUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HUD.h; sourceTree = "<group>"; };
 		923C143718826D960017BAF3 /* HUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HUD.m; sourceTree = "<group>"; };
 		923C143A18826F280017BAF3 /* Toolbelt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Toolbelt.h; sourceTree = "<group>"; };
@@ -216,7 +214,6 @@
 		9204C367182E2F5C006A008D = {
 			isa = PBXGroup;
 			children = (
-				923A0632189DDEAC0064834C /* Default@2x~ipad.png */,
 				92A28A59187428A600F0D934 /* Circuits */,
 				9204C37D182E2F5C006A008D /* Circuitry */,
 				9204C3A0182E2F5C006A008D /* CircuitryTests */,
@@ -517,7 +514,6 @@
 				9218F73E1876AB7C00742F99 /* LinkBezier.vsh in Resources */,
 				92A4F871187295EF00EEB367 /* Grid.vsh in Resources */,
 				92020C09189A54ED00B6D8F5 /* background.jpg in Resources */,
-				923A0633189DDEAC0064834C /* Default@2x~ipad.png in Resources */,
 				923056A118759577005AE348 /* Configurations.plist in Resources */,
 				92A4F872187295EF00EEB367 /* Grid.fsh in Resources */,
 				9288062418725AB20096A1CA /* Sprite.vsh in Resources */,

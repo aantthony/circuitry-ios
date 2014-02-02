@@ -409,7 +409,7 @@ int simulate(Circuit *c, int ticks) {
     NSError *err;
     
     id object = [NSJSONSerialization JSONObjectWithData:data options:0 error:&err];
-    if (err) [NSException exceptionWithName:err.localizedDescription reason:err.localizedFailureReason userInfo:@{}];
+    if (err) [[NSException exceptionWithName:err.localizedDescription reason:err.localizedFailureReason userInfo:@{}] raise];
     return [[Circuit alloc] initWithDictionary:object];
 }
 

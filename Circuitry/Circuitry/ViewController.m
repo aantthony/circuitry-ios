@@ -158,7 +158,7 @@
     [self checkError];
         
     
-    NSURL *docURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"FirstDocument1111"];
+    NSURL *docURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Circuit1.json"];
     
     _doc = [[CircuitDocument alloc] initWithFileURL:docURL];
     NSLog(@"URL: %@", _doc.fileURL);

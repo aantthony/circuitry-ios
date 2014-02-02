@@ -10,6 +10,8 @@
 
 @implementation CircuitDocument
 - (BOOL)loadFromContents:(id)contents ofType:(NSString *)typeName error:(NSError **)outError {
+    _circuit = [Circuit circuitWithJSON:contents];
+    return YES;
     NSLog(@"Loading....");
     NSString *err;
     NSDictionary *dict = [NSPropertyListSerialization propertyListFromData:contents mutabilityOption:NSPropertyListImmutable format:NULL errorDescription:&err];
@@ -21,12 +23,15 @@
 }
 - (id)contentsForType:(NSString *)typeName error:(NSError **)outError {
 
+    return [_circuit toJSON];
     NSError *err;
     
     NSData *data = [NSPropertyListSerialization dataWithPropertyList:[_circuit toDictionary] format:NSPropertyListBinaryFormat_v1_0 options:0 error:&err];
     if (err) [NSException exceptionWithName:err.localizedDescription reason:err.localizedFailureReason userInfo:@{}];
     
-    NSLog(@"SAVED");
+    NSData *json = [_circuit toJSON];
+    
+    NSLog(@"SAVED %d / %d", data.length, json.length);
     return data;
 }
 @end
