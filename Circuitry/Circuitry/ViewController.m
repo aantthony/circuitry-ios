@@ -165,7 +165,7 @@
     [self checkError];
         
     
-    NSURL *docURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Circuit2.json"];
+    NSURL *docURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Circuit7.json"];
     
     _doc = [[CircuitDocument alloc] initWithFileURL:docURL];
     NSLog(@"URL: %@", _doc.fileURL);
@@ -549,6 +549,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     if (sender.state == UIGestureRecognizerStateEnded) {
         [_doc updateChangeCount:UIDocumentChangeDone];
         [_doc savePresentedItemChangesWithCompletionHandler:^(NSError *errorOrNil) {}];
+        [_doc publish];
     }
     
     if ([sender numberOfTouches] != 1) {

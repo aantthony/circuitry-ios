@@ -1,5 +1,7 @@
 #import "Circuit.h"
 
+#import "MongoID.h"
+
 @interface Circuit()
 @property CircuitObject **needsUpdate;
 @property CircuitObject **needsUpdate2;
@@ -17,7 +19,6 @@
 
 @property(readonly) int itemsCount;
 @property CircuitObject *items;
-@property NSInteger largestItemID;
 
 @end
 @implementation Circuit
@@ -109,7 +110,6 @@ NSDictionary *processesById;
         _itemsCount = 0;
         _itemsSize = 100000;
         _items = smalloc((sizeof(CircuitObject) * _itemsSize));
-        _largestItemID = 0;
         
         _linksCount = 0;
         _linksSize = 100000;
@@ -152,10 +152,10 @@ NSDictionary *processesById;
 #pragma mark - Simulation (written in C)
 
 
-CircuitObject *getObjectById(Circuit *c, int id) {
+CircuitObject *getObjectById(Circuit *c, ObjectID id) {
     for(int i = 0 ; i < c->_itemsCount; i++) {
         CircuitObject *o = &c->_items[i];
-        if (o->id == id) return o;
+        if (o->id.m[0] == id.m[0] && o->id.m[1] == id.m[1] && o->id.m[2] == id.m[2]) return o;
     }
     return NULL;
 }
@@ -185,7 +185,6 @@ void linksNeedsUpdate(Circuit *c, CircuitLink * link) {
 
 // Create a new circuit object (and queue it for recalculation)
 CircuitObject * addObject(Circuit *c, CircuitProcess *type) {
-    int id = 0;
 
     c->_itemsCount++;
     
@@ -196,7 +195,6 @@ CircuitObject * addObject(Circuit *c, CircuitProcess *type) {
     
     CircuitObject * o = &c->_items[c->_itemsCount - 1];
     
-    o->id = id;
     o->in = 0;
     o->out = 0;
     o->type = type;
@@ -442,7 +440,7 @@ int simulate(Circuit *c, int ticks) {
             NSMutableArray *linksFromOutlet = [NSMutableArray array];
             CircuitLink *link = object->outputs[i];
             while (link) {
-                [linksFromOutlet addObject:@[@(link->target->id), @(link->targetIndex)]];
+                [linksFromOutlet addObject:@[[MongoID stringWithId:link->target->id], @(link->targetIndex)]];
                 link = link->nextSibling;
             }
             [outputs addObject:linksFromOutlet];
@@ -458,7 +456,7 @@ int simulate(Circuit *c, int ticks) {
         
         [items addObject:@{
                            @"type": [NSString stringWithUTF8String:object->type->id],
-                           @"id": @(object->id),
+                           @"_id": [MongoID stringWithId:object->id],
                            @"pos": @[@(object->pos.x), @(object->pos.y), @(object->pos.z)],
                            @"name": object->name ? [NSString stringWithUTF8String:object->name] : @"",
                            @"in": @(object->in),
@@ -467,6 +465,7 @@ int simulate(Circuit *c, int ticks) {
                            }];
     }];
     return @{
+             @"_id": [MongoID stringWithId:_id],
              @"name": _name,
              @"version": _version,
              @"description": _description,
@@ -492,19 +491,22 @@ int simulate(Circuit *c, int ticks) {
         [self setValue:[object valueForKey:key] forKey:key];
     }];
     
+    if ([object valueForKey:@"_id"]) {
+        _id = [MongoID idWithString:[object valueForKey:@"_id"]];
+    } else {
+        _id = [MongoID id];
+    }
+    
     NSArray *items = [object objectForKey:@"items"];
     [items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         NSString *type = [obj valueForKey:@"type"];
         CircuitProcess *process = [self getProcessById: type];
         CircuitObject *o = addObject(self, process);
-        o->id  = [[obj valueForKey:@"id"] intValue];
-        if (o->id > _largestItemID) {
-            _largestItemID = o->id;
-        }
+        o->id = [MongoID idWithString:[obj valueForKey:@"_id"]];
     }];
     
     [items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        CircuitObject *o = getObjectById(self, [[obj valueForKey:@"id"] intValue]);
+        CircuitObject *o = getObjectById(self, [MongoID idWithString:[obj valueForKey:@"_id"]]);
         
         o->name = (char *)[[obj valueForKey:@"name"] UTF8String];
         o->in  = [[obj valueForKey:@"in"]  intValue];
@@ -513,7 +515,7 @@ int simulate(Circuit *c, int ticks) {
         NSArray *outputs = [obj objectForKey:@"outputs"];
         [outputs enumerateObjectsUsingBlock:^(id obj, NSUInteger sourceIndex, BOOL *stop) {
             [obj enumerateObjectsUsingBlock:^(id obj, NSUInteger index2, BOOL *stop) {
-                int targetId = [[obj objectAtIndex:0] intValue];
+                ObjectID targetId = [MongoID idWithString:[obj objectAtIndex:0]];
                 int targetIndex = [[obj objectAtIndex:1] intValue];
                 CircuitObject *target = getObjectById(self, targetId);
                 addLink(self, o, sourceIndex, target, targetIndex);
@@ -564,7 +566,7 @@ int simulate(Circuit *c, int ticks) {
 
 - (CircuitObject *) addObject: (CircuitProcess*) process {
     CircuitObject *o = addObject(self, process);
-    o->id  = ++_largestItemID;
+    o->id  = [MongoID id];
     
     return o;
 }

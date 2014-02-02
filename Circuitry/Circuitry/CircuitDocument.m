@@ -7,6 +7,11 @@
 //
 
 #import "CircuitDocument.h"
+#import "AppDelegate.h"
+
+@interface CircuitDocument() <NSURLSessionTaskDelegate>
+
+@end
 
 @implementation CircuitDocument
 - (BOOL)loadFromContents:(id)contents ofType:(NSString *)typeName error:(NSError **)outError {
@@ -33,5 +38,31 @@
     
     NSLog(@"SAVED %d / %d", data.length, json.length);
     return data;
+}
+
+- (void) publish {
+    NSData *data = [self contentsForType:@"json" error:NULL];
+    NSString *path = [NSString stringWithFormat:@"circuit/%@", [MongoID stringWithId:_circuit.id]];
+    NSURL *requestURL = [[AppDelegate baseURL] URLByAppendingPathComponent:path];
+    
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:queue];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setTimeoutInterval:5.0];
+    [request setHTTPMethod:@"PUT"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[data length]] forHTTPHeaderField:@"Content-Length"];
+    [request setURL:requestURL];
+    
+    NSURLSessionUploadTask *task = [session uploadTaskWithRequest:request fromData:data completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSLog(@"done");
+//        completionHandler(error);
+    }];
+    
+    [task resume];
+    
+    
 }
 @end

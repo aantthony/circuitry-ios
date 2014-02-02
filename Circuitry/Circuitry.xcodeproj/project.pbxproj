@@ -29,7 +29,7 @@
 		9204C39C182E2F5C006A008D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9204C373182E2F5C006A008D /* Foundation.framework */; };
 		9204C39D182E2F5C006A008D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9204C377182E2F5C006A008D /* UIKit.framework */; };
 		9204C3A5182E2F5C006A008D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9204C3A3182E2F5C006A008D /* InfoPlist.strings */; };
-		9204C3A7182E2F5C006A008D /* CircuitryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9204C3A6182E2F5C006A008D /* CircuitryTests.m */; };
+		920BC892189E7674004E5D45 /* MongoID.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A861B1189E402900F64673 /* MongoID.m */; };
 		9218F7381876978A00742F99 /* LinkBezier.m in Sources */ = {isa = PBXBuildFile; fileRef = 9218F7371876978A00742F99 /* LinkBezier.m */; };
 		9218F73A1876981900742F99 /* LinkBezier.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 9218F7391876981900742F99 /* LinkBezier.fsh */; };
 		9218F73C1876982100742F99 /* LinkBezier.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 9218F73B1876982100742F99 /* LinkBezier.vsh */; };
@@ -58,6 +58,8 @@
 		92A4F87018728A1F00EEB367 /* Drawable.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A4F86F18728A1F00EEB367 /* Drawable.m */; };
 		92A4F871187295EF00EEB367 /* Grid.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 92D90E3C1838E9CD00387FAC /* Grid.vsh */; };
 		92A4F872187295EF00EEB367 /* Grid.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 92D90E3E1838E9D700387FAC /* Grid.fsh */; };
+		92A861B2189E402900F64673 /* MongoID.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A861B1189E402900F64673 /* MongoID.m */; };
+		92AA6323189E73A000A135F3 /* MongoIDTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 92AA6322189E73A000A135F3 /* MongoIDTest.m */; };
 		92B269AF1886B175007E9866 /* ImageAtlas.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B269AE1886B175007E9866 /* ImageAtlas.m */; };
 		92D90E321837807000387FAC /* Sprite.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E311837807000387FAC /* Sprite.m */; };
 		92D90E381837836500387FAC /* ShaderEffect.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E371837836500387FAC /* ShaderEffect.m */; };
@@ -122,7 +124,6 @@
 		9204C39A182E2F5C006A008D /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		9204C3A2182E2F5C006A008D /* CircuitryTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CircuitryTests-Info.plist"; sourceTree = "<group>"; };
 		9204C3A4182E2F5C006A008D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		9204C3A6182E2F5C006A008D /* CircuitryTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CircuitryTests.m; sourceTree = "<group>"; };
 		9208B106187565390038A52A /* Circuitry.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Circuitry.entitlements; sourceTree = "<group>"; };
 		9218F7361876978A00742F99 /* LinkBezier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkBezier.h; sourceTree = "<group>"; };
 		9218F7371876978A00742F99 /* LinkBezier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LinkBezier.m; sourceTree = "<group>"; };
@@ -154,6 +155,9 @@
 		92A4F86C187289F300EEB367 /* Viewport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Viewport.m; sourceTree = "<group>"; };
 		92A4F86E18728A1F00EEB367 /* Drawable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Drawable.h; path = ../Drawable.h; sourceTree = "<group>"; };
 		92A4F86F18728A1F00EEB367 /* Drawable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Drawable.m; path = ../Drawable.m; sourceTree = "<group>"; };
+		92A861B0189E402900F64673 /* MongoID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoID.h; sourceTree = "<group>"; };
+		92A861B1189E402900F64673 /* MongoID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoID.m; sourceTree = "<group>"; };
+		92AA6322189E73A000A135F3 /* MongoIDTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoIDTest.m; sourceTree = "<group>"; };
 		92B269AD1886B175007E9866 /* ImageAtlas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAtlas.h; sourceTree = "<group>"; };
 		92B269AE1886B175007E9866 /* ImageAtlas.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAtlas.m; sourceTree = "<group>"; };
 		92D90E301837807000387FAC /* Sprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sprite.h; sourceTree = "<group>"; };
@@ -288,8 +292,8 @@
 		9204C3A0182E2F5C006A008D /* CircuitryTests */ = {
 			isa = PBXGroup;
 			children = (
-				9204C3A6182E2F5C006A008D /* CircuitryTests.m */,
 				9204C3A1182E2F5C006A008D /* Supporting Files */,
+				92AA6322189E73A000A135F3 /* MongoIDTest.m */,
 			);
 			path = CircuitryTests;
 			sourceTree = "<group>";
@@ -349,6 +353,8 @@
 				92A28A5D187433E800F0D934 /* Circuit.m */,
 				923A062F189D2D660064834C /* CircuitDocument.h */,
 				923A0630189D2D660064834C /* CircuitDocument.m */,
+				92A861B0189E402900F64673 /* MongoID.h */,
+				92A861B1189E402900F64673 /* MongoID.m */,
 			);
 			name = Circuit;
 			sourceTree = "<group>";
@@ -600,6 +606,7 @@
 				92D90E3F1838E9D700387FAC /* Grid.fsh in Sources */,
 				9218F73A1876981900742F99 /* LinkBezier.fsh in Sources */,
 				9218F7381876978A00742F99 /* LinkBezier.m in Sources */,
+				92A861B2189E402900F64673 /* MongoID.m in Sources */,
 				9253C409188545EC00D2509C /* CreateGatePanGestureRecognizer.m in Sources */,
 				9232B6531878140500E45C7E /* BatchedSprite.vsh in Sources */,
 				92D90E381837836500387FAC /* ShaderEffect.m in Sources */,
@@ -612,7 +619,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9204C3A7182E2F5C006A008D /* CircuitryTests.m in Sources */,
+				92AA6323189E73A000A135F3 /* MongoIDTest.m in Sources */,
+				920BC892189E7674004E5D45 /* MongoID.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

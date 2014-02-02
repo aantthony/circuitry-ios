@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import "MongoID.h"
 
 struct CircuitObject;
 typedef struct CircuitObject CircuitObject;
@@ -21,7 +22,7 @@ struct CircuitLink {
 };
 
 struct CircuitObject {
-    int id;
+    ObjectID id;
     int in;
     int out;
     CircuitProcess *type;
@@ -36,6 +37,7 @@ struct CircuitObject {
 
 @interface Circuit : NSObject
 
+@property(readonly) ObjectID id;
 @property NSString *name;
 @property NSString *version;
 @property NSString *description;

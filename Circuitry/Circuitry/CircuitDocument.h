@@ -10,4 +10,7 @@
 
 @interface CircuitDocument : UIDocument
 @property Circuit *circuit;
+
+- (void) publish;
+
 @end
