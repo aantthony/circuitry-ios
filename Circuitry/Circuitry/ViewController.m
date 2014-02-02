@@ -43,6 +43,7 @@
 }
 @property (strong, nonatomic) EAGLContext *context;
 
+@property CircuitDocument *doc;
 @property ImageAtlas *atlas;
 @property Circuit *circuit;
 @property Viewport *viewport;
@@ -102,11 +103,29 @@
     item.type = [_circuit getProcessById:@"7seg"];
     [items addObject:item];
     
+    item = [[ToolbeltItem alloc] init];
+    item.type = [_circuit getProcessById:@"add8"];
+    [items addObject:item];
+    
+    
+    item = [[ToolbeltItem alloc] init];
+    item.type = [_circuit getProcessById:@"bin7seg"];
+    [items addObject:item];
+
     _hud.toolbelt.items = items;
 }
+
+- (NSURL *)applicationDocumentsDirectory
+{
+    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    
+    
     
     panVelocity = CGPointMake(0.0, 0.0);
     
@@ -137,14 +156,52 @@
     [self checkError];
     bg = [[Sprite alloc] initWithTexture:bgTexture];
     [self checkError];
+        
     
-    NSURL *path = [[NSBundle mainBundle] URLForResource:@"nand" withExtension:@"json"];
-    NSInputStream *stream = [NSInputStream inputStreamWithURL:path];
-    [stream open];
-    _circuit = [Circuit circuitWithStream: stream];
-    _viewport.circuit = _circuit;
+    NSURL *docURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"FirstDocument1111"];
     
-    [self configureToolbeltItems];
+    _doc = [[CircuitDocument alloc] initWithFileURL:docURL];
+    NSLog(@"URL: %@", _doc.fileURL);
+    if ([[NSFileManager defaultManager] fileExistsAtPath:[docURL path]]) {
+        [_doc openWithCompletionHandler:^(BOOL success){
+            NSLog(@"opened document: %d, %@", success, _doc.fileURL);
+            
+            _circuit = _doc.circuit;
+            _viewport.circuit = _circuit;
+            
+            [self configureToolbeltItems];
+            
+            [self unpause];
+            
+            if (!success) {
+                // Handle the error.
+            }
+        }];
+    }
+    else {
+        // add initial data...
+        
+        NSURL *path = [[NSBundle mainBundle] URLForResource:@"nand" withExtension:@"json"];
+        NSInputStream *stream = [NSInputStream inputStreamWithURL:path];
+        [stream open];
+        _circuit = [Circuit circuitWithStream: stream];
+        _viewport.circuit = _circuit;
+        
+        _doc.circuit = _circuit;
+        
+        [self configureToolbeltItems];
+        
+        [_doc saveToURL:docURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success){
+            NSLog(@"saved");
+            if (!success) {
+                // Handle the error.
+            }
+        }];
+    }
+
+    
+    
+    
 //    [[[UIAlertView alloc] initWithTitle:_circuit.name message:_circuit.description delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
 }
 
@@ -459,6 +516,10 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     }
     
     CircuitObject *object = beginLongPressGestureObject;
+    if (sender.state == UIGestureRecognizerStateEnded) {
+        [_doc updateChangeCount:UIDocumentChangeDone];
+        [_doc savePresentedItemChangesWithCompletionHandler:^(NSError *errorOrNil) {}];
+    }
     
     if ([sender numberOfTouches] != 1) {
         sender.enabled = NO;
@@ -528,6 +589,10 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         _viewport.currentEditingLinkSource = NULL;
         _viewport.currentEditingLinkTarget = NULL;
         [self unpause];
+
+        [_doc updateChangeCount:UIDocumentChangeDone];
+        [_doc savePresentedItemChangesWithCompletionHandler:^(NSError *errorOrNil) {}];
+        
         return;
     }
     if (!_viewport.currentEditingLinkSource || [sender numberOfTouches] != 1) {

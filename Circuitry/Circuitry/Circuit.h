@@ -43,6 +43,8 @@ struct CircuitObject {
 @property NSString *license;
 @property NSMutableDictionary *dependencies;
 
+- (NSData *) toJSON;
+- (NSDictionary *) toDictionary;
 + (Circuit *) circuitWithStream:(NSInputStream *) stream;
 - (Circuit *) initWithDictionary: (NSDictionary *) dictionary;
 

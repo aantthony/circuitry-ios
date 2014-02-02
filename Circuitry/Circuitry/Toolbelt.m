@@ -42,6 +42,7 @@ static SpriteTexturePos symbolXNOR;
 static SpriteTexturePos symbolAND;
 static SpriteTexturePos symbolNAND;
 static SpriteTexturePos symbolNOT;
+static SpriteTexturePos symbolNone;
 static SpriteTexturePos gateOutletInactive;
 
 - (NSArray *) items {
@@ -77,6 +78,8 @@ static SpriteTexturePos gateOutletInactive;
     symbolNOT = [atlas positionForSprite:@"symbol-not@2x"];
     gateOutletInactive = [atlas positionForSprite: @"inactive@2x"];
     
+    symbolNone.twidth = 0.0;
+    
     _capacity = 100;
     
     _batcher = [[BatchedSprite alloc] initWithTexture:atlas.texture capacity:_capacity];
@@ -105,7 +108,7 @@ static SpriteTexturePos gateOutletInactive;
     else if (process == AND) return symbolAND;
     else if (process == NAND) return symbolNAND;
     else if (process == NOT) return symbolNOT;
-    else return symbolAND;
+    else return symbolNone;
     
 }
 
@@ -118,24 +121,34 @@ static int i = 0;
     BatchedSpriteInstance *symbolI = &_instances[i++];
     CircuitProcess *type = obj.type;
     symbolI->tex = [self textureForProcess:obj.type];
-    symbolI->x = instance->x + 9.0;
-    symbolI->y = instance->y + 0.0;
-    
-    for(int ni = 0; ni < type->numInputs; ni++) {
-        BatchedSpriteInstance *inlet = &_instances[i++];
-        GLKVector3 dotPos = offsetForInlet(type, ni);
-        inlet->x = instance->x + dotPos.x;
-        inlet->y = instance->y + dotPos.y;
-        inlet->tex = gateOutletInactive;
+    if (symbolI->tex.twidth == 0.0) {
+        i--;
+    } else {
+        symbolI->x = instance->x + 9.0;
+        symbolI->y = instance->y + 0.0;
     }
     
-    for(int ni = 0; ni < type->numOutputs; ni++) {
-        BatchedSpriteInstance *inlet = &_instances[i++];
-        GLKVector3 dotPos = offsetForOutlet(type, ni);
-        inlet->x = instance->x + dotPos.x;
-        inlet->y = instance->y + dotPos.y;
-        inlet->tex = gateOutletInactive;
+    if (type->numInputs <= 2) {
+        for(int ni = 0; ni < type->numInputs; ni++) {
+            BatchedSpriteInstance *inlet = &_instances[i++];
+            GLKVector3 dotPos = offsetForInlet(type, ni);
+            inlet->x = instance->x + dotPos.x;
+            inlet->y = instance->y + dotPos.y;
+            inlet->tex = gateOutletInactive;
+        }
     }
+    
+    if (type->numOutputs <= 2) {
+        
+        for(int ni = 0; ni < type->numOutputs; ni++) {
+            BatchedSpriteInstance *inlet = &_instances[i++];
+            GLKVector3 dotPos = offsetForOutlet(type, ni);
+            inlet->x = instance->x + dotPos.x;
+            inlet->y = instance->y + dotPos.y;
+            inlet->tex = gateOutletInactive;
+        }
+    }
+       
 }
 
 - (void) bufferInstances {

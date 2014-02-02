@@ -2,6 +2,7 @@
 #import <GLKit/GLKit.h>
 
 #import "ImageAtlas.h"
+#import "CircuitDocument.h"
 
 @interface ViewController : GLKViewController <UIGestureRecognizerDelegate>
 

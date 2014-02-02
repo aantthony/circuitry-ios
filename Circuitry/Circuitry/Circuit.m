@@ -80,8 +80,8 @@ CircuitProcess defaultGates[] = {
     {"not", 1, 1, NOT },
     {"bindec", 4, 16, BINDEC },
     {"add8", 16, 9, ADD8 },
-    {"BIN7SEG", 4, 7, BIN7SEG },
-    {"7SEG", 7, 0, NULL }
+    {"bin7seg", 4, 7, BIN7SEG },
+    {"7seg", 7, 0, NULL }
 };
 
 #pragma mark - Initialisation
@@ -413,13 +413,12 @@ int simulate(Circuit *c, int ticks) {
     return [[Circuit alloc] initWithDictionary:object];
 }
 
-// Serialize
-- (NSData *) toJSON {
-    NSError *err;
+- (NSDictionary *) toDictionary {
+
     
     NSMutableArray *items = [NSMutableArray arrayWithCapacity:_itemsCount];
     [self enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
-
+        
         NSMutableArray *outputs = [NSMutableArray arrayWithCapacity:object->type->numOutputs];
         for(int i = 0; i < object->type->numOutputs; i++) {
             NSMutableArray *linksFromOutlet = [NSMutableArray array];
@@ -430,6 +429,14 @@ int simulate(Circuit *c, int ticks) {
             }
             [outputs addObject:linksFromOutlet];
         }
+//        
+//        NSLog(@"%@",[NSString stringWithUTF8String:object->type->id]);
+//        NSLog(@"%@",@(object->id));
+//        NSLog(@"%@",@[@(object->pos.x), @(object->pos.y), @(object->pos.z)]);
+//        NSLog(@"%@",object->name ? [NSString stringWithUTF8String:object->name] : @"");
+//        NSLog(@"%@",@(object->in));
+//        NSLog(@"%@",@(object->out));
+//        NSLog(@"%@",outputs);
         
         [items addObject:@{
                            @"type": [NSString stringWithUTF8String:object->type->id],
@@ -441,15 +448,20 @@ int simulate(Circuit *c, int ticks) {
                            @"outputs": outputs
                            }];
     }];
-    
-    NSData *data = [NSJSONSerialization dataWithJSONObject:@{
-                                              @"name": _name,
-                                              @"version": _version,
-                                              @"description": _description,
-                                              @"author": _author,
-                                              @"license": _license,
-                                              @"items": items
-                                              } options:0 error:&err];
+    return @{
+             @"name": _name,
+             @"version": _version,
+             @"description": _description,
+             @"author": _author,
+             @"license": _license,
+             @"items": items
+             };
+}
+
+// Serialize
+- (NSData *) toJSON {
+    NSError *err;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:[self toDictionary] options:0 error:&err];
     
     if (err) [NSException exceptionWithName:err.localizedDescription reason:err.localizedFailureReason userInfo:@{}];
     return data;
