@@ -80,7 +80,7 @@ CircuitProcess defaultGates[] = {
     {"not", 1, 1, NOT },
     {"nor", 2, 1, NOR },
     {"xor", 2, 1, XOR },
-    {"xnor", 2, 1, XOR },
+    {"xnor", 2, 1,XNOR },
     {"and", 2, 1, AND },
     {"nand", 2, 1, NAND },
     {"not", 1, 1, NOT },

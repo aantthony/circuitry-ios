@@ -63,62 +63,13 @@
     NSMutableArray *items = [NSMutableArray array];
     
     
-    ToolbeltItem *item = [[ToolbeltItem alloc] init];
-    item.type = [_circuit getProcessById:@"in"];
-    [items addObject:item];
+    NSArray *types = @[@"in", @"out", @"or", @"not", @"nor", @"xor", @"xnor", @"and", @"nand", @"bindec", @"add8", @"bin7seg", @"7seg", @"clock"];
+    [types enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        ToolbeltItem *item = [[ToolbeltItem alloc] init];
+        item.type = [_circuit getProcessById:obj];
+        [items addObject:item];
+    }];
     
-    item = [[ToolbeltItem alloc] init];
-    item.type = [_circuit getProcessById:@"or"];
-    [items addObject:item];
-    
-    item = [[ToolbeltItem alloc] init];
-    item.type = [_circuit getProcessById:@"and"];
-    [items addObject:item];
-    
-    item = [[ToolbeltItem alloc] init];
-    item.type = [_circuit getProcessById:@"not"];
-    [items addObject:item];
-    
-    item = [[ToolbeltItem alloc] init];
-    item.type = [_circuit getProcessById:@"nor"];
-    [items addObject:item];
-    
-    item = [[ToolbeltItem alloc] init];
-    item.type = [_circuit getProcessById:@"xor"];
-    [items addObject:item];
-    
-    item = [[ToolbeltItem alloc] init];
-    item.type = [_circuit getProcessById:@"nand"];
-    [items addObject:item];
-    
-    item = [[ToolbeltItem alloc] init];
-    item.type = [_circuit getProcessById:@"xnor"];
-    [items addObject:item];
-    
-    item = [[ToolbeltItem alloc] init];
-    item.type = [_circuit getProcessById:@"out"];
-    [items addObject:item];
-    
-    
-    item = [[ToolbeltItem alloc] init];
-    item.type = [_circuit getProcessById:@"7seg"];
-    [items addObject:item];
-    
-    item = [[ToolbeltItem alloc] init];
-    item.type = [_circuit getProcessById:@"add8"];
-    [items addObject:item];
-    
-    
-    item = [[ToolbeltItem alloc] init];
-    item.type = [_circuit getProcessById:@"bin7seg"];
-    [items addObject:item];
-    
-    
-    item = [[ToolbeltItem alloc] init];
-    item.type = [_circuit getProcessById:@"clock"];
-    [items addObject:item];
-
-
     _hud.toolbelt.items = items;
 }
 
@@ -165,7 +116,7 @@
     [self checkError];
         
     
-    NSURL *docURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Circuit7.json"];
+    NSURL *docURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Circuit8.json"];
     
     _doc = [[CircuitDocument alloc] initWithFileURL:docURL];
     NSLog(@"URL: %@", _doc.fileURL);
@@ -555,6 +506,8 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     if ([sender numberOfTouches] != 1) {
         sender.enabled = NO;
         sender.enabled = YES;
+        [_doc updateChangeCount:UIDocumentChangeDone];
+        [_doc savePresentedItemChangesWithCompletionHandler:^(NSError *errorOrNil) {}];
         return;
     }
     
