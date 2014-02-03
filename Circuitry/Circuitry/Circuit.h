@@ -47,6 +47,7 @@ struct CircuitObject {
 @property NSMutableDictionary *dependencies;
 
 - (NSData *) toJSON;
+- (NSDictionary *) metadata;
 + (Circuit *) circuitWithJSON:(NSData *) data;
 - (NSDictionary *) toDictionary;
 + (Circuit *) circuitWithStream:(NSInputStream *) stream;
@@ -70,5 +71,7 @@ struct CircuitObject {
 - (void) enumerateObjectsInReverseUsingBlock:(void (^)(CircuitObject *object, BOOL *stop))block;
 
 - (void)enumerateClocksUsingBlock:(void (^)(CircuitObject *object, BOOL *stop))block;
+
+- (Circuit *) initWithPackage:(NSDictionary *) package items: (NSArray *) items;
 
 @end

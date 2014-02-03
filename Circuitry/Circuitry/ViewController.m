@@ -58,6 +58,37 @@
 
 @implementation ViewController
 
+- (void) saveScreenshot {
+    NSData* data = UIImageJPEGRepresentation([self drawGlToImage], 0.5);
+    _doc.screenshot = data;
+    
+}
+- (UIImage *)drawGlToImage
+{
+    // Draw OpenGL data to an image context 
+    
+    UIGraphicsBeginImageContext(self.view.frame.size);
+    
+    unsigned char buffer[320 * 480 * 4];
+    
+    CGContextRef aContext = UIGraphicsGetCurrentContext();
+    
+    glReadPixels(0, 0, 320, 480, GL_RGBA, GL_UNSIGNED_BYTE, &buffer);
+    
+    CGDataProviderRef ref = CGDataProviderCreateWithData(NULL, &buffer, 320 * 480 * 4, NULL);
+    
+    CGImageRef iref = CGImageCreate(320,480,8,32,320*4, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaLast, ref, NULL, true, kCGRenderingIntentDefault);
+    
+    CGContextScaleCTM(aContext, 1.0, -1.0);
+    CGContextTranslateCTM(aContext, 0, -self.view.frame.size.height);
+    
+    UIImage *im = [[UIImage alloc] initWithCGImage:iref];
+    
+    UIGraphicsEndImageContext();
+    
+    return im;
+}
+
 - (void) configureToolbeltItems {
     
     NSMutableArray *items = [NSMutableArray array];
@@ -116,7 +147,7 @@
     [self checkError];
         
     
-    NSURL *docURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Circuit8.json"];
+    NSURL *docURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Untitled.circuit"];
     
     _doc = [[CircuitDocument alloc] initWithFileURL:docURL];
     NSLog(@"URL: %@", _doc.fileURL);

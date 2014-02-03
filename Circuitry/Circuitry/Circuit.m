@@ -484,20 +484,34 @@ int simulate(Circuit *c, int ticks) {
     return data;
 }
 
-- (Circuit *) initWithDictionary: (id) object {
+- (NSDictionary *) metadata {
+    return @{
+             @"_id": [MongoID stringWithId:_id],
+             @"name": _name,
+             @"version": _version,
+             @"description": _description,
+             @"author": _author,
+             @"license": _license
+             };
+    
+}
+
+
+- (Circuit *) initWithPackage:(NSDictionary *) package items: (NSArray *) items {
+    
     self = [self init];
     NSArray *fields = @[@"name", @"version", @"description", @"author",  @"license"];
     [fields enumerateObjectsUsingBlock:^(id key, NSUInteger idx, BOOL *stop) {
-        [self setValue:[object valueForKey:key] forKey:key];
+        [self setValue:[package valueForKey:key] forKey:key];
     }];
     
-    if ([object valueForKey:@"_id"]) {
-        _id = [MongoID idWithString:[object valueForKey:@"_id"]];
+    if ([package valueForKey:@"_id"]) {
+        _id = [MongoID idWithString:[package valueForKey:@"_id"]];
     } else {
         _id = [MongoID id];
     }
     
-    NSArray *items = [object objectForKey:@"items"];
+
     [items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         NSString *type = [obj valueForKey:@"type"];
         CircuitProcess *process = [self getProcessById: type];
@@ -529,7 +543,14 @@ int simulate(Circuit *c, int ticks) {
         }
     }];
     
+
+    
     return self;
+
+}
+
+- (Circuit *) initWithDictionary: (id) object {
+    return [self initWithPackage:object items: object[@"items"]];
 }
 
 

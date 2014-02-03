@@ -15,33 +15,46 @@
 
 @implementation CircuitDocument
 - (BOOL)loadFromContents:(id)contents ofType:(NSString *)typeName error:(NSError **)outError {
-    _circuit = [Circuit circuitWithJSON:contents];
-    return YES;
-    NSLog(@"Loading....");
-    NSString *err;
-    NSDictionary *dict = [NSPropertyListSerialization propertyListFromData:contents mutabilityOption:NSPropertyListImmutable format:NULL errorDescription:&err];
     
-    if (err) [NSException exceptionWithName:@"Could not load data" reason:err userInfo:@{}];
+    NSError *err;
     
-    _circuit = [[Circuit alloc] initWithDictionary:dict];
+    if ([typeName isEqualToString:@"public.json"]) {
+        _circuit = [[Circuit alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:contents options:0 error:&err]];
+        if (err) return NO;
+        return YES;
+    }
+    
+    NSFileWrapper *wrapper = contents;
+    NSDictionary *files = [wrapper fileWrappers];
+
+    NSDictionary *package = [NSJSONSerialization JSONObjectWithData:[files[@"package.json"] regularFileContents] options:0 error:&err];
+    if (err) return NO;
+    
+    NSArray *items = [NSJSONSerialization JSONObjectWithData:[files[@"items.json"] regularFileContents] options:0 error:&err];
+    if (err) [[NSException exceptionWithName:err.localizedDescription reason:err.localizedFailureReason userInfo:@{}] raise];
+    
+    _circuit = [[Circuit alloc] initWithPackage:package items: items];
+    
     return YES;
 }
 - (id)contentsForType:(NSString *)typeName error:(NSError **)outError {
 
-    return [_circuit toJSON];
-    NSError *err;
+    if ([typeName isEqualToString:@"public.json"]) {
+        return [NSJSONSerialization dataWithJSONObject:[_circuit toDictionary] options:0 error:NULL];
+    }
+    NSLog(@"saving with type %@", typeName);
+    NSFileWrapper *wrapper = [[NSFileWrapper alloc] initDirectoryWithFileWrappers:nil];
+    NSData *metaJson = [NSJSONSerialization dataWithJSONObject:[_circuit metadata] options:0 error:NULL];
+    NSData *itemsJSON = [NSJSONSerialization dataWithJSONObject:[_circuit toDictionary][@"items"] options:0 error:NULL];
+
+    [wrapper addRegularFileWithContents:metaJson preferredFilename:@"package.json"];
+    [wrapper addRegularFileWithContents:itemsJSON preferredFilename:@"items.json"];
     
-    NSData *data = [NSPropertyListSerialization dataWithPropertyList:[_circuit toDictionary] format:NSPropertyListBinaryFormat_v1_0 options:0 error:&err];
-    if (err) [NSException exceptionWithName:err.localizedDescription reason:err.localizedFailureReason userInfo:@{}];
-    
-    NSData *json = [_circuit toJSON];
-    
-    NSLog(@"SAVED %d / %d", data.length, json.length);
-    return data;
+    return wrapper;
 }
 
 - (void) publish {
-    NSData *data = [self contentsForType:@"json" error:NULL];
+    NSData *data = [self contentsForType:@"public.json" error:NULL];
     NSString *path = [NSString stringWithFormat:@"circuit/%@", [MongoID stringWithId:_circuit.id]];
     NSURL *requestURL = [[AppDelegate baseURL] URLByAppendingPathComponent:path];
     

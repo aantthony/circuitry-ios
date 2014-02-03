@@ -10,6 +10,7 @@
 
 @interface CircuitDocument : UIDocument
 @property Circuit *circuit;
+@property NSData *screenshot;
 
 - (void) publish;
 
