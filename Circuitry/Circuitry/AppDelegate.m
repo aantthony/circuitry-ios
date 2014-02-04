@@ -50,7 +50,7 @@
     [AppDelegate.api GET:@"debug" parameters:nil success:^(AFHTTPRequestOperation *operation, NSDictionary *res) {
         NSLog(@"JSON: %@", res);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Error: %@", error);
+//        NSLog(@"Error: %@", error);
     }];
     return YES;
 }

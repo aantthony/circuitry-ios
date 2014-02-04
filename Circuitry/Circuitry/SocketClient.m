@@ -89,7 +89,6 @@
     NSLog(@"message %@", packet);
 }
 - (void) socketIO:(SocketIO *)socket onError:(NSError *)error {
-    NSLog(@"socket io error: %@", error);
     [self performSelector:@selector(connect:) withObject:self afterDelay:3.0];
 }
 

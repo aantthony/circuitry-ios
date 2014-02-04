@@ -42,6 +42,8 @@
     
     Circuit *_circuit;
     
+    void (^ _onNextDraw)(UIImage *);
+    
 }
 @property (strong, nonatomic) EAGLContext *context;
 
@@ -58,36 +60,95 @@
 
 @implementation ViewController
 
-- (void) saveScreenshot {
-    NSData* data = UIImageJPEGRepresentation([self drawGlToImage], 0.5);
-    _doc.screenshot = data;
+- (void) save {
+    CircuitDocument * doc = _doc;
+    
+    [self unpause];
+//    _doc.screenshot = [self takeScreenshot];
+    _onNextDraw = ^(UIImage * snapshot) {
+        doc.screenshot = UIImageJPEGRepresentation(snapshot, 0.5);
+        [doc updateChangeCount:UIDocumentChangeDone];
+        [doc savePresentedItemChangesWithCompletionHandler:^(NSError *errorOrNil) {}];
+    };
     
 }
-- (UIImage *)drawGlToImage
+
+- (void) publish {
+//    [self save];
+    [_doc publish];
+}
+
+- (UIImage*)snapshot
 {
-    // Draw OpenGL data to an image context 
+    GLint backingWidth, backingHeight;
     
-    UIGraphicsBeginImageContext(self.view.frame.size);
+    // Bind the color renderbuffer used to render the OpenGL ES view
+    // If your application only creates a single color renderbuffer which is already bound at this point,
+    // this call is redundant, but it is needed if you're dealing with multiple renderbuffers.
+    // Note, replace "_colorRenderbuffer" with the actual name of the renderbuffer object defined in your class.
+//    glBindRenderbufferOES(GL_RENDERBUFFER_OES, _colorRenderbuffer);
     
-    unsigned char buffer[320 * 480 * 4];
+    // Get the size of the backing CAEAGLLayer
+    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &backingWidth);
+    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &backingHeight);
     
-    CGContextRef aContext = UIGraphicsGetCurrentContext();
+    NSInteger x = 0, y = 0, width = backingWidth, height = backingHeight;
+    NSInteger dataLength = width * height * 4;
+    GLubyte *data = (GLubyte*)malloc(dataLength * sizeof(GLubyte));
     
-    glReadPixels(0, 0, 320, 480, GL_RGBA, GL_UNSIGNED_BYTE, &buffer);
+    // Read pixel data from the framebuffer
+    glPixelStorei(GL_PACK_ALIGNMENT, 4);
+    glReadPixels(x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
     
-    CGDataProviderRef ref = CGDataProviderCreateWithData(NULL, &buffer, 320 * 480 * 4, NULL);
+    // Create a CGImage with the pixel data
+    // If your OpenGL ES content is opaque, use kCGImageAlphaNoneSkipLast to ignore the alpha channel
+    // otherwise, use kCGImageAlphaPremultipliedLast
+    CGDataProviderRef ref = CGDataProviderCreateWithData(NULL, data, dataLength, NULL);
+    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
+    CGImageRef iref = CGImageCreate(width, height, 8, 32, width * 4, colorspace, kCGBitmapByteOrder32Big | kCGImageAlphaNoneSkipLast,
+                                    ref, NULL, true, kCGRenderingIntentDefault);
     
-    CGImageRef iref = CGImageCreate(320,480,8,32,320*4, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaLast, ref, NULL, true, kCGRenderingIntentDefault);
+    // OpenGL ES measures data in PIXELS
+    // Create a graphics context with the target size measured in POINTS
+    NSInteger widthInPoints, heightInPoints;
+    if (NULL != UIGraphicsBeginImageContextWithOptions) {
+        // On iOS 4 and later, use UIGraphicsBeginImageContextWithOptions to take the scale into consideration
+        // Set the scale parameter to your OpenGL ES view's contentScaleFactor
+        // so that you get a high-resolution snapshot when its value is greater than 1.0
+        CGFloat scale = self.view.contentScaleFactor;
+        widthInPoints = width / scale;
+        heightInPoints = height / scale;
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(widthInPoints, heightInPoints), NO, scale);
+    }
+    else {
+        // On iOS prior to 4, fall back to use UIGraphicsBeginImageContext
+        widthInPoints = width;
+        heightInPoints = height;
+        UIGraphicsBeginImageContext(CGSizeMake(widthInPoints, heightInPoints));
+    }
     
-    CGContextScaleCTM(aContext, 1.0, -1.0);
-    CGContextTranslateCTM(aContext, 0, -self.view.frame.size.height);
+    CGContextRef cgcontext = UIGraphicsGetCurrentContext();
     
-    UIImage *im = [[UIImage alloc] initWithCGImage:iref];
+    // UIKit coordinate system is upside down to GL/Quartz coordinate system
+    // Flip the CGImage by rendering it to the flipped bitmap context
+    // The size of the destination area is measured in POINTS
+    CGContextSetBlendMode(cgcontext, kCGBlendModeCopy);
+    CGContextDrawImage(cgcontext, CGRectMake(0.0, 0.0, widthInPoints, heightInPoints), iref);
+    
+    // Retrieve the UIImage from the current context
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     
     UIGraphicsEndImageContext();
     
-    return im;
+    // Clean up
+    free(data);
+    CFRelease(ref);
+    CFRelease(colorspace);
+    CGImageRelease(iref);
+    
+    return image;
 }
+
 
 - (void) configureToolbeltItems {
     
@@ -111,6 +172,7 @@
 
 - (void)viewDidLoad
 {
+    _onNextDraw = NULL;
     [super viewDidLoad];
     
     
@@ -127,6 +189,10 @@
     if (!self.context) {
         NSLog(@"Failed to create ES context");
     }
+    
+    CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.view.layer;
+    
+    eaglLayer.opaque = TRUE;
     
     GLKView *view = (GLKView *)self.view;
     view.context = self.context;
@@ -349,9 +415,6 @@
 // A subclass may override this method, or the two-part variants below, but not both.
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration NS_AVAILABLE_IOS(3_0) {
     self.paused = NO;
-//    [self update];
-//    [EAGLContext setCurrentContext:self.context];
-//    [self glkView:self.view drawInRect:self.view.frame];
 }
 
 - (void) checkError {
@@ -386,6 +449,11 @@
     [_viewport drawWithStack:_stack];
     [_hud drawWithStack:_stack];
     [self checkError];
+    if (_onNextDraw) {
+        _onNextDraw(self.snapshot);
+        _onNextDraw = NO;
+    }
+    
 }
 
 #pragma mark -  OpenGL ES 2 shader compilation
@@ -529,16 +597,14 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     
     CircuitObject *object = beginLongPressGestureObject;
     if (sender.state == UIGestureRecognizerStateEnded) {
-        [_doc updateChangeCount:UIDocumentChangeDone];
-        [_doc savePresentedItemChangesWithCompletionHandler:^(NSError *errorOrNil) {}];
-        [_doc publish];
+        [self save];
+        [self publish];
     }
     
     if ([sender numberOfTouches] != 1) {
         sender.enabled = NO;
         sender.enabled = YES;
-        [_doc updateChangeCount:UIDocumentChangeDone];
-        [_doc savePresentedItemChangesWithCompletionHandler:^(NSError *errorOrNil) {}];
+        [self save];
         return;
     }
     

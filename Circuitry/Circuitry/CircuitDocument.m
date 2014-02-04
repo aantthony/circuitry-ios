@@ -20,6 +20,7 @@
     
     if ([typeName isEqualToString:@"public.json"]) {
         _circuit = [[Circuit alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:contents options:0 error:&err]];
+        _screenshot = nil;
         if (err) return NO;
         return YES;
     }
@@ -31,7 +32,9 @@
     if (err) return NO;
     
     NSArray *items = [NSJSONSerialization JSONObjectWithData:[files[@"items.json"] regularFileContents] options:0 error:&err];
-    if (err) [[NSException exceptionWithName:err.localizedDescription reason:err.localizedFailureReason userInfo:@{}] raise];
+    if (err) return NO;
+    
+    _screenshot = [files[@"Default@2x~ipad.jpg"] regularFileContents];
     
     _circuit = [[Circuit alloc] initWithPackage:package items: items];
     
@@ -42,13 +45,14 @@
     if ([typeName isEqualToString:@"public.json"]) {
         return [NSJSONSerialization dataWithJSONObject:[_circuit toDictionary] options:0 error:NULL];
     }
-    NSLog(@"saving with type %@", typeName);
+
     NSFileWrapper *wrapper = [[NSFileWrapper alloc] initDirectoryWithFileWrappers:nil];
     NSData *metaJson = [NSJSONSerialization dataWithJSONObject:[_circuit metadata] options:0 error:NULL];
     NSData *itemsJSON = [NSJSONSerialization dataWithJSONObject:[_circuit toDictionary][@"items"] options:0 error:NULL];
 
     [wrapper addRegularFileWithContents:metaJson preferredFilename:@"package.json"];
     [wrapper addRegularFileWithContents:itemsJSON preferredFilename:@"items.json"];
+    [wrapper addRegularFileWithContents:_screenshot preferredFilename:@"Default@2x~ipad.jpg"];
     
     return wrapper;
 }
@@ -74,8 +78,7 @@
 //        completionHandler(error);
     }];
     
-    [task resume];
-    
-    
+    [task resume];    
+
 }
 @end
