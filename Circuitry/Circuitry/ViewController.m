@@ -71,7 +71,7 @@
         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 //            if (doc == nil) return;
             NSLog(@"compressing screenshot...");
-            doc.screenshot = UIImageJPEGRepresentation(snapshot, 0.5);
+//            doc.screenshot = UIImageJPEGRepresentation(snapshot, 0.5);
             
             dispatch_async(dispatch_get_main_queue(), ^(void){
 //                if (doc == nil) return;
@@ -184,6 +184,9 @@
 
 -(void)appWillResignActive:(NSNotification*)note {
     NSLog(@"will resign active...");
+    [_doc savePresentedItemChangesWithCompletionHandler:^(NSError *errorOrNil) {
+        NSLog(@"saved");
+    }];
 }
 -(void)appWillTerminate:(NSNotification*)note {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];

@@ -20,7 +20,6 @@
     
     if ([typeName isEqualToString:@"public.json"]) {
         _circuit = [[Circuit alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:contents options:0 error:&err]];
-        _screenshot = nil;
         if (err) return NO;
         return YES;
     }
@@ -34,7 +33,7 @@
     NSArray *items = [NSJSONSerialization JSONObjectWithData:[files[@"items.json"] regularFileContents] options:0 error:&err];
     if (err) return NO;
     
-    _screenshot = [files[@"Default@2x~ipad.jpg"] regularFileContents];
+//    _screenshot = [files[@"Default@2x~ipad.jpg"] regularFileContents];
     
     _circuit = [[Circuit alloc] initWithPackage:package items: items];
     
@@ -52,9 +51,9 @@
 
     [wrapper addRegularFileWithContents:metaJson preferredFilename:@"package.json"];
     [wrapper addRegularFileWithContents:itemsJSON preferredFilename:@"items.json"];
-    [wrapper addRegularFileWithContents:_screenshot preferredFilename:@"Default@2x~ipad.jpg"];
+//    [wrapper addRegularFileWithContents:_screenshot preferredFilename:@"Default@2x~ipad.jpg"];
     
-    NSLog(@"saved jpeg of size %d", [_screenshot length]);
+//    NSLog(@"saved jpeg of size %d", [_screenshot length]);
     return wrapper;
 }
 
