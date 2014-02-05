@@ -54,6 +54,7 @@
     [wrapper addRegularFileWithContents:itemsJSON preferredFilename:@"items.json"];
     [wrapper addRegularFileWithContents:_screenshot preferredFilename:@"Default@2x~ipad.jpg"];
     
+    NSLog(@"saved jpeg of size %d", [_screenshot length]);
     return wrapper;
 }
 

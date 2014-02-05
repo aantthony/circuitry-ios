@@ -19,8 +19,6 @@
 
 - (IBAction) handleTapGesture:(UITapGestureRecognizer *)sender;
 
-- (IBAction) handleLongPressGesture:(UILongPressGestureRecognizer *) recognizer;
-
 - (BOOL) gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer;
 
 @end

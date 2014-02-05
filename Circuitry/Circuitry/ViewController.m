@@ -60,19 +60,31 @@
 
 @implementation ViewController
 
-- (void) save {
-    CircuitDocument * doc = _doc;
+- (void) saveScreenshot {
     
-    [self unpause];
-//    _doc.screenshot = [self takeScreenshot];
+    NSLog(@"getting screenshot...");
+    
+    CircuitDocument * doc = _doc;
+
     _onNextDraw = ^(UIImage * snapshot) {
-        doc.screenshot = UIImageJPEGRepresentation(snapshot, 0.5);
-        [doc updateChangeCount:UIDocumentChangeDone];
-        [doc savePresentedItemChangesWithCompletionHandler:^(NSError *errorOrNil) {}];
+        NSLog(@"renderered screenshot...");
+        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//            if (doc == nil) return;
+            NSLog(@"compressing screenshot...");
+            doc.screenshot = UIImageJPEGRepresentation(snapshot, 0.5);
+            
+            dispatch_async(dispatch_get_main_queue(), ^(void){
+//                if (doc == nil) return;
+                NSLog(@"saving screenshot...");
+                [doc updateChangeCount:UIDocumentChangeDone];
+                [doc savePresentedItemChangesWithCompletionHandler:^(NSError *errorOrNil) {}];
+            });
+        });
+        
     };
     
+    [self unpause];
 }
-
 - (void) publish {
 //    [self save];
     [_doc publish];
@@ -95,7 +107,7 @@
     NSInteger x = 0, y = 0, width = backingWidth, height = backingHeight;
     NSInteger dataLength = width * height * 4;
     GLubyte *data = (GLubyte*)malloc(dataLength * sizeof(GLubyte));
-    
+    NSLog(@"reading pixels");
     // Read pixel data from the framebuffer
     glPixelStorei(GL_PACK_ALIGNMENT, 4);
     glReadPixels(x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
@@ -170,11 +182,22 @@
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
+-(void)appWillResignActive:(NSNotification*)note {
+    NSLog(@"will resign active...");
+}
+-(void)appWillTerminate:(NSNotification*)note {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillTerminateNotification object:nil];
+}
+
 - (void)viewDidLoad
 {
     _onNextDraw = NULL;
     [super viewDidLoad];
     
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillTerminate:) name:UIApplicationWillTerminateNotification object:nil];
     
     
     
@@ -254,11 +277,15 @@
 }
 
 - (void) timerTick:(id) sender {
+    __block int clocks = 0;
     [_circuit enumerateClocksUsingBlock:^(CircuitObject *object, BOOL *stop) {
+        clocks++;
         object->out = !object->out;
         [_circuit didUpdateObject:object];
     }];
-    [self unpause];
+    if (clocks) {
+        [self update];
+    }
 }
 
 - (void) setCircuit:(Circuit *)circuit {
@@ -400,7 +427,9 @@
         }
     }
     int changes = 0;
-    changes += [_circuit simulate:512];
+    int circuitChanges = [_circuit simulate:512];
+    NSLog(@"%d", circuitChanges);
+    changes += circuitChanges;
     changes += [_viewport update: dt];
     changes += [_hud update: dt];
 //    NSLog(@"Changed!");
@@ -450,8 +479,8 @@
     [_hud drawWithStack:_stack];
     [self checkError];
     if (_onNextDraw) {
-        _onNextDraw(self.snapshot);
-        _onNextDraw = NO;
+        _onNextDraw([self snapshot]);
+        _onNextDraw = NULL;
     }
     
 }
@@ -597,14 +626,15 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     
     CircuitObject *object = beginLongPressGestureObject;
     if (sender.state == UIGestureRecognizerStateEnded) {
-        [self save];
-        [self publish];
-    }
-    
-    if ([sender numberOfTouches] != 1) {
+        NSLog(@"ENDED!");
+        [_doc updateChangeCount:UIDocumentChangeDone];
+        [self unpause];
+        return;
+    } else if ([sender numberOfTouches] != 1) {
         sender.enabled = NO;
         sender.enabled = YES;
-        [self save];
+        [_doc updateChangeCount:UIDocumentChangeDone];
+        [self unpause];
         return;
     }
     
@@ -672,7 +702,6 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         [self unpause];
 
         [_doc updateChangeCount:UIDocumentChangeDone];
-        [_doc savePresentedItemChangesWithCompletionHandler:^(NSError *errorOrNil) {}];
         
         return;
     }
