@@ -218,10 +218,14 @@ void removeObject(Circuit *c, CircuitObject *o) {
         }
     }
     for(int i = 0; i < o->type->numInputs; i++) {
-        removeLink(c, o->inputs[i]);
+        if (o->inputs[i]) {
+            removeLink(c, o->inputs[i]);
+        }
     }
     
     free(o->outputs);
+    o->outputs = NULL;
+    o->type = NULL;
     // TODO: we need to know the index of _items for this:
     // TODO: move the last object in _items to the the position of this object, and then fix all points to that last one
 }
@@ -350,7 +354,11 @@ int simulate(Circuit *c, int ticks) {
         for(int i = 0; i < updatingCount; i++) {
             CircuitObject *o = updating[i];
             int oldOut = o->out;
-            
+            if (o->type == NULL) {
+                // was deleted
+                updating[i] = NULL;
+                continue;
+            }
             if (o->type->calculate == NULL) {
                 // this doesn't actually need to be updated
 //                updating[i] = NULL;
@@ -558,7 +566,7 @@ int simulate(Circuit *c, int ticks) {
 - (void)enumerateObjectsUsingBlock:(void (^)(CircuitObject *object, BOOL *stop))block {
     BOOL stop = NO;
     for(int i = 0 ; i < _itemsCount; i++) {
-        if (&_items[i] == NULL) continue;
+        if (_items[i].type == NULL) continue;
         block(&_items[i], &stop);
         if (stop) break;
     }
@@ -566,7 +574,7 @@ int simulate(Circuit *c, int ticks) {
 - (void) enumerateObjectsInReverseUsingBlock:(void (^)(CircuitObject *object, BOOL *stop))block {
     BOOL stop = NO;
     for(int i = _itemsCount - 1 ; i >= 0; i--) {
-        if (&_items[i] == NULL) continue;
+        if (_items[i].type == NULL) continue;
         block(&_items[i], &stop);
         if (stop) break;
     }

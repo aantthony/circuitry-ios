@@ -12,7 +12,7 @@
 
 #import "AppDelegate.h"
 
-@interface ViewController () {
+@interface ViewController () <UIActionSheetDelegate> {
     GLuint _program;
     
     IBOutlet UIPinchGestureRecognizer *_pinchGestureRecognizer;
@@ -46,9 +46,10 @@
     
     void (^ _onNextDraw)(UIImage *);
     
+    
 }
 @property (strong, nonatomic) EAGLContext *context;
-
+@property NSArray *selectedObjects;
 @property CircuitDocument *doc;
 @property ImageAtlas *atlas;
 @property Viewport *viewport;
@@ -619,8 +620,41 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     if ([gestureRecognizer isKindOfClass:[CreateGatePanGestureRecognizer class]] || [otherGestureRecognizer isKindOfClass:[CreateGatePanGestureRecognizer class]]) return NO;
     // TODO: test this
     if ([gestureRecognizer isKindOfClass:[UIPinchGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) return YES;
-    
+    if ([gestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]]) {
+        return YES;
+    }
     return NO;
+}
+
+- (IBAction)handleLongPressObject:(UILongPressGestureRecognizer *)sender {
+    
+    if (sender.state == UIGestureRecognizerStateBegan) {
+        GLKVector3 position = [_viewport unproject:PX(self.view.contentScaleFactor, [sender locationInView:self.view])];
+        CircuitObject *object = [_viewport findCircuitObjectAtPosition:position];
+        if (!object) return;
+        
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@(object->type->id) delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Remove" otherButtonTitles: nil];
+        _selectedObjects = @[[NSValue valueWithPointer:object]];
+        CGRect rect = [_viewport rectForObject:object inView:self.view];
+        
+        [actionSheet showFromRect:rect inView:self.view animated:YES];
+        
+    }
+    
+    
+}
+
+#pragma mark -
+#pragma mark UIActionSheetDelegate
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 0) {
+        for(id obj in _selectedObjects) {
+            CircuitObject *object = [obj pointerValue];
+            [_circuit removeObject:object];
+            [_doc updateChangeCount:UIDocumentChangeDone];
+            [self unpause];
+        }
+    }
 }
 
 - (void) unpause {
@@ -717,7 +751,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 }
 
 - (IBAction)handleCreateLinkGesture:(UILongPressGestureRecognizer *)sender {
-    if (sender.state == UIGestureRecognizerStateEnded) {
+    if (sender.state == UIGestureRecognizerStateEnded || sender.state == UIGestureRecognizerStateCancelled) {
         // If there is no active gate in creation, then just cancel.
         _viewport.currentEditingLinkSource = NULL;
         _viewport.currentEditingLinkTarget = NULL;

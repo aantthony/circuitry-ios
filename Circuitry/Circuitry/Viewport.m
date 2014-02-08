@@ -176,6 +176,14 @@ static SpriteTexturePos symbolNOT;
     return [self unproject:screenPos z: 0.0]; // NEAR
 //    return [self unProject:screenPos z: 1.0]; // FAR
 }
+
+- (GLKVector3) project: (GLKVector3) pos {
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    
+    return GLKMathProject(pos, _viewMatrix, _projectionMatrix, viewport);
+}
+
 - (GLKVector3) unproject: (CGPoint) screenPos z: (float) z {
     
     GLint viewport[4];
@@ -258,6 +266,20 @@ CGSize sizeOfObject(CircuitObject *object) {
 }
 - (CircuitObject*) findCircuitObjectAtScreenPosition: (CGPoint) screenPos {
     return [self findCircuitObjectAtPosition:[self unproject:screenPos]];
+}
+
+- (CGRect) rectForObject:(CircuitObject *) object inView:(UIView *)view {
+    float scaleFactor = view.contentScaleFactor;
+    
+    CGSize size = sizeOfObject(object);
+    
+    GLKVector3 topLeft = GLKVector3Make(object->pos.x, object->pos.y, object->pos.z);
+    GLKVector3 bottomRight = GLKVector3Make(object->pos.x + size.width, object->pos.y + size.height, object->pos.z);
+    
+    GLKVector3 pTopLeft = [self project:topLeft];
+    GLKVector3 pBottomRight = [self project:bottomRight];
+
+    return CGRectMake(pTopLeft.x, view.bounds.size.height - pTopLeft.y, pBottomRight.x - pTopLeft.x, pTopLeft.y - pBottomRight.y);
 }
 
 

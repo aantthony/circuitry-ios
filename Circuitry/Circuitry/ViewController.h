@@ -20,6 +20,7 @@
 - (IBAction) handleTapGesture:(UITapGestureRecognizer *)sender;
 
 - (BOOL) gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer;
+- (IBAction)handleLongPressObject:(UILongPressGestureRecognizer *)sender;
 
 - (NSURL *) documentURL;
 - (void) setDocumentURL:(NSURL *)url;

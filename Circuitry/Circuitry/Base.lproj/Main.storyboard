@@ -24,6 +24,7 @@
                             <outletCollection property="gestureRecognizers" destination="q8S-aQ-v8R" appends="YES" id="w0l-eT-tG5"/>
                             <outletCollection property="gestureRecognizers" destination="7bN-zV-gIM" appends="YES" id="3Sa-so-PtL"/>
                             <outletCollection property="gestureRecognizers" destination="h4l-Nq-EiU" appends="YES" id="HxE-bB-5P9"/>
+                            <outletCollection property="gestureRecognizers" destination="W0R-Er-cpe" appends="YES" id="s9W-GF-sNq"/>
                         </connections>
                     </glkView>
                     <navigationItem key="navigationItem" title="test" id="eXc-qK-JHX"/>
@@ -61,13 +62,18 @@
                         <outlet property="delegate" destination="BV1-FR-VrT" id="Uk0-53-9Mk"/>
                     </connections>
                 </panGestureRecognizer>
+                <pongPressGestureRecognizer allowableMovement="4" minimumPressDuration="0.5" id="W0R-Er-cpe">
+                    <connections>
+                        <action selector="handleLongPressObject:" destination="BV1-FR-VrT" id="0GG-k8-m47"/>
+                    </connections>
+                </pongPressGestureRecognizer>
                 <panGestureRecognizer minimumNumberOfTouches="1" id="7bN-zV-gIM" customClass="CreateGatePanGestureRecognizer">
                     <connections>
                         <action selector="handleCreateGateGesture:" destination="BV1-FR-VrT" id="I1w-wN-plg"/>
                         <outlet property="delegate" destination="BV1-FR-VrT" id="20d-CD-9T5"/>
                     </connections>
                 </panGestureRecognizer>
-                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.25" id="h4l-Nq-EiU" customClass="CreateLinkGestureRecognizer">
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.10000000000000001" id="h4l-Nq-EiU" customClass="CreateLinkGestureRecognizer">
                     <connections>
                         <action selector="handleCreateLinkGesture:" destination="BV1-FR-VrT" id="Qlg-8g-Ac5"/>
                         <outlet property="delegate" destination="BV1-FR-VrT" id="14P-8p-1B8"/>

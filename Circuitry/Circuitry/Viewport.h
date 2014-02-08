@@ -19,6 +19,8 @@
 - (int) findInletIndexAtOffset:(GLKVector3) offset attachedToObject:(CircuitObject *)object;
 - (CircuitLink *) findCircuitLinkAtOffset: (GLKVector3)offset attachedToObject:(CircuitObject *)object;
 - (CircuitObject*) findCircuitObjectAtPosition: (GLKVector3) pos;
+- (CGRect) rectForObject:(CircuitObject *) object inView:(UIView *)view;
+
 - (GLKVector3) unproject: (CGPoint) screenPos;
 
 
