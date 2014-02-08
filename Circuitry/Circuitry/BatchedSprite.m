@@ -47,7 +47,7 @@ static GLint uModelViewProjectMatrix;
 
 + (void)setContext: (EAGLContext*) context {
     if (!shader) {
-        
+        NSLog(@"compiling....");
         NSDictionary *uniforms = @{@"opacity": @1.0};
         NSDictionary *attributes = @{
                                      @"aTarget": @{},
@@ -136,13 +136,22 @@ static GLint uModelViewProjectMatrix;
     int i = 0;
     // Use the texture @i
     glActiveTexture(GL_TEXTURE0 + i);
+    
+    [ShaderEffect checkError];
     glBindTexture(GL_TEXTURE_2D, _texture.name);
+    
+    [ShaderEffect checkError];
     glUniform1i(uTexture, i);
     
+    [ShaderEffect checkError];
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     
+    [ShaderEffect checkError];
+    
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
+    
+    [ShaderEffect checkError];
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexBuffer);
     
     [ShaderEffect checkError];

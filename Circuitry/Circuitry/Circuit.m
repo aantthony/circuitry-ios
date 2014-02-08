@@ -25,16 +25,13 @@
 
 
 void *smalloc(size_t c) {
-    NSLog(@"Allocate %0.1f MB\n", c / 1000000.0);
     return malloc(c);
 }
 void *scalloc(size_t c, size_t b) {
-    NSLog(@"Allocate %0.1f MB\n", (c * b) / 1000000.0);
     return calloc(c, b);
 }
 
 void *srealloc(void * d, size_t c) {
-    NSLog(@"ReAllocate %0.1f MB\n", c / 1000000.0);
     return realloc(d, c);
 }
 

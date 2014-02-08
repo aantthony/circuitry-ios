@@ -10,6 +10,8 @@
 
 #import "ToolbeltItem.h"
 
+#import "AppDelegate.h"
+
 @interface ViewController () {
     GLuint _program;
     
@@ -55,10 +57,24 @@
 - (void)setupGL;
 - (void)tearDownGL;
 
-- (BOOL)loadShaders;
 @end
 
 @implementation ViewController
+static id s_singleton = nil;
++ (id) alloc {
+    if(s_singleton != nil)
+        return s_singleton;
+    return [super alloc];
+}
+- (id) initWithCoder:(NSCoder *)aDecoder {
+    if(s_singleton != nil)
+        return s_singleton;
+    self = [super initWithCoder:aDecoder];
+    if(self) {
+        s_singleton = self;
+    }
+    return self;
+}
 
 - (void) saveScreenshot {
     
@@ -177,11 +193,6 @@
     _hud.toolbelt.items = items;
 }
 
-- (NSURL *)applicationDocumentsDirectory
-{
-    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-}
-
 -(void)appWillResignActive:(NSNotification*)note {
     NSLog(@"will resign active...");
     [_doc savePresentedItemChangesWithCompletionHandler:^(NSError *errorOrNil) {
@@ -193,6 +204,9 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillTerminateNotification object:nil];
 }
 
+- (void) firstLoad {
+}
+
 - (void)viewDidLoad
 {
     _onNextDraw = NULL;
@@ -202,19 +216,23 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillTerminate:) name:UIApplicationWillTerminateNotification object:nil];
     
-    
-    
     panVelocity = CGPointMake(0.0, 0.0);
     
     isAnimatingScaleToSnap = NO;
     toolbeltTouchIntercept = NO;
     animatingPan = NO;
     beginGestureScale = 0.0;
-    self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+    if (!_context) {
+        self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+    }
 
     if (!self.context) {
         NSLog(@"Failed to create ES context");
     }
+    if (!_stack) {
+        _stack = GLKMatrixStackCreate(NULL);
+    }
+    
     
     CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.view.layer;
     
@@ -227,23 +245,41 @@
     [self setupGL];
     [self checkError];
     
-    _atlas = [ImageAtlas imageAtlasWithName:@"circuit"];
-    
-    _viewport = [[Viewport alloc] initWithContext:self.context atlas: _atlas];
-    _hud = [[HUD alloc] initWithAtlas:_atlas];
+    if (!_atlas) {
+        _atlas = [ImageAtlas imageAtlasWithName:@"circuit"];
+    }
+    if (!_viewport) {
+        _viewport = [[Viewport alloc] initWithContext:self.context atlas: _atlas];
+    }
+    if (!_hud) {
+        _hud = [[HUD alloc] initWithAtlas:_atlas];
+    }
     _hud.viewPort = _viewport;
     [self checkError];
-    GLKTextureInfo *bgTexture = [Sprite textureWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"background" withExtension:@"jpg"]];
-    [self checkError];
-    bg = [[Sprite alloc] initWithTexture:bgTexture];
-    [self checkError];
+    if (!bg) {
+        GLKTextureInfo *bgTexture = [Sprite textureWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"background" withExtension:@"jpg"]];
+        [self checkError];
+        bg = [[Sprite alloc] initWithTexture:bgTexture];
+        [self checkError];
+    }
+        
         
     
-    NSURL *docURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Untitled.circuit"];
     
-    _doc = [[CircuitDocument alloc] initWithFileURL:docURL];
-    NSLog(@"URL: %@", _doc.fileURL);
-    if ([[NSFileManager defaultManager] fileExistsAtPath:[docURL path]]) {
+//    [[[UIAlertView alloc] initWithTitle:_circuit.name message:_circuit.description delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
+}
+
+- (NSURL *) documentURL {
+    return _doc.fileURL;
+}
+- (void) setDocumentURL:(NSURL *) url {
+    if ([url.path isEqualToString: _doc.fileURL.path]) {
+        return;
+    }
+    _doc = [[CircuitDocument alloc] initWithFileURL:url];
+    self.circuit = nil;
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:[url path]]) {
         [_doc openWithCompletionHandler:^(BOOL success){
             NSLog(@"opened document: %d, %@", success, _doc.fileURL);
             
@@ -265,18 +301,15 @@
         
         [self configureToolbeltItems];
         
-        [_doc saveToURL:docURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success){
+        [_doc saveToURL:url forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success){
             NSLog(@"saved");
             if (!success) {
                 // Handle the error.
             }
         }];
     }
+    
 
-    
-    
-    
-//    [[[UIAlertView alloc] initWithTitle:_circuit.name message:_circuit.description delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
 }
 
 - (void) timerTick:(id) sender {
@@ -343,13 +376,8 @@
 - (void)setupGL
 {
     [EAGLContext setCurrentContext:self.context];
-    
-    _stack = GLKMatrixStackCreate(NULL);
-    [self checkError];
-    [self loadShaders];
     [self checkError];
     glEnable(GL_DEPTH_TEST);
-    
 }
 
 - (void)tearDownGL
@@ -486,13 +514,6 @@
         _onNextDraw = NULL;
     }
     
-}
-
-#pragma mark -  OpenGL ES 2 shader compilation
-
-- (BOOL)loadShaders
-{
-    return YES;
 }
 
 // Take a pt screen coordinate and translate it to pixel screen coordinates, because OpenGL only deals with pixels.

@@ -21,4 +21,7 @@
 
 - (BOOL) gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer;
 
+- (NSURL *) documentURL;
+- (void) setDocumentURL:(NSURL *)url;
+
 @end

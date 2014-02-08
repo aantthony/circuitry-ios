@@ -9,4 +9,6 @@
 + (NSURL *) baseURL;
 + (AFHTTPRequestOperationManager *) api;
 
++ (NSURL *) documentsDirectory;
+
 @end

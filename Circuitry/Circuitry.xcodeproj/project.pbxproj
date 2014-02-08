@@ -68,6 +68,9 @@
 		92D90E3F1838E9D700387FAC /* Grid.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E3E1838E9D700387FAC /* Grid.fsh */; };
 		92E037BF188425E80047F736 /* DragGateGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 92E037BE188425E80047F736 /* DragGateGestureRecognizer.m */; };
 		92E304631894D6C100003157 /* ToolbeltItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 92E304621894D6C100003157 /* ToolbeltItem.m */; };
+		92FC7F9118A50C1000EA329A /* CircuitListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FC7F9018A50C1000EA329A /* CircuitListViewController.m */; };
+		92FC7F9418A50E7300EA329A /* CircuitListImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FC7F9318A50E7300EA329A /* CircuitListImageView.m */; };
+		92FC7F9618A5906900EA329A /* large-plus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92FC7F9518A5906900EA329A /* large-plus@2x.png */; };
 		CBCFD569C58147F5B4C87DD5 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB58C125A61B4A21B04D8C5D /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -173,6 +176,11 @@
 		92E037BE188425E80047F736 /* DragGateGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DragGateGestureRecognizer.m; sourceTree = "<group>"; };
 		92E304611894D6C100003157 /* ToolbeltItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolbeltItem.h; sourceTree = "<group>"; };
 		92E304621894D6C100003157 /* ToolbeltItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolbeltItem.m; sourceTree = "<group>"; };
+		92FC7F8F18A50C1000EA329A /* CircuitListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircuitListViewController.h; sourceTree = "<group>"; };
+		92FC7F9018A50C1000EA329A /* CircuitListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircuitListViewController.m; sourceTree = "<group>"; };
+		92FC7F9218A50E7300EA329A /* CircuitListImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircuitListImageView.h; sourceTree = "<group>"; };
+		92FC7F9318A50E7300EA329A /* CircuitListImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircuitListImageView.m; sourceTree = "<group>"; };
+		92FC7F9518A5906900EA329A /* large-plus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "large-plus@2x.png"; sourceTree = "<group>"; };
 		9B4B111902D943CCB431DEB6 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		EB58C125A61B4A21B04D8C5D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -253,6 +261,7 @@
 		9204C37D182E2F5C006A008D /* Circuitry */ = {
 			isa = PBXGroup;
 			children = (
+				92FC7F9518A5906900EA329A /* large-plus@2x.png */,
 				92DE44AD187C153F00014CB9 /* circuit.image-atlas */,
 				927D1A191875A9F000457367 /* Models */,
 				927D1A181875A9B400457367 /* OpenGL Views */,
@@ -260,6 +269,8 @@
 				9208B106187565390038A52A /* Circuitry.entitlements */,
 				9204C386182E2F5C006A008D /* AppDelegate.h */,
 				9204C387182E2F5C006A008D /* AppDelegate.m */,
+				92FC7F9218A50E7300EA329A /* CircuitListImageView.h */,
+				92FC7F9318A50E7300EA329A /* CircuitListImageView.m */,
 				9204C389182E2F5C006A008D /* Main.storyboard */,
 				9253C40A18854D0B00D2509C /* CreateLinkGestureRecognizer.h */,
 				9253C40B18854D0B00D2509C /* CreateLinkGestureRecognizer.m */,
@@ -273,6 +284,8 @@
 				9204C37E182E2F5C006A008D /* Supporting Files */,
 				9269EF6F188107DE00C8804D /* SocketClient.h */,
 				9269EF70188107DE00C8804D /* SocketClient.m */,
+				92FC7F8F18A50C1000EA329A /* CircuitListViewController.h */,
+				92FC7F9018A50C1000EA329A /* CircuitListViewController.m */,
 			);
 			path = Circuitry;
 			sourceTree = "<group>";
@@ -512,6 +525,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				920046A2189D0A60007124DA /* SevenSegmentDisplay.fsh in Resources */,
+				92FC7F9618A5906900EA329A /* large-plus@2x.png in Resources */,
 				920046A3189D0A60007124DA /* SevenSegmentDisplay.vsh in Resources */,
 				9232B6761878436E00E45C7E /* BatchedSprite.vsh in Resources */,
 				92020C0B189A578200B6D8F5 /* circuit.image-atlas in Resources */,
@@ -587,6 +601,7 @@
 				92A4F86D187289F300EEB367 /* Viewport.m in Sources */,
 				92E037BF188425E80047F736 /* DragGateGestureRecognizer.m in Sources */,
 				92D90E3D1838E9CD00387FAC /* Grid.vsh in Sources */,
+				92FC7F9118A50C1000EA329A /* CircuitListViewController.m in Sources */,
 				92D90E3B1838D7AB00387FAC /* Grid.m in Sources */,
 				9269EF71188107DE00C8804D /* SocketClient.m in Sources */,
 				9232B6551878353A00E45C7E /* BatchedSprite.fsh in Sources */,
@@ -598,6 +613,7 @@
 				920046A1189D0390007124DA /* SevenSegmentDisplay.vsh in Sources */,
 				9204C388182E2F5C006A008D /* AppDelegate.m in Sources */,
 				92D90E321837807000387FAC /* Sprite.m in Sources */,
+				92FC7F9418A50E7300EA329A /* CircuitListImageView.m in Sources */,
 				92E304631894D6C100003157 /* ToolbeltItem.m in Sources */,
 				923C143C18826F280017BAF3 /* Toolbelt.m in Sources */,
 				9200469C189D0178007124DA /* SevenSegmentDisplay.m in Sources */,

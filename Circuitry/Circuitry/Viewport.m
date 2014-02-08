@@ -154,6 +154,8 @@ static SpriteTexturePos symbolNOT;
 }
 
 - (Circuit *) circuit {
+    UICollectionViewController *c;
+    
     return _circuit;
 }
 
