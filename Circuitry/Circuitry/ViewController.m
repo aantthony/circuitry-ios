@@ -792,7 +792,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     CGPoint screenPos = PX(self.view.contentScaleFactor, [recognizer locationInView:self.view]);
     
     if (recognizer.state == UIGestureRecognizerStateBegan) {
-        beginGestureScale = recognizer.scale;
+        beginGestureScale = _viewport.scale;
     }
     
     GLKVector3 aPos = [_viewport unproject: screenPos];

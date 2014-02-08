@@ -161,6 +161,9 @@
                                         <segment title="Problems"/>
                                     </segments>
                                     <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                    <connections>
+                                        <action selector="didChangeCircuitsProblemsSegment:" destination="bMV-Gg-1ab" eventType="valueChanged" id="LSc-AU-EOE"/>
+                                    </connections>
                                 </segmentedControl>
                             </subviews>
                             <constraints>

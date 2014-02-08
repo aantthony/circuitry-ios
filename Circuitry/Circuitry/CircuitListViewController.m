@@ -114,6 +114,14 @@
         _documentViewController.documentURL = docURL;
     }
 }
+- (IBAction)didChangeCircuitsProblemsSegment:(UISegmentedControl *)sender {
+    if (sender.selectedSegmentIndex == 0) {
+        // circuits
+    } else {
+        // problems
+    }
+}
+
 - (IBAction) didLongPress:(UILongPressGestureRecognizer *)sender {
     if (sender.state == UIGestureRecognizerStateBegan) {
         _actionSheetIndexPath = [self.collectionView indexPathForItemAtPoint: [sender locationInView:self.collectionView]];
