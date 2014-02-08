@@ -4,7 +4,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
     </dependencies>
     <scenes>
-        <!--GLKit View Controller-->
+        <!--GLKit View Controller - test-->
         <scene sceneID="tXr-a1-R10">
             <objects>
                 <glkViewController preferredFramesPerSecond="60" id="BV1-FR-VrT" customClass="ViewController" sceneMemberID="viewController">
@@ -26,6 +26,7 @@
                             <outletCollection property="gestureRecognizers" destination="h4l-Nq-EiU" appends="YES" id="HxE-bB-5P9"/>
                         </connections>
                     </glkView>
+                    <navigationItem key="navigationItem" title="test" id="eXc-qK-JHX"/>
                     <keyCommands/>
                     <connections>
                         <outlet property="pinchGestureRecognizer" destination="prC-OQ-El9" id="tZZ-eO-MgU"/>
@@ -177,7 +178,7 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="edit" id="FaR-5p-vf3"/>
                     </navigationItem>
                     <connections>
-                        <segue destination="BV1-FR-VrT" kind="custom" identifier="OpenDocumentFromDocumentsList" id="wOB-zF-YAn"/>
+                        <segue destination="BV1-FR-VrT" kind="custom" identifier="OpenDocumentFromDocumentsList" customClass="OpenDocumentFromDocumentsListSegue" id="wOB-zF-YAn"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jtp-V0-qL6" userLabel="First Responder" sceneMemberID="firstResponder"/>

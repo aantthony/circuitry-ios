@@ -72,6 +72,8 @@
 		92FC7F9418A50E7300EA329A /* CircuitListImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FC7F9318A50E7300EA329A /* CircuitListImageView.m */; };
 		92FC7F9618A5906900EA329A /* large-plus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92FC7F9518A5906900EA329A /* large-plus@2x.png */; };
 		92FC7F9918A5B39E00EA329A /* CircuitCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FC7F9818A5B39E00EA329A /* CircuitCollectionViewCell.m */; };
+		92FC7F9C18A5CECE00EA329A /* OpenDocumentFromDocumentsListSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FC7F9B18A5CECE00EA329A /* OpenDocumentFromDocumentsListSegue.m */; };
+		92FC7FA618A601BD00EA329A /* UIAlertView+MKBlockAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FC7FA518A601BD00EA329A /* UIAlertView+MKBlockAdditions.m */; };
 		CBCFD569C58147F5B4C87DD5 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB58C125A61B4A21B04D8C5D /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -184,6 +186,10 @@
 		92FC7F9518A5906900EA329A /* large-plus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "large-plus@2x.png"; sourceTree = "<group>"; };
 		92FC7F9718A5B39E00EA329A /* CircuitCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircuitCollectionViewCell.h; sourceTree = "<group>"; };
 		92FC7F9818A5B39E00EA329A /* CircuitCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircuitCollectionViewCell.m; sourceTree = "<group>"; };
+		92FC7F9A18A5CECE00EA329A /* OpenDocumentFromDocumentsListSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenDocumentFromDocumentsListSegue.h; sourceTree = "<group>"; };
+		92FC7F9B18A5CECE00EA329A /* OpenDocumentFromDocumentsListSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenDocumentFromDocumentsListSegue.m; sourceTree = "<group>"; };
+		92FC7FA418A601BD00EA329A /* UIAlertView+MKBlockAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+MKBlockAdditions.h"; sourceTree = "<group>"; };
+		92FC7FA518A601BD00EA329A /* UIAlertView+MKBlockAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+MKBlockAdditions.m"; sourceTree = "<group>"; };
 		9B4B111902D943CCB431DEB6 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		EB58C125A61B4A21B04D8C5D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -229,6 +235,7 @@
 		9204C367182E2F5C006A008D = {
 			isa = PBXGroup;
 			children = (
+				92FC7FA018A601A200EA329A /* UIKitCategoryAdditions */,
 				92A28A59187428A600F0D934 /* Circuits */,
 				9204C37D182E2F5C006A008D /* Circuitry */,
 				9204C3A0182E2F5C006A008D /* CircuitryTests */,
@@ -275,6 +282,8 @@
 				92FC7F9218A50E7300EA329A /* CircuitListImageView.h */,
 				92FC7F9318A50E7300EA329A /* CircuitListImageView.m */,
 				9204C389182E2F5C006A008D /* Main.storyboard */,
+				92FC7F9A18A5CECE00EA329A /* OpenDocumentFromDocumentsListSegue.h */,
+				92FC7F9B18A5CECE00EA329A /* OpenDocumentFromDocumentsListSegue.m */,
 				92FC7F9718A5B39E00EA329A /* CircuitCollectionViewCell.h */,
 				92FC7F9818A5B39E00EA329A /* CircuitCollectionViewCell.m */,
 				9253C40A18854D0B00D2509C /* CreateLinkGestureRecognizer.h */,
@@ -412,12 +421,12 @@
 			isa = PBXGroup;
 			children = (
 				9218F735187696A100742F99 /* LinkBezier */,
-				92A4F86E18728A1F00EEB367 /* Drawable.h */,
 				92A4F86F18728A1F00EEB367 /* Drawable.m */,
 				9200469D189D021D007124DA /* SevenSegmentDisplay */,
 				92020C08189A54ED00B6D8F5 /* background.jpg */,
 				9204C390182E2F5C006A008D /* ViewController.h */,
 				9204C391182E2F5C006A008D /* ViewController.m */,
+				92A4F86E18728A1F00EEB367 /* Drawable.h */,
 				927D1A131875A97000457367 /* Sprite */,
 				927D1A161875A99800457367 /* Grid */,
 				927D1A171875A9AA00457367 /* Viewport */,
@@ -440,6 +449,15 @@
 				92A28A5A187428BE00F0D934 /* nand.json */,
 			);
 			name = Circuits;
+			sourceTree = "<group>";
+		};
+		92FC7FA018A601A200EA329A /* UIKitCategoryAdditions */ = {
+			isa = PBXGroup;
+			children = (
+				92FC7FA418A601BD00EA329A /* UIAlertView+MKBlockAdditions.h */,
+				92FC7FA518A601BD00EA329A /* UIAlertView+MKBlockAdditions.m */,
+			);
+			name = UIKitCategoryAdditions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -619,7 +637,9 @@
 				9204C388182E2F5C006A008D /* AppDelegate.m in Sources */,
 				92D90E321837807000387FAC /* Sprite.m in Sources */,
 				92FC7F9918A5B39E00EA329A /* CircuitCollectionViewCell.m in Sources */,
+				92FC7F9C18A5CECE00EA329A /* OpenDocumentFromDocumentsListSegue.m in Sources */,
 				92FC7F9418A50E7300EA329A /* CircuitListImageView.m in Sources */,
+				92FC7FA618A601BD00EA329A /* UIAlertView+MKBlockAdditions.m in Sources */,
 				92E304631894D6C100003157 /* ToolbeltItem.m in Sources */,
 				923C143C18826F280017BAF3 /* Toolbelt.m in Sources */,
 				9200469C189D0178007124DA /* SevenSegmentDisplay.m in Sources */,

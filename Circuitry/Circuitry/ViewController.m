@@ -214,8 +214,7 @@ static id s_singleton = nil;
 {
     _onNextDraw = NULL;
     [super viewDidLoad];
-    
-    
+        
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillTerminate:) name:UIApplicationWillTerminateNotification object:nil];
     
@@ -330,6 +329,7 @@ static id s_singleton = nil;
         _viewport.circuit = _circuit;
         
         _doc.circuit = _circuit;
+        self.navigationItem.title = _circuit.name;
         
         [self configureToolbeltItems];
         
@@ -811,6 +811,23 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 #endif
 }
 
+- (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+//    [self.navigationController setNavigationBarHidden:YES animated:animated];
+}
+- (void) viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+//    [self.navigationController setNavigationBarHidden:NO animated:animated];
+}
+
+- (void) viewDidAppear:(BOOL)animated {
+    if (_doc) {
+        [_doc savePresentedItemChangesWithCompletionHandler:^(NSError *errorOrNil) {
+            NSLog(@"saved");
+        }];
+    }
+}
+
 - (IBAction) handleTapGesture:(UITapGestureRecognizer *)sender {
     BOOL hit = NO;
     // TODO: try not handling the tap gesture when there is nothing to tap.
@@ -833,9 +850,16 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     if (!hit && sender.numberOfTouches == 1) {
         // hit the background or only hit gates which don't have any tap action.
         // toggle the toolbelt (it animates)
-        self.hud.toolbelt.visible = !self.hud.toolbelt.visible;
+        [self toggleHeaderVisibility: sender];
     }
     [self unpause];
+}
+
+- (IBAction) toggleHeaderVisibility:(id)sender {
+    BOOL visible = !self.hud.toolbelt.visible;
+    self.hud.toolbelt.visible = visible;
+//    self.navigationController.navigationBarHidden = !visible;
+    [self.navigationController setNavigationBarHidden:!visible animated:YES];
 }
 
 
