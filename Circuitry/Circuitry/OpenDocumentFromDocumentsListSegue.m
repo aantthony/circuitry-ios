@@ -31,7 +31,7 @@
     
     [source.navigationController setNavigationBarHidden:YES animated:YES];
     
-    [UIView animateWithDuration:0.5
+    [UIView animateWithDuration:0.3
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
@@ -41,8 +41,8 @@
                      }
                      completion:^(BOOL finished){
                          [destinationViewController.view removeFromSuperview]; // remove from temp super view
-//                         [sourceViewController presentViewController:destinationViewController animated:NO completion:NULL]; // present VC
-                         [source.navigationController pushViewController:destinationViewController animated:NO];
+                         [sourceViewController presentViewController:destinationViewController animated:NO completion:NULL]; // present VC
+//                         [source.navigationController pushViewController:destinationViewController animated:NO];
                      }];
     
     
