@@ -14,8 +14,6 @@
 #import "AppDelegate.h"
 
 @interface ViewController () <UIActionSheetDelegate> {
-    GLuint _program;
-    
     IBOutlet UIPinchGestureRecognizer *_pinchGestureRecognizer;
     GLKMatrix4 _modelViewProjectionMatrix;
     GLKMatrix3 _normalMatrix;
@@ -49,10 +47,8 @@
     
     
 }
-@property (strong, nonatomic) EAGLContext *context;
 @property NSArray *selectedObjects;
 @property CircuitDocument *doc;
-@property ImageAtlas *atlas;
 @property Viewport *viewport;
 @property HUD *hud;
 
@@ -62,21 +58,6 @@
 @end
 
 @implementation ViewController
-static id s_singleton = nil;
-+ (id) alloc {
-    if(s_singleton != nil)
-        return s_singleton;
-    return [super alloc];
-}
-- (id) initWithCoder:(NSCoder *)aDecoder {
-    if(s_singleton != nil)
-        return s_singleton;
-    self = [super initWithCoder:aDecoder];
-    if(self) {
-        s_singleton = self;
-    }
-    return self;
-}
 
 - (void) saveScreenshot {
     
@@ -209,7 +190,26 @@ static id s_singleton = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillTerminateNotification object:nil];
 }
 
-- (void) firstLoad {
++ (void) firstLoad {
+    
+}
+
+- (EAGLContext *) context {
+    static EAGLContext *instance;
+    if (instance) return instance;
+    return instance = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+}
+- (ImageAtlas *) atlas {
+    static id instance;
+    if (instance) return instance;
+    return instance = [ImageAtlas imageAtlasWithName:@"circuit"];
+}
+- (Sprite *) backgroundSprite {
+    static id instance;
+    if (instance) return instance;
+    
+    GLKTextureInfo *bgTexture = [Sprite textureWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"background" withExtension:@"jpg"]];
+    return instance = [[Sprite alloc] initWithTexture:bgTexture];
 }
 
 - (void)viewDidLoad
@@ -226,17 +226,11 @@ static id s_singleton = nil;
     toolbeltTouchIntercept = NO;
     animatingPan = NO;
     beginGestureScale = 0.0;
-    if (!_context) {
-        self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-    }
-
+    
     if (!self.context) {
         NSLog(@"Failed to create ES context");
     }
-    if (!_stack) {
-        _stack = GLKMatrixStackCreate(NULL);
-    }
-    
+    _stack = GLKMatrixStackCreate(NULL);    
     
     CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.view.layer;
     
@@ -249,22 +243,15 @@ static id s_singleton = nil;
     [self setupGL];
     [self checkError];
     
-    if (!_atlas) {
-        _atlas = [ImageAtlas imageAtlasWithName:@"circuit"];
-    }
-    if (!_viewport) {
-        _viewport = [[Viewport alloc] initWithContext:self.context atlas: _atlas];
-    }
-    if (!_hud) {
-        _hud = [[HUD alloc] initWithAtlas:_atlas];
-    }
+    _viewport = [[Viewport alloc] initWithContext:self.context atlas: self.atlas];
+
+    _hud = [[HUD alloc] initWithAtlas:self.atlas];
+    
     _hud.viewPort = _viewport;
+    
     [self checkError];
     if (!bg) {
-        GLKTextureInfo *bgTexture = [Sprite textureWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"background" withExtension:@"jpg"]];
-        [self checkError];
-        bg = [[Sprite alloc] initWithTexture:bgTexture];
-        [self checkError];
+        bg = self.backgroundSprite;
     }
         
         
@@ -369,7 +356,7 @@ static id s_singleton = nil;
         if ([EAGLContext currentContext] == self.context) {
             [EAGLContext setCurrentContext:nil];
         }
-        self.context = nil;
+//        self.context = nil;
     }
 
     // Dispose of any resources that can be recreated.
@@ -388,11 +375,6 @@ static id s_singleton = nil;
     [self checkError];
 //    glDeleteBuffers(1, &_vertexBuffer);
 //    glDeleteVertexArraysOES(1, &_vertexArray);
-    
-    if (_program) {
-        glDeleteProgram(_program);
-        _program = 0;
-    }
 }
 
 #pragma mark - GLKView and GLKViewController delegate methods
@@ -636,7 +618,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     if ([gestureRecognizer isKindOfClass:[LongPressObjectGesture class]] || [otherGestureRecognizer isKindOfClass:[LongPressObjectGesture class]]) {
         return YES;
     }
-    
+    NSLog(@"blocked %@ / %@", gestureRecognizer.class, otherGestureRecognizer.class);
     return NO;
 }
 
@@ -662,6 +644,8 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 #pragma mark UIActionSheetDelegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 0) {
+        [self dismissModalViewControllerAnimated:YES];
+        return;
         for(id obj in _selectedObjects) {
             CircuitObject *object = [obj pointerValue];
             [_circuit removeObject:object];

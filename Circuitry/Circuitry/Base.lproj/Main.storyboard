@@ -64,7 +64,7 @@
                 </panGestureRecognizer>
                 <pongPressGestureRecognizer allowableMovement="4" minimumPressDuration="0.5" id="W0R-Er-cpe" customClass="LongPressObjectGesture">
                     <connections>
-                        <action selector="handleLongPressObject:" destination="BV1-FR-VrT" id="0GG-k8-m47"/>
+                        <action selector="handleLongPressObject:" destination="BV1-FR-VrT" id="r4e-gd-rpx"/>
                     </connections>
                 </pongPressGestureRecognizer>
                 <panGestureRecognizer minimumNumberOfTouches="1" id="7bN-zV-gIM" customClass="CreateGatePanGestureRecognizer">

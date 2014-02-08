@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LongPressObjectGesture : UIGestureRecognizer
+@interface LongPressObjectGesture : UILongPressGestureRecognizer
 
 @end

@@ -43,6 +43,8 @@
 
 @interface CircuitListViewController () <UIActionSheetDelegate>
 @property NSMutableArray *items;
+@property NSMutableArray *circuits;
+@property NSMutableArray *problems;
 @property ViewController *documentViewController;
 @property NSIndexPath *actionSheetIndexPath;
 @property CGRect selectionRect;
@@ -64,7 +66,10 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return _items.count + 1;
+    if (_items == _circuits) {
+        return _circuits.count + 1;
+    }
+    return _items.count;
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
@@ -88,15 +93,17 @@
 }
 
 - (void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSURL *docURL = nil;
-    if (indexPath.row) {
-        DocumentListItem *item = [_items objectAtIndex:indexPath.row - 1];
-        docURL = item.url;
-        CircuitCollectionViewCell *cell = (CircuitCollectionViewCell *) [collectionView cellForItemAtIndexPath:indexPath];
-        _selectionRect = [self.view convertRect:cell.imageView.frame fromView:cell];
-        [self openDocument:docURL];
-    } else {
-        [self createDocument:collectionView];
+    if (_items == _circuits) {
+        NSURL *docURL = nil;
+        if (indexPath.row) {
+            DocumentListItem *item = [_items objectAtIndex:indexPath.row - 1];
+            docURL = item.url;
+            CircuitCollectionViewCell *cell = (CircuitCollectionViewCell *) [collectionView cellForItemAtIndexPath:indexPath];
+            _selectionRect = [self.view convertRect:cell.imageView.frame fromView:cell];
+            [self openDocument:docURL];
+        } else {
+            [self createDocument:collectionView];
+        }
     }
 }
 
@@ -117,18 +124,32 @@
 - (IBAction)didChangeCircuitsProblemsSegment:(UISegmentedControl *)sender {
     if (sender.selectedSegmentIndex == 0) {
         // circuits
+        _items = _circuits;
+        [self.collectionView reloadData];
     } else {
         // problems
+        _items = _problems;
+        [self.collectionView reloadData];
     }
+}
+
+- (void) preload {
+    return;
+    NSLog(@"prealoding...");
+    ViewController *viewcontroller = [[ViewController alloc] init];
+    [self.view addSubview:viewcontroller.view];
+    [viewcontroller.view removeFromSuperview];
 }
 
 - (IBAction) didLongPress:(UILongPressGestureRecognizer *)sender {
     if (sender.state == UIGestureRecognizerStateBegan) {
-        _actionSheetIndexPath = [self.collectionView indexPathForItemAtPoint: [sender locationInView:self.collectionView]];
-        CircuitCollectionViewCell *cell = (CircuitCollectionViewCell *) [self.collectionView cellForItemAtIndexPath:_actionSheetIndexPath];
-        UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:cell.textLabel.text delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete" otherButtonTitles:@"Share", nil];
-        CGRect rect = [self.view convertRect:cell.imageView.frame fromView:cell];
-        [sheet showFromRect:rect inView:self.view animated:YES];
+        if (_items == _circuits) {
+            _actionSheetIndexPath = [self.collectionView indexPathForItemAtPoint: [sender locationInView:self.collectionView]];
+            CircuitCollectionViewCell *cell = (CircuitCollectionViewCell *) [self.collectionView cellForItemAtIndexPath:_actionSheetIndexPath];
+            UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:cell.textLabel.text delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete" otherButtonTitles:@"Share", nil];
+            CGRect rect = [self.view convertRect:cell.imageView.frame fromView:cell];
+            [sheet showFromRect:rect inView:self.view animated:YES];
+        }
     }
 }
 
@@ -189,20 +210,41 @@
 #pragma mark UICollectionViewDataSource methods
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == 0) {
-        return [self.collectionView dequeueReusableCellWithReuseIdentifier:@"CircuitCreatePrototypeCell" forIndexPath:indexPath];
+    if (_items == _circuits) {
+        if (indexPath.row == 0) {
+            return [self.collectionView dequeueReusableCellWithReuseIdentifier:@"CircuitCreatePrototypeCell" forIndexPath:indexPath];
+        }
+        
+        CircuitCollectionViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:@"CircuitListPrototypeCell" forIndexPath:indexPath];
+        
+        DocumentListItem *item = [_items objectAtIndex:indexPath.row - 1];
+        
+        cell.textLabel.text = item.title;
+        return cell;
+    } else {
+        
+        CircuitCollectionViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:@"CircuitListPrototypeCell" forIndexPath:indexPath];
+        
+        DocumentListItem *item = [_items objectAtIndex:indexPath.row];
+        
+        cell.textLabel.text = item.title;
+        return cell;
     }
     
-    CircuitCollectionViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:@"CircuitListPrototypeCell" forIndexPath:indexPath];
-    
-    DocumentListItem *item = [_items objectAtIndex:indexPath.row - 1];
-    
-    cell.textLabel.text = item.title;
-    return cell;
 }
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    NSLog(@"will preload...");
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        NSLog(@"go");
+        [self preload];
+        dispatch_async(dispatch_get_main_queue(), ^(void){
+        });
+    });
+    
+
+    
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -226,9 +268,11 @@
         
         [items addObject:item];
     }
-    _items = [[items sortedArrayUsingComparator:^NSComparisonResult(DocumentListItem *obj1, DocumentListItem *obj2) {
+    _circuits = [[items sortedArrayUsingComparator:^NSComparisonResult(DocumentListItem *obj1, DocumentListItem *obj2) {
         return [obj2.lastModified compare: obj1.lastModified];
     }] mutableCopy];
+    
+    _items = _circuits;
     [self.collectionView reloadData];
 }
 
