@@ -7,6 +7,7 @@
 #import "DragGateGestureRecognizer.h"
 #import "CreateGatePanGestureRecognizer.h"
 #import "CreateLinkGestureRecognizer.h"
+#import "LongPressObjectGesture.h"
 
 #import "ToolbeltItem.h"
 
@@ -459,7 +460,7 @@ static id s_singleton = nil;
     }
     int changes = 0;
     int circuitChanges = [_circuit simulate:512];
-    NSLog(@"%d", circuitChanges);
+    NSLog(@"%d, %f", circuitChanges, dt);
     changes += circuitChanges;
     changes += [_viewport update: dt];
     changes += [_hud update: dt];
@@ -535,6 +536,15 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         isAnimatingScaleToSnap = NO;
         return YES;
 	}
+    
+    if ([gestureRecognizer isKindOfClass:[LongPressObjectGesture class]]) {
+        GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [gestureRecognizer locationInView:self.view])];
+        
+        CircuitObject *object = [_viewport findCircuitObjectAtPosition:position];
+        if (!object) return NO;
+        
+        return YES;
+    }
     
     if ([gestureRecognizer isKindOfClass:[CreateLinkGestureRecognizer class]]) {
         // Create a link from a gate, or move a link that is connected to a gate
@@ -623,6 +633,10 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     if ([gestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]]) {
         return YES;
     }
+    if ([gestureRecognizer isKindOfClass:[LongPressObjectGesture class]] || [otherGestureRecognizer isKindOfClass:[LongPressObjectGesture class]]) {
+        return YES;
+    }
+    
     return NO;
 }
 

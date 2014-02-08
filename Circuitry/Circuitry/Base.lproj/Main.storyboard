@@ -62,7 +62,7 @@
                         <outlet property="delegate" destination="BV1-FR-VrT" id="Uk0-53-9Mk"/>
                     </connections>
                 </panGestureRecognizer>
-                <pongPressGestureRecognizer allowableMovement="4" minimumPressDuration="0.5" id="W0R-Er-cpe">
+                <pongPressGestureRecognizer allowableMovement="4" minimumPressDuration="0.5" id="W0R-Er-cpe" customClass="LongPressObjectGesture">
                     <connections>
                         <action selector="handleLongPressObject:" destination="BV1-FR-VrT" id="0GG-k8-m47"/>
                     </connections>
