@@ -181,7 +181,10 @@ static id s_singleton = nil;
 - (void) configureToolbeltItems {
     
     NSMutableArray *items = [NSMutableArray array];
-    
+    if (!_circuit) {
+        _hud.toolbelt.items = items;
+        return;
+    }
     
     NSArray *types = @[@"in", @"out", @"or", @"not", @"nor", @"xor", @"xnor", @"and", @"nand", @"bindec", @"add8", @"bin7seg", @"7seg", @"clock"];
     [types enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
@@ -281,10 +284,8 @@ static id s_singleton = nil;
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:[url path]]) {
         [_doc openWithCompletionHandler:^(BOOL success){
-            NSLog(@"opened document: %d, %@", success, _doc.fileURL);
             
             self.circuit = _doc.circuit;
-            [self configureToolbeltItems];
             
             if (!success) {
                 // Handle the error.
@@ -298,8 +299,6 @@ static id s_singleton = nil;
         NSInputStream *stream = [NSInputStream inputStreamWithURL:path];
         [stream open];
         self.circuit = [Circuit circuitWithStream: stream];
-        
-        [self configureToolbeltItems];
         
         [_doc saveToURL:url forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success){
             NSLog(@"saved");
@@ -332,6 +331,7 @@ static id s_singleton = nil;
         
         _doc.circuit = _circuit;
         
+        [self configureToolbeltItems];
         
         // setup timers:
         NSTimer *_timer;

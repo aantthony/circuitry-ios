@@ -116,7 +116,7 @@
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                             </collectionViewCell>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CircuitListPrototypeCell" id="oft-HQ-wl9">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CircuitListPrototypeCell" id="oft-HQ-wl9" customClass="CircuitCollectionViewCell">
                                 <rect key="frame" x="284" y="124" width="200" height="250"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -137,6 +137,12 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outlet property="imageView" destination="2Ig-BZ-iW3" id="fVD-J4-kbL"/>
+                                    <outlet property="textLabel" destination="qlO-wE-HbB" id="FjC-1r-JMh"/>
+                                    <outletCollection property="gestureRecognizers" destination="vdI-Sy-RJM" appends="YES" id="qcG-CN-wEO"/>
+                                </connections>
                             </collectionViewCell>
                         </cells>
                         <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CircuitListHeader" id="w5Z-pY-lly">
@@ -175,6 +181,11 @@
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jtp-V0-qL6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="vdI-Sy-RJM">
+                    <connections>
+                        <action selector="didLongPress:" destination="bMV-Gg-1ab" id="14G-vQ-Qho"/>
+                    </connections>
+                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1231" y="-127"/>
         </scene>

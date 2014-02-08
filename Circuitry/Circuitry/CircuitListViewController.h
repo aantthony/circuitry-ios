@@ -11,4 +11,5 @@
 #import "ViewController.h"
 
 @interface CircuitListViewController : UICollectionViewController
+- (IBAction) didLongPress:(id)sender;
 @end

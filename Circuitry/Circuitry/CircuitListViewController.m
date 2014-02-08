@@ -10,12 +10,22 @@
 
 #import "CircuitDocument.h"
 #import "AppDelegate.h"
-
+#import "CircuitCollectionViewCell.h"
 
 @interface DocumentListItem : NSObject
 @property NSURL *url;
+@property NSString *title;
 @end
 @implementation DocumentListItem
+- (id) initWithURL: (NSURL *)url; {
+    self = [super init];
+    _url = url;
+    NSInputStream *stream = [[NSInputStream alloc] initWithURL:[url URLByAppendingPathComponent:@"package.json"]];
+    [stream open];
+    NSDictionary *package = [NSJSONSerialization JSONObjectWithStream:stream options:0 error:NULL];
+    _title = package[@"description"];
+    return self;
+}
 @end
 
 @interface CircuitListViewController ()
@@ -51,8 +61,6 @@
         
         reusableview = headerView;
     }
-    
-    
     return reusableview;
 }
 
@@ -76,14 +84,27 @@
         _documentViewController.documentURL = docURL;
     }
 }
+- (IBAction) didLongPress:(UILongPressGestureRecognizer *)sender {
+    if (sender.state == UIGestureRecognizerStateBegan) {
+        NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint: [sender locationInView:self.collectionView]];
+        CircuitCollectionViewCell *cell = (CircuitCollectionViewCell *) [self.collectionView cellForItemAtIndexPath:indexPath];
+        UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:cell.textLabel.text delegate:nil cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete" otherButtonTitles:@"Share", nil];
+        CGRect rect = [self.view convertRect:cell.imageView.frame fromView:cell];
+        
+        [sheet showFromRect:rect inView:self.view animated:YES];
+    }
+}
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == 0) {
         return [self.collectionView dequeueReusableCellWithReuseIdentifier:@"CircuitCreatePrototypeCell" forIndexPath:indexPath];
     }
     
-    UICollectionViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:@"CircuitListPrototypeCell" forIndexPath:indexPath];
+    CircuitCollectionViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:@"CircuitListPrototypeCell" forIndexPath:indexPath];
     
+    DocumentListItem *item = [_items objectAtIndex:indexPath.row - 1];
+    
+    cell.textLabel.text = [NSString stringWithFormat:@"%@ (%d)", item.title, indexPath.row];
     return cell;
 }
 - (void)viewDidLoad
@@ -97,10 +118,8 @@
     NSArray* localDocuments = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:
                                directoryPath error:nil];
     for (NSString* document in localDocuments) {
-        DocumentListItem *item = [[DocumentListItem alloc] init];
-        
-        item.url = [NSURL fileURLWithPath:[directoryPath
-                                             stringByAppendingPathComponent:document]];
+        DocumentListItem *item = [[DocumentListItem alloc] initWithURL:[NSURL fileURLWithPath:[directoryPath
+                                                                                               stringByAppendingPathComponent:document]]];
         
         [_items addObject:item];
     }

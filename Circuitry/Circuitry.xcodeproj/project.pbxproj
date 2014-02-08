@@ -71,6 +71,7 @@
 		92FC7F9118A50C1000EA329A /* CircuitListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FC7F9018A50C1000EA329A /* CircuitListViewController.m */; };
 		92FC7F9418A50E7300EA329A /* CircuitListImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FC7F9318A50E7300EA329A /* CircuitListImageView.m */; };
 		92FC7F9618A5906900EA329A /* large-plus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92FC7F9518A5906900EA329A /* large-plus@2x.png */; };
+		92FC7F9918A5B39E00EA329A /* CircuitCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FC7F9818A5B39E00EA329A /* CircuitCollectionViewCell.m */; };
 		CBCFD569C58147F5B4C87DD5 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB58C125A61B4A21B04D8C5D /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -181,6 +182,8 @@
 		92FC7F9218A50E7300EA329A /* CircuitListImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircuitListImageView.h; sourceTree = "<group>"; };
 		92FC7F9318A50E7300EA329A /* CircuitListImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircuitListImageView.m; sourceTree = "<group>"; };
 		92FC7F9518A5906900EA329A /* large-plus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "large-plus@2x.png"; sourceTree = "<group>"; };
+		92FC7F9718A5B39E00EA329A /* CircuitCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircuitCollectionViewCell.h; sourceTree = "<group>"; };
+		92FC7F9818A5B39E00EA329A /* CircuitCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircuitCollectionViewCell.m; sourceTree = "<group>"; };
 		9B4B111902D943CCB431DEB6 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		EB58C125A61B4A21B04D8C5D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -272,6 +275,8 @@
 				92FC7F9218A50E7300EA329A /* CircuitListImageView.h */,
 				92FC7F9318A50E7300EA329A /* CircuitListImageView.m */,
 				9204C389182E2F5C006A008D /* Main.storyboard */,
+				92FC7F9718A5B39E00EA329A /* CircuitCollectionViewCell.h */,
+				92FC7F9818A5B39E00EA329A /* CircuitCollectionViewCell.m */,
 				9253C40A18854D0B00D2509C /* CreateLinkGestureRecognizer.h */,
 				9253C40B18854D0B00D2509C /* CreateLinkGestureRecognizer.m */,
 				9253C407188545EC00D2509C /* CreateGatePanGestureRecognizer.h */,
@@ -613,6 +618,7 @@
 				920046A1189D0390007124DA /* SevenSegmentDisplay.vsh in Sources */,
 				9204C388182E2F5C006A008D /* AppDelegate.m in Sources */,
 				92D90E321837807000387FAC /* Sprite.m in Sources */,
+				92FC7F9918A5B39E00EA329A /* CircuitCollectionViewCell.m in Sources */,
 				92FC7F9418A50E7300EA329A /* CircuitListImageView.m in Sources */,
 				92E304631894D6C100003157 /* ToolbeltItem.m in Sources */,
 				923C143C18826F280017BAF3 /* Toolbelt.m in Sources */,
