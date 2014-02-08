@@ -31,7 +31,7 @@
     
     [source.navigationController setNavigationBarHidden:YES animated:YES];
     
-    [UIView animateWithDuration:0.3
+    [UIView animateWithDuration:0.9
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{

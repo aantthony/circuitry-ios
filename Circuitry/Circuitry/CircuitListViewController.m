@@ -134,7 +134,7 @@
 }
 
 - (void) preload {
-    return;
+//    return;
     NSLog(@"prealoding...");
     ViewController *viewcontroller = [[ViewController alloc] init];
     [self.view addSubview:viewcontroller.view];
@@ -235,9 +235,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    NSLog(@"will preload...");
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-        NSLog(@"go");
         [self preload];
         dispatch_async(dispatch_get_main_queue(), ^(void){
         });
