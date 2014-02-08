@@ -466,6 +466,7 @@ int simulate(Circuit *c, int ticks) {
              @"name": _name,
              @"version": _version,
              @"description": _description,
+             @"title": _title,
              @"author": _author,
              @"license": _license,
              @"items": items
@@ -487,6 +488,7 @@ int simulate(Circuit *c, int ticks) {
              @"name": _name,
              @"version": _version,
              @"description": _description,
+             @"title": _title,
              @"author": _author,
              @"license": _license
              };
@@ -497,7 +499,7 @@ int simulate(Circuit *c, int ticks) {
 - (Circuit *) initWithPackage:(NSDictionary *) package items: (NSArray *) items {
     
     self = [self init];
-    NSArray *fields = @[@"name", @"version", @"description", @"author",  @"license"];
+    NSArray *fields = @[@"name", @"version", @"description", @"title", @"author",  @"license"];
     [fields enumerateObjectsUsingBlock:^(id key, NSUInteger idx, BOOL *stop) {
         [self setValue:[package valueForKey:key] forKey:key];
     }];

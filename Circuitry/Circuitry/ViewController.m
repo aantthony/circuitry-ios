@@ -329,7 +329,7 @@ static id s_singleton = nil;
         _viewport.circuit = _circuit;
         
         _doc.circuit = _circuit;
-        self.navigationItem.title = _circuit.name;
+        self.navigationItem.title = _circuit.title;
         
         [self configureToolbeltItems];
         
@@ -421,7 +421,6 @@ static id s_singleton = nil;
     
     [_viewport setProjectionMatrix:_modelViewProjectionMatrix];
     if (!isAnimatingScaleToSnap && beginGestureScale != 0.0 && !_pinchGestureRecognizer.numberOfTouches) {
-        beginGestureScale = 0.0;
         isAnimatingScaleToSnap = YES;
     }
 
@@ -533,7 +532,6 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     [self stopPanAnimation];
 	if ( [gestureRecognizer isKindOfClass:[UIPinchGestureRecognizer class]] ) {
         isAnimatingScaleToSnap = NO;
-		beginGestureScale = _viewport.scale;
         return YES;
 	}
     
@@ -792,6 +790,10 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 - (IBAction) handlePinchGesture:(UIPinchGestureRecognizer *)recognizer {
     // Zoom:
     CGPoint screenPos = PX(self.view.contentScaleFactor, [recognizer locationInView:self.view]);
+    
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        beginGestureScale = recognizer.scale;
+    }
     
     GLKVector3 aPos = [_viewport unproject: screenPos];
     _viewport.scale = beginGestureScale * recognizer.scale;

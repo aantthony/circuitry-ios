@@ -1,8 +1,9 @@
 {
-  "name": "NAND Gate",
+  "name": "",
   "version": "1.0.0",
   "description": "Sample",
   "author": "Anthony Foster",
+  "title": "Untitled",
   "engines": {
     "circuitry": ">=0.0"
   },

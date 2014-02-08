@@ -18,6 +18,7 @@
 @interface DocumentListItem : NSObject
 @property NSURL *url;
 @property NSString *title;
+@property NSDate *lastModified;
 @end
 @implementation DocumentListItem
 - (id) initWithURL: (NSURL *)url; {
@@ -26,7 +27,14 @@
     NSInputStream *stream = [[NSInputStream alloc] initWithURL:[url URLByAppendingPathComponent:@"package.json"]];
     [stream open];
     NSDictionary *package = [NSJSONSerialization JSONObjectWithStream:stream options:0 error:NULL];
-    _title = package[@"description"];
+    _title = package[@"title"];
+    
+    NSDictionary* properties = [[NSFileManager defaultManager]
+                                attributesOfItemAtPath:url.path
+                                error:NULL];
+    
+    _lastModified = [properties objectForKey:NSFileModificationDate];
+
     return self;
 }
 @end
@@ -69,13 +77,23 @@
     return reusableview;
 }
 
+- (void) openDocument: (NSURL *)url {
+    [self performSegueWithIdentifier:@"OpenDocumentFromDocumentsList" sender:url];
+}
+
+- (IBAction) createDocument:(id)sender {
+    [self openDocument:nil];
+}
+
 - (void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSURL *docURL = nil;
     if (indexPath.row) {
         DocumentListItem *item = [_items objectAtIndex:indexPath.row - 1];
         docURL = item.url;
+        [self openDocument:docURL];
+    } else {
+        [self createDocument:collectionView];
     }
-    [self performSegueWithIdentifier:@"OpenDocumentFromDocumentsList" sender:docURL];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
@@ -164,28 +182,39 @@
     
     DocumentListItem *item = [_items objectAtIndex:indexPath.row - 1];
     
-    cell.textLabel.text = [NSString stringWithFormat:@"%@ (%d)", item.title, indexPath.row];
+    cell.textLabel.text = item.title;
     return cell;
 }
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+}
+
+- (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     
-    _items = [NSMutableArray array];
     
     NSString *directoryPath = [AppDelegate.documentsDirectory path];
-
+    
     NSArray* localDocuments = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:
                                directoryPath error:nil];
+    
+    
+    
+    NSMutableArray *items = [NSMutableArray array];
+    
     for (NSString* document in localDocuments) {
         NSURL *url = [NSURL fileURLWithPath:[directoryPath
                                              stringByAppendingPathComponent:document]];
         
         DocumentListItem *item = [[DocumentListItem alloc] initWithURL:url];
         
-        [_items addObject:item];
+        [items addObject:item];
     }
-    
+    _items = [[items sortedArrayUsingComparator:^NSComparisonResult(DocumentListItem *obj1, DocumentListItem *obj2) {
+        return [obj2.lastModified compare: obj1.lastModified];
+    }] mutableCopy];
+    [self.collectionView reloadData];
 }
 
 - (void)didReceiveMemoryWarning

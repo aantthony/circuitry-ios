@@ -12,4 +12,5 @@
 
 @interface CircuitListViewController : UICollectionViewController
 - (IBAction) didLongPress:(id)sender;
+- (IBAction) createDocument:(id)sender;
 @end

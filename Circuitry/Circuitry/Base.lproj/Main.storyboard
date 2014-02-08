@@ -174,7 +174,11 @@
                         </connections>
                     </collectionView>
                     <navigationItem key="navigationItem" title="Circuits" id="Bj2-Se-1Yq">
-                        <barButtonItem key="leftBarButtonItem" systemItem="add" id="vXF-Ph-Sji"/>
+                        <barButtonItem key="leftBarButtonItem" systemItem="add" id="vXF-Ph-Sji">
+                            <connections>
+                                <action selector="createDocument:" destination="bMV-Gg-1ab" id="4Yh-wA-5AZ"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="edit" id="FaR-5p-vf3"/>
                     </navigationItem>
                     <connections>

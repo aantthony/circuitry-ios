@@ -41,6 +41,7 @@ struct CircuitObject {
 @property NSString *name;
 @property NSString *version;
 @property NSString *description;
+@property NSString *title;
 @property NSString *author;
 @property NSMutableArray *engines;
 @property NSString *license;
