@@ -14,6 +14,8 @@
 
 #import "UIAlertView+MKBlockAdditions.h"
 
+#import "OpenDocumentFromDocumentsListSegue.h"
+
 
 @interface DocumentListItem : NSObject
 @property NSURL *url;
@@ -43,7 +45,7 @@
 @property NSMutableArray *items;
 @property ViewController *documentViewController;
 @property NSIndexPath *actionSheetIndexPath;
-
+@property CGRect selectionRect;
 @end
 
 @implementation CircuitListViewController
@@ -90,6 +92,8 @@
     if (indexPath.row) {
         DocumentListItem *item = [_items objectAtIndex:indexPath.row - 1];
         docURL = item.url;
+        CircuitCollectionViewCell *cell = (CircuitCollectionViewCell *) [collectionView cellForItemAtIndexPath:indexPath];
+        _selectionRect = [self.view convertRect:cell.imageView.frame fromView:cell];
         [self openDocument:docURL];
     } else {
         [self createDocument:collectionView];
@@ -97,6 +101,9 @@
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if ([segue isKindOfClass:[OpenDocumentFromDocumentsListSegue class]]) {
+        ((OpenDocumentFromDocumentsListSegue *)segue).originatingRect = _selectionRect;
+    }
     if([segue.identifier isEqualToString:@"OpenDocumentFromDocumentsList"]){
         _documentViewController = (ViewController *)segue.destinationViewController;
         NSURL *docURL = sender;

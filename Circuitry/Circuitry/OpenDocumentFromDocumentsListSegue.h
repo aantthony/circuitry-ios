@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface OpenDocumentFromDocumentsListSegue : UIStoryboardSegue
-
+@property CGRect originatingRect;
 @end
