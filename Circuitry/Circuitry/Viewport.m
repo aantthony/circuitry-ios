@@ -279,7 +279,7 @@ CGSize sizeOfObject(CircuitObject *object) {
     GLKVector3 pTopLeft = [self project:topLeft];
     GLKVector3 pBottomRight = [self project:bottomRight];
 
-    return CGRectMake(pTopLeft.x, view.bounds.size.height - pTopLeft.y, pBottomRight.x - pTopLeft.x, pTopLeft.y - pBottomRight.y);
+    return CGRectMake(pTopLeft.x / scaleFactor, view.bounds.size.height - pTopLeft.y /scaleFactor, (pBottomRight.x - pTopLeft.x) / scaleFactor, (pTopLeft.y - pBottomRight.y)/scaleFactor);
 }
 
 

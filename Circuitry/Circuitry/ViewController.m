@@ -777,7 +777,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         
         GLKVector3 offset = GLKVector3Subtract(curPos, *(GLKVector3 *)&target->pos);
         int targetIndex = -1;
-        if (target == _viewport.currentEditingLinkSource && offset.x > 180.0) {
+        if (target == _viewport.currentEditingLinkSource && offset.x > 140.0) {
             
         } else {
             targetIndex = [_viewport findInletIndexAtOffset:offset attachedToObject:target];
