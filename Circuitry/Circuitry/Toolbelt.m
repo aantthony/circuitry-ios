@@ -255,18 +255,13 @@ static int i = 0;
         float targetX = _visible ? 0.0 : -350.0;
         _visibleAnimationOffsetX += 12.0 * dt * (targetX - _visibleAnimationOffsetX);
         changes ++;
-        if (targetX > _visibleAnimationOffsetX) {
-            float remaining = targetX - _visibleAnimationOffsetX;
-            if (remaining < 0.1) {
-                _visibleAnimationOffsetX = targetX;
-                _visibleAnimating = NO;
-            }
-        } else {
-            float remaining = _visibleAnimationOffsetX - targetX;
-            if (remaining < 0.1) {
-                _visibleAnimationOffsetX = targetX;
-                _visibleAnimating = NO;
-            }
+        
+        float remaining = fabs(targetX - _visibleAnimationOffsetX);
+        
+        if (remaining < 0.1 || (_visible && _visibleAnimationOffsetX > targetX) ||
+            (!_visible && _visibleAnimationOffsetX < targetX)) {
+            _visibleAnimationOffsetX = targetX;
+            _visibleAnimating = NO;
         }
     }
     if (_currentObjectXAnimating) {
