@@ -868,6 +868,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 //    [self.navigationController setNavigationBarHidden:NO animated:animated];
     [_timer invalidate];
     _timer = nil;
+    [_doc closeWithCompletionHandler:^(BOOL success) {}];
 }
 
 - (void) viewDidAppear:(BOOL)animated {

@@ -191,7 +191,11 @@
                                 <action selector="createDocument:" destination="bMV-Gg-1ab" id="4Yh-wA-5AZ"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="FaR-5p-vf3"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="FaR-5p-vf3">
+                            <connections>
+                                <action selector="edit:" destination="bMV-Gg-1ab" id="VYP-K6-dVd"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jtp-V0-qL6" userLabel="First Responder" sceneMemberID="firstResponder"/>

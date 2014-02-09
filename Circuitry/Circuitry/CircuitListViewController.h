@@ -11,6 +11,7 @@
 #import "ViewController.h"
 
 @interface CircuitListViewController : UICollectionViewController <UINavigationControllerDelegate>
+- (IBAction)edit:(UIBarButtonItem *)sender;
 
 - (IBAction) didChangeCircuitsProblemsSegment:(UISegmentedControl *)sender;
 - (IBAction) didLongPress:(id)sender;

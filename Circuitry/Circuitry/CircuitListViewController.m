@@ -101,11 +101,12 @@
 - (IBAction) createDocument:(id)sender {
     NSString *_id = [MongoID stringWithId:[MongoID id]];
     NSURL *url = [[AppDelegate documentsDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.circuit", _id]];
-    [self openDocument:url];
+    
+    int index = 0;
+    
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index + 1 inSection:0];
     
     [self.collectionView performBatchUpdates:^{
-        int index = 0;
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index + 1 inSection:0];
         
         NSArray *selectedItemsIndexPaths = @[indexPath];
         
@@ -117,7 +118,11 @@
         }
 
     } completion:^(BOOL finished) {
-        
+        if (_items == _circuits) {
+            CircuitCollectionViewCell *cell = (CircuitCollectionViewCell *) [self.collectionView cellForItemAtIndexPath:indexPath];
+            _selectionRect = [self.view convertRect:cell.imageView.frame fromView:cell];
+        }
+        [self openDocument:url];
     }];
 }
 
@@ -139,6 +144,10 @@
             [self createDocument:collectionView];
         }
     }
+}
+
+- (IBAction)edit:(UIBarButtonItem *)sender {
+    [self reloadCircuitListData];
 }
 
 - (IBAction)didChangeCircuitsProblemsSegment:(UISegmentedControl *)sender {
@@ -205,6 +214,8 @@
         [fileCoordinator coordinateWritingItemAtURL:fileURL options:NSFileCoordinatorWritingForDeleting
                                               error:nil byAccessor:^(NSURL* writingURL) {
                                                   NSFileManager* fileManager = [[NSFileManager alloc] init];
+                                                  fileManager = [NSFileManager defaultManager];
+                                                  NSLog(@"Delete %@", writingURL);
                                                   [fileManager removeItemAtURL:writingURL error:nil];
                                               }];
     });
