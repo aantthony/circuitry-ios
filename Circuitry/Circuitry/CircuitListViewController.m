@@ -95,7 +95,6 @@
         if (error) [[NSException exceptionWithName:error.localizedDescription reason:error.localizedFailureReason userInfo:nil] raise];
         
         [self.navigationController pushViewController:controller animated:YES];
-        [self reloadCircuitListData];
     }];
 }
 
@@ -103,6 +102,23 @@
     NSString *_id = [MongoID stringWithId:[MongoID id]];
     NSURL *url = [[AppDelegate documentsDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.circuit", _id]];
     [self openDocument:url];
+    
+    [self.collectionView performBatchUpdates:^{
+        int index = 0;
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index + 1 inSection:0];
+        
+        NSArray *selectedItemsIndexPaths = @[indexPath];
+        
+        DocumentListItem *item = [[DocumentListItem alloc] initWithURL:url];
+        
+        [_circuits insertObject:item atIndex:index];
+        if (_items == _circuits) {
+            [self.collectionView insertItemsAtIndexPaths:selectedItemsIndexPaths];
+        }
+
+    } completion:^(BOOL finished) {
+        
+    }];
 }
 
 - (void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
