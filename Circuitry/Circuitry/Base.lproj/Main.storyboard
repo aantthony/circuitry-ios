@@ -7,7 +7,7 @@
         <!--GLKit View Controller - test-->
         <scene sceneID="tXr-a1-R10">
             <objects>
-                <glkViewController preferredFramesPerSecond="60" id="BV1-FR-VrT" customClass="ViewController" sceneMemberID="viewController">
+                <glkViewController storyboardIdentifier="Viewing Circuit" preferredFramesPerSecond="60" id="BV1-FR-VrT" customClass="ViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="zAf-WF-YrM"/>
                         <viewControllerLayoutGuide type="bottom" id="4IW-dR-L7m"/>
@@ -108,7 +108,6 @@
                                             <rect key="frame" x="-23" y="209" width="247" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" red="0.1403878127" green="0.52914172739999998" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         </label>
                                         <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KU1-Qp-ixG" customClass="CircuitListImageView">
                                             <rect key="frame" x="6" y="8" width="188" height="188"/>
@@ -190,9 +189,6 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="edit" id="FaR-5p-vf3"/>
                     </navigationItem>
-                    <connections>
-                        <segue destination="BV1-FR-VrT" kind="custom" identifier="OpenDocumentFromDocumentsList" id="wOB-zF-YAn"/>
-                    </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jtp-V0-qL6" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="vdI-Sy-RJM">

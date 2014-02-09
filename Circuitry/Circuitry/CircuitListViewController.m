@@ -87,7 +87,18 @@
 }
 
 - (void) openDocument: (NSURL *)url {
-    [self performSegueWithIdentifier:@"OpenDocumentFromDocumentsList" sender:url];
+    ViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"Viewing Circuit"];
+    
+    if (!url) {
+        NSString *_id = [MongoID stringWithId:[MongoID id]];
+        url = [[AppDelegate documentsDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.circuit", _id]];
+    }
+    
+    [controller loadURL:url complete:^(NSError *error) { 
+        if (error) [[NSException exceptionWithName:error.localizedDescription reason:error.localizedFailureReason userInfo:nil] raise];
+        
+        [self.navigationController pushViewController:controller animated:YES];
+    }];
 }
 
 - (IBAction) createDocument:(id)sender {
@@ -95,6 +106,7 @@
 }
 
 - (void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    [collectionView deselectItemAtIndexPath:indexPath animated:YES];
     if (_items == _circuits) {
         NSURL *docURL = nil;
         if (indexPath.row) {
@@ -109,20 +121,6 @@
     }
 }
 
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-//    if ([segue isKindOfClass:[OpenDocumentFromDocumentsListSegue class]]) {
-//        ((OpenDocumentFromDocumentsListSegue *)segue).originatingRect = _selectionRect;
-//    }
-    if([segue.identifier isEqualToString:@"OpenDocumentFromDocumentsList"]){
-        _documentViewController = (ViewController *)segue.destinationViewController;
-        NSURL *docURL = sender;
-        if (!docURL) {
-            NSString *_id = [MongoID stringWithId:[MongoID id]];
-            docURL = [[AppDelegate documentsDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.circuit", _id]];
-        }
-        _documentViewController.documentURL = docURL;
-    }
-}
 - (IBAction)didChangeCircuitsProblemsSegment:(UISegmentedControl *)sender {
     if (sender.selectedSegmentIndex == 0) {
         // circuits
@@ -136,8 +134,6 @@
 }
 
 - (void) preload {
-//    return;
-    NSLog(@"prealoding...");
     ViewController *viewcontroller = [[ViewController alloc] init];
     [self.view addSubview:viewcontroller.view];
     [viewcontroller.view removeFromSuperview];
@@ -253,15 +249,6 @@
     self.navigationController.delegate = self;
 }
 
-- (void) viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    // Stop being the navigation controller's delegate
-    if (self.navigationController.delegate == self) {
-        self.navigationController.delegate = nil;
-    }
-}
-
-
 #pragma mark - Navigation Controller Delegate
 
 - (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController
@@ -270,7 +257,16 @@
                                                  toViewController:(UIViewController *)toVC {
     // Check if we're transitioning from this view controller to a DSLSecondViewController
     if (fromVC == self && [toVC isKindOfClass:[ViewController class]]) {
-        return [[TransitionFromDocumentListToDocument alloc] init];
+        TransitionFromDocumentListToDocument *delegate = [[TransitionFromDocumentListToDocument alloc] init];
+        delegate.originatingRect = _selectionRect;
+        return delegate;
+    }
+    
+    if ([fromVC isKindOfClass:[ViewController class]]) {
+        TransitionFromDocumentListToDocument *delegate = [[TransitionFromDocumentListToDocument alloc] init];
+        delegate.reverse = YES;
+        delegate.originatingRect = _selectionRect;
+        return delegate;
     }
 
     return nil;

@@ -42,6 +42,7 @@
     BOOL animatingPan;
     
     Circuit *_circuit;
+    BOOL _ready;
     
     void (^ _onNextDraw)(UIImage *);
     
@@ -191,10 +192,6 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillTerminateNotification object:nil];
 }
 
-+ (void) firstLoad {
-    
-}
-
 - (EAGLContext *) context {
     static EAGLContext *instance;
     if (instance) return instance;
@@ -213,13 +210,12 @@
     return instance = [[Sprite alloc] initWithTexture:bgTexture];
 }
 
-- (void)viewDidLoad
-{
+- (id) initWithCoder:(NSCoder *)aDecoder {
+    
+    self = [super initWithCoder:aDecoder];
+    
+    _ready = NO;
     _onNextDraw = NULL;
-    [super viewDidLoad];
-        
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillTerminate:) name:UIApplicationWillTerminateNotification object:nil];
     
     panVelocity = CGPointMake(0.0, 0.0);
     
@@ -227,12 +223,22 @@
     toolbeltTouchIntercept = NO;
     animatingPan = NO;
     beginGestureScale = 0.0;
+
+    _stack = GLKMatrixStackCreate(NULL);    
+    
+    return self;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillTerminate:) name:UIApplicationWillTerminateNotification object:nil];
     
     if (!self.context) {
         NSLog(@"Failed to create ES context");
     }
-    _stack = GLKMatrixStackCreate(NULL);    
-    
     CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.view.layer;
     
     eaglLayer.opaque = TRUE;
@@ -255,16 +261,19 @@
         bg = self.backgroundSprite;
     }
         
-        
     
-    
-//    [[[UIAlertView alloc] initWithTitle:_circuit.name message:_circuit.description delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
+    // This is a bit of a hack, but in setCircuit, the setup was deferred until this stage (because we need the context before we can initialize the viewport, but we need the circuit before we can configure the viewport...)
+    _ready = YES;
+    Circuit *circuit = _circuit;
+    _circuit = nil;
+    self.circuit = circuit;
 }
 
 - (NSURL *) documentURL {
     return _doc.fileURL;
 }
-- (void) setDocumentURL:(NSURL *) url {
+
+- (void) loadURL:(NSURL *) url complete:(void (^)(NSError *error))completionHandler {
     if ([url.path isEqualToString: _doc.fileURL.path]) {
         return;
     }
@@ -274,11 +283,12 @@
     if ([[NSFileManager defaultManager] fileExistsAtPath:[url path]]) {
         [_doc openWithCompletionHandler:^(BOOL success){
             
-            self.circuit = _doc.circuit;
-            
             if (!success) {
                 // Handle the error.
+                return completionHandler([NSError errorWithDomain:@"au.id.circuitry" code:500 userInfo:nil]);
             }
+            self.circuit = _doc.circuit;
+            completionHandler(nil);
         }];
     }
     else {
@@ -296,8 +306,6 @@
             }
         }];
     }
-    
-
 }
 
 - (void) timerTick:(id) sender {
@@ -317,6 +325,9 @@
 - (void) setCircuit:(Circuit *)circuit {
     if (circuit != _circuit) {
         _circuit = circuit;
+        if (!_ready) {
+            return;
+        }
         
         _viewport.circuit = _circuit;
         
@@ -439,7 +450,7 @@
     }
     int changes = 0;
     int circuitChanges = [_circuit simulate:512];
-    NSLog(@"%d, %f", circuitChanges, dt);
+//    NSLog(@"%d, %f [%@] %@ - %@)", circuitChanges, dt, _circuit.name, _circuit.title, _circuit.description);
     changes += circuitChanges;
     changes += [_viewport update: dt];
     changes += [_hud update: dt];

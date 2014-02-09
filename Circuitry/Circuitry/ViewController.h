@@ -23,6 +23,6 @@
 - (IBAction)handleLongPressObject:(UILongPressGestureRecognizer *)sender;
 
 - (NSURL *) documentURL;
-- (void) setDocumentURL:(NSURL *)url;
+- (void) loadURL:(NSURL *) url complete:(void (^)(NSError *error))completionHandler;
 
 @end
