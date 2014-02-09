@@ -10,6 +10,12 @@
 
 @implementation TransitionFromDocumentListToDocument
 
+- (id) init {
+    self = [super init];
+    _reverse = NO;
+    _fadeIn = NO;
+    return self;
+}
 
 #pragma mark -
 #pragma mark UIViewControllerContextTransitioning delegate
@@ -40,12 +46,18 @@ CGPoint CGRectGetMid(CGRect rect) {
         CGPoint targetCenter = toViewController.view.center;
         toViewController.view.center = CGRectGetMid(_originatingRect);
         toViewController.view.transform = CGAffineTransformMakeScale(0.2, 0.2);
+        if (_fadeIn) {
+            toViewController.view.alpha = 0.0;
+        }
         [UIView animateWithDuration:[self transitionDuration:ctx]
                               delay:0.0
                             options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
                              toViewController.view.transform = CGAffineTransformIdentity;
                              toViewController.view.center = targetCenter;
+                             if (_fadeIn) {
+                                 toViewController.view.alpha = 1.0;
+                             }
                          } completion:^(BOOL finished){
                              [ctx completeTransition:finished];
                          }];  

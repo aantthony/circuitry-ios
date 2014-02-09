@@ -298,11 +298,10 @@
         NSInputStream *stream = [NSInputStream inputStreamWithURL:path];
         [stream open];
         self.circuit = [Circuit circuitWithStream: stream];
-        
         [_doc saveToURL:url forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success){
-            NSLog(@"saved");
+            completionHandler(nil);
             if (!success) {
-                // Handle the error.
+                [[NSException exceptionWithName:@"Could not load document" reason:nil userInfo:nil] raise];
             }
         }];
     }
@@ -325,13 +324,13 @@
 - (void) setCircuit:(Circuit *)circuit {
     if (circuit != _circuit) {
         _circuit = circuit;
+        _doc.circuit = circuit;
         if (!_ready) {
             return;
         }
         
         _viewport.circuit = _circuit;
         
-        _doc.circuit = _circuit;
         self.navigationItem.title = _circuit.title;
         
         [self configureToolbeltItems];

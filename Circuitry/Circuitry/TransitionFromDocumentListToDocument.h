@@ -11,5 +11,5 @@
 @interface TransitionFromDocumentListToDocument : NSObject <UIViewControllerAnimatedTransitioning>
 @property BOOL reverse;
 @property CGRect originatingRect;
-
+@property BOOL fadeIn;
 @end

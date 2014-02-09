@@ -38,6 +38,7 @@
                                 error:NULL];
     
     _lastModified = [properties objectForKey:NSFileModificationDate];
+    NSLog(@"last modified: %@", _lastModified);
 
     return self;
 }
@@ -50,6 +51,7 @@
 @property ViewController *documentViewController;
 @property NSIndexPath *actionSheetIndexPath;
 @property CGRect selectionRect;
+@property BOOL openDocumentAnimationShouldFadeIn;
 @end
 
 @implementation CircuitListViewController
@@ -89,20 +91,18 @@
 - (void) openDocument: (NSURL *)url {
     ViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"Viewing Circuit"];
     
-    if (!url) {
-        NSString *_id = [MongoID stringWithId:[MongoID id]];
-        url = [[AppDelegate documentsDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.circuit", _id]];
-    }
-    
     [controller loadURL:url complete:^(NSError *error) { 
         if (error) [[NSException exceptionWithName:error.localizedDescription reason:error.localizedFailureReason userInfo:nil] raise];
         
         [self.navigationController pushViewController:controller animated:YES];
+        [self reloadCircuitListData];
     }];
 }
 
 - (IBAction) createDocument:(id)sender {
-    [self openDocument:nil];
+    NSString *_id = [MongoID stringWithId:[MongoID id]];
+    NSURL *url = [[AppDelegate documentsDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.circuit", _id]];
+    [self openDocument:url];
 }
 
 - (void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -114,8 +114,12 @@
             docURL = item.url;
             CircuitCollectionViewCell *cell = (CircuitCollectionViewCell *) [collectionView cellForItemAtIndexPath:indexPath];
             _selectionRect = [self.view convertRect:cell.imageView.frame fromView:cell];
+            _openDocumentAnimationShouldFadeIn = NO;
             [self openDocument:docURL];
         } else {
+            CircuitCollectionViewCell *cell = (CircuitCollectionViewCell *) [collectionView cellForItemAtIndexPath:indexPath];
+            _selectionRect = [self.view convertRect:cell.imageView.frame fromView:cell];
+            _openDocumentAnimationShouldFadeIn = YES;
             [self createDocument:collectionView];
         }
     }
@@ -259,6 +263,7 @@
     if (fromVC == self && [toVC isKindOfClass:[ViewController class]]) {
         TransitionFromDocumentListToDocument *delegate = [[TransitionFromDocumentListToDocument alloc] init];
         delegate.originatingRect = _selectionRect;
+        delegate.fadeIn = _openDocumentAnimationShouldFadeIn;
         return delegate;
     }
     
@@ -266,6 +271,26 @@
         TransitionFromDocumentListToDocument *delegate = [[TransitionFromDocumentListToDocument alloc] init];
         delegate.reverse = YES;
         delegate.originatingRect = _selectionRect;
+        if (_openDocumentAnimationShouldFadeIn) {
+            ViewController * controller = (ViewController *) fromVC;
+            NSURL *url = controller.documentURL;
+            NSString *urlPath = url.path;
+            __block BOOL found = NO;
+            [_items enumerateObjectsUsingBlock:^(DocumentListItem *item, NSUInteger idx, BOOL *stop) {
+                if ([item.url.path isEqualToString:urlPath]) {
+                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:idx + 1 inSection:0];
+                    
+                    CircuitCollectionViewCell * cell = (CircuitCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
+                    delegate.originatingRect = [self.view convertRect:cell.imageView.frame fromView:cell];
+                    found = YES;
+                    *stop = YES;
+                }
+            }];
+            
+            if (!found) {
+                NSLog(@"Could not find rect");
+            }
+        }
         return delegate;
     }
 
@@ -287,7 +312,10 @@
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+    [self reloadCircuitListData];
+}
+
+- (void) reloadCircuitListData {
     
     NSString *directoryPath = [AppDelegate.documentsDirectory path];
     

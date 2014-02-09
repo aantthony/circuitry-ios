@@ -41,6 +41,10 @@
 }
 - (id)contentsForType:(NSString *)typeName error:(NSError **)outError {
 
+//    if (!_circuit) {
+//        *outError = [NSError errorWithDomain:@"au.id.af" code:501 userInfo:@{@"name": @"Circuit does not exist"}];
+//        return nil;
+//    }
     if ([typeName isEqualToString:@"public.json"]) {
         return [NSJSONSerialization dataWithJSONObject:[_circuit toDictionary] options:0 error:NULL];
     }

@@ -97,7 +97,7 @@
                             <inset key="sectionInset" minX="60" minY="20" maxX="60" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CircuitCreatePrototypeCell" id="YlR-if-xgL">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CircuitCreatePrototypeCell" id="YlR-if-xgL" customClass="CircuitCollectionViewCell">
                                 <rect key="frame" x="60" y="124" width="200" height="250"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -121,6 +121,10 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
+                                <connections>
+                                    <outlet property="imageView" destination="KU1-Qp-ixG" id="AES-5t-IZs"/>
+                                    <outlet property="textLabel" destination="BR9-T1-jqv" id="0so-jN-NaM"/>
+                                </connections>
                             </collectionViewCell>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CircuitListPrototypeCell" id="oft-HQ-wl9" customClass="CircuitCollectionViewCell">
                                 <rect key="frame" x="284" y="124" width="200" height="250"/>
