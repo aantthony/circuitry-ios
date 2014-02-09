@@ -14,7 +14,9 @@
 
 #import "UIAlertView+MKBlockAdditions.h"
 
-#import "OpenDocumentFromDocumentsListSegue.h"
+//#import "OpenDocumentFromDocumentsListSegue.h"
+
+#import "TransitionFromDocumentListToDocument.h"
 
 
 @interface DocumentListItem : NSObject
@@ -41,7 +43,7 @@
 }
 @end
 
-@interface CircuitListViewController () <UIActionSheetDelegate>
+@interface CircuitListViewController () <UIActionSheetDelegate, UIViewControllerTransitioningDelegate, UINavigationControllerDelegate>
 @property NSMutableArray *items;
 @property NSMutableArray *circuits;
 @property NSMutableArray *problems;
@@ -108,9 +110,9 @@
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    if ([segue isKindOfClass:[OpenDocumentFromDocumentsListSegue class]]) {
-        ((OpenDocumentFromDocumentsListSegue *)segue).originatingRect = _selectionRect;
-    }
+//    if ([segue isKindOfClass:[OpenDocumentFromDocumentsListSegue class]]) {
+//        ((OpenDocumentFromDocumentsListSegue *)segue).originatingRect = _selectionRect;
+//    }
     if([segue.identifier isEqualToString:@"OpenDocumentFromDocumentsList"]){
         _documentViewController = (ViewController *)segue.destinationViewController;
         NSURL *docURL = sender;
@@ -235,6 +237,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self setTransitioningDelegate:self];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         [self preload];
         dispatch_async(dispatch_get_main_queue(), ^(void){
@@ -244,6 +247,47 @@
 
     
 }
+
+- (void) viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    self.navigationController.delegate = self;
+}
+
+- (void) viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    // Stop being the navigation controller's delegate
+    if (self.navigationController.delegate == self) {
+        self.navigationController.delegate = nil;
+    }
+}
+
+
+#pragma mark - Navigation Controller Delegate
+
+- (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController
+                                  animationControllerForOperation:(UINavigationControllerOperation)operation
+                                               fromViewController:(UIViewController *)fromVC
+                                                 toViewController:(UIViewController *)toVC {
+    // Check if we're transitioning from this view controller to a DSLSecondViewController
+    if (fromVC == self && [toVC isKindOfClass:[ViewController class]]) {
+        return [[TransitionFromDocumentListToDocument alloc] init];
+    }
+
+    return nil;
+}
+
+//
+//#pragma mark - Transitioning Delegate (Modal)
+//-(id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source {
+//    _modalAnimationController.type = AnimationTypePresent;
+//    return _modalAnimationController;
+//}
+//
+//-(id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed {
+//    _modalAnimationController.type = AnimationTypeDismiss;
+//    return _modalAnimationController;
+//}
+
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -273,11 +317,11 @@
     _items = _circuits;
     [self.collectionView reloadData];
 }
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 
 @end

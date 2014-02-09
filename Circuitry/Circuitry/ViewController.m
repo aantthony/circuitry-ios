@@ -51,6 +51,7 @@
 @property CircuitDocument *doc;
 @property Viewport *viewport;
 @property HUD *hud;
+@property NSTimer *timer;
 
 - (void)setupGL;
 - (void)tearDownGL;
@@ -300,6 +301,7 @@
 }
 
 - (void) timerTick:(id) sender {
+    if (!_circuit) return;
     __block int clocks = 0;
     [_circuit enumerateClocksUsingBlock:^(CircuitObject *object, BOOL *stop) {
         clocks++;
@@ -311,6 +313,7 @@
     }
 }
 
+
 - (void) setCircuit:(Circuit *)circuit {
     if (circuit != _circuit) {
         _circuit = circuit;
@@ -321,12 +324,6 @@
         self.navigationItem.title = _circuit.title;
         
         [self configureToolbeltItems];
-        
-        // setup timers:
-        NSTimer *_timer;
-        
-        _timer = [NSTimer scheduledTimerWithTimeInterval:0.005 target:self selector:@selector(timerTick:) userInfo:@{} repeats:YES];
-        
         [self unpause];
     }
 }
@@ -480,6 +477,13 @@
 {
     [self checkError];
     glClearColor(0.0, 0.0, 0.0, 1.0f);
+    EAGLContext *ctx = [EAGLContext currentContext];
+    if (ctx != self.context) {
+        NSLog(@"WTFF");
+    }
+    if (!self.context) {
+        NSLog(@"WTF");
+    }
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 //    glDisable(GL_DEPTH_TEST);
     glEnable(GL_DEPTH_TEST);
@@ -852,13 +856,13 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 - (void) viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
 //    [self.navigationController setNavigationBarHidden:NO animated:animated];
+    [_timer invalidate];
+    _timer = nil;
 }
 
 - (void) viewDidAppear:(BOOL)animated {
-    if (_doc) {
-        [_doc savePresentedItemChangesWithCompletionHandler:^(NSError *errorOrNil) {
-            NSLog(@"saved");
-        }];
+    if (!_timer) {
+        _timer = [NSTimer scheduledTimerWithTimeInterval:0.005 target:self selector:@selector(timerTick:) userInfo:nil repeats:YES];
     }
 }
 

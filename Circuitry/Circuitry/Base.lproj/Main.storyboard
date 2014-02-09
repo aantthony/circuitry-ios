@@ -191,7 +191,7 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="edit" id="FaR-5p-vf3"/>
                     </navigationItem>
                     <connections>
-                        <segue destination="BV1-FR-VrT" kind="custom" identifier="OpenDocumentFromDocumentsList" customClass="OpenDocumentFromDocumentsListSegue" id="wOB-zF-YAn"/>
+                        <segue destination="BV1-FR-VrT" kind="custom" identifier="OpenDocumentFromDocumentsList" id="wOB-zF-YAn"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jtp-V0-qL6" userLabel="First Responder" sceneMemberID="firstResponder"/>

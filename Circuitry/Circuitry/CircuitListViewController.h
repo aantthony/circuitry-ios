@@ -10,9 +10,10 @@
 
 #import "ViewController.h"
 
-@interface CircuitListViewController : UICollectionViewController
-- (IBAction)didChangeCircuitsProblemsSegment:(UISegmentedControl *)sender;
+@interface CircuitListViewController : UICollectionViewController <UINavigationControllerDelegate>
 
+- (IBAction) didChangeCircuitsProblemsSegment:(UISegmentedControl *)sender;
 - (IBAction) didLongPress:(id)sender;
 - (IBAction) createDocument:(id)sender;
+
 @end
