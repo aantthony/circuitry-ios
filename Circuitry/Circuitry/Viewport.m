@@ -427,6 +427,7 @@ BOOL expandDrawGate(CircuitObject *object) {
 }
 - (void) drawWithStack:(GLKMatrixStackRef) stack {
     
+    [ShaderEffect checkError];
     GLKVector3 active1 = GLKVector3Make(0.1960784314, 1.0, 0.3098039216);
     GLKVector3 active2 = GLKVector3Make(0.0, 0.0, 0.0);
     
@@ -442,7 +443,10 @@ BOOL expandDrawGate(CircuitObject *object) {
     GLKMatrixStackPush(stack);
     GLKMatrixStackMultiplyMatrix4(stack, _viewMatrix);
     
+    [ShaderEffect checkError];
     [_grid drawWithStack:stack];
+    
+    [ShaderEffect checkError];
     int radius = gateOutletActive.width / 2;
     [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
         for(int sourceIndex = 0; sourceIndex < object->type->numOutputs; sourceIndex++) {
@@ -473,6 +477,7 @@ BOOL expandDrawGate(CircuitObject *object) {
         
     }
     
+    [ShaderEffect checkError];
     [self bufferSprites];
     
     [ShaderEffect checkError];

@@ -25,4 +25,10 @@
 - (NSURL *) documentURL;
 - (void) loadURL:(NSURL *) url complete:(void (^)(NSError *error))completionHandler;
 
++ (EAGLContext *) context;
++ (ImageAtlas *) atlas;
+
+- (id) setup;
+- (void)update;
+
 @end

@@ -11,6 +11,8 @@
 
 #import "ToolbeltItem.h"
 
+#import "CircuitImagePreview.h"
+
 #import "AppDelegate.h"
 
 @interface ViewController () <UIActionSheetDelegate> {
@@ -191,16 +193,35 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillTerminateNotification object:nil];
 }
-
++ (EAGLContext *) context {
+    static dispatch_once_t onceToken = 0;
+    static EAGLContext * context;
+    
+    dispatch_once(&onceToken, ^{
+        context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+    });
+    
+    return context;
+}
++ (ImageAtlas *) atlas {
+    static dispatch_once_t onceToken = 0;
+    static ImageAtlas *atlas;
+    
+    dispatch_once(&onceToken, ^{
+        atlas = [ImageAtlas imageAtlasWithName:@"circuit"];
+    });
+    
+    return atlas;
+}
 - (EAGLContext *) context {
     static EAGLContext *instance;
     if (instance) return instance;
-    return instance = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+    return instance = [ViewController context];
 }
 - (ImageAtlas *) atlas {
     static id instance;
     if (instance) return instance;
-    return instance = [ImageAtlas imageAtlasWithName:@"circuit"];
+    return instance = [ViewController atlas];
 }
 - (Sprite *) backgroundSprite {
     static id instance;
@@ -210,9 +231,7 @@
     return instance = [[Sprite alloc] initWithTexture:bgTexture];
 }
 
-- (id) initWithCoder:(NSCoder *)aDecoder {
-    
-    self = [super initWithCoder:aDecoder];
+- (id) setup {
     
     _ready = NO;
     _onNextDraw = NULL;
@@ -223,9 +242,16 @@
     toolbeltTouchIntercept = NO;
     animatingPan = NO;
     beginGestureScale = 0.0;
-
+    
     _stack = GLKMatrixStackCreate(NULL);    
     
+    return self;
+}
+
+- (id) initWithCoder:(NSCoder *)aDecoder {
+    
+    self = [super initWithCoder:aDecoder];
+    [self setup];
     return self;
 }
 
@@ -298,6 +324,10 @@
         NSInputStream *stream = [NSInputStream inputStreamWithURL:path];
         [stream open];
         self.circuit = [Circuit circuitWithStream: stream];
+        
+//        CircuitImagePreview *preview = [[CircuitImagePreview alloc] init];
+        
+//        NSData *image = [preview png:_circuit];
         [_doc saveToURL:url forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success){
             completionHandler(nil);
             if (!success) {
@@ -486,7 +516,7 @@
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
     [self checkError];
-    glClearColor(0.0, 0.0, 0.0, 1.0f);
+    glClearColor(0.4, 0.4, 0.4, 1.0f);
     EAGLContext *ctx = [EAGLContext currentContext];
     if (ctx != self.context) {
         NSLog(@"WTFF");
