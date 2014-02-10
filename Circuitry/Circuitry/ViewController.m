@@ -11,8 +11,6 @@
 
 #import "ToolbeltItem.h"
 
-#import "CircuitImagePreview.h"
-
 #import "AppDelegate.h"
 
 @interface ViewController () <UIActionSheetDelegate> {
