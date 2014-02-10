@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface CircuitListImageView : UIImageView
-
+- (void) loadURL:(NSURL *) url;
 @end

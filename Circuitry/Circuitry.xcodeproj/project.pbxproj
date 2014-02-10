@@ -54,6 +54,7 @@
 		9288062418725AB20096A1CA /* Sprite.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 92880620187243800096A1CA /* Sprite.vsh */; };
 		9288062518725AB20096A1CA /* Sprite.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 928806221872438E0096A1CA /* Sprite.fsh */; };
 		929CB69518A7833C00BEE7D6 /* TransitionFromDocumentListToDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 929CB69418A7833C00BEE7D6 /* TransitionFromDocumentListToDocument.m */; };
+		929CB69818A7CB7A00BEE7D6 /* CircuitImagePreview.m in Sources */ = {isa = PBXBuildFile; fileRef = 929CB69718A7CB7A00BEE7D6 /* CircuitImagePreview.m */; };
 		92A28A5B187428BE00F0D934 /* nand.json in Resources */ = {isa = PBXBuildFile; fileRef = 92A28A5A187428BE00F0D934 /* nand.json */; };
 		92A28A5E187433E800F0D934 /* Circuit.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A28A5D187433E800F0D934 /* Circuit.m */; };
 		92A4F86D187289F300EEB367 /* Viewport.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A4F86C187289F300EEB367 /* Viewport.m */; };
@@ -159,6 +160,8 @@
 		928806221872438E0096A1CA /* Sprite.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; name = Sprite.fsh; path = ../Sprite.fsh; sourceTree = "<group>"; };
 		929CB69318A7833C00BEE7D6 /* TransitionFromDocumentListToDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitionFromDocumentListToDocument.h; sourceTree = "<group>"; };
 		929CB69418A7833C00BEE7D6 /* TransitionFromDocumentListToDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitionFromDocumentListToDocument.m; sourceTree = "<group>"; };
+		929CB69618A7CB7A00BEE7D6 /* CircuitImagePreview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircuitImagePreview.h; sourceTree = "<group>"; };
+		929CB69718A7CB7A00BEE7D6 /* CircuitImagePreview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircuitImagePreview.m; sourceTree = "<group>"; };
 		92A28A5A187428BE00F0D934 /* nand.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = nand.json; sourceTree = "<group>"; };
 		92A28A5C187433E800F0D934 /* Circuit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Circuit.h; sourceTree = "<group>"; };
 		92A28A5D187433E800F0D934 /* Circuit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Circuit.m; sourceTree = "<group>"; };
@@ -284,6 +287,8 @@
 				9204C387182E2F5C006A008D /* AppDelegate.m */,
 				92FC7F9218A50E7300EA329A /* CircuitListImageView.h */,
 				92FC7F9318A50E7300EA329A /* CircuitListImageView.m */,
+				929CB69618A7CB7A00BEE7D6 /* CircuitImagePreview.h */,
+				929CB69718A7CB7A00BEE7D6 /* CircuitImagePreview.m */,
 				9204C389182E2F5C006A008D /* Main.storyboard */,
 				929CB69318A7833C00BEE7D6 /* TransitionFromDocumentListToDocument.h */,
 				929CB69418A7833C00BEE7D6 /* TransitionFromDocumentListToDocument.m */,
@@ -645,6 +650,7 @@
 				929CB69518A7833C00BEE7D6 /* TransitionFromDocumentListToDocument.m in Sources */,
 				92FC7F9418A50E7300EA329A /* CircuitListImageView.m in Sources */,
 				92FC7FA618A601BD00EA329A /* UIAlertView+MKBlockAdditions.m in Sources */,
+				929CB69818A7CB7A00BEE7D6 /* CircuitImagePreview.m in Sources */,
 				92E304631894D6C100003157 /* ToolbeltItem.m in Sources */,
 				923C143C18826F280017BAF3 /* Toolbelt.m in Sources */,
 				9200469C189D0178007124DA /* SevenSegmentDisplay.m in Sources */,

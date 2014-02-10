@@ -18,7 +18,6 @@
 
 #import "TransitionFromDocumentListToDocument.h"
 
-
 @interface DocumentListItem : NSObject
 @property NSURL *url;
 @property NSString *title;
@@ -249,6 +248,7 @@
         DocumentListItem *item = [_items objectAtIndex:indexPath.row - 1];
         
         cell.textLabel.text = item.title;
+        [cell.imageView loadURL:item.url];
         return cell;
     } else {
         
@@ -350,8 +350,8 @@
                                directoryPath error:nil];
     
     
-    
     NSMutableArray *items = [NSMutableArray array];
+    
     
     for (NSString* document in localDocuments) {
         NSURL *url = [NSURL fileURLWithPath:[directoryPath
