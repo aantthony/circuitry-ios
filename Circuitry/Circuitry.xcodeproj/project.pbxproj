@@ -47,6 +47,7 @@
 		9253C409188545EC00D2509C /* CreateGatePanGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9253C408188545EC00D2509C /* CreateGatePanGestureRecognizer.m */; };
 		9253C40C18854D0B00D2509C /* CreateLinkGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9253C40B18854D0B00D2509C /* CreateLinkGestureRecognizer.m */; };
 		9269EF71188107DE00C8804D /* SocketClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 9269EF70188107DE00C8804D /* SocketClient.m */; };
+		92794CB118AF0E5500A39012 /* ic@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92794CB018AF0E5400A39012 /* ic@2x.png */; };
 		92796A3418A668FB00DB690F /* LongPressObjectGesture.m in Sources */ = {isa = PBXBuildFile; fileRef = 92796A3318A668FB00DB690F /* LongPressObjectGesture.m */; };
 		9288061B187210180096A1CA /* Shader.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 9204C38E182E2F5C006A008D /* Shader.vsh */; };
 		92880621187243800096A1CA /* Sprite.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 92880620187243800096A1CA /* Sprite.vsh */; };
@@ -153,6 +154,7 @@
 		9253C40B18854D0B00D2509C /* CreateLinkGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateLinkGestureRecognizer.m; sourceTree = "<group>"; };
 		9269EF6F188107DE00C8804D /* SocketClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocketClient.h; sourceTree = "<group>"; };
 		9269EF70188107DE00C8804D /* SocketClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocketClient.m; sourceTree = "<group>"; };
+		92794CB018AF0E5400A39012 /* ic@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic@2x.png"; sourceTree = "<group>"; };
 		92796A3218A668FB00DB690F /* LongPressObjectGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LongPressObjectGesture.h; sourceTree = "<group>"; };
 		92796A3318A668FB00DB690F /* LongPressObjectGesture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LongPressObjectGesture.m; sourceTree = "<group>"; };
 		92880620187243800096A1CA /* Sprite.vsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; name = Sprite.vsh; path = ../Sprite.vsh; sourceTree = "<group>"; };
@@ -274,6 +276,7 @@
 		9204C37D182E2F5C006A008D /* Circuitry */ = {
 			isa = PBXGroup;
 			children = (
+				92794CB018AF0E5400A39012 /* ic@2x.png */,
 				92FC7F9518A5906900EA329A /* large-plus@2x.png */,
 				92DE44AD187C153F00014CB9 /* circuit.image-atlas */,
 				927D1A191875A9F000457367 /* Models */,
@@ -561,6 +564,7 @@
 				9218F73D1876AB7C00742F99 /* LinkBezier.fsh in Resources */,
 				9218F73E1876AB7C00742F99 /* LinkBezier.vsh in Resources */,
 				92A4F871187295EF00EEB367 /* Grid.vsh in Resources */,
+				92794CB118AF0E5500A39012 /* ic@2x.png in Resources */,
 				92020C09189A54ED00B6D8F5 /* background.jpg in Resources */,
 				923056A118759577005AE348 /* Configurations.plist in Resources */,
 				92A4F872187295EF00EEB367 /* Grid.fsh in Resources */,

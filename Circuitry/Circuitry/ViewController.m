@@ -250,7 +250,13 @@
     
     self = [super initWithCoder:aDecoder];
     [self setup];
+    UIBarButtonItem *groupButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ic"] style:UIBarButtonItemStyleBordered target:self action:@selector(group:)];
+    self.navigationItem.rightBarButtonItems = @[groupButton];
     return self;
+}
+
+- (IBAction)group:(id)sender {
+    
 }
 
 - (void)viewDidLoad
@@ -860,7 +866,48 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     _viewport.currentEditingLinkTargetPosition = curPos;
     [self unpause];
 }
-
+-(void)snapUIImage
+{
+    int s = 1;
+    UIScreen* screen = [ UIScreen mainScreen ];
+    if ( [ screen respondsToSelector:@selector(scale) ] )
+        s = (int) [ screen scale ];
+    
+    s = 1;
+    const int w = self.view.frame.size.width;
+    const int h = self.view.frame.size.height;
+    const NSInteger myDataLength = w * h * 4 * s * s;
+    // allocate array and read pixels into it.
+    GLubyte *buffer = (GLubyte *) malloc(myDataLength);
+    glReadPixels(0, 0, w*s, h*s, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+    // gl renders "upside down" so swap top to bottom into new array.
+    // there's gotta be a better way, but this works.
+    GLubyte *buffer2 = (GLubyte *) malloc(myDataLength);
+    for(int y = 0; y < h*s; y++)
+    {
+        memcpy( buffer2 + (h*s - 1 - y) * w * 4 * s, buffer + (y * 4 * w * s), w * 4 * s );
+    }
+    free(buffer); // work with the flipped buffer, so get rid of the original one.
+    
+    // make data provider with data.
+    CGDataProviderRef provider = CGDataProviderCreateWithData(NULL, buffer2, myDataLength, NULL);
+    // prep the ingredients
+    int bitsPerComponent = 8;
+    int bitsPerPixel = 32;
+    int bytesPerRow = 4 * w * s;
+    CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
+    CGBitmapInfo bitmapInfo = kCGBitmapByteOrderDefault;
+    CGColorRenderingIntent renderingIntent = kCGRenderingIntentDefault;
+    // make the cgimage
+    CGImageRef imageRef = CGImageCreate(w*s, h*s, bitsPerComponent, bitsPerPixel, bytesPerRow, colorSpaceRef, bitmapInfo, provider, NULL, NO, renderingIntent);
+    // then make the uiimage from that
+    UIImage *myImage = [ UIImage imageWithCGImage:imageRef scale:s orientation:UIImageOrientationUp ];
+    UIImageWriteToSavedPhotosAlbum( myImage, nil, nil, nil );
+    CGImageRelease( imageRef );
+    CGDataProviderRelease(provider);
+    CGColorSpaceRelease(colorSpaceRef);
+    free(buffer2);
+}
 - (IBAction) handlePinchGesture:(UIPinchGestureRecognizer *)recognizer {
     // Zoom:
     CGPoint screenPos = PX(self.view.contentScaleFactor, [recognizer locationInView:self.view]);
@@ -892,6 +939,9 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 //    [self.navigationController setNavigationBarHidden:YES animated:animated];
 }
 - (void) viewWillDisappear:(BOOL)animated {
+//    [EAGLContext setCurrentContext:self.context];
+//    [self glkView:self.view drawInRect:self.view.frame];
+//    [self snapUIImage];
     [super viewWillDisappear:animated];
 //    [self.navigationController setNavigationBarHidden:NO animated:animated];
     [_timer invalidate];
@@ -936,7 +986,9 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     BOOL visible = !self.hud.toolbelt.visible;
     self.hud.toolbelt.visible = visible;
 //    self.navigationController.navigationBarHidden = !visible;
-    [self.navigationController setNavigationBarHidden:!visible animated:YES];
+    [UIView animateWithDuration:0.2 animations:^{
+        self.navigationController.navigationBar.alpha = visible ? 1.0 : 0.0;
+    }];
 }
 
 

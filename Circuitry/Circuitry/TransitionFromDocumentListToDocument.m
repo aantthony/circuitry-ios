@@ -29,7 +29,6 @@ CGPoint CGRectGetMid(CGRect rect) {
 
 - (void)animateTransition:(id <UIViewControllerContextTransitioning>)ctx {
     UIView *containerView = ctx.containerView;
-    
     UIViewController *fromViewController = [ctx viewControllerForKey:UITransitionContextFromViewControllerKey];
     UIViewController *toViewController = [ctx viewControllerForKey:UITransitionContextToViewControllerKey];
     
@@ -44,6 +43,7 @@ CGPoint CGRectGetMid(CGRect rect) {
             [ctx completeTransition:YES];
         }];
     } else {
+//        [toViewController.navigationController setNavigationBarHidden:YES animated:YES];
         [containerView insertSubview:toViewController.view aboveSubview:fromViewController.view];
         CGPoint targetCenter = toViewController.view.center;
         toViewController.view.center = CGRectGetMid(_originatingRect);

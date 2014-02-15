@@ -163,6 +163,7 @@
 }
 
 - (void) preload {
+    return;
     ViewController *viewcontroller = [[ViewController alloc] init];
     [self.view addSubview:viewcontroller.view];
     [viewcontroller.view removeFromSuperview];
