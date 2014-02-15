@@ -297,6 +297,8 @@
     Circuit *circuit = _circuit;
     _circuit = nil;
     self.circuit = circuit;
+    
+    [AppDelegate trackView:@"Circuit"];
 }
 
 - (NSURL *) documentURL {

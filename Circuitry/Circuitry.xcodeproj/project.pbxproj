@@ -69,6 +69,10 @@
 		92D90E3B1838D7AB00387FAC /* Grid.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E3A1838D7AB00387FAC /* Grid.m */; };
 		92D90E3D1838E9CD00387FAC /* Grid.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E3C1838E9CD00387FAC /* Grid.vsh */; };
 		92D90E3F1838E9D700387FAC /* Grid.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E3E1838E9D700387FAC /* Grid.fsh */; };
+		92DD078A18AFC10D00FB684A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92DD078918AFC10D00FB684A /* SystemConfiguration.framework */; };
+		92DD078C18AFC11A00FB684A /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92DD078B18AFC11A00FB684A /* AdSupport.framework */; };
+		92DD078E18AFC12300FB684A /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92DD078D18AFC12300FB684A /* CoreData.framework */; };
+		92DD079018AFC12D00FB684A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 92DD078F18AFC12D00FB684A /* libz.dylib */; };
 		92E037BF188425E80047F736 /* DragGateGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 92E037BE188425E80047F736 /* DragGateGestureRecognizer.m */; };
 		92E304631894D6C100003157 /* ToolbeltItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 92E304621894D6C100003157 /* ToolbeltItem.m */; };
 		92FC7F9118A50C1000EA329A /* CircuitListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FC7F9018A50C1000EA329A /* CircuitListViewController.m */; };
@@ -181,6 +185,10 @@
 		92D90E3A1838D7AB00387FAC /* Grid.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Grid.m; path = ../Grid.m; sourceTree = "<group>"; };
 		92D90E3C1838E9CD00387FAC /* Grid.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Grid.vsh; sourceTree = "<group>"; };
 		92D90E3E1838E9D700387FAC /* Grid.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Grid.fsh; sourceTree = "<group>"; };
+		92DD078918AFC10D00FB684A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		92DD078B18AFC11A00FB684A /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		92DD078D18AFC12300FB684A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		92DD078F18AFC12D00FB684A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		92DE44AD187C153F00014CB9 /* circuit.image-atlas */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "circuit.image-atlas"; sourceTree = "<group>"; };
 		92E037BD188425E80047F736 /* DragGateGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DragGateGestureRecognizer.h; sourceTree = "<group>"; };
 		92E037BE188425E80047F736 /* DragGateGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DragGateGestureRecognizer.m; sourceTree = "<group>"; };
@@ -204,6 +212,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92DD079018AFC12D00FB684A /* libz.dylib in Frameworks */,
+				92DD078E18AFC12300FB684A /* CoreData.framework in Frameworks */,
+				92DD078C18AFC11A00FB684A /* AdSupport.framework in Frameworks */,
+				92DD078A18AFC10D00FB684A /* SystemConfiguration.framework in Frameworks */,
 				9204C37C182E2F5C006A008D /* OpenGLES.framework in Frameworks */,
 				9204C376182E2F5C006A008D /* CoreGraphics.framework in Frameworks */,
 				9204C378182E2F5C006A008D /* UIKit.framework in Frameworks */,
@@ -262,6 +274,10 @@
 		9204C372182E2F5C006A008D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				92DD078F18AFC12D00FB684A /* libz.dylib */,
+				92DD078D18AFC12300FB684A /* CoreData.framework */,
+				92DD078B18AFC11A00FB684A /* AdSupport.framework */,
+				92DD078918AFC10D00FB684A /* SystemConfiguration.framework */,
 				9204C373182E2F5C006A008D /* Foundation.framework */,
 				9204C375182E2F5C006A008D /* CoreGraphics.framework */,
 				9204C377182E2F5C006A008D /* UIKit.framework */,
@@ -811,8 +827,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Anthony Foster (5X6237AEMK)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Circuitry/Circuitry-Prefix.pch";
 				INFOPLIST_FILE = "Circuitry/Circuitry-Info.plist";

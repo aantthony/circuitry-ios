@@ -8,7 +8,7 @@
 + (NSDictionary *) sharedConfiguration;
 + (NSURL *) baseURL;
 + (AFHTTPRequestOperationManager *) api;
-
 + (NSURL *) documentsDirectory;
++ (void) trackView:(NSString *)screenName;
 
 @end

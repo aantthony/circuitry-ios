@@ -4,6 +4,10 @@
 //#import <AFNetworking/AFHTTPSessionManager.h>
 #import "SocketClient.h"
 
+#import <GoogleAnalytics-iOS-SDK/GAI.h>
+#import <GoogleAnalytics-iOS-SDK/GAIFields.h>
+#import <GoogleAnalytics-iOS-SDK/GAIDictionaryBuilder.h>
+
 @interface AppDelegate()
 @property SocketClient *client;
 @end
@@ -39,8 +43,38 @@
     return [NSURL URLWithString:[[AppDelegate sharedConfiguration] objectForKey:@"APIEndpoint"]];
 }
 
+- (id <GAITracker>) tracker {
+    return [[GAI sharedInstance] trackerWithTrackingId:@"UA-48110067-1"];
+}
++ (AppDelegate *) sharedDelegate {
+    return [[UIApplication sharedApplication] delegate];
+}
+
++ (void) trackView:(NSString *)screenName {
+    // instead of using Google's bloated UIViewController subclass, just set the screen name, 
+    id <GAITracker> tracker = self.sharedDelegate.tracker;
+    
+    // This screen name value will remain set on the tracker and sent with
+    // hits until it is set to a new value or to nil.
+    [tracker set:kGAIScreenName value:screenName];
+    
+    // Send the screen view.
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    GAI *g = [GAI sharedInstance];
+    
+    g.trackUncaughtExceptions = YES;
+    g.dispatchInterval = 20;
+    g.dryRun = YES;
+    g.logger.logLevel = kGAILogLevelVerbose;
+    
+    id<GAITracker> tracker = self.tracker;
+    
+    NSLog(@"Google analytics tracker: %@", tracker.name);
+    
     _client = [SocketClient sharedInstance];
     
     [_client sendEvent:@"subscribe" withData:@"52d4f829c9aaf03423c13697" andAcknowledge:^(id err, id response) {

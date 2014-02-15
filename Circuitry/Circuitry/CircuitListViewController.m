@@ -272,8 +272,7 @@
         });
     });
     
-
-    
+    [AppDelegate trackView:@"Document List"];
 }
 
 - (void) viewDidAppear:(BOOL)animated {
