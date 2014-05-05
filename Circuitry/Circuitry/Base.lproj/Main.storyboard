@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13B42" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="rnE-YD-fev">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13C64" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="rnE-YD-fev">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <scenes>
         <!--GLKit View Controller - test-->
@@ -230,7 +230,6 @@
                                 <connections>
                                     <outlet property="imageView" destination="2Ig-BZ-iW3" id="fVD-J4-kbL"/>
                                     <outlet property="textLabel" destination="qlO-wE-HbB" id="FjC-1r-JMh"/>
-                                    <outletCollection property="gestureRecognizers" destination="vdI-Sy-RJM" appends="YES" id="qcG-CN-wEO"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
