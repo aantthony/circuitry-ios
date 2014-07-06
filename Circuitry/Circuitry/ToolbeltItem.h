@@ -10,8 +10,8 @@
 #import "Circuit.h"
 
 @interface ToolbeltItem : NSObject
-@property NSString *name;
-@property CircuitProcess *type;
-@property NSUInteger count;
-@property NSInteger remaining;
+@property (nonatomic) NSString *name;
+@property (nonatomic) CircuitProcess *type;
+@property (nonatomic) NSUInteger count;
+@property (nonatomic) NSInteger remaining;
 @end

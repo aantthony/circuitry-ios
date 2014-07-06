@@ -10,7 +10,7 @@
 
 @interface ImageAtlas() {
 }
-@property NSDictionary *json;
+@property (nonatomic) NSDictionary *json;
 
 
 @end

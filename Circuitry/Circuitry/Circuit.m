@@ -3,22 +3,22 @@
 #import "MongoID.h"
 
 @interface Circuit()
-@property CircuitObject **needsUpdate;
-@property CircuitObject **needsUpdate2;
-@property CircuitLink   *links;
+@property (nonatomic) CircuitObject **needsUpdate;
+@property (nonatomic) CircuitObject **needsUpdate2;
+@property (nonatomic) CircuitLink   *links;
 
-@property int clocksSize;
-@property int clocksCount;
-@property CircuitObject **clocks;
+@property (nonatomic) int clocksSize;
+@property (nonatomic) int clocksCount;
+@property (nonatomic) CircuitObject **clocks;
 
-@property int needsUpdateCount;
-@property int needsUpdateSize;
-@property int itemsSize;
-@property int linksSize;
-@property int linksCount;
+@property (nonatomic) int needsUpdateCount;
+@property (nonatomic) int needsUpdateSize;
+@property (nonatomic) int itemsSize;
+@property (nonatomic) int linksSize;
+@property (nonatomic) int linksCount;
 
-@property(readonly) int itemsCount;
-@property CircuitObject *items;
+@property (nonatomic, readonly) int itemsCount;
+@property (nonatomic) CircuitObject *items;
 
 @end
 @implementation Circuit
@@ -138,10 +138,10 @@ NSDictionary *processesById;
                       };
 }
 
-- (CircuitProcess *) getProcessById:(NSString *)_id {
+- (CircuitProcess *) getProcessById:(NSString *)processId {
     CircuitProcess *p;
-    id data = [processesById objectForKey:_id];
-    if (!data) [NSException raise:@"Could not find object type" format:@"Object type \"%@\" does not exist.", _id, nil];
+    id data = [processesById objectForKey:processId];
+    if (!data) [NSException raise:@"Could not find object type" format:@"Object type \"%@\" does not exist.", processId, nil];
     p = [data pointerValue];
     return p;
 }

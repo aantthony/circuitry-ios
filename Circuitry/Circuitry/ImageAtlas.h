@@ -1,7 +1,7 @@
 #import "BatchedSprite.h"
 @interface ImageAtlas : NSObject
 
-@property(readonly) GLKTextureInfo *texture;
+@property(nonatomic, readonly) GLKTextureInfo *texture;
 
 + (ImageAtlas *) imageAtlasWithName:(NSString *) name;
 - (id) initWithName:(NSString *) name;

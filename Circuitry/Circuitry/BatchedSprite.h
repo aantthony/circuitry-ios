@@ -2,7 +2,6 @@
 #import <GLKit/GLKit.h>
 #import "ShaderEffect.h"
 
-
 typedef struct {
     float width, height;
     float u, v, twidth, theight;

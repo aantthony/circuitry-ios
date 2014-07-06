@@ -30,7 +30,7 @@
     BOOL _currentObjectXAnimating;
 }
 @property (strong, nonatomic) NSArray *gates;
-@property BatchedSprite *batcher;
+@property (nonatomic) BatchedSprite *batcher;
 @end
 
 @implementation Toolbelt
@@ -50,6 +50,7 @@ static SpriteTexturePos gateOutletInactive;
 }
 - (void) setItems:(NSArray *)items {
     _items = items;
+    NSLog(@"Toolbelt items: %d", _items.count);
     [self bufferInstances];
 }
 - (id) initWithAtlas:(ImageAtlas *)atlas {
@@ -112,9 +113,10 @@ static SpriteTexturePos gateOutletInactive;
     
 }
 
-GLKVector3 offsetForOutlet(CircuitProcess *process, int index);
+static GLKVector3 offsetForOutlet(CircuitProcess *process, int index);
 
-GLKVector3 offsetForInlet(CircuitProcess *process, int index);
+static GLKVector3 offsetForInlet(CircuitProcess *process, int index);
+
 static int i = 0;
 - (void) drawAt:(ToolbeltItem *)obj index:(int) idx frameInstance:(BatchedSpriteInstance*)instance  {
     

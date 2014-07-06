@@ -13,6 +13,9 @@
 
 #import "AppDelegate.h"
 
+// For iOS 8 support:
+#import <OpenGLES/ES1/glext.h>
+
 @interface ViewController () <UIActionSheetDelegate> {
     IBOutlet UIPinchGestureRecognizer *_pinchGestureRecognizer;
     GLKMatrix4 _modelViewProjectionMatrix;
@@ -41,18 +44,16 @@
     
     BOOL animatingPan;
     
-    Circuit *_circuit;
-    BOOL _ready;
-    
     void (^ _onNextDraw)(UIImage *);
     
     
+    CircuitDocument *_document;
+    
 }
-@property NSArray *selectedObjects;
-@property CircuitDocument *doc;
-@property Viewport *viewport;
-@property HUD *hud;
-@property NSTimer *timer;
+@property (nonatomic) NSArray *selectedObjects;
+@property (nonatomic) Viewport *viewport;
+@property (nonatomic) HUD *hud;
+@property (nonatomic) NSTimer *timer;
 
 - (void)setupGL;
 - (void)tearDownGL;
@@ -65,7 +66,7 @@
     
     NSLog(@"getting screenshot...");
     
-    CircuitDocument * doc = _doc;
+    CircuitDocument * doc = _document;
 
     _onNextDraw = ^(UIImage * snapshot) {
         NSLog(@"renderered screenshot...");
@@ -88,7 +89,22 @@
 }
 - (void) publish {
 //    [self save];
-    [_doc publish];
+    [_document publish];
+}
+
+
+- (CircuitDocument *) document {
+    return _document;
+}
+- (void) setDocument:(CircuitDocument *) document {
+    _document = document;
+    
+    _viewport.circuit = _document.circuit;
+    
+    self.navigationItem.title = _document.circuit.title;
+    
+    [self configureToolbeltItems];
+    
 }
 
 - (UIImage*)snapshot
@@ -105,7 +121,7 @@
     glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &backingWidth);
     glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &backingHeight);
     
-    NSInteger x = 0, y = 0, width = backingWidth, height = backingHeight;
+    GLint x = 0, y = 0, width = backingWidth, height = backingHeight;
     NSInteger dataLength = width * height * 4;
     GLubyte *data = (GLubyte*)malloc(dataLength * sizeof(GLubyte));
     NSLog(@"reading pixels");
@@ -166,15 +182,11 @@
 - (void) configureToolbeltItems {
     
     NSMutableArray *items = [NSMutableArray array];
-    if (!_circuit) {
-        _hud.toolbelt.items = items;
-        return;
-    }
     
     NSArray *types = @[@"in", @"out", @"or", @"not", @"nor", @"xor", @"xnor", @"and", @"nand", @"bindec", @"add8", @"bin7seg", @"7seg", @"clock"];
     [types enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         ToolbeltItem *item = [[ToolbeltItem alloc] init];
-        item.type = [_circuit getProcessById:obj];
+        item.type = [_document.circuit getProcessById:obj];
         [items addObject:item];
     }];
     
@@ -183,8 +195,8 @@
 
 -(void)appWillResignActive:(NSNotification*)note {
     NSLog(@"will resign active...");
-    [_doc savePresentedItemChangesWithCompletionHandler:^(NSError *errorOrNil) {
-        NSLog(@"saved");
+    [_document savePresentedItemChangesWithCompletionHandler:^(NSError *errorOrNil) {
+        NSLog(@"will resign active:: saved");
     }];
 }
 -(void)appWillTerminate:(NSNotification*)note {
@@ -231,7 +243,6 @@
 
 - (id) setup {
     
-    _ready = NO;
     _onNextDraw = NULL;
     
     panVelocity = CGPointMake(0.0, 0.0);
@@ -241,7 +252,7 @@
     animatingPan = NO;
     beginGestureScale = 0.0;
     
-    _stack = GLKMatrixStackCreate(NULL);    
+    _stack = GLKMatrixStackCreate(NULL);
     
     return self;
 }
@@ -250,8 +261,6 @@
     
     self = [super initWithCoder:aDecoder];
     [self setup];
-    UIBarButtonItem *groupButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ic"] style:UIBarButtonItemStyleBordered target:self action:@selector(group:)];
-    self.navigationItem.rightBarButtonItems = @[groupButton];
     return self;
 }
 
@@ -290,87 +299,22 @@
     if (!bg) {
         bg = self.backgroundSprite;
     }
-        
     
-    // This is a bit of a hack, but in setCircuit, the setup was deferred until this stage (because we need the context before we can initialize the viewport, but we need the circuit before we can configure the viewport...)
-    _ready = YES;
-    Circuit *circuit = _circuit;
-    _circuit = nil;
-    self.circuit = circuit;
+    self.document = _document;
     
     [AppDelegate trackView:@"Circuit"];
 }
 
-- (NSURL *) documentURL {
-    return _doc.fileURL;
-}
-
-- (void) loadURL:(NSURL *) url complete:(void (^)(NSError *error))completionHandler {
-    if ([url.path isEqualToString: _doc.fileURL.path]) {
-        return;
-    }
-    _doc = [[CircuitDocument alloc] initWithFileURL:url];
-    self.circuit = nil;
-    
-    if ([[NSFileManager defaultManager] fileExistsAtPath:[url path]]) {
-        [_doc openWithCompletionHandler:^(BOOL success){
-            
-            if (!success) {
-                // Handle the error.
-                return completionHandler([NSError errorWithDomain:@"au.id.circuitry" code:500 userInfo:nil]);
-            }
-            self.circuit = _doc.circuit;
-            completionHandler(nil);
-        }];
-    }
-    else {
-        // add initial data...
-        
-        NSURL *path = [[NSBundle mainBundle] URLForResource:@"nand" withExtension:@"json"];
-        NSInputStream *stream = [NSInputStream inputStreamWithURL:path];
-        [stream open];
-        self.circuit = [Circuit circuitWithStream: stream];
-        
-//        CircuitImagePreview *preview = [[CircuitImagePreview alloc] init];
-        
-//        NSData *image = [preview png:_circuit];
-        [_doc saveToURL:url forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success){
-            completionHandler(nil);
-            if (!success) {
-                [[NSException exceptionWithName:@"Could not load document" reason:nil userInfo:nil] raise];
-            }
-        }];
-    }
-}
-
 - (void) timerTick:(id) sender {
-    if (!_circuit) return;
+    if (!_document.circuit) return;
     __block int clocks = 0;
-    [_circuit enumerateClocksUsingBlock:^(CircuitObject *object, BOOL *stop) {
+    [_document.circuit enumerateClocksUsingBlock:^(CircuitObject *object, BOOL *stop) {
         clocks++;
         object->out = !object->out;
-        [_circuit didUpdateObject:object];
+        [_document.circuit didUpdateObject:object];
     }];
     if (clocks) {
         [self update];
-    }
-}
-
-
-- (void) setCircuit:(Circuit *)circuit {
-    if (circuit != _circuit) {
-        _circuit = circuit;
-        _doc.circuit = circuit;
-        if (!_ready) {
-            return;
-        }
-        
-        _viewport.circuit = _circuit;
-        
-        self.navigationItem.title = _circuit.title;
-        
-        [self configureToolbeltItems];
-        [self unpause];
     }
 }
 
@@ -484,7 +428,7 @@
         }
     }
     int changes = 0;
-    int circuitChanges = [_circuit simulate:512];
+    int circuitChanges = [_document.circuit simulate:512];
 //    NSLog(@"%d, %f [%@] %@ - %@)", circuitChanges, dt, _circuit.name, _circuit.title, _circuit.description);
     changes += circuitChanges;
     changes += [_viewport update: dt];
@@ -668,7 +612,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     if ([gestureRecognizer isKindOfClass:[LongPressObjectGesture class]] || [otherGestureRecognizer isKindOfClass:[LongPressObjectGesture class]]) {
         return YES;
     }
-    NSLog(@"blocked %@ / %@", gestureRecognizer.class, otherGestureRecognizer.class);
+//    NSLog(@"blocked %@ / %@", gestureRecognizer.class, otherGestureRecognizer.class);
     return NO;
 }
 
@@ -694,12 +638,10 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 #pragma mark UIActionSheetDelegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 0) {
-        [self dismissModalViewControllerAnimated:YES];
-        return;
         for(id obj in _selectedObjects) {
             CircuitObject *object = [obj pointerValue];
-            [_circuit removeObject:object];
-            [_doc updateChangeCount:UIDocumentChangeDone];
+            [_document.circuit removeObject:object];
+            [_document updateChangeCount:UIDocumentChangeDone];
             [self unpause];
         }
     }
@@ -731,13 +673,13 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     CircuitObject *object = beginLongPressGestureObject;
     if (sender.state == UIGestureRecognizerStateEnded) {
         NSLog(@"ENDED!");
-        [_doc updateChangeCount:UIDocumentChangeDone];
+        [_document updateChangeCount:UIDocumentChangeDone];
         [self unpause];
         return;
     } else if ([sender numberOfTouches] != 1) {
         sender.enabled = NO;
         sender.enabled = YES;
-        [_doc updateChangeCount:UIDocumentChangeDone];
+        [_document updateChangeCount:UIDocumentChangeDone];
         [self unpause];
         return;
     }
@@ -754,7 +696,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 }
 
 - (IBAction)handleCreateGateGesture:(UIPanGestureRecognizer *)sender {
-    
+    Circuit *_circuit = _document.circuit;
     if (draggingOutFromToolbeltLockY) {
         // still dragging it out of the toolbelt
         
@@ -799,13 +741,14 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 }
 
 - (IBAction)handleCreateLinkGesture:(UILongPressGestureRecognizer *)sender {
+    Circuit *_circuit = _document.circuit;
     if (sender.state == UIGestureRecognizerStateEnded || sender.state == UIGestureRecognizerStateCancelled) {
         // If there is no active gate in creation, then just cancel.
         _viewport.currentEditingLinkSource = NULL;
         _viewport.currentEditingLinkTarget = NULL;
         [self unpause];
 
-        [_doc updateChangeCount:UIDocumentChangeDone];
+        [_document updateChangeCount:UIDocumentChangeDone];
         
         return;
     }
@@ -948,7 +891,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 //    [self.navigationController setNavigationBarHidden:NO animated:animated];
     [_timer invalidate];
     _timer = nil;
-    [_doc closeWithCompletionHandler:^(BOOL success) {}];
+    [_document closeWithCompletionHandler:^(BOOL success) {}];
 }
 
 - (void) viewDidAppear:(BOOL)animated {
@@ -969,11 +912,11 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         CircuitObject *object = [_viewport findCircuitObjectAtPosition:position];
         
         if (!object) break;
-        if (object->type == [_circuit getProcessById:@"in"]) {
+        if (object->type == [_document.circuit getProcessById:@"in"]) {
             // Toggle a switch:
             hit = YES;
             object->out = !object->out;
-            [_circuit didUpdateObject:object];
+            [_document.circuit didUpdateObject:object];
         }
     }
     if (!hit && sender.numberOfTouches == 1) {

@@ -1,47 +1,12 @@
 #import "AppDelegate.h"
 
-#import <AFNetworking/AFNetworking.h>
-//#import <AFNetworking/AFHTTPSessionManager.h>
-#import "SocketClient.h"
-
 #import <GoogleAnalytics-iOS-SDK/GAI.h>
 #import <GoogleAnalytics-iOS-SDK/GAIFields.h>
 #import <GoogleAnalytics-iOS-SDK/GAIDictionaryBuilder.h>
 
 @interface AppDelegate()
-@property SocketClient *client;
 @end
 @implementation AppDelegate
-
-+ (NSDictionary *) sharedConfiguration
-{
-    static dispatch_once_t onceToken = 0;
-    static NSDictionary *config;
-    
-    dispatch_once(&onceToken, ^{
-        NSBundle *bundle = [NSBundle mainBundle];
-        NSString *environment = [[bundle infoDictionary] objectForKey:@"Configuration"];
-        config = [[NSDictionary dictionaryWithContentsOfFile:[bundle pathForResource:@"Configurations" ofType:@"plist"]] objectForKey:environment];
-    });
-    
-    return config;
-}
-
-
-+ (AFHTTPRequestOperationManager *) api {
-    static dispatch_once_t onceToken = 0;
-    static AFHTTPRequestOperationManager * manager;
-    
-    dispatch_once(&onceToken, ^{
-        manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL: [AppDelegate baseURL]];
-    });
-    
-    return manager;
-}
-
-+ (NSURL *) baseURL {
-    return [NSURL URLWithString:[[AppDelegate sharedConfiguration] objectForKey:@"APIEndpoint"]];
-}
 
 - (id <GAITracker>) tracker {
     return [[GAI sharedInstance] trackerWithTrackingId:@"UA-48110067-1"];
@@ -75,17 +40,6 @@
     
     NSLog(@"Google analytics tracker: %@", tracker.name);
     
-    _client = [SocketClient sharedInstance];
-    
-    [_client sendEvent:@"subscribe" withData:@"52d4f829c9aaf03423c13697" andAcknowledge:^(id err, id response) {
-        NSLog(@"ready");
-    }];
-    
-    [AppDelegate.api GET:@"debug" parameters:nil success:^(AFHTTPRequestOperation *operation, NSDictionary *res) {
-        NSLog(@"JSON: %@", res);
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-//        NSLog(@"Error: %@", error);
-    }];
     return YES;
 }
 

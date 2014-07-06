@@ -10,6 +10,6 @@
 #import "CircuitListImageView.h"
 
 @interface CircuitCollectionViewCell : UICollectionViewCell
-@property IBOutlet UILabel *textLabel;
-@property IBOutlet CircuitListImageView *imageView;
+@property (nonatomic) IBOutlet UILabel *textLabel;
+@property (nonatomic) IBOutlet CircuitListImageView *imageView;
 @end

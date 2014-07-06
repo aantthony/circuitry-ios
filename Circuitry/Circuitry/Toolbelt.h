@@ -13,7 +13,7 @@
 
 @interface Toolbelt : Drawable
 
-@property Viewport *viewport;
+@property (nonatomic) Viewport *viewport;
 
 - (id) initWithAtlas:(ImageAtlas *)atlas;
 - (CGRect) bounds;

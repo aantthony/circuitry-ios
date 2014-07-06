@@ -37,15 +37,15 @@ struct CircuitObject {
 
 @interface Circuit : NSObject
 
-@property(readonly) ObjectID id;
-@property NSString *name;
-@property NSString *version;
-@property NSString *description;
-@property NSString *title;
-@property NSString *author;
-@property NSMutableArray *engines;
-@property NSString *license;
-@property NSMutableDictionary *dependencies;
+@property(nonatomic, readonly) ObjectID id;
+@property(nonatomic) NSString *name;
+@property(nonatomic) NSString *version;
+@property(nonatomic) NSString *description;
+@property(nonatomic) NSString *title;
+@property(nonatomic) NSString *author;
+@property(nonatomic) NSMutableArray *engines;
+@property(nonatomic) NSString *license;
+@property(nonatomic) NSMutableDictionary *dependencies;
 
 - (NSData *) toJSON;
 - (NSDictionary *) metadata;

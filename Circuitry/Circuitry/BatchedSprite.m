@@ -1,5 +1,7 @@
 #import "BatchedSprite.h"
 
+#import <OpenGLES/ES2/glext.h> 
+
 @interface BatchedSprite() {
     GLKTextureInfo *_texture;
     GLuint _instanceBuffer;
@@ -35,8 +37,8 @@ static GLint uModelViewProjectMatrix;
 static GLint uTextureSize;
 
 // attribute locations:
-static GLint aSource;
-static GLint aTarget;
+static GLuint aSource;
+static GLuint aTarget;
 
 // buffer names:
 static GLuint _vertexBuffer;

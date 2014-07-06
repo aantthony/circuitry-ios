@@ -46,7 +46,7 @@
 		923C143C18826F280017BAF3 /* Toolbelt.m in Sources */ = {isa = PBXBuildFile; fileRef = 923C143B18826F280017BAF3 /* Toolbelt.m */; };
 		9253C409188545EC00D2509C /* CreateGatePanGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9253C408188545EC00D2509C /* CreateGatePanGestureRecognizer.m */; };
 		9253C40C18854D0B00D2509C /* CreateLinkGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9253C40B18854D0B00D2509C /* CreateLinkGestureRecognizer.m */; };
-		9269EF71188107DE00C8804D /* SocketClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 9269EF70188107DE00C8804D /* SocketClient.m */; };
+		926099DD19690DB00048F2BD /* CircuitDocumentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 926099DC19690DB00048F2BD /* CircuitDocumentViewController.m */; };
 		92794CB118AF0E5500A39012 /* ic@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92794CB018AF0E5400A39012 /* ic@2x.png */; };
 		92796A3418A668FB00DB690F /* LongPressObjectGesture.m in Sources */ = {isa = PBXBuildFile; fileRef = 92796A3318A668FB00DB690F /* LongPressObjectGesture.m */; };
 		9288061B187210180096A1CA /* Shader.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 9204C38E182E2F5C006A008D /* Shader.vsh */; };
@@ -74,6 +74,7 @@
 		92DD078E18AFC12300FB684A /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92DD078D18AFC12300FB684A /* CoreData.framework */; };
 		92DD079018AFC12D00FB684A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 92DD078F18AFC12D00FB684A /* libz.dylib */; };
 		92E037BF188425E80047F736 /* DragGateGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 92E037BE188425E80047F736 /* DragGateGestureRecognizer.m */; };
+		92E08B8219587206004B6775 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92E08B8119587206004B6775 /* TutorialViewController.m */; };
 		92E304631894D6C100003157 /* ToolbeltItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 92E304621894D6C100003157 /* ToolbeltItem.m */; };
 		92FC7F9118A50C1000EA329A /* CircuitListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FC7F9018A50C1000EA329A /* CircuitListViewController.m */; };
 		92FC7F9418A50E7300EA329A /* CircuitListImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FC7F9318A50E7300EA329A /* CircuitListImageView.m */; };
@@ -137,6 +138,7 @@
 		9204C3A2182E2F5C006A008D /* CircuitryTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CircuitryTests-Info.plist"; sourceTree = "<group>"; };
 		9204C3A4182E2F5C006A008D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9208B106187565390038A52A /* Circuitry.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Circuitry.entitlements; sourceTree = "<group>"; };
+		9208BDF71965851C00980D70 /* circuitry.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = circuitry.entitlements; path = circuitry/circuitry.entitlements; sourceTree = "<group>"; };
 		9218F7361876978A00742F99 /* LinkBezier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkBezier.h; sourceTree = "<group>"; };
 		9218F7371876978A00742F99 /* LinkBezier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LinkBezier.m; sourceTree = "<group>"; };
 		9218F7391876981900742F99 /* LinkBezier.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = LinkBezier.fsh; sourceTree = "<group>"; };
@@ -156,8 +158,8 @@
 		9253C408188545EC00D2509C /* CreateGatePanGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateGatePanGestureRecognizer.m; sourceTree = "<group>"; };
 		9253C40A18854D0B00D2509C /* CreateLinkGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateLinkGestureRecognizer.h; sourceTree = "<group>"; };
 		9253C40B18854D0B00D2509C /* CreateLinkGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateLinkGestureRecognizer.m; sourceTree = "<group>"; };
-		9269EF6F188107DE00C8804D /* SocketClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocketClient.h; sourceTree = "<group>"; };
-		9269EF70188107DE00C8804D /* SocketClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocketClient.m; sourceTree = "<group>"; };
+		926099DB19690DB00048F2BD /* CircuitDocumentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircuitDocumentViewController.h; sourceTree = "<group>"; };
+		926099DC19690DB00048F2BD /* CircuitDocumentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircuitDocumentViewController.m; sourceTree = "<group>"; };
 		92794CB018AF0E5400A39012 /* ic@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic@2x.png"; sourceTree = "<group>"; };
 		92796A3218A668FB00DB690F /* LongPressObjectGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LongPressObjectGesture.h; sourceTree = "<group>"; };
 		92796A3318A668FB00DB690F /* LongPressObjectGesture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LongPressObjectGesture.m; sourceTree = "<group>"; };
@@ -192,6 +194,8 @@
 		92DE44AD187C153F00014CB9 /* circuit.image-atlas */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "circuit.image-atlas"; sourceTree = "<group>"; };
 		92E037BD188425E80047F736 /* DragGateGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DragGateGestureRecognizer.h; sourceTree = "<group>"; };
 		92E037BE188425E80047F736 /* DragGateGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DragGateGestureRecognizer.m; sourceTree = "<group>"; };
+		92E08B8019587206004B6775 /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialViewController.h; sourceTree = "<group>"; };
+		92E08B8119587206004B6775 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; };
 		92E304611894D6C100003157 /* ToolbeltItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolbeltItem.h; sourceTree = "<group>"; };
 		92E304621894D6C100003157 /* ToolbeltItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolbeltItem.m; sourceTree = "<group>"; };
 		92FC7F8F18A50C1000EA329A /* CircuitListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircuitListViewController.h; sourceTree = "<group>"; };
@@ -252,6 +256,7 @@
 		9204C367182E2F5C006A008D = {
 			isa = PBXGroup;
 			children = (
+				9208BDF71965851C00980D70 /* circuitry.entitlements */,
 				92FC7FA018A601A200EA329A /* UIKitCategoryAdditions */,
 				92A28A59187428A600F0D934 /* Circuits */,
 				9204C37D182E2F5C006A008D /* Circuitry */,
@@ -304,6 +309,10 @@
 				92FC7F9218A50E7300EA329A /* CircuitListImageView.h */,
 				92FC7F9318A50E7300EA329A /* CircuitListImageView.m */,
 				9204C389182E2F5C006A008D /* Main.storyboard */,
+				926099DB19690DB00048F2BD /* CircuitDocumentViewController.h */,
+				926099DC19690DB00048F2BD /* CircuitDocumentViewController.m */,
+				92E08B8019587206004B6775 /* TutorialViewController.h */,
+				92E08B8119587206004B6775 /* TutorialViewController.m */,
 				929CB69318A7833C00BEE7D6 /* TransitionFromDocumentListToDocument.h */,
 				929CB69418A7833C00BEE7D6 /* TransitionFromDocumentListToDocument.m */,
 				92FC7F9718A5B39E00EA329A /* CircuitCollectionViewCell.h */,
@@ -318,8 +327,6 @@
 				9204C38E182E2F5C006A008D /* Shader.vsh */,
 				9204C393182E2F5C006A008D /* Images.xcassets */,
 				9204C37E182E2F5C006A008D /* Supporting Files */,
-				9269EF6F188107DE00C8804D /* SocketClient.h */,
-				9269EF70188107DE00C8804D /* SocketClient.m */,
 				92FC7F8F18A50C1000EA329A /* CircuitListViewController.h */,
 				92FC7F9018A50C1000EA329A /* CircuitListViewController.m */,
 			);
@@ -531,14 +538,14 @@
 		9204C368182E2F5C006A008D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = Circuitry;
 				TargetAttributes = {
 					9204C36F182E2F5C006A008D = {
 						DevelopmentTeam = 5X6237AEMK;
 						SystemCapabilities = {
 							com.apple.iCloud = {
-								enabled = 0;
+								enabled = 1;
 							};
 						};
 					};
@@ -651,7 +658,6 @@
 				92D90E3D1838E9CD00387FAC /* Grid.vsh in Sources */,
 				92FC7F9118A50C1000EA329A /* CircuitListViewController.m in Sources */,
 				92D90E3B1838D7AB00387FAC /* Grid.m in Sources */,
-				9269EF71188107DE00C8804D /* SocketClient.m in Sources */,
 				9232B6551878353A00E45C7E /* BatchedSprite.fsh in Sources */,
 				9218F73C1876982100742F99 /* LinkBezier.vsh in Sources */,
 				92880621187243800096A1CA /* Sprite.vsh in Sources */,
@@ -665,6 +671,7 @@
 				929CB69518A7833C00BEE7D6 /* TransitionFromDocumentListToDocument.m in Sources */,
 				92FC7F9418A50E7300EA329A /* CircuitListImageView.m in Sources */,
 				92FC7FA618A601BD00EA329A /* UIAlertView+MKBlockAdditions.m in Sources */,
+				92E08B8219587206004B6775 /* TutorialViewController.m in Sources */,
 				92E304631894D6C100003157 /* ToolbeltItem.m in Sources */,
 				923C143C18826F280017BAF3 /* Toolbelt.m in Sources */,
 				9200469C189D0178007124DA /* SevenSegmentDisplay.m in Sources */,
@@ -676,6 +683,7 @@
 				92A861B2189E402900F64673 /* MongoID.m in Sources */,
 				9253C409188545EC00D2509C /* CreateGatePanGestureRecognizer.m in Sources */,
 				9232B6531878140500E45C7E /* BatchedSprite.vsh in Sources */,
+				926099DD19690DB00048F2BD /* CircuitDocumentViewController.m in Sources */,
 				92796A3418A668FB00DB690F /* LongPressObjectGesture.m in Sources */,
 				92D90E381837836500387FAC /* ShaderEffect.m in Sources */,
 				923A0631189D2D660064834C /* CircuitDocument.m in Sources */,
@@ -734,7 +742,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -774,7 +781,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -810,6 +816,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = NO;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
+				CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES = YES;
+				CODE_SIGN_ENTITLEMENTS = circuitry/circuitry.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -827,13 +837,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = NO;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
+				CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES = YES;
+				CODE_SIGN_ENTITLEMENTS = circuitry/circuitry.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Circuitry/Circuitry-Prefix.pch";
 				INFOPLIST_FILE = "Circuitry/Circuitry-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "BB844EA7-30D6-4023-A23A-1763AEC65C56";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -841,7 +856,6 @@
 		9204C3AE182E2F5C006A008D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Circuitry.app/Circuitry";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -864,7 +878,6 @@
 		9204C3AF182E2F5C006A008D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Circuitry.app/Circuitry";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",

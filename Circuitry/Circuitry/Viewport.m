@@ -35,7 +35,7 @@
     
     SevenSegmentDisplay *sevenSegment;
 }
-@property Grid *grid;
+@property (nonatomic) Grid *grid;
 @end
 
 @implementation Viewport

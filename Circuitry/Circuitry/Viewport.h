@@ -27,11 +27,11 @@
 - (void) setCircuit:(Circuit *) circuit;
 - (Circuit *) circuit;
 
-@property CircuitLink *currentEditingLink;
-@property CircuitObject *currentEditingLinkSource;
-@property CircuitObject *currentEditingLinkTarget;
-@property int currentEditingLinkSourceIndex;
-@property int currentEditingLinkTargetIndex;
-@property GLKVector3 currentEditingLinkTargetPosition;
+@property (nonatomic) CircuitLink *currentEditingLink;
+@property (nonatomic) CircuitObject *currentEditingLinkSource;
+@property (nonatomic) CircuitObject *currentEditingLinkTarget;
+@property (nonatomic) int currentEditingLinkSourceIndex;
+@property (nonatomic) int currentEditingLinkTargetIndex;
+@property (nonatomic) GLKVector3 currentEditingLinkTargetPosition;
 
 @end

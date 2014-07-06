@@ -20,9 +20,9 @@
 
 
 @interface DocumentListItem : NSObject
-@property NSURL *url;
-@property NSString *title;
-@property NSDate *lastModified;
+@property (nonatomic) NSURL *url;
+@property (nonatomic) NSString *title;
+@property (nonatomic) NSDate *lastModified;
 @end
 @implementation DocumentListItem
 - (id) initWithURL: (NSURL *)url; {
@@ -45,13 +45,14 @@
 @end
 
 @interface CircuitListViewController () <UIActionSheetDelegate, UIViewControllerTransitioningDelegate, UINavigationControllerDelegate>
-@property NSMutableArray *items;
-@property NSMutableArray *circuits;
-@property NSMutableArray *problems;
-@property ViewController *documentViewController;
-@property NSIndexPath *actionSheetIndexPath;
-@property CGRect selectionRect;
-@property BOOL openDocumentAnimationShouldFadeIn;
+@property (nonatomic) NSMutableArray *items;
+@property (nonatomic) NSMutableArray *circuits;
+@property (nonatomic) NSMutableArray *problems;
+@property (nonatomic) ViewController *documentViewController;
+@property (nonatomic) NSIndexPath *actionSheetIndexPath;
+@property (nonatomic) CGRect selectionRect;
+@property (nonatomic) BOOL openDocumentAnimationShouldFadeIn;
+@property (nonatomic) CircuitDocument *presentingDocument;
 @end
 
 @implementation CircuitListViewController
@@ -88,14 +89,34 @@
     return reusableview;
 }
 
-- (void) openDocument: (NSURL *)url {
-    ViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"Viewing Circuit"];
+- (void) createAndOpenNewDocumentWithURL:(NSURL *)url {
     
-    [controller loadURL:url complete:^(NSError *error) { 
-        if (error) [[NSException exceptionWithName:error.localizedDescription reason:error.localizedFailureReason userInfo:nil] raise];
-        
-        [self.navigationController pushViewController:controller animated:YES];
+    NSURL *path = [[NSBundle mainBundle] URLForResource:@"nand" withExtension:@"json"];
+    NSInputStream *stream = [NSInputStream inputStreamWithURL:path];
+    [stream open];
+    Circuit *circuit = [Circuit circuitWithStream: stream];
+    
+    CircuitDocument *doc = [[CircuitDocument alloc] initWithFileURL:url];
+    _presentingDocument = doc;
+    [doc openWithCompletionHandler:^(BOOL success){
+        [self performSegueWithIdentifier:@"presentDocument" sender:self];
     }];
+}
+
+- (void) openDocument: (NSURL *)url {
+    CircuitDocument *doc = [[CircuitDocument alloc] initWithFileURL:url];
+    _presentingDocument = doc;
+    [doc openWithCompletionHandler:^(BOOL success){
+        [self performSegueWithIdentifier:@"presentDocument" sender:self];
+    }];
+}
+
+- (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"presentDocument"]) {
+        
+        ViewController *controller = [segue destinationViewController];
+        controller.document = _presentingDocument;
+    }
 }
 
 - (IBAction) createDocument:(id)sender {
@@ -106,6 +127,7 @@
     
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index + 1 inSection:0];
     
+    // TODO: Use fetched results controller somehow?
     [self.collectionView performBatchUpdates:^{
         
         NSArray *selectedItemsIndexPaths = @[indexPath];
@@ -122,7 +144,7 @@
             CircuitCollectionViewCell *cell = (CircuitCollectionViewCell *) [self.collectionView cellForItemAtIndexPath:indexPath];
             _selectionRect = [self.view convertRect:cell.imageView.frame fromView:cell];
         }
-        [self openDocument:url];
+        [self createAndOpenNewDocumentWithURL:url];
     }];
 }
 
@@ -300,7 +322,7 @@
         delegate.originatingRect = _selectionRect;
         if (_openDocumentAnimationShouldFadeIn) {
             ViewController * controller = (ViewController *) fromVC;
-            NSURL *url = controller.documentURL;
+            NSURL *url = controller.document.fileURL;
             NSString *urlPath = url.path;
             __block BOOL found = NO;
             [_items enumerateObjectsUsingBlock:^(DocumentListItem *item, NSUInteger idx, BOOL *stop) {

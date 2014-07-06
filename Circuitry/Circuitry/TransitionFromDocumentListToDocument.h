@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface TransitionFromDocumentListToDocument : NSObject <UIViewControllerAnimatedTransitioning>
-@property BOOL reverse;
-@property CGRect originatingRect;
-@property BOOL fadeIn;
+@property (nonatomic) BOOL reverse;
+@property (nonatomic) CGRect originatingRect;
+@property (nonatomic) BOOL fadeIn;
 @end

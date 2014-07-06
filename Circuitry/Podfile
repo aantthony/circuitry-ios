@@ -1,5 +1,3 @@
 platform :ios, '7.0'
 
-pod 'AFNetworking',              '~> 2.0'
-pod 'socket.IO',                 '~> 0.4.0.1'
 pod 'GoogleAnalytics-iOS-SDK',   '~> 3.0.3'

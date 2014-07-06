@@ -64,7 +64,7 @@
 - (void) publish {
     NSData *data = [self contentsForType:@"public.json" error:NULL];
     NSString *path = [NSString stringWithFormat:@"circuit/%@", [MongoID stringWithId:_circuit.id]];
-    NSURL *requestURL = [[AppDelegate baseURL] URLByAppendingPathComponent:path];
+    NSURL *requestURL = [[NSURL URLWithString:nil] URLByAppendingPathComponent:path];
     
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];

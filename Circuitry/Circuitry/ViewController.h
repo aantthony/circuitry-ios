@@ -22,11 +22,11 @@
 - (BOOL) gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer;
 - (IBAction)handleLongPressObject:(UILongPressGestureRecognizer *)sender;
 
-- (NSURL *) documentURL;
-- (void) loadURL:(NSURL *) url complete:(void (^)(NSError *error))completionHandler;
-
 + (EAGLContext *) context;
 + (ImageAtlas *) atlas;
+
+- (CircuitDocument *) document;
+- (void) setDocument:(CircuitDocument *) document;
 
 - (id) setup;
 - (void)update;

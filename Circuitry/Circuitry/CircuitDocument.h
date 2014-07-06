@@ -9,7 +9,7 @@
 #import "Circuit.h"
 
 @interface CircuitDocument : UIDocument
-@property Circuit *circuit;
+@property (nonatomic) Circuit *circuit;
 
 - (void) publish;
 

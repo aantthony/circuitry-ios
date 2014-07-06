@@ -25,7 +25,7 @@
     
     SpriteTexturePos _source;
 }
-@property ShaderEffect *shader;
+@property (nonatomic) ShaderEffect *shader;
 @end
 @implementation SevenSegmentDisplay
 
