@@ -7,10 +7,12 @@
 //
 
 #import "CircuitDocumentViewController.h"
+
+#import "CircuitObjectListTableViewController.h"
 #import "ViewController.h"
 
 @interface CircuitDocumentViewController ()
-
+@property (nonatomic) CircuitDocument *document;
 @end
 
 @implementation CircuitDocumentViewController
@@ -22,6 +24,10 @@
         // Custom initialization
     }
     return self;
+}
+
+- (void) setDocument:(CircuitDocument *) document {
+    NSLog(@"CONTROLLERS: %@",  self.childViewControllers);
 }
 
 - (void)viewDidLoad
@@ -36,20 +42,19 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void) setDocument:(CircuitDocument *) document {
-    ViewController *controller = self.viewControllers[1];
-    controller.document = document;
-}
 
-/*
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    if ([segue.destinationViewController isKindOfClass:[CircuitObjectListTableViewController class]]) {
+        CircuitObjectListTableViewController *controller = (CircuitObjectListTableViewController *) segue.destinationViewController;
+        controller.document = self.document;
+    } else if ([segue.destinationViewController isKindOfClass:[ViewController class]]) {
+        ViewController *controller = (ViewController *) segue.destinationViewController;
+        controller.document = self.document;
+    }
 }
-*/
 
 @end

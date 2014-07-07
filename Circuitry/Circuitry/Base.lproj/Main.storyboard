@@ -5,6 +5,39 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6153.11"/>
     </dependencies>
     <scenes>
+        <!--Circuit Document View Controller-->
+        <scene sceneID="fNu-Fm-yIg">
+            <objects>
+                <viewController id="2hA-su-58g" customClass="CircuitDocumentViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="aYZ-yF-N0r"/>
+                        <viewControllerLayoutGuide type="bottom" id="0Ys-4M-3pE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="U6a-IS-6io">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="isi-1p-ZHn">
+                                <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                                <connections>
+                                    <segue destination="BV1-FR-VrT" kind="embed" id="T04-qz-oBq"/>
+                                </connections>
+                            </containerView>
+                            <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8GE-Pt-Sug">
+                                <rect key="frame" x="0.0" y="44" width="207" height="980"/>
+                                <connections>
+                                    <segue destination="92d-HQ-qId" kind="embed" id="Ado-jK-saD"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="M0a-6u-F4U"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GmU-f2-KCc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2682" y="-748"/>
+        </scene>
         <!--GLKit View Controller - test-->
         <scene sceneID="tXr-a1-R10">
             <objects>
@@ -83,7 +116,7 @@
                     </connections>
                 </pongPressGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2168" y="-83"/>
+            <point key="canvasLocation" x="3586" y="-748"/>
         </scene>
         <!--Circuit List View Controller - Circuits-->
         <scene sceneID="fYR-El-sOZ">
@@ -194,7 +227,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <segue destination="BV1-FR-VrT" kind="push" identifier="presentDocument" id="Fqg-em-5f8"/>
+                        <segue destination="2hA-su-58g" kind="push" identifier="presentDocument" id="MpB-7m-KJD"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jtp-V0-qL6" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -315,11 +348,60 @@
             </objects>
             <point key="canvasLocation" x="1205" y="-1626"/>
         </scene>
+        <!--Circuit Object List Table View Controller-->
+        <scene sceneID="Odt-EM-XnG">
+            <objects>
+                <tableViewController id="92d-HQ-qId" customClass="CircuitObjectListTableViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="80" sectionHeaderHeight="22" sectionFooterHeight="22" id="anR-55-epr">
+                        <rect key="frame" x="0.0" y="0.0" width="207" height="980"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" ambiguous="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="CircuitObjectItemIdentifier" rowHeight="80" id="T64-lA-g3q" customClass="ToolbeltItemTableViewCell">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="T64-lA-g3q" id="GI7-Kf-vdT">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="or-gate.png" translatesAutoresizingMaskIntoConstraints="NO" id="HAG-xY-fkt">
+                                            <rect key="frame" x="112" y="2" width="95" height="77"/>
+                                        </imageView>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Object Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fAD-Le-CC6">
+                                            <rect key="frame" x="20" y="16" width="196" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="2 inputs, 1 output" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zbc-Tn-otI">
+                                            <rect key="frame" x="20" y="38" width="121" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="image" destination="HAG-xY-fkt" id="GYB-Wb-Qvy"/>
+                                    <outlet property="label" destination="fAD-Le-CC6" id="2cA-h2-6pi"/>
+                                    <outlet property="subtitle" destination="Zbc-Tn-otI" id="69S-En-6Yu"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="92d-HQ-qId" id="VTg-g7-8Fd"/>
+                            <outlet property="delegate" destination="92d-HQ-qId" id="Aks-sK-njQ"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Q5p-fw-2hb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2057.5" y="-555"/>
+        </scene>
     </scenes>
     <resources>
         <image name="background.jpg" width="2048" height="1536"/>
         <image name="ic.png" width="23" height="23"/>
         <image name="large-plus.png" width="54" height="54"/>
+        <image name="or-gate.png" width="73" height="32"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <nil key="statusBar"/>

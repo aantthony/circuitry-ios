@@ -1,5 +1,5 @@
 //
-//  CircuitDocumentViewController.h
+//  CircuitObjectListTableViewController.h
 //  Circuitry
 //
 //  Created by Anthony Foster on 6/07/2014.
@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "CircuitDocument.h"
 
-@interface CircuitDocumentViewController : UIViewController
-- (void) setDocument:(CircuitDocument *) document;
+@interface CircuitObjectListTableViewController : UITableViewController
+- (void) setDocument: (CircuitDocument *) document;
 @end

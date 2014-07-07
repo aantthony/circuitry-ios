@@ -9,8 +9,6 @@
 #import "CreateLinkGestureRecognizer.h"
 #import "LongPressObjectGesture.h"
 
-#import "ToolbeltItem.h"
-
 #import "AppDelegate.h"
 
 // For iOS 8 support:
@@ -103,8 +101,6 @@
     
     self.navigationItem.title = _document.circuit.title;
     
-    [self configureToolbeltItems];
-    
 }
 
 - (UIImage*)snapshot
@@ -176,21 +172,6 @@
     CGImageRelease(iref);
     
     return image;
-}
-
-
-- (void) configureToolbeltItems {
-    
-    NSMutableArray *items = [NSMutableArray array];
-    
-    NSArray *types = @[@"in", @"out", @"or", @"not", @"nor", @"xor", @"xnor", @"and", @"nand", @"bindec", @"add8", @"bin7seg", @"7seg", @"clock"];
-    [types enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        ToolbeltItem *item = [[ToolbeltItem alloc] init];
-        item.type = [_document.circuit getProcessById:obj];
-        [items addObject:item];
-    }];
-    
-    _hud.toolbelt.items = items;
 }
 
 -(void)appWillResignActive:(NSNotification*)note {
@@ -575,17 +556,17 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     } else if ([gestureRecognizer isKindOfClass:[CreateGatePanGestureRecognizer class]]) {
         // only starts if the finger is on the toolbelt
         CGPoint location = [gestureRecognizer locationInView:self.view];
-        if (!CGRectContainsPoint(_hud.toolbelt.bounds, location)) {
+//        if (!CGRectContainsPoint(_hud.toolbelt.bounds, location)) {
             return NO;
-        }
+//        }
         
         CGPoint p = [gestureRecognizer locationInView:self.view];
         p.x = 0.0;
         
         draggingOutFromToolbeltLockY = YES;
-        int index = [_hud.toolbelt indexAtPosition:p];
+//        int index = [_hud.toolbelt indexAtPosition:p];
         if (index == -1) return NO;
-        _hud.toolbelt.currentObjectIndex = index;
+//        _hud.toolbelt.currentObjectIndex = index;
         draggingOutFromToolbeltStart = p;
         return YES;
     } else if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
@@ -696,48 +677,48 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 }
 
 - (IBAction)handleCreateGateGesture:(UIPanGestureRecognizer *)sender {
-    Circuit *_circuit = _document.circuit;
-    if (draggingOutFromToolbeltLockY) {
-        // still dragging it out of the toolbelt
-        
-        if ([sender numberOfTouches] != 1) {
-            sender.enabled = NO;
-            sender.enabled = YES;
-            return;
-        }
-        CGPoint p = [sender locationOfTouch:0 inView:self.view];
-        
-        CGPoint diff = CGPointMake(p.x - draggingOutFromToolbeltStart.x, p.y - draggingOutFromToolbeltStart.y);
-        if (diff.x > _hud.toolbelt.listWidth) {
-            GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, p)];
-            
-            // the gate is out of the toolbelt, act the same as the normal drag gate gesture from now on:
-            draggingOutFromToolbeltLockY = NO;
-            
-            ToolbeltItem *item = _hud.toolbelt.items[_hud.toolbelt.currentObjectIndex];
-            
-            
-            // Create a new gate object, and start dragging the gate (as if the drag gate gesture recognizer started)
-            
-            CircuitObject *o = [_circuit addObject:item.type];
-            beginLongPressGestureObject = o;
-            o->pos.x = position.x;
-            o->pos.y = position.y - 100.0;
-            GLKVector3 objectPosition = *(GLKVector3 *) &beginLongPressGestureObject->pos;
-
-            beginLongPressGestureOffset = GLKVector3Subtract(objectPosition, position);
-            
-            beginLongPressGestureObject = o;
-            
-            _hud.toolbelt.currentObjectIndex = -1;
-        } else {
-            _hud.toolbelt.currentObjectX = diff.x;
-        }
-    } else {
-        // the gate is out of the toolbelt:
-        [self handleDragGateGesture:sender];
-    }
-    [self unpause];
+//    Circuit *_circuit = _document.circuit;
+//    if (draggingOutFromToolbeltLockY) {
+//        // still dragging it out of the toolbelt
+//        
+//        if ([sender numberOfTouches] != 1) {
+//            sender.enabled = NO;
+//            sender.enabled = YES;
+//            return;
+//        }
+//        CGPoint p = [sender locationOfTouch:0 inView:self.view];
+//        
+//        CGPoint diff = CGPointMake(p.x - draggingOutFromToolbeltStart.x, p.y - draggingOutFromToolbeltStart.y);
+//        if (diff.x > _hud.toolbelt.listWidth) {
+//            GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, p)];
+//            
+//            // the gate is out of the toolbelt, act the same as the normal drag gate gesture from now on:
+//            draggingOutFromToolbeltLockY = NO;
+//            
+//            ToolbeltItem *item = _hud.toolbelt.items[_hud.toolbelt.currentObjectIndex];
+//            
+//            
+//            // Create a new gate object, and start dragging the gate (as if the drag gate gesture recognizer started)
+//            
+//            CircuitObject *o = [_circuit addObject:item.type];
+//            beginLongPressGestureObject = o;
+//            o->pos.x = position.x;
+//            o->pos.y = position.y - 100.0;
+//            GLKVector3 objectPosition = *(GLKVector3 *) &beginLongPressGestureObject->pos;
+//
+//            beginLongPressGestureOffset = GLKVector3Subtract(objectPosition, position);
+//            
+//            beginLongPressGestureObject = o;
+//            
+//            _hud.toolbelt.currentObjectIndex = -1;
+//        } else {
+//            _hud.toolbelt.currentObjectX = diff.x;
+//        }
+//    } else {
+//        // the gate is out of the toolbelt:
+//        [self handleDragGateGesture:sender];
+//    }
+//    [self unpause];
 }
 
 - (IBAction)handleCreateLinkGesture:(UILongPressGestureRecognizer *)sender {
@@ -928,8 +909,8 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 }
 
 - (IBAction) toggleHeaderVisibility:(id)sender {
-    BOOL visible = !self.hud.toolbelt.visible;
-    self.hud.toolbelt.visible = visible;
+    BOOL visible = YES;
+//    self.hud.toolbelt.visible = visible;
 //    self.navigationController.navigationBarHidden = !visible;
     [UIView animateWithDuration:0.2 animations:^{
         self.navigationController.navigationBar.alpha = visible ? 1.0 : 0.0;

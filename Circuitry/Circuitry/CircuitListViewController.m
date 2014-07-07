@@ -18,6 +18,8 @@
 
 #import "TransitionFromDocumentListToDocument.h"
 
+#import "CircuitDocumentViewController.h"
+
 
 @interface DocumentListItem : NSObject
 @property (nonatomic) NSURL *url;
@@ -114,7 +116,7 @@
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"presentDocument"]) {
         
-        ViewController *controller = [segue destinationViewController];
+        CircuitDocumentViewController *controller = [segue destinationViewController];
         controller.document = _presentingDocument;
     }
 }

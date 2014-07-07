@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "Toolbelt.h"
 #import "Drawable.h"
 #import "Viewport.h"
 #import "ImageAtlas.h"
@@ -17,7 +16,6 @@
 - (id) initWithAtlas:(ImageAtlas *)atlas;
 - (int) update: (NSTimeInterval) dt;
 
-@property (strong, nonatomic) Toolbelt *toolbelt;
 - (void) setViewPort:(Viewport *)viewport;
 
 @end

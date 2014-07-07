@@ -7,7 +7,6 @@
 //
 
 #import "HUD.h"
-#import "Toolbelt.h"
 
 @interface HUD() {
     Viewport *_viewport;
@@ -18,8 +17,6 @@
 
 - (id) initWithAtlas:(ImageAtlas *)atlas {
     self = [super init];
-
-    _toolbelt = [[Toolbelt alloc] initWithAtlas:atlas];
     return self;
 }
 
@@ -27,16 +24,14 @@
     GLKMatrixStackPush(stack);
     float devicePixelRatio = 2.0;
     GLKMatrixStackScale(stack,  1/ devicePixelRatio, 1/devicePixelRatio, 1/devicePixelRatio);
-    [_toolbelt drawWithStack:stack];
     GLKMatrixStackPop(stack);
 }
 - (int) update: (NSTimeInterval) dt {
-    return [_toolbelt update:dt];
+    return 0;
 }
 
 
 - (void) setViewPort:(Viewport *)viewport {
     _viewport = viewport;
-    _toolbelt.viewport = viewport;
 }
 @end
