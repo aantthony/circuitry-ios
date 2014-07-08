@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6154.17" systemVersion="13D65" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="rnE-YD-fev">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="rnE-YD-fev">
     <dependencies>
-        <deployment defaultVersion="1792" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6153.11"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <scenes>
-        <!--Circuit Document View Controller-->
+        <!--Circuit Document View Controller - test-->
         <scene sceneID="fNu-Fm-yIg">
             <objects>
                 <viewController id="2hA-su-58g" customClass="CircuitDocumentViewController" sceneMemberID="viewController">
@@ -17,28 +16,36 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="isi-1p-ZHn">
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="isi-1p-ZHn">
                                 <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                                 <connections>
                                     <segue destination="BV1-FR-VrT" kind="embed" id="T04-qz-oBq"/>
                                 </connections>
                             </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8GE-Pt-Sug">
-                                <rect key="frame" x="0.0" y="44" width="207" height="980"/>
+                                <rect key="frame" x="0.0" y="63" width="207" height="961"/>
                                 <connections>
                                     <segue destination="92d-HQ-qId" kind="embed" id="Ado-jK-saD"/>
                                 </connections>
                             </containerView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="0Ys-4M-3pE" firstAttribute="top" secondItem="isi-1p-ZHn" secondAttribute="bottom" id="1NR-Ds-kbU"/>
+                            <constraint firstAttribute="trailing" secondItem="isi-1p-ZHn" secondAttribute="trailing" id="D8w-5r-iLY"/>
+                            <constraint firstItem="isi-1p-ZHn" firstAttribute="top" secondItem="U6a-IS-6io" secondAttribute="top" id="JqZ-Tu-jsn"/>
+                            <constraint firstItem="isi-1p-ZHn" firstAttribute="leading" secondItem="U6a-IS-6io" secondAttribute="leading" id="rx5-Zg-Mbz"/>
+                        </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="M0a-6u-F4U"/>
+                    <navigationItem key="navigationItem" title="test" id="eXc-qK-JHX">
+                        <barButtonItem key="rightBarButtonItem" image="ic.png" id="nPY-62-rYn"/>
+                    </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GmU-f2-KCc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2682" y="-748"/>
         </scene>
-        <!--GLKit View Controller - test-->
+        <!--GLKit View Controller-->
         <scene sceneID="tXr-a1-R10">
             <objects>
                 <glkViewController storyboardIdentifier="Viewing Circuit" preferredFramesPerSecond="60" id="BV1-FR-VrT" customClass="ViewController" sceneMemberID="viewController">
@@ -61,9 +68,6 @@
                             <outletCollection property="gestureRecognizers" destination="W0R-Er-cpe" appends="YES" id="s9W-GF-sNq"/>
                         </connections>
                     </glkView>
-                    <navigationItem key="navigationItem" title="test" id="eXc-qK-JHX">
-                        <barButtonItem key="rightBarButtonItem" image="ic.png" id="nPY-62-rYn"/>
-                    </navigationItem>
                     <keyCommands/>
                     <connections>
                         <outlet property="pinchGestureRecognizer" destination="prC-OQ-El9" id="tZZ-eO-MgU"/>
@@ -255,7 +259,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                             </imageView>
                             <scrollView autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceHorizontal="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EU2-oe-YNk">
-                                <rect key="frame" x="0.0" y="1" width="768" height="1024"/>
+                                <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                                 <subviews>
                                     <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tnA-I8-oZH">
                                         <rect key="frame" x="0.0" y="0.0" width="2304" height="1024"/>
@@ -346,27 +350,26 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oJ5-BI-oId" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1205" y="-1626"/>
+            <point key="canvasLocation" x="1367" y="-1998"/>
         </scene>
         <!--Circuit Object List Table View Controller-->
         <scene sceneID="Odt-EM-XnG">
             <objects>
                 <tableViewController id="92d-HQ-qId" customClass="CircuitObjectListTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="80" sectionHeaderHeight="22" sectionFooterHeight="22" id="anR-55-epr">
-                        <rect key="frame" x="0.0" y="0.0" width="207" height="980"/>
+                        <rect key="frame" x="0.0" y="0.0" width="207" height="961"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" ambiguous="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="CircuitObjectItemIdentifier" rowHeight="80" id="T64-lA-g3q" customClass="ToolbeltItemTableViewCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CircuitObjectItemIdentifier" rowHeight="80" id="T64-lA-g3q" customClass="ToolbeltItemTableViewCell">
+                                <rect key="frame" x="0.0" y="22" width="207" height="80"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="T64-lA-g3q" id="GI7-Kf-vdT">
+                                    <rect key="frame" x="0.0" y="0.0" width="207" height="79"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="or-gate.png" translatesAutoresizingMaskIntoConstraints="NO" id="HAG-xY-fkt">
-                                            <rect key="frame" x="112" y="2" width="95" height="77"/>
-                                        </imageView>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Object Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fAD-Le-CC6">
-                                            <rect key="frame" x="20" y="16" width="196" height="21"/>
+                                            <rect key="frame" x="20" y="20" width="196" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
@@ -377,6 +380,9 @@
                                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="or.png" translatesAutoresizingMaskIntoConstraints="NO" id="HAG-xY-fkt">
+                                            <rect key="frame" x="106" y="0.0" width="95" height="77"/>
+                                        </imageView>
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
@@ -391,17 +397,52 @@
                             <outlet property="delegate" destination="92d-HQ-qId" id="Aks-sK-njQ"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="searchDisplayController" destination="spr-TK-onu" id="oYr-EC-EVU"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q5p-fw-2hb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <searchDisplayController id="D5D-2y-zFr">
+                    <connections>
+                        <outlet property="delegate" destination="92d-HQ-qId" id="Yzz-1r-Ime"/>
+                        <outlet property="searchContentsController" destination="92d-HQ-qId" id="g4l-QA-qOi"/>
+                        <outlet property="searchResultsDataSource" destination="92d-HQ-qId" id="usP-kd-Fcu"/>
+                        <outlet property="searchResultsDelegate" destination="92d-HQ-qId" id="O6d-rB-lFa"/>
+                    </connections>
+                </searchDisplayController>
+                <searchDisplayController id="pgh-Ap-O3e">
+                    <connections>
+                        <outlet property="delegate" destination="92d-HQ-qId" id="xfI-pB-dmM"/>
+                        <outlet property="searchContentsController" destination="92d-HQ-qId" id="GL8-tp-LaO"/>
+                        <outlet property="searchResultsDataSource" destination="92d-HQ-qId" id="5lr-x6-eUv"/>
+                        <outlet property="searchResultsDelegate" destination="92d-HQ-qId" id="0Vg-Ch-E7S"/>
+                    </connections>
+                </searchDisplayController>
+                <searchDisplayController id="Zzn-9c-dUT">
+                    <connections>
+                        <outlet property="delegate" destination="92d-HQ-qId" id="axe-Z2-WZt"/>
+                        <outlet property="searchContentsController" destination="92d-HQ-qId" id="68v-nf-WWP"/>
+                        <outlet property="searchResultsDataSource" destination="92d-HQ-qId" id="rqs-Tz-njg"/>
+                        <outlet property="searchResultsDelegate" destination="92d-HQ-qId" id="Gib-E5-oGb"/>
+                    </connections>
+                </searchDisplayController>
+                <searchDisplayController id="spr-TK-onu">
+                    <connections>
+                        <outlet property="delegate" destination="92d-HQ-qId" id="b92-KG-SkY"/>
+                        <outlet property="searchContentsController" destination="92d-HQ-qId" id="h1c-k1-aPI"/>
+                        <outlet property="searchResultsDataSource" destination="92d-HQ-qId" id="FVi-0D-aB8"/>
+                        <outlet property="searchResultsDelegate" destination="92d-HQ-qId" id="hnu-sa-Ejl"/>
+                    </connections>
+                </searchDisplayController>
             </objects>
-            <point key="canvasLocation" x="2057.5" y="-555"/>
+            <point key="canvasLocation" x="2156" y="-453"/>
         </scene>
     </scenes>
     <resources>
         <image name="background.jpg" width="2048" height="1536"/>
         <image name="ic.png" width="23" height="23"/>
         <image name="large-plus.png" width="54" height="54"/>
-        <image name="or-gate.png" width="73" height="32"/>
+        <image name="or.png" width="90" height="50"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <nil key="statusBar"/>

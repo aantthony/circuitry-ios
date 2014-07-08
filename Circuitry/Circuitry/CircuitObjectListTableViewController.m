@@ -10,11 +10,13 @@
 #import "ToolbeltItem.h"
 #import "ToolbeltItemTableViewCell.h"
 
-@interface CircuitObjectListTableViewController () {
+@interface CircuitObjectListTableViewController () <UISearchBarDelegate> {
     CircuitDocument *_document;
 }
+@property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 
 @property (nonatomic) NSArray *items;
+@property (nonatomic) NSArray *results;
 @end
 
 @implementation CircuitObjectListTableViewController
@@ -28,6 +30,17 @@
     return self;
 }
 
+- (void) searchThroughData {
+    self.results = nil;
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name contains [search] %@", self.searchBar.text];
+    NSLog(@"items: %@", self.items);
+    self.results = [[self.items filteredArrayUsingPredicate:predicate] mutableCopy];
+}
+
+- (void) searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    [self searchThroughData];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -39,16 +52,49 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
     ToolbeltItem *item = [ToolbeltItem new];
-    item.name = @"OR Gate";
+    item.name = @"OR";
+    item.type = @"or";
     item.subtitle = @"2 in, 1 out";
-    item.image = [UIImage imageNamed:@"or-gate.png"];
+    item.image = [UIImage imageNamed:@"or.png"];
     
     ToolbeltItem *item2 = [ToolbeltItem new];
-    item2.name = @"AND Gate";
+    item2.name = @"AND";
+    item.type = @"or";
     item2.subtitle = @"2 in, 1 out";
-    item2.image = [UIImage imageNamed:@"and-gate.png"];
+    item2.image = [UIImage imageNamed:@"and.png"];
     
-    self.items = @[item, item2];
+    ToolbeltItem *item3 = [ToolbeltItem new];
+    item3.name = @"NOT";
+    item3.type = @"not";
+    item3.subtitle = @"1 in, 1 out";
+    item3.image = [UIImage imageNamed:@"not.png"];
+    
+    ToolbeltItem *item4 = [ToolbeltItem new];
+    item4.name = @"XOR";
+    item4.type = @"xor";
+    item4.subtitle = @"2 in, 1 out";
+    item4.image = [UIImage imageNamed:@"xor.png"];
+    
+    ToolbeltItem *item5 = [ToolbeltItem new];
+    item5.name = @"XNOR";
+    item5.type = @"xnor";
+    item5.subtitle = @"1 in, 1 out";
+    item5.image = [UIImage imageNamed:@"xnor.png"];
+    
+    ToolbeltItem *item6 = [ToolbeltItem new];
+    item6.name = @"NAND";
+    item6.type = @"nand";
+    item6.subtitle = @"2 in, 1 out";
+    item6.image = [UIImage imageNamed:@"nand.png"];
+    
+    ToolbeltItem *item7 = [ToolbeltItem new];
+    item7.name = @"NOR";
+    item7.type = @"nor";
+    item7.subtitle = @"2 in, 1 out";
+    item7.image = [UIImage imageNamed:@"nor.png"];
+
+    self.items = @[item, item2, item3, item4, item5, item6, item7];
+    self.results = self.items;
 }
 
 - (void) setDocument: (CircuitDocument *) document {
@@ -67,58 +113,36 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return _items.count;
+    if (tableView == self.tableView) {
+        return _items.count;
+    } else {
+        [self searchThroughData];
+        return _results.count;
+    }
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    ToolbeltItemTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CircuitObjectItemIdentifier" forIndexPath:indexPath];
+    static NSString *identifier = @"CircuitObjectItemIdentifier";
+    ToolbeltItemTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
 
+    if (!cell) {
+        cell = (ToolbeltItemTableViewCell *)[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+    }
     
-    [cell configureForToolbeltItem: _items[indexPath.row]];
-    // Configure the cell...
+    
+    if (tableView == self.tableView) {
+        [cell configureForToolbeltItem: _items[indexPath.row]];
+    } else {
+        [cell configureForToolbeltItem: _results[indexPath.row]];
+    }
     
     return cell;
 }
 
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+- (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 /*
 #pragma mark - Navigation
