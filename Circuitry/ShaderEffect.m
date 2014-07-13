@@ -99,9 +99,7 @@
                                  @GL_INVALID_VALUE: @"GL_INVALID_VALUE",
                                  @GL_INVALID_OPERATION: @"GL_INVALID_OPERATION",
                                  @GL_INVALID_FRAMEBUFFER_OPERATION: @"GL_INVALID_FRAMEBUFFER_OPERATION",
-                                 @GL_OUT_OF_MEMORY: @"GL_OUT_OF_MEMORY",
-                                 @GL_STACK_UNDERFLOW: @"GL_STACK_UNDERFLOW",
-                                 @GL_STACK_OVERFLOW: @"GL_STACK_OVERFLOW"
+                                 @GL_OUT_OF_MEMORY: @"GL_OUT_OF_MEMORY"
                                  };
         [NSException raise:@"OpenGL Error" format:@"%@ (%d)", [names objectForKey:[NSNumber numberWithInt:err]], err];
     }

@@ -13,6 +13,9 @@
 
 #import "AppDelegate.h"
 
+// For iOS 8 support:
+#import <OpenGLES/ES1/glext.h>
+
 @interface ViewController () <UIActionSheetDelegate> {
     IBOutlet UIPinchGestureRecognizer *_pinchGestureRecognizer;
     GLKMatrix4 _modelViewProjectionMatrix;

@@ -1,6 +1,8 @@
 #import "Sprite.h"
 #import "ShaderEffect.h"
 
+#import <OpenGLES/ES1/glext.h>
+
 @interface Sprite()
 @property GLKTextureInfo *texture;
 @end
