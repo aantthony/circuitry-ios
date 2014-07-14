@@ -912,7 +912,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         CircuitObject *object = [_viewport findCircuitObjectAtPosition:position];
         
         if (!object) break;
-        if (object->type == [_document.circuit getProcessById:@"in"]) {
+        if (object->type == [_document.circuit getProcessById:@"button"]) {
             // Toggle a switch:
             hit = YES;
             object->out = !object->out;

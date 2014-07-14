@@ -24,6 +24,8 @@
     CircuitProcess *OR  ;
     CircuitProcess *IN  ;
     CircuitProcess *OUT ;
+    CircuitProcess *LIGHT;
+    CircuitProcess *BUTTON;
     CircuitProcess *NOR ;
     CircuitProcess *XOR ;
     CircuitProcess *XNOR;
@@ -150,6 +152,9 @@ static SpriteTexturePos symbolNOT;
     NAND=[_circuit getProcessById:@"nand"];
     NOT =[_circuit getProcessById:@"not"];
     OUT =[_circuit getProcessById:@"out"];
+    
+    LIGHT  =[_circuit getProcessById:@"light"];
+    BUTTON  =[_circuit getProcessById:@"button"];
     SEG7 =[_circuit getProcessById:@"7seg"];
 }
 
@@ -382,11 +387,11 @@ BOOL expandDrawGate(CircuitObject *object) {
         }
         
         
-        if (object->type == IN) {
+        if (object->type == BUTTON) {
             instance->tex = object->out ? switchOn : switchOff;
             instance->x -= 50.0;
             instance->y -= 50.0;
-        } else if (object->type == OUT) {
+        } else if (object->type == LIGHT) {
             BatchedSpriteInstance *symbol = &_instances[i++];
             symbol->x = pos.x + 70.0;
             symbol->y = pos.y - 85.0;

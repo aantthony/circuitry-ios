@@ -29,6 +29,22 @@
 		9204C39C182E2F5C006A008D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9204C373182E2F5C006A008D /* Foundation.framework */; };
 		9204C39D182E2F5C006A008D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9204C377182E2F5C006A008D /* UIKit.framework */; };
 		9204C3A5182E2F5C006A008D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9204C3A3182E2F5C006A008D /* InfoPlist.strings */; };
+		920A1A021973FE1800A67742 /* add4@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 920A19F31973FE1800A67742 /* add4@2x.png */; };
+		920A1A031973FE1800A67742 /* and@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 920A19F41973FE1800A67742 /* and@2x.png */; };
+		920A1A041973FE1800A67742 /* bin7seg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 920A19F51973FE1800A67742 /* bin7seg@2x.png */; };
+		920A1A051973FE1800A67742 /* capacitor 2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 920A19F61973FE1800A67742 /* capacitor 2@2x.png */; };
+		920A1A061973FE1800A67742 /* capacitor@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 920A19F71973FE1800A67742 /* capacitor@2x.png */; };
+		920A1A071973FE1800A67742 /* clock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 920A19F81973FE1800A67742 /* clock@2x.png */; };
+		920A1A081973FE1800A67742 /* led@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 920A19F91973FE1800A67742 /* led@2x.png */; };
+		920A1A091973FE1800A67742 /* mult4@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 920A19FA1973FE1800A67742 /* mult4@2x.png */; };
+		920A1A0A1973FE1800A67742 /* nand@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 920A19FB1973FE1800A67742 /* nand@2x.png */; };
+		920A1A0B1973FE1800A67742 /* nor@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 920A19FC1973FE1800A67742 /* nor@2x.png */; };
+		920A1A0C1973FE1800A67742 /* not@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 920A19FD1973FE1800A67742 /* not@2x.png */; };
+		920A1A0D1973FE1800A67742 /* or@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 920A19FE1973FE1800A67742 /* or@2x.png */; };
+		920A1A0E1973FE1800A67742 /* switch@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 920A19FF1973FE1800A67742 /* switch@2x.png */; };
+		920A1A0F1973FE1800A67742 /* xnor@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 920A1A001973FE1800A67742 /* xnor@2x.png */; };
+		920A1A101973FE1800A67742 /* xor@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 920A1A011973FE1800A67742 /* xor@2x.png */; };
+		920A1A121973FE6600A67742 /* 7seg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 920A1A111973FE6600A67742 /* 7seg@2x.png */; };
 		920BC892189E7674004E5D45 /* MongoID.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A861B1189E402900F64673 /* MongoID.m */; };
 		9218F7381876978A00742F99 /* LinkBezier.m in Sources */ = {isa = PBXBuildFile; fileRef = 9218F7371876978A00742F99 /* LinkBezier.m */; };
 		9218F73A1876981900742F99 /* LinkBezier.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 9218F7391876981900742F99 /* LinkBezier.fsh */; };
@@ -43,13 +59,6 @@
 		9232B6771878436E00E45C7E /* BatchedSprite.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9232B6541878353A00E45C7E /* BatchedSprite.fsh */; };
 		923A0631189D2D660064834C /* CircuitDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 923A0630189D2D660064834C /* CircuitDocument.m */; };
 		923C143818826D960017BAF3 /* HUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 923C143718826D960017BAF3 /* HUD.m */; };
-		92431294196C2DE90096B0E2 /* nand@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9243128E196C2DE90096B0E2 /* nand@2x.png */; };
-		92431295196C2DE90096B0E2 /* nor@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9243128F196C2DE90096B0E2 /* nor@2x.png */; };
-		92431296196C2DE90096B0E2 /* not@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92431290196C2DE90096B0E2 /* not@2x.png */; };
-		92431297196C2DE90096B0E2 /* or@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92431291196C2DE90096B0E2 /* or@2x.png */; };
-		92431298196C2DE90096B0E2 /* xnor@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92431292196C2DE90096B0E2 /* xnor@2x.png */; };
-		92431299196C2DE90096B0E2 /* xor@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92431293196C2DE90096B0E2 /* xor@2x.png */; };
-		9243129B196C2E6C0096B0E2 /* and@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9243129A196C2E6C0096B0E2 /* and@2x.png */; };
 		9253C409188545EC00D2509C /* CreateGatePanGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9253C408188545EC00D2509C /* CreateGatePanGestureRecognizer.m */; };
 		9253C40C18854D0B00D2509C /* CreateLinkGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9253C40B18854D0B00D2509C /* CreateLinkGestureRecognizer.m */; };
 		926099E0196917CF0048F2BD /* CircuitDocumentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 926099DF196917CF0048F2BD /* CircuitDocumentViewController.m */; };
@@ -147,6 +156,22 @@
 		9204C3A4182E2F5C006A008D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9208B106187565390038A52A /* Circuitry.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Circuitry.entitlements; sourceTree = "<group>"; };
 		9208BDF71965851C00980D70 /* circuitry.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = circuitry.entitlements; path = circuitry/circuitry.entitlements; sourceTree = "<group>"; };
+		920A19F31973FE1800A67742 /* add4@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add4@2x.png"; sourceTree = "<group>"; };
+		920A19F41973FE1800A67742 /* and@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "and@2x.png"; sourceTree = "<group>"; };
+		920A19F51973FE1800A67742 /* bin7seg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bin7seg@2x.png"; sourceTree = "<group>"; };
+		920A19F61973FE1800A67742 /* capacitor 2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "capacitor 2@2x.png"; sourceTree = "<group>"; };
+		920A19F71973FE1800A67742 /* capacitor@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "capacitor@2x.png"; sourceTree = "<group>"; };
+		920A19F81973FE1800A67742 /* clock@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "clock@2x.png"; sourceTree = "<group>"; };
+		920A19F91973FE1800A67742 /* led@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "led@2x.png"; sourceTree = "<group>"; };
+		920A19FA1973FE1800A67742 /* mult4@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mult4@2x.png"; sourceTree = "<group>"; };
+		920A19FB1973FE1800A67742 /* nand@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nand@2x.png"; sourceTree = "<group>"; };
+		920A19FC1973FE1800A67742 /* nor@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nor@2x.png"; sourceTree = "<group>"; };
+		920A19FD1973FE1800A67742 /* not@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "not@2x.png"; sourceTree = "<group>"; };
+		920A19FE1973FE1800A67742 /* or@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "or@2x.png"; sourceTree = "<group>"; };
+		920A19FF1973FE1800A67742 /* switch@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "switch@2x.png"; sourceTree = "<group>"; };
+		920A1A001973FE1800A67742 /* xnor@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "xnor@2x.png"; sourceTree = "<group>"; };
+		920A1A011973FE1800A67742 /* xor@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "xor@2x.png"; sourceTree = "<group>"; };
+		920A1A111973FE6600A67742 /* 7seg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "7seg@2x.png"; sourceTree = "<group>"; };
 		9218F7361876978A00742F99 /* LinkBezier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkBezier.h; sourceTree = "<group>"; };
 		9218F7371876978A00742F99 /* LinkBezier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LinkBezier.m; sourceTree = "<group>"; };
 		9218F7391876981900742F99 /* LinkBezier.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = LinkBezier.fsh; sourceTree = "<group>"; };
@@ -160,13 +185,6 @@
 		923A0630189D2D660064834C /* CircuitDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircuitDocument.m; sourceTree = "<group>"; };
 		923C143618826D960017BAF3 /* HUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HUD.h; sourceTree = "<group>"; };
 		923C143718826D960017BAF3 /* HUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HUD.m; sourceTree = "<group>"; };
-		9243128E196C2DE90096B0E2 /* nand@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nand@2x.png"; sourceTree = "<group>"; };
-		9243128F196C2DE90096B0E2 /* nor@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nor@2x.png"; sourceTree = "<group>"; };
-		92431290196C2DE90096B0E2 /* not@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "not@2x.png"; sourceTree = "<group>"; };
-		92431291196C2DE90096B0E2 /* or@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "or@2x.png"; sourceTree = "<group>"; };
-		92431292196C2DE90096B0E2 /* xnor@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "xnor@2x.png"; sourceTree = "<group>"; };
-		92431293196C2DE90096B0E2 /* xor@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "xor@2x.png"; sourceTree = "<group>"; };
-		9243129A196C2E6C0096B0E2 /* and@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "and@2x.png"; sourceTree = "<group>"; };
 		9253C407188545EC00D2509C /* CreateGatePanGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateGatePanGestureRecognizer.h; sourceTree = "<group>"; };
 		9253C408188545EC00D2509C /* CreateGatePanGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateGatePanGestureRecognizer.m; sourceTree = "<group>"; };
 		9253C40A18854D0B00D2509C /* CreateLinkGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateLinkGestureRecognizer.h; sourceTree = "<group>"; };
@@ -497,13 +515,22 @@
 		9288BBB1196AD5810090455A /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				9243128E196C2DE90096B0E2 /* nand@2x.png */,
-				9243128F196C2DE90096B0E2 /* nor@2x.png */,
-				9243129A196C2E6C0096B0E2 /* and@2x.png */,
-				92431290196C2DE90096B0E2 /* not@2x.png */,
-				92431291196C2DE90096B0E2 /* or@2x.png */,
-				92431292196C2DE90096B0E2 /* xnor@2x.png */,
-				92431293196C2DE90096B0E2 /* xor@2x.png */,
+				920A1A111973FE6600A67742 /* 7seg@2x.png */,
+				920A19F31973FE1800A67742 /* add4@2x.png */,
+				920A19F41973FE1800A67742 /* and@2x.png */,
+				920A19F51973FE1800A67742 /* bin7seg@2x.png */,
+				920A19F61973FE1800A67742 /* capacitor 2@2x.png */,
+				920A19F71973FE1800A67742 /* capacitor@2x.png */,
+				920A19F81973FE1800A67742 /* clock@2x.png */,
+				920A19F91973FE1800A67742 /* led@2x.png */,
+				920A19FA1973FE1800A67742 /* mult4@2x.png */,
+				920A19FB1973FE1800A67742 /* nand@2x.png */,
+				920A19FC1973FE1800A67742 /* nor@2x.png */,
+				920A19FD1973FE1800A67742 /* not@2x.png */,
+				920A19FE1973FE1800A67742 /* or@2x.png */,
+				920A19FF1973FE1800A67742 /* switch@2x.png */,
+				920A1A001973FE1800A67742 /* xnor@2x.png */,
+				920A1A011973FE1800A67742 /* xor@2x.png */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -613,31 +640,40 @@
 			buildActionMask = 2147483647;
 			files = (
 				920046A2189D0A60007124DA /* SevenSegmentDisplay.fsh in Resources */,
-				92431295196C2DE90096B0E2 /* nor@2x.png in Resources */,
 				92FC7F9618A5906900EA329A /* large-plus@2x.png in Resources */,
 				920046A3189D0A60007124DA /* SevenSegmentDisplay.vsh in Resources */,
+				920A1A061973FE1800A67742 /* capacitor@2x.png in Resources */,
+				920A1A081973FE1800A67742 /* led@2x.png in Resources */,
+				920A1A0D1973FE1800A67742 /* or@2x.png in Resources */,
+				920A1A091973FE1800A67742 /* mult4@2x.png in Resources */,
 				9232B6761878436E00E45C7E /* BatchedSprite.vsh in Resources */,
 				92020C0B189A578200B6D8F5 /* circuit.image-atlas in Resources */,
-				92431296196C2DE90096B0E2 /* not@2x.png in Resources */,
-				92431298196C2DE90096B0E2 /* xnor@2x.png in Resources */,
-				9243129B196C2E6C0096B0E2 /* and@2x.png in Resources */,
 				9232B6771878436E00E45C7E /* BatchedSprite.fsh in Resources */,
+				920A1A041973FE1800A67742 /* bin7seg@2x.png in Resources */,
+				920A1A031973FE1800A67742 /* and@2x.png in Resources */,
 				9218F73D1876AB7C00742F99 /* LinkBezier.fsh in Resources */,
 				9218F73E1876AB7C00742F99 /* LinkBezier.vsh in Resources */,
 				92A4F871187295EF00EEB367 /* Grid.vsh in Resources */,
+				920A1A121973FE6600A67742 /* 7seg@2x.png in Resources */,
+				920A1A021973FE1800A67742 /* add4@2x.png in Resources */,
 				92794CB118AF0E5500A39012 /* ic@2x.png in Resources */,
+				920A1A0C1973FE1800A67742 /* not@2x.png in Resources */,
 				92020C09189A54ED00B6D8F5 /* background.jpg in Resources */,
 				923056A118759577005AE348 /* Configurations.plist in Resources */,
+				920A1A101973FE1800A67742 /* xor@2x.png in Resources */,
+				920A1A051973FE1800A67742 /* capacitor 2@2x.png in Resources */,
 				92A4F872187295EF00EEB367 /* Grid.fsh in Resources */,
-				92431294196C2DE90096B0E2 /* nand@2x.png in Resources */,
 				9288062418725AB20096A1CA /* Sprite.vsh in Resources */,
 				9288062518725AB20096A1CA /* Sprite.fsh in Resources */,
+				920A1A071973FE1800A67742 /* clock@2x.png in Resources */,
+				920A1A0F1973FE1800A67742 /* xnor@2x.png in Resources */,
+				920A1A0B1973FE1800A67742 /* nor@2x.png in Resources */,
 				9204C394182E2F5C006A008D /* Images.xcassets in Resources */,
-				92431297196C2DE90096B0E2 /* or@2x.png in Resources */,
 				92A28A5B187428BE00F0D934 /* nand.json in Resources */,
+				920A1A0E1973FE1800A67742 /* switch@2x.png in Resources */,
+				920A1A0A1973FE1800A67742 /* nand@2x.png in Resources */,
 				9204C382182E2F5C006A008D /* InfoPlist.strings in Resources */,
 				9204C38B182E2F5C006A008D /* Main.storyboard in Resources */,
-				92431299196C2DE90096B0E2 /* xor@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -37,17 +37,17 @@ void *srealloc(void * d, size_t c) {
 
 
 
-int XOR  (int x, void *d) { return x == 1 || x == 2;}
-int XNOR (int x, void *d) { return x == 0 || x == 3;}
-int AND  (int x, void *d) { return x == 3;}
-int NAND (int x, void *d) { return x != 3;}
-int NOT  (int x, void *d) { return !x; }
-int NOR  (int x, void *d) { return !x; }
-int OR   (int x, void *d) { return !!x; }
-int ADD8 (int x, void *d) { return (x&255) + (x >> 8); }
+static int XOR  (int x, void *d) { return x == 1 || x == 2;}
+static int XNOR (int x, void *d) { return x == 0 || x == 3;}
+static int AND  (int x, void *d) { return x == 3;}
+static int NAND (int x, void *d) { return x != 3;}
+static int NOT  (int x, void *d) { return !x; }
+static int NOR  (int x, void *d) { return !x; }
+static int OR   (int x, void *d) { return !!x; }
+static int ADD8 (int x, void *d) { return (x&255) + (x >> 8); }
 
-int BINDEC (int x, void *d) { return 1 << x; }
-int BIN7SEG(int x, void *d) {
+static int BINDEC (int x, void *d) { return 1 << x; }
+static int BIN7SEG(int x, void *d) {
     switch(x) {
         case 0: return 0b0111111;
         case 1: return 0b0000110;
@@ -70,32 +70,29 @@ int BIN7SEG(int x, void *d) {
     }
 }
 
-CircuitProcess defaultGates[] = {
-    {"in",  0, 1, NULL },
-    {"out", 1, 0, NULL },
-    {"or",  2, 1, OR },
-    {"not", 1, 1, NOT },
-    {"nor", 2, 1, NOR },
-    {"xor", 2, 1, XOR },
-    {"xnor", 2, 1,XNOR },
-    {"and", 2, 1, AND },
-    {"nand", 2, 1, NAND },
-    {"not", 1, 1, NOT },
-    {"bindec", 4, 16, BINDEC },
-    {"add8", 16, 9, ADD8 },
-    {"bin7seg", 4, 7, BIN7SEG },
-    {"7seg", 7, 0, NULL },
-    {"clock", 0, 1, NULL }
-};
-
-CircuitProcess *clockType = &defaultGates[14];
+static CircuitProcess GateIn = {"in",  0, 1, NULL };
+static CircuitProcess GateOut = {"out",  0, 1, NULL };
+static CircuitProcess GateButton = {"button",  0, 1, NULL };
+static CircuitProcess GateLight = {"light",  1, 0, NULL };
+static CircuitProcess GateOr = {"or",  2, 1, OR };
+static CircuitProcess GateNot = {"not",  1, 1, NOT };
+static CircuitProcess GateNor = {"nor",  2, 1, NOR };
+static CircuitProcess GateXor = {"xor",  2, 1, XOR };
+static CircuitProcess GateXnor = {"xnor",  2, 1, XNOR };
+static CircuitProcess GateAnd = {"and",  2, 1, AND };
+static CircuitProcess GateNand = {"nand",  2, 1, NAND };
+static CircuitProcess GateBinDec = {"bindec", 4, 16, BINDEC };
+static CircuitProcess GateAdd8 = {"add8",  16, 9, ADD8 };
+static CircuitProcess GateBin7Seg = {"bin7seg",  4, 7, BIN7SEG };
+static CircuitProcess Gate7Seg = {"7seg",  7, 0, NULL };
+static CircuitProcess GateClock = {"clock",  0, 1, NULL };
 
 #pragma mark - Initialisation
-NSValue *valueForGate(CircuitProcess *process) {
+static NSValue *valueForGate(CircuitProcess *process) {
     return [NSValue valueWithPointer:process];
 }
 
-NSDictionary *processesById;
+static NSDictionary *processesById;
 
 - (id) init {
     if ((self = [super init])){
@@ -120,28 +117,32 @@ NSDictionary *processesById;
 }
 + (void) initialize {
     processesById = @{
-                      @"in": valueForGate(&defaultGates[0]),
-                      @"out": valueForGate(&defaultGates[1]),
-                      @"or": valueForGate(&defaultGates[2]),
-                      @"not": valueForGate(&defaultGates[3]),
-                      @"nor": valueForGate(&defaultGates[4]),
-                      @"xor": valueForGate(&defaultGates[5]),
-                      @"xnor": valueForGate(&defaultGates[6]),
-                      @"and": valueForGate(&defaultGates[7]),
-                      @"nand": valueForGate(&defaultGates[8]),
-                      @"not": valueForGate(&defaultGates[9]),
-                      @"bindec": valueForGate(&defaultGates[10]),
-                      @"add8": valueForGate(&defaultGates[11]),
-                      @"bin7seg": valueForGate(&defaultGates[12]),
-                      @"7seg": valueForGate(&defaultGates[13]),
-                      @"clock": valueForGate(&defaultGates[14])
+                      @"in": valueForGate(&GateIn),
+                      @"out": valueForGate(&GateOut),
+                      @"button": valueForGate(&GateButton),
+                      @"light": valueForGate(&GateLight),
+                      @"or": valueForGate(&GateOr),
+                      @"not": valueForGate(&GateNot),
+                      @"nor": valueForGate(&GateNor),
+                      @"xor": valueForGate(&GateXor),
+                      @"xnor": valueForGate(&GateXnor),
+                      @"and": valueForGate(&GateAnd),
+                      @"nand": valueForGate(&GateNand),
+                      @"not": valueForGate(&GateNot),
+                      @"bindec": valueForGate(&GateBinDec),
+                      @"add8": valueForGate(&GateAdd8),
+                      @"bin7seg": valueForGate(&GateBin7Seg),
+                      @"7seg": valueForGate(&Gate7Seg),
+                      @"clock": valueForGate(&GateClock)
                       };
 }
 
 - (CircuitProcess *) getProcessById:(NSString *)processId {
     CircuitProcess *p;
     id data = [processesById objectForKey:processId];
-    if (!data) [NSException raise:@"Could not find object type" format:@"Object type \"%@\" does not exist.", processId, nil];
+    if (!data) {
+        [NSException raise:@"Could not find object type" format:@"Object type \"%@\" does not exist.", processId, nil];
+    }
     p = [data pointerValue];
     return p;
 }
@@ -149,7 +150,7 @@ NSDictionary *processesById;
 #pragma mark - Simulation (written in C)
 
 
-CircuitObject *getObjectById(Circuit *c, ObjectID id) {
+static CircuitObject *getObjectById(Circuit *c, ObjectID id) {
     for(int i = 0 ; i < c->_itemsCount; i++) {
         CircuitObject *o = &c->_items[i];
         if (o->id.m[0] == id.m[0] && o->id.m[1] == id.m[1] && o->id.m[2] == id.m[2]) return o;
@@ -158,7 +159,7 @@ CircuitObject *getObjectById(Circuit *c, ObjectID id) {
 }
 
 // Queue a gate for a re-calculation
-void needsUpdate(Circuit *c, CircuitObject *object) {
+static void needsUpdate(Circuit *c, CircuitObject *object) {
     for(int i = 0; i < c->_needsUpdateCount; i++) {
         if (c->_needsUpdate[i] == object) return;
     }
@@ -173,7 +174,7 @@ void needsUpdate(Circuit *c, CircuitObject *object) {
 }
 
 // Queue a link for a re-calculation (i.e, queue the links targets for recalculation)
-void linksNeedsUpdate(Circuit *c, CircuitLink * link) {
+static void linksNeedsUpdate(Circuit *c, CircuitLink * link) {
     while(link) {
         needsUpdate(c, link->target);
         link = link->nextSibling;
@@ -200,7 +201,7 @@ CircuitObject * addObject(Circuit *c, CircuitProcess *type) {
     o->outputs = scalloc(o->type->numOutputs + o->type->numInputs, sizeof(CircuitLink *));
     o->inputs = o->outputs + o->type->numOutputs;
     
-    if (type == clockType) {
+    if (type == &GateClock) {
         c->_clocks[c->_clocksCount++] = o;
     }
     
@@ -211,7 +212,7 @@ CircuitObject * addObject(Circuit *c, CircuitProcess *type) {
 
 // Remove a circuit object (and the links into and out of it)
 // Automatically queues the outlet links targets for recalculation
-void removeObject(Circuit *c, CircuitObject *o) {
+static void removeObject(Circuit *c, CircuitObject *o) {
     for(int i = 0; i < o->type->numOutputs; i++) {
         while(o->outputs[i]) {
             removeLink(c, o->outputs[i]);
@@ -231,7 +232,7 @@ void removeObject(Circuit *c, CircuitObject *o) {
 }
 
 
-CircuitLink *makeLink(Circuit *c) {
+static CircuitLink *makeLink(Circuit *c) {
     
     c->_linksCount++;
     
@@ -248,7 +249,7 @@ CircuitLink *makeLink(Circuit *c) {
 }
 
 // Remove a link from the circuit, and queue its target for recalculation
-void removeLink(Circuit *c, CircuitLink *link) {
+static void removeLink(Circuit *c, CircuitLink *link) {
     if (link->target->in & 1<<link->targetIndex) {
         needsUpdate(c, link->target);
     }
@@ -282,7 +283,7 @@ void removeLink(Circuit *c, CircuitLink *link) {
 }
 
 // Add a link to the circuit (and will queue the targets recalculation if necessary). *All* links have a target. The half-made links in the Viewport are fakes.
-CircuitLink *addLink(Circuit *c, CircuitObject *object, int index, CircuitObject *target, int targetIndex) {
+static CircuitLink *addLink(Circuit *c, CircuitObject *object, int index, CircuitObject *target, int targetIndex) {
     CircuitLink *prev = object->outputs[index];
     CircuitLink *link;
 
@@ -342,7 +343,7 @@ CircuitLink *addLink(Circuit *c, CircuitObject *object, int index, CircuitObject
     Return value: number of gates changed
  */
  
-int simulate(Circuit *c, int ticks) {
+static int simulate(Circuit *c, int ticks) {
     int nAffected = 0;
     for(int i = 0; i < ticks; i++) {
         
