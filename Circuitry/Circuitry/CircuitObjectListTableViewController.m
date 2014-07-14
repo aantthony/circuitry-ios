@@ -142,6 +142,15 @@
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    ToolbeltItem *item;
+    
+    if (tableView == self.tableView) {
+        item = _items[indexPath.row];
+    } else {
+        item = _results[indexPath.row];
+    }
+    
+    [self.delegate tableViewController:self didStartCreatingObject:item];
 }
 
 /*

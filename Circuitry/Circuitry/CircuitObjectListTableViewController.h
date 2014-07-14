@@ -9,6 +9,17 @@
 #import <UIKit/UIKit.h>
 #import "CircuitDocument.h"
 
+#import "ToolbeltItem.h"
+
+@protocol CircuitObjectListTableViewControllerDelegate;
+
 @interface CircuitObjectListTableViewController : UITableViewController
 - (void) setDocument: (CircuitDocument *) document;
+@property (nonatomic, weak) id<CircuitObjectListTableViewControllerDelegate> delegate;
+@end
+
+@protocol CircuitObjectListTableViewControllerDelegate <NSObject>
+
+- (void) tableViewController:(CircuitObjectListTableViewController *) tableViewController didStartCreatingObject:(ToolbeltItem *)item;
+
 @end

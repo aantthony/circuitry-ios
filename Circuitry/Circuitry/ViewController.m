@@ -483,7 +483,26 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     panVelocity = CGPointZero;
     animatingPan = NO;
 }
+
+- (void) startCreatingObjectFromItem: (ToolbeltItem *) item {
+    Circuit *_circuit = _document.circuit;
+    
+    // TODO: delete draggingOutFromToolbeltLockY
+    CGPoint locationInView = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
+        
+    GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, locationInView)];
+    
+    CircuitProcess *process = [_circuit getProcessById:item.type];
+    CircuitObject *o = [_circuit addObject:process];
+    beginLongPressGestureObject = o;
+    o->pos.x = position.x;
+    o->pos.y = position.y;
+    [self unpause];
+
+}
+
 #pragma mark -  Gesture methods
+
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {

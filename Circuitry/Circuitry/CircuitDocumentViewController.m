@@ -11,8 +11,11 @@
 #import "CircuitObjectListTableViewController.h"
 #import "ViewController.h"
 
-@interface CircuitDocumentViewController ()
+@interface CircuitDocumentViewController () <CircuitObjectListTableViewControllerDelegate>
 @property (nonatomic) CircuitDocument *document;
+@property (nonatomic, weak) CircuitObjectListTableViewController *objectListViewController;
+@property (nonatomic, weak) ViewController *glkViewController;
+
 @end
 
 @implementation CircuitDocumentViewController
@@ -27,7 +30,9 @@
 }
 
 - (void) setDocument:(CircuitDocument *) document {
-    NSLog(@"CONTROLLERS: %@",  self.childViewControllers);
+    _objectListViewController.document = document;
+    _glkViewController.document = document;
+    _document = document;
 }
 
 - (void)viewDidLoad
@@ -42,6 +47,11 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - Toolbelt delegate
+
+- (void) tableViewController:(CircuitObjectListTableViewController *)tableViewController didStartCreatingObject:(ToolbeltItem *)item {
+    [_glkViewController startCreatingObjectFromItem: item];
+}
 
 #pragma mark - Navigation
 
@@ -50,9 +60,12 @@
 {
     if ([segue.destinationViewController isKindOfClass:[CircuitObjectListTableViewController class]]) {
         CircuitObjectListTableViewController *controller = (CircuitObjectListTableViewController *) segue.destinationViewController;
+        _objectListViewController = controller;
+        controller.delegate = self;
         controller.document = self.document;
     } else if ([segue.destinationViewController isKindOfClass:[ViewController class]]) {
         ViewController *controller = (ViewController *) segue.destinationViewController;
+        _glkViewController = controller;
         controller.document = self.document;
     }
 }

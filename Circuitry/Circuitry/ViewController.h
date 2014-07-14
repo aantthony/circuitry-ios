@@ -4,6 +4,8 @@
 #import "ImageAtlas.h"
 #import "CircuitDocument.h"
 
+#import "ToolbeltItem.h"
+
 @interface ViewController : GLKViewController <UIGestureRecognizerDelegate>
 
 //@property (, nonatomic) GLKMatrix4 _modelViewProjectionMatrix;\
@@ -30,5 +32,8 @@
 
 - (id) setup;
 - (void)update;
+
+
+- (void) startCreatingObjectFromItem: (ToolbeltItem *) item;
 
 @end

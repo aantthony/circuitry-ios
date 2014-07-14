@@ -99,6 +99,7 @@
     Circuit *circuit = [Circuit circuitWithStream: stream];
     
     CircuitDocument *doc = [[CircuitDocument alloc] initWithFileURL:url];
+    doc.circuit = circuit;
     _presentingDocument = doc;
     [doc openWithCompletionHandler:^(BOOL success){
         [self performSegueWithIdentifier:@"presentDocument" sender:self];
