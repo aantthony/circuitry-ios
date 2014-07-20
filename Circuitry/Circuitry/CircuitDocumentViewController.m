@@ -29,6 +29,16 @@
     return self;
 }
 
+- (BOOL) prefersStatusBarHidden {
+    return NO;
+}
+
+- (UIStatusBarStyle) preferredStatusBarStyle {
+    return UIStatusBarStyleDefault;
+//    return UIStatusBarStyleLightContent;
+}
+
+
 - (void) setDocument:(CircuitDocument *) document {
     _objectListViewController.document = document;
     _glkViewController.document = document;
@@ -45,6 +55,11 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void) viewDidAppear:(BOOL)animated {
+//    self.navigationController.navigationBarHidden = YES;
+    [super viewDidAppear:animated];
 }
 
 #pragma mark - Toolbelt delegate

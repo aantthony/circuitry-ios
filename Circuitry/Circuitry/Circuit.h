@@ -1,5 +1,6 @@
 #import <Foundation/Foundation.h>
 #import "MongoID.h"
+#import "CircuitTest.h"
 
 struct CircuitObject;
 typedef struct CircuitObject CircuitObject;
@@ -30,7 +31,7 @@ struct CircuitObject {
     
     union { struct {float x, y, z;}; struct {float v[3];}; } pos;
     
-    char *name;
+    char name[4];
     CircuitLink **outputs;
     CircuitLink **inputs;
 };
@@ -40,12 +41,15 @@ struct CircuitObject {
 @property(nonatomic, readonly) ObjectID id;
 @property(nonatomic) NSString *name;
 @property(nonatomic) NSString *version;
-@property(nonatomic) NSString *description;
+@property(nonatomic) NSString *userDescription;
 @property(nonatomic) NSString *title;
 @property(nonatomic) NSString *author;
 @property(nonatomic) NSMutableArray *engines;
 @property(nonatomic) NSString *license;
 @property(nonatomic) NSMutableDictionary *dependencies;
+
+
+- (NSArray *) tests;
 
 - (NSData *) toJSON;
 - (NSDictionary *) metadata;
@@ -71,7 +75,9 @@ struct CircuitObject {
 - (void) enumerateObjectsUsingBlock:(void (^)(CircuitObject *object, BOOL *stop))block;
 - (void) enumerateObjectsInReverseUsingBlock:(void (^)(CircuitObject *object, BOOL *stop))block;
 
-- (void)enumerateClocksUsingBlock:(void (^)(CircuitObject *object, BOOL *stop))block;
+- (void) enumerateClocksUsingBlock:(void (^)(CircuitObject *object, BOOL *stop))block;
+
+- (CircuitObject *) findObjectById:(NSString *)_id;
 
 - (Circuit *) initWithPackage:(NSDictionary *) package items: (NSArray *) items;
 

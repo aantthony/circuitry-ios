@@ -19,10 +19,10 @@
 
 @property (nonatomic, readonly) int itemsCount;
 @property (nonatomic) CircuitObject *items;
+@property (nonatomic) NSArray *tests;
 
 @end
 @implementation Circuit
-
 
 void *smalloc(size_t c) {
     return malloc(c);
@@ -71,7 +71,7 @@ static int BIN7SEG(int x, void *d) {
 }
 
 static CircuitProcess GateIn = {"in",  0, 1, NULL };
-static CircuitProcess GateOut = {"out",  0, 1, NULL };
+static CircuitProcess GateOut = {"out",  1, 0, NULL };
 static CircuitProcess GateButton = {"button",  0, 1, NULL };
 static CircuitProcess GateLight = {"light",  1, 0, NULL };
 static CircuitProcess GateOr = {"or",  2, 1, OR };
@@ -197,7 +197,7 @@ CircuitObject * addObject(Circuit *c, CircuitProcess *type) {
     o->out = 0;
     o->type = type;
     o->pos.x = o->pos.y = o->pos.z = 0.0;
-    o->name = "";
+    o->name[0] = '\0';
     o->outputs = scalloc(o->type->numOutputs + o->type->numInputs, sizeof(CircuitLink *));
     o->inputs = o->outputs + o->type->numOutputs;
     
@@ -460,11 +460,15 @@ static int simulate(Circuit *c, int ticks) {
 //        NSLog(@"%@",@(object->out));
 //        NSLog(@"%@",outputs);
         
+        NSString *name = nil;
+        if (object->name) {
+            name = [NSString stringWithUTF8String:object->name];
+        }
         [items addObject:@{
                            @"type": [NSString stringWithUTF8String:object->type->id],
                            @"_id": [MongoID stringWithId:object->id],
                            @"pos": @[@(object->pos.x), @(object->pos.y), @(object->pos.z)],
-                           @"name": object->name ? [NSString stringWithUTF8String:object->name] : @"",
+                           @"name": name ? name : @"",
                            @"in": @(object->in),
                            @"out": @(object->out),
                            @"outputs": outputs
@@ -474,7 +478,7 @@ static int simulate(Circuit *c, int ticks) {
              @"_id": [MongoID stringWithId:_id],
              @"name": _name,
              @"version": _version,
-             @"description": _description,
+             @"description": _userDescription,
              @"title": _title,
              @"author": _author,
              @"license": _license,
@@ -491,15 +495,31 @@ static int simulate(Circuit *c, int ticks) {
     return data;
 }
 
+- (NSArray *) tests {
+    return _tests;
+}
+
 - (NSDictionary *) metadata {
+    NSMutableArray *testsArray = [NSMutableArray arrayWithCapacity:_tests.count];
+    [_tests enumerateObjectsUsingBlock:^(CircuitTest *test, NSUInteger idx, BOOL *stop) {
+        [testsArray addObject:@{
+                                @"name": test.name,
+                                @"inputs": test.inputIds,
+                                @"outputs": test.outputIds,
+                                @"spec": test.spec
+                                }];
+    }];
+    
     return @{
              @"_id": [MongoID stringWithId:_id],
              @"name": _name,
              @"version": _version,
-             @"description": _description,
+             @"description": _userDescription,
              @"title": _title,
              @"author": _author,
-             @"license": _license
+             @"license": _license,
+             @"engines": @{@"circuitry": @">=0.0"},
+             @"tests" : testsArray
              };
     
 }
@@ -508,17 +528,18 @@ static int simulate(Circuit *c, int ticks) {
 - (Circuit *) initWithPackage:(NSDictionary *) package items: (NSArray *) items {
     
     self = [self init];
-    NSArray *fields = @[@"name", @"version", @"description", @"title", @"author",  @"license"];
+    NSArray *fields = @[@"name", @"version", @"title", @"author",  @"license"];
     [fields enumerateObjectsUsingBlock:^(id key, NSUInteger idx, BOOL *stop) {
         [self setValue:[package valueForKey:key] forKey:key];
     }];
+    
+    self.userDescription = package[@"description"];
     
     if ([package valueForKey:@"_id"]) {
         _id = [MongoID idWithString:[package valueForKey:@"_id"]];
     } else {
         _id = [MongoID id];
     }
-    
 
     [items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         NSString *type = [obj valueForKey:@"type"];
@@ -530,13 +551,22 @@ static int simulate(Circuit *c, int ticks) {
     [items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         CircuitObject *o = getObjectById(self, [MongoID idWithString:[obj valueForKey:@"_id"]]);
         
-        o->name = (char *)[[obj valueForKey:@"name"] UTF8String];
+        const char * utf8String = [obj[@"name"] UTF8String];
+        for(int i = 0; i < 4; i++) {
+            o->name[i] = utf8String[i];
+            if (utf8String[i] == 0) {
+                break;
+            }
+        }
         o->in  = [[obj valueForKey:@"in"]  intValue];
         o->out = [[obj valueForKey:@"out"] intValue];
         
         NSArray *outputs = [obj objectForKey:@"outputs"];
         [outputs enumerateObjectsUsingBlock:^(id obj, NSUInteger sourceIndex, BOOL *stop) {
             [obj enumerateObjectsUsingBlock:^(id obj, NSUInteger index2, BOOL *stop) {
+                // obj === [targetId, n]
+                // targetId is the object to which the link connects.
+                // It connects into the nth input on that gate.
                 ObjectID targetId = [MongoID idWithString:[obj objectAtIndex:0]];
                 int targetIndex = [[obj objectAtIndex:1] intValue];
                 CircuitObject *target = getObjectById(self, targetId);
@@ -551,7 +581,33 @@ static int simulate(Circuit *c, int ticks) {
         }
     }];
     
-
+    if (package[@"tests"]) {
+        Circuit * _self = self;
+        NSArray *tests = package[@"tests"];
+        NSMutableArray *circuitTests = [NSMutableArray arrayWithCapacity:tests.count];
+        [tests enumerateObjectsUsingBlock:^(NSDictionary *testObj, NSUInteger idx, BOOL *stop) {
+        
+            NSArray * inputIds = testObj[@"inputs"];
+            NSArray * outputIds = testObj[@"outputs"];
+        
+            
+            NSMutableArray *inputNodes = [NSMutableArray arrayWithCapacity:inputIds.count];
+            [inputIds enumerateObjectsUsingBlock:^(NSString *objectId, NSUInteger idx, BOOL *stop) {
+                CircuitObject *object = [_self findObjectById:objectId];
+                [inputNodes addObject:[NSValue valueWithPointer:object]];
+            }];
+            
+            NSMutableArray *outputNodes = [NSMutableArray arrayWithCapacity:outputIds.count];
+            [outputIds enumerateObjectsUsingBlock:^(NSString *objectId, NSUInteger idx, BOOL *stop) {
+                CircuitObject *object = [_self findObjectById:objectId];
+                [outputNodes addObject:[NSValue valueWithPointer:object]];
+            }];
+            
+            [circuitTests addObject:[[CircuitTest alloc]  initWithName:testObj[@"name"] inputs:inputNodes outputs:outputNodes spec:testObj[@"spec"]]];
+        }];
+        
+        _tests = circuitTests;
+    }
     
     return self;
 
@@ -589,6 +645,20 @@ static int simulate(Circuit *c, int ticks) {
         block(_clocks[i], &stop);
         if (stop) break;
     }
+}
+
+- (CircuitObject *) findObjectById:(NSString *)searchObjectIdString {
+    ObjectID searchId = [MongoID idWithString:searchObjectIdString];
+    
+    for(int i = _itemsCount - 1 ; i >= 0; i--) {
+        if (_items[i].type == NULL) continue;
+        ObjectID *objId = &_items[i].id;
+        if (objId->m[2] == searchId.m[2] && objId->m[0] == searchId.m[0] && objId->m[1] == searchId.m[1]) {
+            return &_items[i];
+        }
+    }
+    
+    return nil;
 }
 
 #pragma mark - circuit modification

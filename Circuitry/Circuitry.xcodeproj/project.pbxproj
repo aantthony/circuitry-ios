@@ -81,6 +81,8 @@
 		92A4F872187295EF00EEB367 /* Grid.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 92D90E3E1838E9D700387FAC /* Grid.fsh */; };
 		92A861B2189E402900F64673 /* MongoID.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A861B1189E402900F64673 /* MongoID.m */; };
 		92AA6323189E73A000A135F3 /* MongoIDTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 92AA6322189E73A000A135F3 /* MongoIDTest.m */; };
+		92AFE8FE197B728A003680B0 /* CircuitTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 92AFE8FD197B728A003680B0 /* CircuitTest.m */; };
+		92AFE901197B90AC003680B0 /* CircuitTestResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 92AFE900197B90AC003680B0 /* CircuitTestResult.m */; };
 		92B269AF1886B175007E9866 /* ImageAtlas.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B269AE1886B175007E9866 /* ImageAtlas.m */; };
 		92D90E321837807000387FAC /* Sprite.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E311837807000387FAC /* Sprite.m */; };
 		92D90E381837836500387FAC /* ShaderEffect.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E371837836500387FAC /* ShaderEffect.m */; };
@@ -214,6 +216,10 @@
 		92A861B0189E402900F64673 /* MongoID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoID.h; sourceTree = "<group>"; };
 		92A861B1189E402900F64673 /* MongoID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoID.m; sourceTree = "<group>"; };
 		92AA6322189E73A000A135F3 /* MongoIDTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoIDTest.m; sourceTree = "<group>"; };
+		92AFE8FC197B728A003680B0 /* CircuitTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircuitTest.h; sourceTree = "<group>"; };
+		92AFE8FD197B728A003680B0 /* CircuitTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircuitTest.m; sourceTree = "<group>"; };
+		92AFE8FF197B90AC003680B0 /* CircuitTestResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircuitTestResult.h; sourceTree = "<group>"; };
+		92AFE900197B90AC003680B0 /* CircuitTestResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircuitTestResult.m; sourceTree = "<group>"; };
 		92B269AD1886B175007E9866 /* ImageAtlas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAtlas.h; sourceTree = "<group>"; };
 		92B269AE1886B175007E9866 /* ImageAtlas.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAtlas.m; sourceTree = "<group>"; };
 		92D90E301837807000387FAC /* Sprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sprite.h; sourceTree = "<group>"; };
@@ -445,6 +451,10 @@
 			children = (
 				92A28A5C187433E800F0D934 /* Circuit.h */,
 				92A28A5D187433E800F0D934 /* Circuit.m */,
+				92AFE8FF197B90AC003680B0 /* CircuitTestResult.h */,
+				92AFE900197B90AC003680B0 /* CircuitTestResult.m */,
+				92AFE8FC197B728A003680B0 /* CircuitTest.h */,
+				92AFE8FD197B728A003680B0 /* CircuitTest.m */,
 				923A062F189D2D660064834C /* CircuitDocument.h */,
 				923A0630189D2D660064834C /* CircuitDocument.m */,
 				92A861B0189E402900F64673 /* MongoID.h */,
@@ -739,6 +749,7 @@
 				9218F73C1876982100742F99 /* LinkBezier.vsh in Sources */,
 				92880621187243800096A1CA /* Sprite.vsh in Sources */,
 				9204C392182E2F5C006A008D /* ViewController.m in Sources */,
+				92AFE901197B90AC003680B0 /* CircuitTestResult.m in Sources */,
 				9200469F189D037F007124DA /* SevenSegmentDisplay.fsh in Sources */,
 				923C143818826D960017BAF3 /* HUD.m in Sources */,
 				920046A1189D0390007124DA /* SevenSegmentDisplay.vsh in Sources */,
@@ -764,6 +775,7 @@
 				92796A3418A668FB00DB690F /* LongPressObjectGesture.m in Sources */,
 				92D90E381837836500387FAC /* ShaderEffect.m in Sources */,
 				923A0631189D2D660064834C /* CircuitDocument.m in Sources */,
+				92AFE8FE197B728A003680B0 /* CircuitTest.m in Sources */,
 				926099E6196919E50048F2BD /* CircuitObjectListTableViewController.m in Sources */,
 				9204C384182E2F5C006A008D /* main.m in Sources */,
 			);

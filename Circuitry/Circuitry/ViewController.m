@@ -87,7 +87,7 @@
 }
 - (void) publish {
 //    [self save];
-    [_document publish];
+//    [_document publish];
 }
 
 
@@ -623,7 +623,8 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         CircuitObject *object = [_viewport findCircuitObjectAtPosition:position];
         if (!object) return;
         
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@(object->type->id) delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Remove" otherButtonTitles: nil];
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@(object->type->id) delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Remove" otherButtonTitles: @"DEBUG: CHECK ANSWER", nil];
+
         _selectedObjects = @[[NSValue valueWithPointer:object]];
         CGRect rect = [_viewport rectForObject:object inView:self.view];
         
@@ -644,6 +645,11 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
             [_document updateChangeCount:UIDocumentChangeDone];
             [self unpause];
         }
+    } else if (buttonIndex == 1) {
+        
+        CircuitTest *test = _document.circuit.tests[0];
+        CircuitTestResult *testResult = [test runAndSimulate:_document.circuit];
+        [[[UIAlertView alloc] initWithTitle:@"Test Result" message: testResult.resultDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
     }
 }
 

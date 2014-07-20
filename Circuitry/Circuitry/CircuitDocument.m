@@ -34,13 +34,14 @@
     if (err) return NO;
     
 //    _screenshot = [files[@"Default@2x~ipad.jpg"] regularFileContents];
-    
+     
     _circuit = [[Circuit alloc] initWithPackage:package items: items];
     
     return YES;
 }
 - (id)contentsForType:(NSString *)typeName error:(NSError **)outError {
 
+    NSLog(@"Saving circuit %@", _circuit);
 //    if (!_circuit) {
 //        *outError = [NSError errorWithDomain:@"au.id.af" code:501 userInfo:@{@"name": @"Circuit does not exist"}];
 //        return nil;
@@ -82,7 +83,8 @@
 //        completionHandler(error);
     }];
     
-    [task resume];    
+    [task resume];
 
 }
+
 @end

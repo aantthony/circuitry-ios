@@ -11,6 +11,4 @@
 @interface CircuitDocument : UIDocument
 @property (nonatomic) Circuit *circuit;
 
-- (void) publish;
-
 @end
