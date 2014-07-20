@@ -253,15 +253,23 @@ static void removeLink(Circuit *c, CircuitLink *link) {
     if (link->target->in & 1<<link->targetIndex) {
         needsUpdate(c, link->target);
     }
+    // first sibling:
     CircuitLink *prevSibling = link->source->outputs[link->sourceIndex];
     if (prevSibling == link) {
+        // if this link is the first sibling, set the first sibling to equal the next sibling (or null)
         prevSibling = NULL;
         link->source->outputs[link->sourceIndex] = link->nextSibling;
     } else {
+        // There are siblings inserted before. Find this link:
         while(prevSibling) {
-            if (prevSibling->nextSibling == link) break;
+            if (prevSibling->nextSibling == link) {
+                // Found: Now prevSibling->nextSibling should be set to the next sibling (or null)
+                break;
+            }
+            // nope: keep searching:
             prevSibling = prevSibling->nextSibling;
         }
+        assert(prevSibling);
         prevSibling->nextSibling = link->nextSibling;
     }
     

@@ -904,6 +904,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     if (!_timer) {
         _timer = [NSTimer scheduledTimerWithTimeInterval:0.005 target:self selector:@selector(timerTick:) userInfo:nil repeats:YES];
     }
+    [super viewDidAppear:animated];
 }
 
 - (IBAction) handleTapGesture:(UITapGestureRecognizer *)sender {

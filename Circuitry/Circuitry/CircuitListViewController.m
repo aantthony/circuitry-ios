@@ -239,8 +239,7 @@
         NSFileCoordinator* fileCoordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
         [fileCoordinator coordinateWritingItemAtURL:fileURL options:NSFileCoordinatorWritingForDeleting
                                               error:nil byAccessor:^(NSURL* writingURL) {
-                                                  NSFileManager* fileManager = [[NSFileManager alloc] init];
-                                                  fileManager = [NSFileManager defaultManager];
+                                                  NSFileManager* fileManager = [NSFileManager defaultManager];
                                                   NSLog(@"Delete %@", writingURL);
                                                   [fileManager removeItemAtURL:writingURL error:nil];
                                               }];
