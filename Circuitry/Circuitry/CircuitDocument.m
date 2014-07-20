@@ -30,8 +30,12 @@
     NSDictionary *package = [NSJSONSerialization JSONObjectWithData:[files[@"package.json"] regularFileContents] options:0 error:&err];
     if (err) return NO;
     
-    NSArray *items = [NSJSONSerialization JSONObjectWithData:[files[@"items.json"] regularFileContents] options:0 error:&err];
-    if (err) return NO;
+    NSArray *items = package[@"items"];
+    
+    if (!items) {
+        items = [NSJSONSerialization JSONObjectWithData:[files[@"items.json"] regularFileContents] options:0 error:&err];
+        if (err) return NO;
+    }
     
 //    _screenshot = [files[@"Default@2x~ipad.jpg"] regularFileContents];
      

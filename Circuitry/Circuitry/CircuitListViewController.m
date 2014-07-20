@@ -25,6 +25,7 @@
 @property (nonatomic) NSURL *url;
 @property (nonatomic) NSString *title;
 @property (nonatomic) NSDate *lastModified;
+
 @end
 @implementation DocumentListItem
 - (id) initWithURL: (NSURL *)url; {
@@ -40,7 +41,7 @@
                                 error:NULL];
     
     _lastModified = [properties objectForKey:NSFileModificationDate];
-    NSLog(@"last modified: %@", _lastModified);
+    NSLog(@"Loaded circuit: %@", _title);
 
     return self;
 }
@@ -54,6 +55,7 @@
 @property (nonatomic) NSIndexPath *actionSheetIndexPath;
 @property (nonatomic) CGRect selectionRect;
 @property (nonatomic) BOOL openDocumentAnimationShouldFadeIn;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *segmentControl;
 @property (nonatomic) CircuitDocument *presentingDocument;
 @end
 
@@ -123,6 +125,8 @@
 }
 
 - (IBAction) createDocument:(id)sender {
+    if (_items != _circuits) return;
+    
     NSString *_id = [MongoID stringWithId:[MongoID id]];
     NSURL *url = [[AppDelegate documentsDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.circuit", _id]];
     
@@ -168,6 +172,14 @@
             _openDocumentAnimationShouldFadeIn = YES;
             [self createDocument:collectionView];
         }
+    } else if(_items == _problems) {
+        
+        DocumentListItem *item = [_items objectAtIndex:indexPath.row];
+        NSURL *docURL = item.url;
+        CircuitCollectionViewCell *cell = (CircuitCollectionViewCell *) [collectionView cellForItemAtIndexPath:indexPath];
+        _selectionRect = [self.view convertRect:cell.imageView.frame fromView:cell];
+        _openDocumentAnimationShouldFadeIn = NO;
+        [self openDocument:docURL];
     }
 }
 
@@ -177,14 +189,13 @@
 
 - (IBAction)didChangeCircuitsProblemsSegment:(UISegmentedControl *)sender {
     if (sender.selectedSegmentIndex == 0) {
-        // circuits
-        _items = _circuits;
-        [self.collectionView reloadData];
-    } else {
-        // problems
         _items = _problems;
         [self.collectionView reloadData];
+    } else {
+        _items = _circuits;
+        [self.collectionView reloadData];
     }
+    _segmentControl = sender;
 }
 
 - (void) preload {
@@ -297,6 +308,7 @@
     });
     
     [AppDelegate trackView:@"Document List"];
+    
 }
 
 - (void) viewDidAppear:(BOOL)animated {
@@ -363,7 +375,40 @@
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self reloadProblemListData];
     [self reloadCircuitListData];
+    
+    if (_segmentControl && _segmentControl.selectedSegmentIndex == 0) {
+        _items = _circuits;
+    } else {
+        _items = _problems;
+    }
+    
+    
+}
+
+
+- (void) reloadProblemListData {
+    NSString *directoryPath = [[NSBundle mainBundle] pathForResource:@"Problems" ofType:nil];
+    
+    NSArray* localDocuments = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:
+                               directoryPath error:nil];
+    
+    
+    NSMutableArray *items = [NSMutableArray array];
+    
+    for (NSString* document in localDocuments) {
+        NSURL *url = [NSURL fileURLWithPath:[directoryPath
+                                             stringByAppendingPathComponent:document]];
+        
+        DocumentListItem *item = [[DocumentListItem alloc] initWithURL:url];
+        [items addObject:item];
+    }
+    
+    _problems = [[items sortedArrayUsingComparator:^NSComparisonResult(DocumentListItem *obj1, DocumentListItem *obj2) {
+        return [obj2.lastModified compare: obj1.lastModified];
+    }] mutableCopy];
+    
 }
 
 - (void) reloadCircuitListData {
@@ -389,8 +434,6 @@
         return [obj2.lastModified compare: obj1.lastModified];
     }] mutableCopy];
     
-    _items = _circuits;
-    [self.collectionView reloadData];
 }
 - (void)didReceiveMemoryWarning
 {

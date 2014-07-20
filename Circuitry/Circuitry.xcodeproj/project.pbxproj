@@ -73,7 +73,6 @@
 		9288BBB6196AD6230090455A /* ToolbeltItemTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9288BBB5196AD6230090455A /* ToolbeltItemTableViewCell.m */; };
 		9288BBB9196AD6470090455A /* ToolbeltItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 9288BBB8196AD6470090455A /* ToolbeltItem.m */; };
 		929CB69518A7833C00BEE7D6 /* TransitionFromDocumentListToDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 929CB69418A7833C00BEE7D6 /* TransitionFromDocumentListToDocument.m */; };
-		92A28A5B187428BE00F0D934 /* nand.json in Resources */ = {isa = PBXBuildFile; fileRef = 92A28A5A187428BE00F0D934 /* nand.json */; };
 		92A28A5E187433E800F0D934 /* Circuit.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A28A5D187433E800F0D934 /* Circuit.m */; };
 		92A4F86D187289F300EEB367 /* Viewport.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A4F86C187289F300EEB367 /* Viewport.m */; };
 		92A4F87018728A1F00EEB367 /* Drawable.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A4F86F18728A1F00EEB367 /* Drawable.m */; };
@@ -84,6 +83,7 @@
 		92AFE8FE197B728A003680B0 /* CircuitTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 92AFE8FD197B728A003680B0 /* CircuitTest.m */; };
 		92AFE901197B90AC003680B0 /* CircuitTestResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 92AFE900197B90AC003680B0 /* CircuitTestResult.m */; };
 		92B269AF1886B175007E9866 /* ImageAtlas.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B269AE1886B175007E9866 /* ImageAtlas.m */; };
+		92C62F4C197BFCD600A3E939 /* Problems in Resources */ = {isa = PBXBuildFile; fileRef = 92C62F4B197BFCD500A3E939 /* Problems */; };
 		92D90E321837807000387FAC /* Sprite.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E311837807000387FAC /* Sprite.m */; };
 		92D90E381837836500387FAC /* ShaderEffect.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E371837836500387FAC /* ShaderEffect.m */; };
 		92D90E3B1838D7AB00387FAC /* Grid.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E3A1838D7AB00387FAC /* Grid.m */; };
@@ -206,7 +206,6 @@
 		9288BBB8196AD6470090455A /* ToolbeltItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolbeltItem.m; sourceTree = "<group>"; };
 		929CB69318A7833C00BEE7D6 /* TransitionFromDocumentListToDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitionFromDocumentListToDocument.h; sourceTree = "<group>"; };
 		929CB69418A7833C00BEE7D6 /* TransitionFromDocumentListToDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitionFromDocumentListToDocument.m; sourceTree = "<group>"; };
-		92A28A5A187428BE00F0D934 /* nand.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = nand.json; sourceTree = "<group>"; };
 		92A28A5C187433E800F0D934 /* Circuit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Circuit.h; sourceTree = "<group>"; };
 		92A28A5D187433E800F0D934 /* Circuit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Circuit.m; sourceTree = "<group>"; };
 		92A4F86B187289F300EEB367 /* Viewport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Viewport.h; sourceTree = "<group>"; };
@@ -222,6 +221,7 @@
 		92AFE900197B90AC003680B0 /* CircuitTestResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircuitTestResult.m; sourceTree = "<group>"; };
 		92B269AD1886B175007E9866 /* ImageAtlas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAtlas.h; sourceTree = "<group>"; };
 		92B269AE1886B175007E9866 /* ImageAtlas.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAtlas.m; sourceTree = "<group>"; };
+		92C62F4B197BFCD500A3E939 /* Problems */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Problems; path = Circuitry/Problems; sourceTree = "<group>"; };
 		92D90E301837807000387FAC /* Sprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sprite.h; sourceTree = "<group>"; };
 		92D90E311837807000387FAC /* Sprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sprite.m; sourceTree = "<group>"; };
 		92D90E361837836500387FAC /* ShaderEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShaderEffect.h; path = ../ShaderEffect.h; sourceTree = "<group>"; };
@@ -297,6 +297,7 @@
 		9204C367182E2F5C006A008D = {
 			isa = PBXGroup;
 			children = (
+				92C62F4B197BFCD500A3E939 /* Problems */,
 				9208BDF71965851C00980D70 /* circuitry.entitlements */,
 				92FC7FA018A601A200EA329A /* UIKitCategoryAdditions */,
 				92A28A59187428A600F0D934 /* Circuits */,
@@ -548,7 +549,6 @@
 		92A28A59187428A600F0D934 /* Circuits */ = {
 			isa = PBXGroup;
 			children = (
-				92A28A5A187428BE00F0D934 /* nand.json */,
 			);
 			name = Circuits;
 			sourceTree = "<group>";
@@ -679,8 +679,8 @@
 				920A1A0F1973FE1800A67742 /* xnor@2x.png in Resources */,
 				920A1A0B1973FE1800A67742 /* nor@2x.png in Resources */,
 				9204C394182E2F5C006A008D /* Images.xcassets in Resources */,
-				92A28A5B187428BE00F0D934 /* nand.json in Resources */,
 				920A1A0E1973FE1800A67742 /* switch@2x.png in Resources */,
+				92C62F4C197BFCD600A3E939 /* Problems in Resources */,
 				920A1A0A1973FE1800A67742 /* nand@2x.png in Resources */,
 				9204C382182E2F5C006A008D /* InfoPlist.strings in Resources */,
 				9204C38B182E2F5C006A008D /* Main.storyboard in Resources */,

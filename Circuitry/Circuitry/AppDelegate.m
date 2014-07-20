@@ -34,7 +34,7 @@
     g.trackUncaughtExceptions = YES;
     g.dispatchInterval = 20;
     g.dryRun = YES;
-    g.logger.logLevel = kGAILogLevelVerbose;
+    g.logger.logLevel = kGAILogLevelWarning;
     
     id<GAITracker> tracker = self.tracker;
     
