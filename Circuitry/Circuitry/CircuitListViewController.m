@@ -306,9 +306,6 @@
         dispatch_async(dispatch_get_main_queue(), ^(void){
         });
     });
-    
-    [AppDelegate trackView:@"Document List"];
-    
 }
 
 - (void) viewDidAppear:(BOOL)animated {

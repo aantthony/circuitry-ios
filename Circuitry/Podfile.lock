@@ -1,10 +1,10 @@
 PODS:
-  - GoogleAnalytics-iOS-SDK (3.0.6)
+  - Mixpanel (2.5.0)
 
 DEPENDENCIES:
-  - GoogleAnalytics-iOS-SDK (~> 3.0.3)
+  - Mixpanel
 
 SPEC CHECKSUMS:
-  GoogleAnalytics-iOS-SDK: 4577fb25381a71c5beac455b18ebb288fc4f44e9
+  Mixpanel: e2cbef6022acff6e0182c994ed69b18613209611
 
 COCOAPODS: 0.33.1

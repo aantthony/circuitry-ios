@@ -95,6 +95,10 @@
 		92DD079018AFC12D00FB684A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 92DD078F18AFC12D00FB684A /* libz.dylib */; };
 		92E037BF188425E80047F736 /* DragGateGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 92E037BE188425E80047F736 /* DragGateGestureRecognizer.m */; };
 		92E08B8219587206004B6775 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92E08B8119587206004B6775 /* TutorialViewController.m */; };
+		92FA32BE19B2C0140046A7FE /* tutorial-bg-1@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 92FA32BD19B2C0140046A7FE /* tutorial-bg-1@2x.jpg */; };
+		92FA32C219B2C21B0046A7FE /* tutorial-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92FA32C119B2C21B0046A7FE /* tutorial-logo@2x.png */; };
+		92FA32C519B2C8270046A7FE /* Tutorial3PagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FA32C419B2C8270046A7FE /* Tutorial3PagesViewController.m */; };
+		92FA32C719B2E1B70046A7FE /* tutorial-bg-3@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 92FA32C619B2E1B70046A7FE /* tutorial-bg-3@2x.jpg */; };
 		92FC7F9118A50C1000EA329A /* CircuitListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FC7F9018A50C1000EA329A /* CircuitListViewController.m */; };
 		92FC7F9418A50E7300EA329A /* CircuitListImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FC7F9318A50E7300EA329A /* CircuitListImageView.m */; };
 		92FC7F9618A5906900EA329A /* large-plus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92FC7F9518A5906900EA329A /* large-plus@2x.png */; };
@@ -239,6 +243,11 @@
 		92E037BE188425E80047F736 /* DragGateGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DragGateGestureRecognizer.m; sourceTree = "<group>"; };
 		92E08B8019587206004B6775 /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialViewController.h; sourceTree = "<group>"; };
 		92E08B8119587206004B6775 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; };
+		92FA32BD19B2C0140046A7FE /* tutorial-bg-1@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial-bg-1@2x.jpg"; sourceTree = "<group>"; };
+		92FA32C119B2C21B0046A7FE /* tutorial-logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tutorial-logo@2x.png"; sourceTree = "<group>"; };
+		92FA32C319B2C8270046A7FE /* Tutorial3PagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tutorial3PagesViewController.h; sourceTree = "<group>"; };
+		92FA32C419B2C8270046A7FE /* Tutorial3PagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tutorial3PagesViewController.m; sourceTree = "<group>"; };
+		92FA32C619B2E1B70046A7FE /* tutorial-bg-3@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial-bg-3@2x.jpg"; sourceTree = "<group>"; };
 		92FC7F8F18A50C1000EA329A /* CircuitListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircuitListViewController.h; sourceTree = "<group>"; };
 		92FC7F9018A50C1000EA329A /* CircuitListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircuitListViewController.m; sourceTree = "<group>"; };
 		92FC7F9218A50E7300EA329A /* CircuitListImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircuitListImageView.h; sourceTree = "<group>"; };
@@ -297,6 +306,7 @@
 		9204C367182E2F5C006A008D = {
 			isa = PBXGroup;
 			children = (
+				92FA32BC19B2C00C0046A7FE /* Tutorial */,
 				92C62F4B197BFCD500A3E939 /* Problems */,
 				9208BDF71965851C00980D70 /* circuitry.entitlements */,
 				92FC7FA018A601A200EA329A /* UIKitCategoryAdditions */,
@@ -553,6 +563,18 @@
 			name = Circuits;
 			sourceTree = "<group>";
 		};
+		92FA32BC19B2C00C0046A7FE /* Tutorial */ = {
+			isa = PBXGroup;
+			children = (
+				92FA32C119B2C21B0046A7FE /* tutorial-logo@2x.png */,
+				92FA32BD19B2C0140046A7FE /* tutorial-bg-1@2x.jpg */,
+				92FA32C319B2C8270046A7FE /* Tutorial3PagesViewController.h */,
+				92FA32C619B2E1B70046A7FE /* tutorial-bg-3@2x.jpg */,
+				92FA32C419B2C8270046A7FE /* Tutorial3PagesViewController.m */,
+			);
+			name = Tutorial;
+			sourceTree = "<group>";
+		};
 		92FC7FA018A601A200EA329A /* UIKitCategoryAdditions */ = {
 			isa = PBXGroup;
 			children = (
@@ -660,6 +682,7 @@
 				92020C0B189A578200B6D8F5 /* circuit.image-atlas in Resources */,
 				9232B6771878436E00E45C7E /* BatchedSprite.fsh in Resources */,
 				920A1A041973FE1800A67742 /* bin7seg@2x.png in Resources */,
+				92FA32C719B2E1B70046A7FE /* tutorial-bg-3@2x.jpg in Resources */,
 				920A1A031973FE1800A67742 /* and@2x.png in Resources */,
 				9218F73D1876AB7C00742F99 /* LinkBezier.fsh in Resources */,
 				9218F73E1876AB7C00742F99 /* LinkBezier.vsh in Resources */,
@@ -667,8 +690,10 @@
 				920A1A121973FE6600A67742 /* 7seg@2x.png in Resources */,
 				920A1A021973FE1800A67742 /* add4@2x.png in Resources */,
 				92794CB118AF0E5500A39012 /* ic@2x.png in Resources */,
+				92FA32C219B2C21B0046A7FE /* tutorial-logo@2x.png in Resources */,
 				920A1A0C1973FE1800A67742 /* not@2x.png in Resources */,
 				92020C09189A54ED00B6D8F5 /* background.jpg in Resources */,
+				92FA32BE19B2C0140046A7FE /* tutorial-bg-1@2x.jpg in Resources */,
 				923056A118759577005AE348 /* Configurations.plist in Resources */,
 				920A1A101973FE1800A67742 /* xor@2x.png in Resources */,
 				920A1A051973FE1800A67742 /* capacitor 2@2x.png in Resources */,
@@ -778,6 +803,7 @@
 				92AFE8FE197B728A003680B0 /* CircuitTest.m in Sources */,
 				926099E6196919E50048F2BD /* CircuitObjectListTableViewController.m in Sources */,
 				9204C384182E2F5C006A008D /* main.m in Sources */,
+				92FA32C519B2C8270046A7FE /* Tutorial3PagesViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -15,19 +15,10 @@
 @property (nonatomic) CircuitDocument *document;
 @property (nonatomic, weak) CircuitObjectListTableViewController *objectListViewController;
 @property (nonatomic, weak) ViewController *glkViewController;
-
+@property (nonatomic) BOOL objectListVisible;
 @end
 
 @implementation CircuitDocumentViewController
-
-- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (BOOL) prefersStatusBarHidden {
     return NO;
@@ -43,11 +34,13 @@
     _objectListViewController.document = document;
     _glkViewController.document = document;
     _document = document;
+    [self configureView];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self configureView];
     // Do any additional setup after loading the view.
 }
 
@@ -60,7 +53,25 @@
 - (void) viewDidAppear:(BOOL)animated {
 //    self.navigationController.navigationBarHidden = YES;
     [super viewDidAppear:animated];
+    [self configureView];
 }
+
+- (void) configureView {
+    self.objectListVisible = [self shouldShowToolbeltForDocument:_document];
+}
+
+- (void) setObjectListVisible:(BOOL)objectListVisible {
+    
+    _objectListVisible = objectListVisible;
+    _objectListView.hidden = YES;
+}
+
+- (BOOL) shouldShowToolbeltForDocument: (CircuitDocument *) doc {
+    id toolbeltFlag = doc.circuit.meta[@"toolbelt"];
+    if (toolbeltFlag == nil) return YES;
+    return [toolbeltFlag boolValue];
+}
+
 
 #pragma mark - Toolbelt delegate
 

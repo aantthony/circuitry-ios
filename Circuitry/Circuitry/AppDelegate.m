@@ -1,45 +1,48 @@
 #import "AppDelegate.h"
 
-#import <GoogleAnalytics-iOS-SDK/GAI.h>
-#import <GoogleAnalytics-iOS-SDK/GAIFields.h>
-#import <GoogleAnalytics-iOS-SDK/GAIDictionaryBuilder.h>
+//#import <GoogleAnalytics-iOS-SDK/GAI.h>
+//#import <GoogleAnalytics-iOS-SDK/GAIFields.h>
+//#import <GoogleAnalytics-iOS-SDK/GAIDictionaryBuilder.h>
+
+#import <Mixpanel/Mixpanel.h>
 
 @interface AppDelegate()
 @end
 @implementation AppDelegate
 
-- (id <GAITracker>) tracker {
-    return [[GAI sharedInstance] trackerWithTrackingId:@"UA-48110067-1"];
-}
+//- (id <GAITracker>) tracker {
+//    return [[GAI sharedInstance] trackerWithTrackingId:@"UA-48110067-1"];
+//}
 + (AppDelegate *) sharedDelegate {
     return [[UIApplication sharedApplication] delegate];
 }
 
 + (void) trackView:(NSString *)screenName {
     // instead of using Google's bloated UIViewController subclass, just set the screen name, 
-    id <GAITracker> tracker = self.sharedDelegate.tracker;
-    
-    // This screen name value will remain set on the tracker and sent with
-    // hits until it is set to a new value or to nil.
-    [tracker set:kGAIScreenName value:screenName];
-    
-    // Send the screen view.
-    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
+//    id <GAITracker> tracker = self.sharedDelegate.tracker;
+//    
+//    // This screen name value will remain set on the tracker and sent with
+//    // hits until it is set to a new value or to nil.
+//    [tracker set:kGAIScreenName value:screenName];
+//    
+//    // Send the screen view.
+//    [tracker sen:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    GAI *g = [GAI sharedInstance];
+//    GAI *g = [GAI sharedInstance];
+//    
+//    g.trackUncaughtExceptions = YES;
+//    g.dispatchInterval = 20;
+//    g.dryRun = YES;
+//    g.logger.logLevel = kGAILogLevelWarning;
+//    
+//    id<GAITracker> tracker = self.tracker;
+//    
+//    NSLog(@"Google analytics tracker: %@", tracker.name);
     
-    g.trackUncaughtExceptions = YES;
-    g.dispatchInterval = 20;
-    g.dryRun = YES;
-    g.logger.logLevel = kGAILogLevelWarning;
-    
-    id<GAITracker> tracker = self.tracker;
-    
-    NSLog(@"Google analytics tracker: %@", tracker.name);
-    
+    [Mixpanel sharedInstanceWithToken: @"487f2144b76c05506336adaa68417724"];
     return YES;
 }
 

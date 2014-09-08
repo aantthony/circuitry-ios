@@ -47,12 +47,12 @@ struct CircuitObject {
 @property(nonatomic) NSMutableArray *engines;
 @property(nonatomic) NSString *license;
 @property(nonatomic) NSMutableDictionary *dependencies;
-
+@property(nonatomic) NSMutableDictionary *meta;
 
 - (NSArray *) tests;
 
 - (NSData *) toJSON;
-- (NSDictionary *) metadata;
+- (NSDictionary *) exportPackageDictionaryWithoutItems;
 + (Circuit *) circuitWithJSON:(NSData *) data;
 - (NSDictionary *) toDictionary;
 + (Circuit *) circuitWithStream:(NSInputStream *) stream;

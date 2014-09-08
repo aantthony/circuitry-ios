@@ -507,7 +507,7 @@ static int simulate(Circuit *c, int ticks) {
     return _tests;
 }
 
-- (NSDictionary *) metadata {
+- (NSDictionary *) exportPackageDictionaryWithoutItems {
     NSMutableArray *testsArray = [NSMutableArray arrayWithCapacity:_tests.count];
     [_tests enumerateObjectsUsingBlock:^(CircuitTest *test, NSUInteger idx, BOOL *stop) {
         [testsArray addObject:@{
@@ -527,7 +527,8 @@ static int simulate(Circuit *c, int ticks) {
              @"author": _author,
              @"license": _license,
              @"engines": @{@"circuitry": @">=0.0"},
-             @"tests" : testsArray
+             @"tests" : testsArray,
+             @"meta": _meta
              };
     
 }
@@ -615,6 +616,10 @@ static int simulate(Circuit *c, int ticks) {
         }];
         
         _tests = circuitTests;
+    }
+    
+    if (package[@"meta"]) {
+        _meta = [package[@"meta"] mutableCopy];
     }
     
     return self;

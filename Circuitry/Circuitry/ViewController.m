@@ -282,8 +282,6 @@
     }
     
     self.document = _document;
-    
-    [AppDelegate trackView:@"Circuit"];
 }
 
 - (void) timerTick:(id) sender {

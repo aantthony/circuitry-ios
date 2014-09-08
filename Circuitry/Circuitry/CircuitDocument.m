@@ -45,17 +45,17 @@
 }
 - (id)contentsForType:(NSString *)typeName error:(NSError **)outError {
 
-    NSLog(@"Saving circuit %@", _circuit);
 //    if (!_circuit) {
 //        *outError = [NSError errorWithDomain:@"au.id.af" code:501 userInfo:@{@"name": @"Circuit does not exist"}];
 //        return nil;
 //    }
     if ([typeName isEqualToString:@"public.json"]) {
+        // Export the entire circuit into a single JSON object:
         return [NSJSONSerialization dataWithJSONObject:[_circuit toDictionary] options:0 error:NULL];
     }
 
     NSFileWrapper *wrapper = [[NSFileWrapper alloc] initDirectoryWithFileWrappers:nil];
-    NSData *metaJson = [NSJSONSerialization dataWithJSONObject:[_circuit metadata] options:0 error:NULL];
+    NSData *metaJson = [NSJSONSerialization dataWithJSONObject:[_circuit exportPackageDictionaryWithoutItems] options:0 error:NULL];
     NSData *itemsJSON = [NSJSONSerialization dataWithJSONObject:[_circuit toDictionary][@"items"] options:0 error:NULL];
 
     [wrapper addRegularFileWithContents:metaJson preferredFilename:@"package.json"];

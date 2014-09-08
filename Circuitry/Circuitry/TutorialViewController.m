@@ -12,6 +12,7 @@
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 @property (weak, nonatomic) IBOutlet UIPageControl *pageControl;
+@property (weak, nonatomic) IBOutlet UIImageView *bg3;
 @property (nonatomic) BOOL isScrollingToPage;
 @end
 
@@ -37,7 +38,9 @@
 - (void) setCurrentPage:(int)currentPage {
     NSString *nextNumberLabel;
     NSString *nextInstructionLabel;
-    
+    [UIView animateWithDuration:0.2 animations:^{
+        _bg3.alpha = currentPage > 1;
+    }];
 }
 - (IBAction)changePage:(id)sender {
     _isScrollingToPage = YES;

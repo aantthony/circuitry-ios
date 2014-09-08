@@ -26,7 +26,8 @@
     }
   ],
   "meta": {
-    "truthTable": "TODO"
+    "truthTable": "TODO",
+    "toolbelt": false
   },
   "items": [
     {
