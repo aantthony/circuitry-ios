@@ -10,6 +10,7 @@
 
 #import "CircuitObjectListTableViewController.h"
 #import "ViewController.h"
+#import "ProblemInfoViewController.h"
 
 @interface CircuitDocumentViewController () <CircuitObjectListTableViewControllerDelegate>
 @property (nonatomic) CircuitDocument *document;
@@ -92,6 +93,9 @@
     } else if ([segue.destinationViewController isKindOfClass:[ViewController class]]) {
         ViewController *controller = (ViewController *) segue.destinationViewController;
         _glkViewController = controller;
+        controller.document = self.document;
+    } else if ([segue.destinationViewController isKindOfClass:ProblemInfoViewController.class]) {
+        ProblemInfoViewController * controller = (ProblemInfoViewController *) segue.destinationViewController;
         controller.document = self.document;
     }
 }

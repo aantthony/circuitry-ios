@@ -29,6 +29,7 @@
 		9204C39C182E2F5C006A008D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9204C373182E2F5C006A008D /* Foundation.framework */; };
 		9204C39D182E2F5C006A008D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9204C377182E2F5C006A008D /* UIKit.framework */; };
 		9204C3A5182E2F5C006A008D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9204C3A3182E2F5C006A008D /* InfoPlist.strings */; };
+		92061DE819BDF0720081E3B9 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92061DE719BDF0720081E3B9 /* TutorialViewController.m */; };
 		920A1A021973FE1800A67742 /* add4@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 920A19F31973FE1800A67742 /* add4@2x.png */; };
 		920A1A031973FE1800A67742 /* and@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 920A19F41973FE1800A67742 /* and@2x.png */; };
 		920A1A041973FE1800A67742 /* bin7seg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 920A19F51973FE1800A67742 /* bin7seg@2x.png */; };
@@ -61,6 +62,10 @@
 		923C143818826D960017BAF3 /* HUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 923C143718826D960017BAF3 /* HUD.m */; };
 		9253C409188545EC00D2509C /* CreateGatePanGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9253C408188545EC00D2509C /* CreateGatePanGestureRecognizer.m */; };
 		9253C40C18854D0B00D2509C /* CreateLinkGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9253C40B18854D0B00D2509C /* CreateLinkGestureRecognizer.m */; };
+		92575A3719D2D510000D5AC7 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92575A3619D2D510000D5AC7 /* MainViewController.m */; };
+		92575A3919D2E136000D5AC7 /* dots@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92575A3819D2E136000D5AC7 /* dots@2x.png */; };
+		92575A3B19D2E838000D5AC7 /* continue-arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92575A3A19D2E838000D5AC7 /* continue-arrow@2x.png */; };
+		92575A3E19D2EC57000D5AC7 /* ProblemInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92575A3D19D2EC57000D5AC7 /* ProblemInfoViewController.m */; };
 		926099E0196917CF0048F2BD /* CircuitDocumentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 926099DF196917CF0048F2BD /* CircuitDocumentViewController.m */; };
 		926099E6196919E50048F2BD /* CircuitObjectListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 926099E5196919E50048F2BD /* CircuitObjectListTableViewController.m */; };
 		92794CB118AF0E5500A39012 /* ic@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92794CB018AF0E5400A39012 /* ic@2x.png */; };
@@ -94,10 +99,8 @@
 		92DD078E18AFC12300FB684A /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92DD078D18AFC12300FB684A /* CoreData.framework */; };
 		92DD079018AFC12D00FB684A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 92DD078F18AFC12D00FB684A /* libz.dylib */; };
 		92E037BF188425E80047F736 /* DragGateGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 92E037BE188425E80047F736 /* DragGateGestureRecognizer.m */; };
-		92E08B8219587206004B6775 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92E08B8119587206004B6775 /* TutorialViewController.m */; };
 		92FA32BE19B2C0140046A7FE /* tutorial-bg-1@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 92FA32BD19B2C0140046A7FE /* tutorial-bg-1@2x.jpg */; };
 		92FA32C219B2C21B0046A7FE /* tutorial-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92FA32C119B2C21B0046A7FE /* tutorial-logo@2x.png */; };
-		92FA32C519B2C8270046A7FE /* Tutorial3PagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FA32C419B2C8270046A7FE /* Tutorial3PagesViewController.m */; };
 		92FA32C719B2E1B70046A7FE /* tutorial-bg-3@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 92FA32C619B2E1B70046A7FE /* tutorial-bg-3@2x.jpg */; };
 		92FC7F9118A50C1000EA329A /* CircuitListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FC7F9018A50C1000EA329A /* CircuitListViewController.m */; };
 		92FC7F9418A50E7300EA329A /* CircuitListImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FC7F9318A50E7300EA329A /* CircuitListImageView.m */; };
@@ -160,6 +163,8 @@
 		9204C39A182E2F5C006A008D /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		9204C3A2182E2F5C006A008D /* CircuitryTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CircuitryTests-Info.plist"; sourceTree = "<group>"; };
 		9204C3A4182E2F5C006A008D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		92061DE619BDF0720081E3B9 /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialViewController.h; sourceTree = "<group>"; };
+		92061DE719BDF0720081E3B9 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; };
 		9208B106187565390038A52A /* Circuitry.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Circuitry.entitlements; sourceTree = "<group>"; };
 		9208BDF71965851C00980D70 /* circuitry.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = circuitry.entitlements; path = circuitry/circuitry.entitlements; sourceTree = "<group>"; };
 		920A19F31973FE1800A67742 /* add4@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add4@2x.png"; sourceTree = "<group>"; };
@@ -195,6 +200,12 @@
 		9253C408188545EC00D2509C /* CreateGatePanGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateGatePanGestureRecognizer.m; sourceTree = "<group>"; };
 		9253C40A18854D0B00D2509C /* CreateLinkGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateLinkGestureRecognizer.h; sourceTree = "<group>"; };
 		9253C40B18854D0B00D2509C /* CreateLinkGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateLinkGestureRecognizer.m; sourceTree = "<group>"; };
+		92575A3519D2D510000D5AC7 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		92575A3619D2D510000D5AC7 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		92575A3819D2E136000D5AC7 /* dots@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dots@2x.png"; sourceTree = "<group>"; };
+		92575A3A19D2E838000D5AC7 /* continue-arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "continue-arrow@2x.png"; sourceTree = "<group>"; };
+		92575A3C19D2EC57000D5AC7 /* ProblemInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProblemInfoViewController.h; sourceTree = "<group>"; };
+		92575A3D19D2EC57000D5AC7 /* ProblemInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProblemInfoViewController.m; sourceTree = "<group>"; };
 		926099DE196917CF0048F2BD /* CircuitDocumentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircuitDocumentViewController.h; sourceTree = "<group>"; };
 		926099DF196917CF0048F2BD /* CircuitDocumentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircuitDocumentViewController.m; sourceTree = "<group>"; };
 		926099E4196919E50048F2BD /* CircuitObjectListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircuitObjectListTableViewController.h; sourceTree = "<group>"; };
@@ -241,12 +252,8 @@
 		92DE44AD187C153F00014CB9 /* circuit.image-atlas */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "circuit.image-atlas"; sourceTree = "<group>"; };
 		92E037BD188425E80047F736 /* DragGateGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DragGateGestureRecognizer.h; sourceTree = "<group>"; };
 		92E037BE188425E80047F736 /* DragGateGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DragGateGestureRecognizer.m; sourceTree = "<group>"; };
-		92E08B8019587206004B6775 /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialViewController.h; sourceTree = "<group>"; };
-		92E08B8119587206004B6775 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; };
 		92FA32BD19B2C0140046A7FE /* tutorial-bg-1@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial-bg-1@2x.jpg"; sourceTree = "<group>"; };
 		92FA32C119B2C21B0046A7FE /* tutorial-logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tutorial-logo@2x.png"; sourceTree = "<group>"; };
-		92FA32C319B2C8270046A7FE /* Tutorial3PagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tutorial3PagesViewController.h; sourceTree = "<group>"; };
-		92FA32C419B2C8270046A7FE /* Tutorial3PagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tutorial3PagesViewController.m; sourceTree = "<group>"; };
 		92FA32C619B2E1B70046A7FE /* tutorial-bg-3@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial-bg-3@2x.jpg"; sourceTree = "<group>"; };
 		92FC7F8F18A50C1000EA329A /* CircuitListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircuitListViewController.h; sourceTree = "<group>"; };
 		92FC7F9018A50C1000EA329A /* CircuitListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircuitListViewController.m; sourceTree = "<group>"; };
@@ -364,14 +371,18 @@
 				926099E5196919E50048F2BD /* CircuitObjectListTableViewController.m */,
 				92FC7F9318A50E7300EA329A /* CircuitListImageView.m */,
 				9204C389182E2F5C006A008D /* Main.storyboard */,
+				92575A3C19D2EC57000D5AC7 /* ProblemInfoViewController.h */,
+				92575A3D19D2EC57000D5AC7 /* ProblemInfoViewController.m */,
+				92575A3519D2D510000D5AC7 /* MainViewController.h */,
+				92575A3619D2D510000D5AC7 /* MainViewController.m */,
+				92061DE619BDF0720081E3B9 /* TutorialViewController.h */,
+				92061DE719BDF0720081E3B9 /* TutorialViewController.m */,
 				9288BBB7196AD6470090455A /* ToolbeltItem.h */,
 				9288BBB8196AD6470090455A /* ToolbeltItem.m */,
 				9288BBB4196AD6230090455A /* ToolbeltItemTableViewCell.h */,
 				9288BBB5196AD6230090455A /* ToolbeltItemTableViewCell.m */,
 				926099DE196917CF0048F2BD /* CircuitDocumentViewController.h */,
 				926099DF196917CF0048F2BD /* CircuitDocumentViewController.m */,
-				92E08B8019587206004B6775 /* TutorialViewController.h */,
-				92E08B8119587206004B6775 /* TutorialViewController.m */,
 				929CB69318A7833C00BEE7D6 /* TransitionFromDocumentListToDocument.h */,
 				929CB69418A7833C00BEE7D6 /* TransitionFromDocumentListToDocument.m */,
 				92FC7F9718A5B39E00EA329A /* CircuitCollectionViewCell.h */,
@@ -537,7 +548,9 @@
 			isa = PBXGroup;
 			children = (
 				920A1A111973FE6600A67742 /* 7seg@2x.png */,
+				92575A3819D2E136000D5AC7 /* dots@2x.png */,
 				920A19F31973FE1800A67742 /* add4@2x.png */,
+				92575A3A19D2E838000D5AC7 /* continue-arrow@2x.png */,
 				920A19F41973FE1800A67742 /* and@2x.png */,
 				920A19F51973FE1800A67742 /* bin7seg@2x.png */,
 				920A19F61973FE1800A67742 /* capacitor 2@2x.png */,
@@ -568,9 +581,7 @@
 			children = (
 				92FA32C119B2C21B0046A7FE /* tutorial-logo@2x.png */,
 				92FA32BD19B2C0140046A7FE /* tutorial-bg-1@2x.jpg */,
-				92FA32C319B2C8270046A7FE /* Tutorial3PagesViewController.h */,
 				92FA32C619B2E1B70046A7FE /* tutorial-bg-3@2x.jpg */,
-				92FA32C419B2C8270046A7FE /* Tutorial3PagesViewController.m */,
 			);
 			name = Tutorial;
 			sourceTree = "<group>";
@@ -684,7 +695,9 @@
 				920A1A041973FE1800A67742 /* bin7seg@2x.png in Resources */,
 				92FA32C719B2E1B70046A7FE /* tutorial-bg-3@2x.jpg in Resources */,
 				920A1A031973FE1800A67742 /* and@2x.png in Resources */,
+				92575A3919D2E136000D5AC7 /* dots@2x.png in Resources */,
 				9218F73D1876AB7C00742F99 /* LinkBezier.fsh in Resources */,
+				92575A3B19D2E838000D5AC7 /* continue-arrow@2x.png in Resources */,
 				9218F73E1876AB7C00742F99 /* LinkBezier.vsh in Resources */,
 				92A4F871187295EF00EEB367 /* Grid.vsh in Resources */,
 				920A1A121973FE6600A67742 /* 7seg@2x.png in Resources */,
@@ -767,9 +780,11 @@
 				9253C40C18854D0B00D2509C /* CreateLinkGestureRecognizer.m in Sources */,
 				92A4F86D187289F300EEB367 /* Viewport.m in Sources */,
 				92E037BF188425E80047F736 /* DragGateGestureRecognizer.m in Sources */,
+				92061DE819BDF0720081E3B9 /* TutorialViewController.m in Sources */,
 				92D90E3D1838E9CD00387FAC /* Grid.vsh in Sources */,
 				92FC7F9118A50C1000EA329A /* CircuitListViewController.m in Sources */,
 				92D90E3B1838D7AB00387FAC /* Grid.m in Sources */,
+				92575A3719D2D510000D5AC7 /* MainViewController.m in Sources */,
 				9232B6551878353A00E45C7E /* BatchedSprite.fsh in Sources */,
 				9218F73C1876982100742F99 /* LinkBezier.vsh in Sources */,
 				92880621187243800096A1CA /* Sprite.vsh in Sources */,
@@ -783,9 +798,9 @@
 				92FC7F9918A5B39E00EA329A /* CircuitCollectionViewCell.m in Sources */,
 				929CB69518A7833C00BEE7D6 /* TransitionFromDocumentListToDocument.m in Sources */,
 				92FC7F9418A50E7300EA329A /* CircuitListImageView.m in Sources */,
+				92575A3E19D2EC57000D5AC7 /* ProblemInfoViewController.m in Sources */,
 				92FC7FA618A601BD00EA329A /* UIAlertView+MKBlockAdditions.m in Sources */,
 				9288BBB9196AD6470090455A /* ToolbeltItem.m in Sources */,
-				92E08B8219587206004B6775 /* TutorialViewController.m in Sources */,
 				9200469C189D0178007124DA /* SevenSegmentDisplay.m in Sources */,
 				92A4F87018728A1F00EEB367 /* Drawable.m in Sources */,
 				9288061B187210180096A1CA /* Shader.vsh in Sources */,
@@ -803,7 +818,6 @@
 				92AFE8FE197B728A003680B0 /* CircuitTest.m in Sources */,
 				926099E6196919E50048F2BD /* CircuitObjectListTableViewController.m in Sources */,
 				9204C384182E2F5C006A008D /* main.m in Sources */,
-				92FA32C519B2C8270046A7FE /* Tutorial3PagesViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

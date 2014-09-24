@@ -270,6 +270,24 @@
     }
     [_items removeObjectsAtIndexes:indexSet];
 }
+- (IBAction)optionsPanel:(UIBarButtonItem *)sender {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    UIAlertAction *otherAction = [UIAlertAction
+                                  actionWithTitle:@"About Circuitry"
+                                  style:UIAlertActionStyleDefault
+                                  handler:^(UIAlertAction *action)
+                                  {
+                                      
+                                  }];
+    
+    [alertController addAction:otherAction];
+    
+    [alertController.popoverPresentationController setPermittedArrowDirections:UIPopoverArrowDirectionUp];
+    UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:alertController];
+    [popoverController presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+    
+}
 
 #pragma mark -
 #pragma mark UICollectionViewDataSource methods

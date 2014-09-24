@@ -620,8 +620,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         GLKVector3 position = [_viewport unproject:PX(self.view.contentScaleFactor, [sender locationInView:self.view])];
         CircuitObject *object = [_viewport findCircuitObjectAtPosition:position];
         if (!object) return;
-        
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@(object->type->id) delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Remove" otherButtonTitles: @"DEBUG: CHECK ANSWER", nil];
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@(object->type->id) delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Remove" otherButtonTitles: @"View Information", @"DEBUG: CHECK ANSWER", nil];
 
         _selectedObjects = @[[NSValue valueWithPointer:object]];
         CGRect rect = [_viewport rectForObject:object inView:self.view];
