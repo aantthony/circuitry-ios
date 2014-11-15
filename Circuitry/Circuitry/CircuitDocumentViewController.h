@@ -10,6 +10,11 @@
 #import "CircuitDocument.h"
 
 @interface CircuitDocumentViewController : UIViewController
+
+// Container views:
 @property (weak, nonatomic) IBOutlet UIView *objectListView;
+@property (weak, nonatomic) IBOutlet UIView *problemInfoView;
+
+// Document bindings:
 - (void) setDocument:(CircuitDocument *) document;
 @end

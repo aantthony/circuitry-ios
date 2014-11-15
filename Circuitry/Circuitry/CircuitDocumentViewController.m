@@ -12,11 +12,13 @@
 #import "ViewController.h"
 #import "ProblemInfoViewController.h"
 
-@interface CircuitDocumentViewController () <CircuitObjectListTableViewControllerDelegate>
+@interface CircuitDocumentViewController () <CircuitObjectListTableViewControllerDelegate, ProblemInfoViewControllerDelegate>
 @property (nonatomic) CircuitDocument *document;
 @property (nonatomic, weak) CircuitObjectListTableViewController *objectListViewController;
+@property (nonatomic, weak) ProblemInfoViewController *problemInfoViewController;
 @property (nonatomic, weak) ViewController *glkViewController;
 @property (nonatomic) BOOL objectListVisible;
+@property (nonatomic) BOOL problemInfoVisible;
 @end
 
 @implementation CircuitDocumentViewController
@@ -59,12 +61,18 @@
 
 - (void) configureView {
     self.objectListVisible = [self shouldShowToolbeltForDocument:_document];
+    BOOL hasTests = _document.circuit.tests.count > 0;
+    self.problemInfoVisible = hasTests;
 }
 
 - (void) setObjectListVisible:(BOOL)objectListVisible {
-    
     _objectListVisible = objectListVisible;
-    _objectListView.hidden = YES;
+    _objectListView.hidden = !_objectListVisible;
+}
+
+- (void) setProblemInfoVisible:(BOOL) problemInfoVisible {
+    _problemInfoVisible = problemInfoVisible;
+    _problemInfoView.hidden = !problemInfoVisible;
 }
 
 - (BOOL) shouldShowToolbeltForDocument: (CircuitDocument *) doc {
@@ -72,12 +80,35 @@
     if (toolbeltFlag == nil) return YES;
     return [toolbeltFlag boolValue];
 }
+- (IBAction)checkAnswer:(id)sender {
+    if (_document.circuit.tests.count) {
+        __block CircuitTestResult *failure = nil;
+        [_document.circuit.tests enumerateObjectsUsingBlock:^(CircuitTest *test, NSUInteger idx, BOOL *stop) {
+            CircuitTestResult *testResult = [test runAndSimulate:_document.circuit];
+            if (!testResult.passed) {
+                failure = testResult;
+                *stop = YES;
+            }
+        }];
+        if (failure) {
+            [[[UIAlertView alloc] initWithTitle:@"Test Result" message: failure.resultDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
+        } else {
+            // Success!
+            [_problemInfoViewController showProgressToNextLevelScreen];
+        }
+    }
+}
 
 
 #pragma mark - Toolbelt delegate
 
 - (void) tableViewController:(CircuitObjectListTableViewController *)tableViewController didStartCreatingObject:(ToolbeltItem *)item {
     [_glkViewController startCreatingObjectFromItem: item];
+}
+
+#pragma mark - Problem Info delegate
+- (void) problemInfoViewController:(ProblemInfoViewController *)problemInfoViewController didPressContinueButton:(id)sender {
+    
 }
 
 #pragma mark - Navigation
@@ -96,6 +127,8 @@
         controller.document = self.document;
     } else if ([segue.destinationViewController isKindOfClass:ProblemInfoViewController.class]) {
         ProblemInfoViewController * controller = (ProblemInfoViewController *) segue.destinationViewController;
+        _problemInfoViewController = controller;
+        controller.delegate = self;
         controller.document = self.document;
     }
 }

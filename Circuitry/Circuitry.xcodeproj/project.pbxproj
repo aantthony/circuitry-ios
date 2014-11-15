@@ -47,6 +47,7 @@
 		920A1A101973FE1800A67742 /* xor@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 920A1A011973FE1800A67742 /* xor@2x.png */; };
 		920A1A121973FE6600A67742 /* 7seg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 920A1A111973FE6600A67742 /* 7seg@2x.png */; };
 		920BC892189E7674004E5D45 /* MongoID.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A861B1189E402900F64673 /* MongoID.m */; };
+		92121A761A16E8CF0071ABEF /* blank.json in Resources */ = {isa = PBXBuildFile; fileRef = 92121A751A16E8CF0071ABEF /* blank.json */; };
 		9218F7381876978A00742F99 /* LinkBezier.m in Sources */ = {isa = PBXBuildFile; fileRef = 9218F7371876978A00742F99 /* LinkBezier.m */; };
 		9218F73A1876981900742F99 /* LinkBezier.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 9218F7391876981900742F99 /* LinkBezier.fsh */; };
 		9218F73C1876982100742F99 /* LinkBezier.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 9218F73B1876982100742F99 /* LinkBezier.vsh */; };
@@ -183,6 +184,7 @@
 		920A1A001973FE1800A67742 /* xnor@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "xnor@2x.png"; sourceTree = "<group>"; };
 		920A1A011973FE1800A67742 /* xor@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "xor@2x.png"; sourceTree = "<group>"; };
 		920A1A111973FE6600A67742 /* 7seg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "7seg@2x.png"; sourceTree = "<group>"; };
+		92121A751A16E8CF0071ABEF /* blank.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = blank.json; sourceTree = "<group>"; };
 		9218F7361876978A00742F99 /* LinkBezier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkBezier.h; sourceTree = "<group>"; };
 		9218F7371876978A00742F99 /* LinkBezier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LinkBezier.m; sourceTree = "<group>"; };
 		9218F7391876981900742F99 /* LinkBezier.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = LinkBezier.fsh; sourceTree = "<group>"; };
@@ -572,6 +574,7 @@
 		92A28A59187428A600F0D934 /* Circuits */ = {
 			isa = PBXGroup;
 			children = (
+				92121A751A16E8CF0071ABEF /* blank.json */,
 			);
 			name = Circuits;
 			sourceTree = "<group>";
@@ -701,6 +704,7 @@
 				9218F73E1876AB7C00742F99 /* LinkBezier.vsh in Resources */,
 				92A4F871187295EF00EEB367 /* Grid.vsh in Resources */,
 				920A1A121973FE6600A67742 /* 7seg@2x.png in Resources */,
+				92121A761A16E8CF0071ABEF /* blank.json in Resources */,
 				920A1A021973FE1800A67742 /* add4@2x.png in Resources */,
 				92794CB118AF0E5500A39012 /* ic@2x.png in Resources */,
 				92FA32C219B2C21B0046A7FE /* tutorial-logo@2x.png in Resources */,

@@ -11,6 +11,7 @@
 #import "CircuitDocument.h"
 
 @interface ProblemInfoViewController ()
+@property (weak, nonatomic) IBOutlet UIView *congratsView;
 @property (weak, nonatomic) CircuitDocument *document;
 @end
 
@@ -18,7 +19,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    _congratsView.alpha = 0.0;
+    _congratsView.hidden = YES;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -29,5 +31,16 @@
 - (void) setDocument: (CircuitDocument *) document {
     _document = document;
 }
+- (void) showProgressToNextLevelScreen {
+    _congratsView.hidden = NO;
+    [UIView animateWithDuration:0.3 animations:^{
+        _congratsView.alpha = 1.0;
+    } completion:^(BOOL finished) {
+        
+    }];
+}
 
+- (IBAction)continueButton:(id)sender {
+    [self.delegate problemInfoViewController:self didPressContinueButton:sender];
+}
 @end

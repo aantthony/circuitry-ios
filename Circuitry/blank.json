@@ -1,0 +1,19 @@
+{
+    "name": "",
+    "version": "1.0.0",
+    "description": "",
+    "author": "",
+    "title": "",
+    "engines": {
+        "circuitry": ">=0.0"
+    },
+    "license": "Copyright",
+    "dependencies": {
+        
+    },
+    "meta": {
+        "toolbelt": true
+    },
+    "items": []
+}
+

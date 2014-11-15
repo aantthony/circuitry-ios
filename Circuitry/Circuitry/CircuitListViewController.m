@@ -95,7 +95,7 @@
 
 - (void) createAndOpenNewDocumentWithURL:(NSURL *)url {
     
-    NSURL *path = [[NSBundle mainBundle] URLForResource:@"nand" withExtension:@"json"];
+    NSURL *path = [[NSBundle mainBundle] URLForResource:@"blank" withExtension:@"json"];
     NSInputStream *stream = [NSInputStream inputStreamWithURL:path];
     [stream open];
     Circuit *circuit = [Circuit circuitWithStream: stream];
@@ -104,6 +104,7 @@
     doc.circuit = circuit;
     _presentingDocument = doc;
     [doc openWithCompletionHandler:^(BOOL success){
+        [doc saveToURL:doc.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:nil];
         [self performSegueWithIdentifier:@"presentDocument" sender:self];
     }];
 }
@@ -125,7 +126,7 @@
 }
 
 - (IBAction) createDocument:(id)sender {
-    if (_items != _circuits) return;
+    if (_items == _problems) return;
     
     NSString *_id = [MongoID stringWithId:[MongoID id]];
     NSURL *url = [[AppDelegate documentsDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.circuit", _id]];
@@ -133,6 +134,7 @@
     int index = 0;
     
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index + 1 inSection:0];
+    NSLog(@"Old length: %lu", _circuits.count);
     
     // TODO: Use fetched results controller somehow?
     [self.collectionView performBatchUpdates:^{
@@ -140,8 +142,9 @@
         NSArray *selectedItemsIndexPaths = @[indexPath];
         
         DocumentListItem *item = [[DocumentListItem alloc] initWithURL:url];
-        
+        NSLog(@"Old length: %lu", _circuits.count);
         [_circuits insertObject:item atIndex:index];
+        NSLog(@"New length: %lu", _circuits.count);
         if (_items == _circuits) {
             [self.collectionView insertItemsAtIndexPaths:selectedItemsIndexPaths];
         }
@@ -173,7 +176,6 @@
             [self createDocument:collectionView];
         }
     } else if(_items == _problems) {
-        
         DocumentListItem *item = [_items objectAtIndex:indexPath.row];
         NSURL *docURL = item.url;
         CircuitCollectionViewCell *cell = (CircuitCollectionViewCell *) [collectionView cellForItemAtIndexPath:indexPath];
@@ -303,9 +305,11 @@
         DocumentListItem *item = [_items objectAtIndex:indexPath.row - 1];
         
         cell.textLabel.text = item.title;
+        if (!cell.textLabel.text.length) {
+            cell.textLabel.text = @"Untitled";
+        }
         return cell;
     } else {
-        
         CircuitCollectionViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:@"CircuitListPrototypeCell" forIndexPath:indexPath];
         
         DocumentListItem *item = [_items objectAtIndex:indexPath.row];
@@ -393,13 +397,13 @@
     [self reloadProblemListData];
     [self reloadCircuitListData];
     
-    if (_segmentControl && _segmentControl.selectedSegmentIndex == 0) {
+    if (_segmentControl && _segmentControl.selectedSegmentIndex == 1) {
         _items = _circuits;
     } else {
         _items = _problems;
     }
-    
-    
+    // TODO: This only needs to be called when the data is reloaded (on initial launch, it loads automatically, making this call unecessary)
+    [self.collectionView reloadData];
 }
 
 
@@ -448,6 +452,7 @@
     _circuits = [[items sortedArrayUsingComparator:^NSComparisonResult(DocumentListItem *obj1, DocumentListItem *obj2) {
         return [obj2.lastModified compare: obj1.lastModified];
     }] mutableCopy];
+    NSLog(@"Loaded list of %lu circuits", _circuits.count);
     
 }
 - (void)didReceiveMemoryWarning

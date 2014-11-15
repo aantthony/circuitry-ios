@@ -620,7 +620,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         GLKVector3 position = [_viewport unproject:PX(self.view.contentScaleFactor, [sender locationInView:self.view])];
         CircuitObject *object = [_viewport findCircuitObjectAtPosition:position];
         if (!object) return;
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@(object->type->id) delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Remove" otherButtonTitles: @"View Information", @"DEBUG: CHECK ANSWER", nil];
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@(object->type->id) delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Remove" otherButtonTitles: nil];
 
         _selectedObjects = @[[NSValue valueWithPointer:object]];
         CGRect rect = [_viewport rectForObject:object inView:self.view];
@@ -642,11 +642,6 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
             [_document updateChangeCount:UIDocumentChangeDone];
             [self unpause];
         }
-    } else if (buttonIndex == 1) {
-        
-        CircuitTest *test = _document.circuit.tests[0];
-        CircuitTestResult *testResult = [test runAndSimulate:_document.circuit];
-        [[[UIAlertView alloc] initWithTitle:@"Test Result" message: testResult.resultDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
     }
 }
 
@@ -675,7 +670,6 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     
     CircuitObject *object = beginLongPressGestureObject;
     if (sender.state == UIGestureRecognizerStateEnded) {
-        NSLog(@"ENDED!");
         [_document updateChangeCount:UIDocumentChangeDone];
         [self unpause];
         return;
