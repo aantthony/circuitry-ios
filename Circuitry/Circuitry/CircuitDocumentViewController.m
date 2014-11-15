@@ -18,6 +18,7 @@
 @property (nonatomic, weak) ProblemInfoViewController *problemInfoViewController;
 @property (nonatomic, weak) ViewController *glkViewController;
 @property (nonatomic) BOOL objectListVisible;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *checkAnswerButton;
 @property (nonatomic) BOOL problemInfoVisible;
 @end
 
@@ -63,6 +64,11 @@
     self.objectListVisible = [self shouldShowToolbeltForDocument:_document];
     BOOL hasTests = _document.circuit.tests.count > 0;
     self.problemInfoVisible = hasTests;
+    if (hasTests) {
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Check Answer" style:UIBarButtonItemStyleDone target:self action:@selector(checkAnswer:)];
+    } else {
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Configure" style:UIBarButtonItemStyleDone target:self action:@selector(configureDocument:)];
+    }
 }
 
 - (void) setObjectListVisible:(BOOL)objectListVisible {
@@ -73,6 +79,10 @@
 - (void) setProblemInfoVisible:(BOOL) problemInfoVisible {
     _problemInfoVisible = problemInfoVisible;
     _problemInfoView.hidden = !problemInfoVisible;
+}
+
+- (IBAction)configureDocument:(id)sender {
+    
 }
 
 - (BOOL) shouldShowToolbeltForDocument: (CircuitDocument *) doc {

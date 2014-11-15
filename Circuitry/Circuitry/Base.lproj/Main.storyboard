@@ -59,6 +59,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="checkAnswerButton" destination="nPY-62-rYn" id="4Ka-7c-DOa"/>
                         <outlet property="objectListView" destination="8GE-Pt-Sug" id="O64-gb-akG"/>
                         <outlet property="problemInfoView" destination="0G8-Qd-p90" id="Tou-jP-Xp3"/>
                     </connections>
