@@ -278,6 +278,22 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="tutorial-bg-1.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="hrp-fQ-oJe">
+                                <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="tutorial-bg-2.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="RYN-9x-0pP">
+                                <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="tutorial-bg-3.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="bDE-Iu-eTm">
+                                <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                                <gestureRecognizers/>
+                            </imageView>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceHorizontal="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vXf-4B-MG2">
+                                <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                                <connections>
+                                    <outlet property="delegate" destination="SLJ-zi-R7l" id="IfV-ko-JfD"/>
+                                </connections>
+                            </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VYP-BM-iwz">
                                 <rect key="frame" x="266" y="910" width="237" height="64"/>
                                 <color key="backgroundColor" red="0.047058823530000002" green="0.37254901959999998" blue="0.69411764710000001" alpha="1" colorSpace="calibratedRGB"/>
@@ -308,7 +324,11 @@
                     </view>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
                     <connections>
+                        <outlet property="image1" destination="hrp-fQ-oJe" id="IhU-yC-mmW"/>
+                        <outlet property="image2" destination="RYN-9x-0pP" id="i2o-fe-8md"/>
+                        <outlet property="image3" destination="bDE-Iu-eTm" id="4bI-dM-96x"/>
                         <outlet property="pageControl" destination="jvE-f8-6kx" id="k5j-mp-dBh"/>
+                        <outlet property="scrollView" destination="vXf-4B-MG2" id="SOV-KN-KhF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zRt-Qw-45B" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -346,7 +366,6 @@
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="0.087830585449999998" green="0.3450255102" blue="0.25212057510000002" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="hRk-6H-ar2" secondAttribute="centerX" id="7Jd-4F-eJ9"/>
                             <constraint firstItem="2DZ-xc-hfg" firstAttribute="centerX" secondItem="hRk-6H-ar2" secondAttribute="centerX" id="ClZ-JT-zhx"/>
@@ -390,7 +409,6 @@
                     <view key="view" contentMode="scaleToFill" id="XMt-Ix-xBI">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" red="0.47843137250000001" green="0.70980392160000005" blue="0.2470588235" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="I8q-bf-zCk" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -559,6 +577,9 @@ This logic diagram describes the rule:
         <image name="dots.png" width="22" height="6"/>
         <image name="large-plus.png" width="54" height="54"/>
         <image name="or.png" width="90" height="50"/>
+        <image name="tutorial-bg-1.jpg" width="768" height="1024"/>
+        <image name="tutorial-bg-2.jpg" width="768" height="1024"/>
+        <image name="tutorial-bg-3.jpg" width="768" height="1024"/>
         <image name="tutorial-logo.png" width="61" height="145"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

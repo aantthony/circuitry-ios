@@ -8,7 +8,11 @@
 
 #import "TutorialViewController.h"
 
-@interface TutorialViewController ()
+@interface TutorialViewController () <UIScrollViewDelegate>
+@property (weak, nonatomic) IBOutlet UIImageView *image1;
+@property (weak, nonatomic) IBOutlet UIImageView *image2;
+@property (weak, nonatomic) IBOutlet UIImageView *image3;
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIPageControl *pageControl;
 @end
 
@@ -27,32 +31,88 @@ static int pageCount = 3;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
-    self.pageViewController.delegate = self;
-
-    UIViewController *startingViewController = [self viewControllerAtIndex:0 storyboard:self.storyboard];
-    NSArray *viewControllers = @[startingViewController];
-    [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-    
-    self.pageViewController.dataSource = self;
-    
-    [self addChildViewController:self.pageViewController];
-    [self.view insertSubview:self.pageViewController.view atIndex:0];
-    
-    self.pageViewController.view.frame = self.view.bounds;
-    
-    [self.pageViewController didMoveToParentViewController:self];
-    
-    // Add the page view controller's gesture recognizers to the book view controller's view so that the gestures are started more easily.
-    self.view.gestureRecognizers = self.pageViewController.gestureRecognizers;
+    [self initScrollView];
 }
+
+- (UIImageView *) imageViewForIndex:(int)index {
+    if (index == 0) return _image1;
+    if (index == 1) return _image2;
+    if (index == 2) return _image3;
+    return nil;
+}
+
+- (void) configureBackgroundFade {
+    CGFloat width = self.view.bounds.size.width;
+    CGFloat x = _scrollView.contentOffset.x;
+    int page = x / width;
+    double offset = fmod(x, width) / width;
+    int i;
+    for (i = 0; i <= page; i++) {
+        [self imageViewForIndex:i].alpha = 1.0;
+    }
+    [self imageViewForIndex:i].alpha = offset;
+    i++;
+    for (; i < pageCount; i++) {
+        [self imageViewForIndex:i].alpha = 0.0;
+    }
+}
+
+- (void) configureSubviewLayouts {
+    CGFloat width = self.view.bounds.size.width;
+    CGFloat height = self.view.bounds.size.height;
+    _image1.frame = CGRectMake(0, 0, width, height);
+    _image2.frame = CGRectMake(0, 0, width, height);
+    _image3.frame = CGRectMake(0, 0, width, height);
+    
+    _scrollView.frame = CGRectMake(0, 0, width, height);
+    _scrollView.contentSize = CGSizeMake(pageCount * width, height);
+    
+    for(int i = 0; i < pageCount; i++) {
+        UIView *v  = [[_scrollView subviews] objectAtIndex:i];
+        v.frame = CGRectMake(i * width, 0, width, height);
+    }
+}
+
+- (void) scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+    _pageControl.currentPage = _scrollView.contentOffset.x / self.view.bounds.size.width;
+}
+
+- (void) scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    _pageControl.currentPage = _scrollView.contentOffset.x / self.view.bounds.size.width;
+}
+
+- (void) scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self configureBackgroundFade];
+}
+
+- (void) viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    [self configureSubviewLayouts];
+}
+- (void) viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    [self configureSubviewLayouts];
+}
+
+- (void) initScrollView {
+    CGFloat width = self.view.bounds.size.width;
+    CGFloat height = self.view.bounds.size.height;
+    _scrollView.contentSize = CGSizeMake(pageCount * width, height);
+    
+    for(int i = 0; i < pageCount; i++) {
+        UIViewController *v1 = [self viewControllerAtIndex:i storyboard:self.storyboard];
+        [self addChildViewController:v1];
+        v1.view.frame = CGRectMake(i * width, 0, width, height);
+        [_scrollView addSubview:v1.view];
+        [v1 didMoveToParentViewController:self];
+    }
+    [self configureBackgroundFade];
+}
+
 - (UIStatusBarStyle) preferredStatusBarStyle {
     return UIStatusBarStyleLightContent;
 }
 
-- (void) pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed {
-    _pageControl.currentPage = [self indexOfViewController:[pageViewController.viewControllers lastObject]];
-}
 - (IBAction)continue:(id)sender {
     [self.delegate tutorialViewController:self didFinishWithResult:YES];
     [self dismissViewControllerAnimated:YES completion:nil];
@@ -64,46 +124,6 @@ static int pageCount = 3;
     // Dispose of any resources that can be recreated.
 }
 
-
-- (NSUInteger)indexOfViewController:(UIViewController *)viewController
-{   
-    // Return the index of the given data view controller.
-    // For simplicity, this implementation uses a static array of model objects and the view controller stores the model object; you can therefore use the model object to identify the index.
-    if ([viewController.restorationIdentifier isEqualToString:@"Tutorial-Page-1"]) return 0;
-    if ([viewController.restorationIdentifier isEqualToString:@"Tutorial-Page-2"]) return 1;
-    if ([viewController.restorationIdentifier isEqualToString:@"Tutorial-Page-3"]) return 2;
-    
-    return NSNotFound;
-}
-
-
-- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController
-{
-    NSUInteger index = [self indexOfViewController:viewController];
-    if ((index == 0) || (index == NSNotFound)) {
-        return nil;
-    }
-    
-    index--;
-    return [self viewControllerAtIndex:index storyboard:viewController.storyboard];
-}
-
-- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController
-{
-    NSUInteger index = [self indexOfViewController:viewController];
-    if (index == NSNotFound) {
-        return nil;
-    }
-    
-    index++;
-    if (index == pageCount) {
-        return nil;
-    }
-    return [self viewControllerAtIndex:index storyboard:viewController.storyboard];
-}
-- (NSInteger) presentationCountForPageViewController:(UIPageViewController *)pageViewController {
-    return pageCount;
-}
 - (UIViewController *)viewControllerAtIndex:(NSUInteger)index storyboard:(UIStoryboard *)storyboard {
     
     if (index == 0) {

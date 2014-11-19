@@ -71,6 +71,7 @@
 		926099E6196919E50048F2BD /* CircuitObjectListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 926099E5196919E50048F2BD /* CircuitObjectListTableViewController.m */; };
 		92794CB118AF0E5500A39012 /* ic@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92794CB018AF0E5400A39012 /* ic@2x.png */; };
 		92796A3418A668FB00DB690F /* LongPressObjectGesture.m in Sources */ = {isa = PBXBuildFile; fileRef = 92796A3318A668FB00DB690F /* LongPressObjectGesture.m */; };
+		927FC3991A1A12BA00138BCA /* tutorial-bg-2@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 927FC3981A1A12BA00138BCA /* tutorial-bg-2@2x.jpg */; };
 		9288061B187210180096A1CA /* Shader.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 9204C38E182E2F5C006A008D /* Shader.vsh */; };
 		92880621187243800096A1CA /* Sprite.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 92880620187243800096A1CA /* Sprite.vsh */; };
 		928806231872438E0096A1CA /* Sprite.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 928806221872438E0096A1CA /* Sprite.fsh */; };
@@ -215,6 +216,7 @@
 		92794CB018AF0E5400A39012 /* ic@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic@2x.png"; sourceTree = "<group>"; };
 		92796A3218A668FB00DB690F /* LongPressObjectGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LongPressObjectGesture.h; sourceTree = "<group>"; };
 		92796A3318A668FB00DB690F /* LongPressObjectGesture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LongPressObjectGesture.m; sourceTree = "<group>"; };
+		927FC3981A1A12BA00138BCA /* tutorial-bg-2@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial-bg-2@2x.jpg"; sourceTree = "<group>"; };
 		92880620187243800096A1CA /* Sprite.vsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; name = Sprite.vsh; path = ../Sprite.vsh; sourceTree = "<group>"; };
 		928806221872438E0096A1CA /* Sprite.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; name = Sprite.fsh; path = ../Sprite.fsh; sourceTree = "<group>"; };
 		9288BBB4196AD6230090455A /* ToolbeltItemTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolbeltItemTableViewCell.h; sourceTree = "<group>"; };
@@ -584,6 +586,7 @@
 			children = (
 				92FA32C119B2C21B0046A7FE /* tutorial-logo@2x.png */,
 				92FA32BD19B2C0140046A7FE /* tutorial-bg-1@2x.jpg */,
+				927FC3981A1A12BA00138BCA /* tutorial-bg-2@2x.jpg */,
 				92FA32C619B2E1B70046A7FE /* tutorial-bg-3@2x.jpg */,
 			);
 			name = Tutorial;
@@ -703,6 +706,7 @@
 				92575A3B19D2E838000D5AC7 /* continue-arrow@2x.png in Resources */,
 				9218F73E1876AB7C00742F99 /* LinkBezier.vsh in Resources */,
 				92A4F871187295EF00EEB367 /* Grid.vsh in Resources */,
+				927FC3991A1A12BA00138BCA /* tutorial-bg-2@2x.jpg in Resources */,
 				920A1A121973FE6600A67742 /* 7seg@2x.png in Resources */,
 				92121A761A16E8CF0071ABEF /* blank.json in Resources */,
 				920A1A021973FE1800A67742 /* add4@2x.png in Resources */,

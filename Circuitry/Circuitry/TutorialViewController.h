@@ -9,9 +9,8 @@
 #import <UIKit/UIKit.h>
 @protocol TutorialViewControllerDelegate;
 
-@interface TutorialViewController : UIViewController <UIPageViewControllerDelegate, UIPageViewControllerDataSource>
+@interface TutorialViewController : UIViewController
 
-@property (strong, nonatomic) UIPageViewController *pageViewController;
 @property (weak, nonatomic) id <TutorialViewControllerDelegate> delegate;
 @end
 
