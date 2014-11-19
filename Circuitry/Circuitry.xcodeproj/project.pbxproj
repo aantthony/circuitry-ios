@@ -54,6 +54,10 @@
 		9218F73D1876AB7C00742F99 /* LinkBezier.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9218F7391876981900742F99 /* LinkBezier.fsh */; };
 		9218F73E1876AB7C00742F99 /* LinkBezier.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 9218F73B1876982100742F99 /* LinkBezier.vsh */; };
 		923056A118759577005AE348 /* Configurations.plist in Resources */ = {isa = PBXBuildFile; fileRef = 923056A018759577005AE348 /* Configurations.plist */; };
+		9232AD791A1CB8010030ADB2 /* TutorialPage1ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9232AD781A1CB8010030ADB2 /* TutorialPage1ViewController.m */; };
+		9232AD7B1A1CB9EC0030ADB2 /* ipad-white-vertical-level-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 9232AD7A1A1CB9EC0030ADB2 /* ipad-white-vertical-level-1.png */; };
+		9232AD7E1A1CBBF40030ADB2 /* TutorialPage2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9232AD7D1A1CBBF40030ADB2 /* TutorialPage2ViewController.m */; };
+		9232AD811A1CBC090030ADB2 /* TutorialPage3ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9232AD801A1CBC090030ADB2 /* TutorialPage3ViewController.m */; };
 		9232B65118780CFE00E45C7E /* BatchedSprite.m in Sources */ = {isa = PBXBuildFile; fileRef = 9232B65018780CFE00E45C7E /* BatchedSprite.m */; };
 		9232B6531878140500E45C7E /* BatchedSprite.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 9232B6521878140500E45C7E /* BatchedSprite.vsh */; };
 		9232B6551878353A00E45C7E /* BatchedSprite.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 9232B6541878353A00E45C7E /* BatchedSprite.fsh */; };
@@ -191,6 +195,13 @@
 		9218F7391876981900742F99 /* LinkBezier.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = LinkBezier.fsh; sourceTree = "<group>"; };
 		9218F73B1876982100742F99 /* LinkBezier.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = LinkBezier.vsh; sourceTree = "<group>"; };
 		923056A018759577005AE348 /* Configurations.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Configurations.plist; sourceTree = "<group>"; };
+		9232AD771A1CB8000030ADB2 /* TutorialPage1ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialPage1ViewController.h; sourceTree = "<group>"; };
+		9232AD781A1CB8010030ADB2 /* TutorialPage1ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialPage1ViewController.m; sourceTree = "<group>"; };
+		9232AD7A1A1CB9EC0030ADB2 /* ipad-white-vertical-level-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ipad-white-vertical-level-1.png"; sourceTree = "<group>"; };
+		9232AD7C1A1CBBF40030ADB2 /* TutorialPage2ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialPage2ViewController.h; sourceTree = "<group>"; };
+		9232AD7D1A1CBBF40030ADB2 /* TutorialPage2ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialPage2ViewController.m; sourceTree = "<group>"; };
+		9232AD7F1A1CBC090030ADB2 /* TutorialPage3ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialPage3ViewController.h; sourceTree = "<group>"; };
+		9232AD801A1CBC090030ADB2 /* TutorialPage3ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialPage3ViewController.m; sourceTree = "<group>"; };
 		9232B64F18780CFE00E45C7E /* BatchedSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BatchedSprite.h; sourceTree = "<group>"; };
 		9232B65018780CFE00E45C7E /* BatchedSprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BatchedSprite.m; sourceTree = "<group>"; };
 		9232B6521878140500E45C7E /* BatchedSprite.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = BatchedSprite.vsh; sourceTree = "<group>"; };
@@ -376,11 +387,17 @@
 				92FC7F9318A50E7300EA329A /* CircuitListImageView.m */,
 				9204C389182E2F5C006A008D /* Main.storyboard */,
 				92575A3C19D2EC57000D5AC7 /* ProblemInfoViewController.h */,
+				9232AD771A1CB8000030ADB2 /* TutorialPage1ViewController.h */,
+				9232AD781A1CB8010030ADB2 /* TutorialPage1ViewController.m */,
 				92575A3D19D2EC57000D5AC7 /* ProblemInfoViewController.m */,
 				92575A3519D2D510000D5AC7 /* MainViewController.h */,
 				92575A3619D2D510000D5AC7 /* MainViewController.m */,
 				92061DE619BDF0720081E3B9 /* TutorialViewController.h */,
 				92061DE719BDF0720081E3B9 /* TutorialViewController.m */,
+				9232AD7C1A1CBBF40030ADB2 /* TutorialPage2ViewController.h */,
+				9232AD7D1A1CBBF40030ADB2 /* TutorialPage2ViewController.m */,
+				9232AD7F1A1CBC090030ADB2 /* TutorialPage3ViewController.h */,
+				9232AD801A1CBC090030ADB2 /* TutorialPage3ViewController.m */,
 				9288BBB7196AD6470090455A /* ToolbeltItem.h */,
 				9288BBB8196AD6470090455A /* ToolbeltItem.m */,
 				9288BBB4196AD6230090455A /* ToolbeltItemTableViewCell.h */,
@@ -585,6 +602,7 @@
 			isa = PBXGroup;
 			children = (
 				92FA32C119B2C21B0046A7FE /* tutorial-logo@2x.png */,
+				9232AD7A1A1CB9EC0030ADB2 /* ipad-white-vertical-level-1.png */,
 				92FA32BD19B2C0140046A7FE /* tutorial-bg-1@2x.jpg */,
 				927FC3981A1A12BA00138BCA /* tutorial-bg-2@2x.jpg */,
 				92FA32C619B2E1B70046A7FE /* tutorial-bg-3@2x.jpg */,
@@ -706,6 +724,7 @@
 				92575A3B19D2E838000D5AC7 /* continue-arrow@2x.png in Resources */,
 				9218F73E1876AB7C00742F99 /* LinkBezier.vsh in Resources */,
 				92A4F871187295EF00EEB367 /* Grid.vsh in Resources */,
+				9232AD7B1A1CB9EC0030ADB2 /* ipad-white-vertical-level-1.png in Resources */,
 				927FC3991A1A12BA00138BCA /* tutorial-bg-2@2x.jpg in Resources */,
 				920A1A121973FE6600A67742 /* 7seg@2x.png in Resources */,
 				92121A761A16E8CF0071ABEF /* blank.json in Resources */,
@@ -808,12 +827,15 @@
 				92FC7F9418A50E7300EA329A /* CircuitListImageView.m in Sources */,
 				92575A3E19D2EC57000D5AC7 /* ProblemInfoViewController.m in Sources */,
 				92FC7FA618A601BD00EA329A /* UIAlertView+MKBlockAdditions.m in Sources */,
+				9232AD811A1CBC090030ADB2 /* TutorialPage3ViewController.m in Sources */,
 				9288BBB9196AD6470090455A /* ToolbeltItem.m in Sources */,
 				9200469C189D0178007124DA /* SevenSegmentDisplay.m in Sources */,
 				92A4F87018728A1F00EEB367 /* Drawable.m in Sources */,
 				9288061B187210180096A1CA /* Shader.vsh in Sources */,
 				92D90E3F1838E9D700387FAC /* Grid.fsh in Sources */,
 				9218F73A1876981900742F99 /* LinkBezier.fsh in Sources */,
+				9232AD791A1CB8010030ADB2 /* TutorialPage1ViewController.m in Sources */,
+				9232AD7E1A1CBBF40030ADB2 /* TutorialPage2ViewController.m in Sources */,
 				9288BBB6196AD6230090455A /* ToolbeltItemTableViewCell.m in Sources */,
 				9218F7381876978A00742F99 /* LinkBezier.m in Sources */,
 				92A861B2189E402900F64673 /* MongoID.m in Sources */,

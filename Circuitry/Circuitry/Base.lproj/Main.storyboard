@@ -255,6 +255,7 @@
                     </navigationItem>
                     <connections>
                         <segue destination="2hA-su-58g" kind="push" identifier="presentDocument" id="MpB-7m-KJD"/>
+                        <segue destination="SLJ-zi-R7l" kind="modal" identifier="ShowTutorialAgain" modalTransitionStyle="flipHorizontal" id="gnN-9s-ocl"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jtp-V0-qL6" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -302,7 +303,7 @@
                                     <constraint firstAttribute="height" constant="64" id="fqP-bw-IBG"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="19"/>
-                                <state key="normal" title="Continue to Circuitry">
+                                <state key="normal" title="Get Started!">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -324,6 +325,7 @@
                     </view>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
                     <connections>
+                        <outlet property="button" destination="VYP-BM-iwz" id="yFO-vg-Bgk"/>
                         <outlet property="image1" destination="hrp-fQ-oJe" id="IhU-yC-mmW"/>
                         <outlet property="image2" destination="RYN-9x-0pP" id="i2o-fe-8md"/>
                         <outlet property="image3" destination="bDE-Iu-eTm" id="4bI-dM-96x"/>
@@ -335,10 +337,10 @@
             </objects>
             <point key="canvasLocation" x="663" y="-1986"/>
         </scene>
-        <!--View Controller-->
+        <!--Tutorial Page1 View Controller-->
         <scene sceneID="xwe-YO-aJi">
             <objects>
-                <viewController storyboardIdentifier="Tutorial-Page-1" useStoryboardIdentifierAsRestorationIdentifier="YES" id="aPM-Ua-4Gd" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Tutorial-Page-1" useStoryboardIdentifierAsRestorationIdentifier="YES" id="aPM-Ua-4Gd" customClass="TutorialPage1ViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="4RX-Qm-tGO"/>
                         <viewControllerLayoutGuide type="bottom" id="TJ5-L3-mNu"/>
@@ -366,6 +368,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
+                        <color key="backgroundColor" white="0.57499999999999996" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="hRk-6H-ar2" secondAttribute="centerX" id="7Jd-4F-eJ9"/>
                             <constraint firstItem="2DZ-xc-hfg" firstAttribute="centerX" secondItem="hRk-6H-ar2" secondAttribute="centerX" id="ClZ-JT-zhx"/>
@@ -376,6 +379,9 @@
                             <constraint firstItem="2DZ-xc-hfg" firstAttribute="top" secondItem="Jtd-SE-Qql" secondAttribute="bottom" constant="8" symbolic="YES" id="W0V-WG-kGk"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="descriptionText" destination="hRk-6H-ar2" id="Ndk-Zl-lX3"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="96p-vM-bli" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -392,16 +398,28 @@
                     <view key="view" contentMode="scaleToFill" id="Vff-66-ktq">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ipad-white-vertical-level-1.png" translatesAutoresizingMaskIntoConstraints="NO" id="mzK-eN-2zw">
+                                <rect key="frame" x="158" y="80" width="453" height="538"/>
+                            </imageView>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Construct solutions to complicated logic gate problems linking AND gates, OR gates, XOR gates, and so on." textAlignment="center" lineBreakMode="clip" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="500" translatesAutoresizingMaskIntoConstraints="NO" id="LqF-H5-SNk">
+                                <rect key="frame" x="135" y="751" width="499" height="132"/>
+                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="24"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="0.59474611282348633" green="0.48714275069322927" blue="0.41777814864485741" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Moy-52-UG6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1464" y="-3069"/>
         </scene>
-        <!--View Controller-->
+        <!--Tutorial Page3 View Controller-->
         <scene sceneID="54s-tG-xxe">
             <objects>
-                <viewController storyboardIdentifier="Tutorial-Page-3" useStoryboardIdentifierAsRestorationIdentifier="YES" id="f9Z-nB-XyN" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Tutorial-Page-3" useStoryboardIdentifierAsRestorationIdentifier="YES" id="f9Z-nB-XyN" customClass="TutorialPage3ViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="1ej-VG-PRl"/>
                         <viewControllerLayoutGuide type="bottom" id="6Kr-rB-iSk"/>
@@ -409,7 +427,23 @@
                     <view key="view" contentMode="scaleToFill" id="XMt-Ix-xBI">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="center" lineBreakMode="clip" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="500" translatesAutoresizingMaskIntoConstraints="NO" id="Zx9-i6-yMt">
+                                <rect key="frame" x="136" y="692" width="465" height="164"/>
+                                <string key="text">Progressing through the levels will unlock various logical elements and contraptions which you can use to develop circuits in Playground Mode. This is where things can get interesting!</string>
+                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="24"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ipad-white-vertical-level-1.png" translatesAutoresizingMaskIntoConstraints="NO" id="eoz-vI-Ld4">
+                                <rect key="frame" x="142" y="45" width="453" height="538"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.55326310582550797" green="0.53577800666664499" blue="0.57594609260559082" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
+                    <connections>
+                        <outlet property="descriptionText" destination="Zx9-i6-yMt" id="htv-gM-KI9"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="I8q-bf-zCk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -575,6 +609,7 @@ This logic diagram describes the rule:
         <image name="background.jpg" width="2048" height="1536"/>
         <image name="continue-arrow.png" width="53" height="18"/>
         <image name="dots.png" width="22" height="6"/>
+        <image name="ipad-white-vertical-level-1.png" width="882" height="1310"/>
         <image name="large-plus.png" width="54" height="54"/>
         <image name="or.png" width="90" height="50"/>
         <image name="tutorial-bg-1.jpg" width="768" height="1024"/>
@@ -587,4 +622,7 @@ This logic diagram describes the rule:
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="gnN-9s-ocl"/>
+    </inferredMetricsTieBreakers>
 </document>

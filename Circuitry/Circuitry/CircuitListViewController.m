@@ -265,7 +265,7 @@
         if (itemPath.row == 0) {
             [[NSException exceptionWithName:@"Could not remove \"Create Circuit\" item from list" reason:nil userInfo:nil] raise];
         }
-        int index = itemPath.row - 1;
+        long index = itemPath.row - 1;
         DocumentListItem *item = [_items objectAtIndex:index];
         [self deleteURL:item.url];
         [indexSet addIndex:index];
@@ -275,12 +275,14 @@
 - (IBAction)optionsPanel:(UIBarButtonItem *)sender {
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
+    __weak CircuitListViewController *weakSelf = self;
     UIAlertAction *otherAction = [UIAlertAction
                                   actionWithTitle:@"About Circuitry"
                                   style:UIAlertActionStyleDefault
                                   handler:^(UIAlertAction *action)
                                   {
-                                      
+                                      if (!weakSelf) return;
+                                      [weakSelf performSegueWithIdentifier:@"ShowTutorialAgain" sender:weakSelf];
                                   }];
     
     [alertController addAction:otherAction];

@@ -12,8 +12,10 @@
 @property (weak, nonatomic) IBOutlet UIImageView *image1;
 @property (weak, nonatomic) IBOutlet UIImageView *image2;
 @property (weak, nonatomic) IBOutlet UIImageView *image3;
+@property (weak, nonatomic) IBOutlet UIButton *button;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIPageControl *pageControl;
+@property (nonatomic) BOOL buttonEnabled;
 @end
 
 @implementation TutorialViewController
@@ -32,6 +34,8 @@ static int pageCount = 3;
 {
     [super viewDidLoad];
     [self initScrollView];
+    _buttonEnabled = NO;
+    _button.alpha = 0.0;
 }
 
 - (UIImageView *) imageViewForIndex:(int)index {
@@ -55,6 +59,17 @@ static int pageCount = 3;
     for (; i < pageCount; i++) {
         [self imageViewForIndex:i].alpha = 0.0;
     }
+    BOOL buttonEnabled = (page >= 2 || (page >=1 && offset > 0.3));
+    self.buttonEnabled = buttonEnabled;
+}
+
+- (void) setButtonEnabled:(BOOL) buttonEnabled {
+    if (_buttonEnabled == buttonEnabled) return;
+    _button.enabled = buttonEnabled;
+    [UIView animateWithDuration:0.3 animations:^{
+        _button.alpha = buttonEnabled ? 1.0 : 0.0;
+    }];
+    _buttonEnabled = buttonEnabled;
 }
 
 - (void) configureSubviewLayouts {
@@ -102,6 +117,7 @@ static int pageCount = 3;
     for(int i = 0; i < pageCount; i++) {
         UIViewController *v1 = [self viewControllerAtIndex:i storyboard:self.storyboard];
         [self addChildViewController:v1];
+        v1.view.backgroundColor = [UIColor clearColor];
         v1.view.frame = CGRectMake(i * width, 0, width, height);
         [_scrollView addSubview:v1.view];
         [v1 didMoveToParentViewController:self];
