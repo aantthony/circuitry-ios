@@ -276,7 +276,7 @@
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
     __weak CircuitListViewController *weakSelf = self;
-    UIAlertAction *otherAction = [UIAlertAction
+    UIAlertAction *aboutAction = [UIAlertAction
                                   actionWithTitle:@"About Circuitry"
                                   style:UIAlertActionStyleDefault
                                   handler:^(UIAlertAction *action)
@@ -285,7 +285,18 @@
                                       [weakSelf performSegueWithIdentifier:@"ShowTutorialAgain" sender:weakSelf];
                                   }];
     
-    [alertController addAction:otherAction];
+    [alertController addAction:aboutAction];
+    
+    UIAlertAction *boringInfoAction = [UIAlertAction
+                                  actionWithTitle:@"Legal & Attributions"
+                                  style:UIAlertActionStyleDefault
+                                  handler:^(UIAlertAction *action)
+                                  {
+                                      if (!weakSelf) return;
+                                      [weakSelf performSegueWithIdentifier:@"ShowBoringInfo" sender:weakSelf];
+                                  }];
+    
+    [alertController addAction:boringInfoAction];
     
     [alertController.popoverPresentationController setPermittedArrowDirections:UIPopoverArrowDirectionUp];
     UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:alertController];

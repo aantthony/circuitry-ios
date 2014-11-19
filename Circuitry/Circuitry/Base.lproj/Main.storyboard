@@ -145,6 +145,62 @@
             </objects>
             <point key="canvasLocation" x="2544" y="478"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="g2Q-hm-1qV">
+            <objects>
+                <navigationController id="q9S-XF-PBR" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="khs-U4-ZaT">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zFW-x7-eOI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1041" y="-2021"/>
+        </scene>
+        <!--Legal & Attributions-->
+        <scene sceneID="aUo-mN-B3h">
+            <objects>
+                <viewController id="TC5-kT-rFU" customClass="BoringInfoViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="TQZ-pJ-PKK"/>
+                        <viewControllerLayoutGuide type="bottom" id="VGm-2D-Kuk"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="DyV-8G-Tbd">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" editable="NO" text="This box will be automatically replaced with the contents of Terms.rtf." translatesAutoresizingMaskIntoConstraints="NO" id="YRN-8Z-2sB">
+                                <rect key="frame" x="4" y="0.0" width="760" height="1024"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <dataDetectorType key="dataDetectorTypes" link="YES"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="YRN-8Z-2sB" firstAttribute="leading" secondItem="DyV-8G-Tbd" secondAttribute="leadingMargin" constant="-16" id="A1t-e2-7I0"/>
+                            <constraint firstItem="VGm-2D-Kuk" firstAttribute="top" secondItem="YRN-8Z-2sB" secondAttribute="bottom" id="Rn4-Bf-RVR"/>
+                            <constraint firstItem="YRN-8Z-2sB" firstAttribute="top" secondItem="TQZ-pJ-PKK" secondAttribute="bottom" id="Zpk-XM-7jx"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="YRN-8Z-2sB" secondAttribute="trailing" constant="-16" id="f6E-rI-RUy"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Legal &amp; Attributions" id="hIB-BI-b8v">
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="qer-Lj-haq">
+                            <connections>
+                                <action selector="done:" destination="TC5-kT-rFU" id="Bte-Xv-bnO"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="textView" destination="YRN-8Z-2sB" id="ScT-Tc-UGR"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uod-wc-WqP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3451" y="-1912"/>
+        </scene>
         <!--Circuitry-->
         <scene sceneID="fYR-El-sOZ">
             <objects>
@@ -256,6 +312,7 @@
                     <connections>
                         <segue destination="2hA-su-58g" kind="push" identifier="presentDocument" id="MpB-7m-KJD"/>
                         <segue destination="SLJ-zi-R7l" kind="modal" identifier="ShowTutorialAgain" modalTransitionStyle="flipHorizontal" id="gnN-9s-ocl"/>
+                        <segue destination="fgr-9P-fIo" kind="modal" identifier="ShowBoringInfo" modalTransitionStyle="coverVertical" id="0tP-rl-eoO"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jtp-V0-qL6" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -603,6 +660,24 @@ This logic diagram describes the rule:
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xfo-PK-73x" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1647" y="1266"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="kGb-hu-6hy">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="fgr-9P-fIo" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="KhL-3u-8ra">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="TC5-kT-rFU" kind="relationship" relationship="rootViewController" id="sQe-V4-uHE"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Hdh-vx-nU7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2471" y="-1912"/>
         </scene>
     </scenes>
     <resources>

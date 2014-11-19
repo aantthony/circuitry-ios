@@ -58,6 +58,8 @@
 		9232AD7B1A1CB9EC0030ADB2 /* ipad-white-vertical-level-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 9232AD7A1A1CB9EC0030ADB2 /* ipad-white-vertical-level-1.png */; };
 		9232AD7E1A1CBBF40030ADB2 /* TutorialPage2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9232AD7D1A1CBBF40030ADB2 /* TutorialPage2ViewController.m */; };
 		9232AD811A1CBC090030ADB2 /* TutorialPage3ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9232AD801A1CBC090030ADB2 /* TutorialPage3ViewController.m */; };
+		9232AD841A1CBD6D0030ADB2 /* BoringInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9232AD831A1CBD6D0030ADB2 /* BoringInfoViewController.m */; };
+		9232AD861A1CBE120030ADB2 /* Terms.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 9232AD851A1CBE120030ADB2 /* Terms.rtf */; };
 		9232B65118780CFE00E45C7E /* BatchedSprite.m in Sources */ = {isa = PBXBuildFile; fileRef = 9232B65018780CFE00E45C7E /* BatchedSprite.m */; };
 		9232B6531878140500E45C7E /* BatchedSprite.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 9232B6521878140500E45C7E /* BatchedSprite.vsh */; };
 		9232B6551878353A00E45C7E /* BatchedSprite.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 9232B6541878353A00E45C7E /* BatchedSprite.fsh */; };
@@ -202,6 +204,9 @@
 		9232AD7D1A1CBBF40030ADB2 /* TutorialPage2ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialPage2ViewController.m; sourceTree = "<group>"; };
 		9232AD7F1A1CBC090030ADB2 /* TutorialPage3ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialPage3ViewController.h; sourceTree = "<group>"; };
 		9232AD801A1CBC090030ADB2 /* TutorialPage3ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialPage3ViewController.m; sourceTree = "<group>"; };
+		9232AD821A1CBD6D0030ADB2 /* BoringInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BoringInfoViewController.h; sourceTree = "<group>"; };
+		9232AD831A1CBD6D0030ADB2 /* BoringInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BoringInfoViewController.m; sourceTree = "<group>"; };
+		9232AD851A1CBE120030ADB2 /* Terms.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Terms.rtf; sourceTree = "<group>"; };
 		9232B64F18780CFE00E45C7E /* BatchedSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BatchedSprite.h; sourceTree = "<group>"; };
 		9232B65018780CFE00E45C7E /* BatchedSprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BatchedSprite.m; sourceTree = "<group>"; };
 		9232B6521878140500E45C7E /* BatchedSprite.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = BatchedSprite.vsh; sourceTree = "<group>"; };
@@ -380,6 +385,7 @@
 				927D1A151875A98F00457367 /* ShaderEffect */,
 				9208B106187565390038A52A /* Circuitry.entitlements */,
 				9204C386182E2F5C006A008D /* AppDelegate.h */,
+				9232AD851A1CBE120030ADB2 /* Terms.rtf */,
 				9204C387182E2F5C006A008D /* AppDelegate.m */,
 				92FC7F9218A50E7300EA329A /* CircuitListImageView.h */,
 				926099E4196919E50048F2BD /* CircuitObjectListTableViewController.h */,
@@ -390,6 +396,8 @@
 				9232AD771A1CB8000030ADB2 /* TutorialPage1ViewController.h */,
 				9232AD781A1CB8010030ADB2 /* TutorialPage1ViewController.m */,
 				92575A3D19D2EC57000D5AC7 /* ProblemInfoViewController.m */,
+				9232AD821A1CBD6D0030ADB2 /* BoringInfoViewController.h */,
+				9232AD831A1CBD6D0030ADB2 /* BoringInfoViewController.m */,
 				92575A3519D2D510000D5AC7 /* MainViewController.h */,
 				92575A3619D2D510000D5AC7 /* MainViewController.m */,
 				92061DE619BDF0720081E3B9 /* TutorialViewController.h */,
@@ -712,6 +720,7 @@
 				920A1A061973FE1800A67742 /* capacitor@2x.png in Resources */,
 				920A1A081973FE1800A67742 /* led@2x.png in Resources */,
 				920A1A0D1973FE1800A67742 /* or@2x.png in Resources */,
+				9232AD861A1CBE120030ADB2 /* Terms.rtf in Resources */,
 				920A1A091973FE1800A67742 /* mult4@2x.png in Resources */,
 				9232B6761878436E00E45C7E /* BatchedSprite.vsh in Resources */,
 				92020C0B189A578200B6D8F5 /* circuit.image-atlas in Resources */,
@@ -808,6 +817,7 @@
 				92A4F86D187289F300EEB367 /* Viewport.m in Sources */,
 				92E037BF188425E80047F736 /* DragGateGestureRecognizer.m in Sources */,
 				92061DE819BDF0720081E3B9 /* TutorialViewController.m in Sources */,
+				9232AD841A1CBD6D0030ADB2 /* BoringInfoViewController.m in Sources */,
 				92D90E3D1838E9CD00387FAC /* Grid.vsh in Sources */,
 				92FC7F9118A50C1000EA329A /* CircuitListViewController.m in Sources */,
 				92D90E3B1838D7AB00387FAC /* Grid.m in Sources */,
