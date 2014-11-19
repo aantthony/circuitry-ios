@@ -145,19 +145,6 @@
             </objects>
             <point key="canvasLocation" x="2544" y="478"/>
         </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="g2Q-hm-1qV">
-            <objects>
-                <navigationController id="q9S-XF-PBR" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="khs-U4-ZaT">
-                        <rect key="frame" x="0.0" y="0.0" width="768" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="zFW-x7-eOI" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1041" y="-2021"/>
-        </scene>
         <!--Legal & Attributions-->
         <scene sceneID="aUo-mN-B3h">
             <objects>
@@ -354,7 +341,7 @@
                             </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VYP-BM-iwz">
                                 <rect key="frame" x="266" y="910" width="237" height="64"/>
-                                <color key="backgroundColor" red="0.047058823530000002" green="0.37254901959999998" blue="0.69411764710000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.20000000000000001" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="237" id="2vP-n7-a5d"/>
                                     <constraint firstAttribute="height" constant="64" id="fqP-bw-IBG"/>
@@ -677,7 +664,7 @@ This logic diagram describes the rule:
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Hdh-vx-nU7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2471" y="-1912"/>
+            <point key="canvasLocation" x="2537" y="-1912"/>
         </scene>
     </scenes>
     <resources>

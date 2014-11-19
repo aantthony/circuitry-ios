@@ -36,6 +36,9 @@ static int pageCount = 3;
     [self initScrollView];
     _buttonEnabled = NO;
     _button.alpha = 0.0;
+    _button.layer.cornerRadius = 4.0;
+    _button.layer.borderColor = [[UIColor whiteColor] CGColor];
+    _button.layer.borderWidth = 2.0;
 }
 
 - (UIImageView *) imageViewForIndex:(int)index {
