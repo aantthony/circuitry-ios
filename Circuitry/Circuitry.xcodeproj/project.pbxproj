@@ -53,6 +53,8 @@
 		9218F73C1876982100742F99 /* LinkBezier.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 9218F73B1876982100742F99 /* LinkBezier.vsh */; };
 		9218F73D1876AB7C00742F99 /* LinkBezier.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9218F7391876981900742F99 /* LinkBezier.fsh */; };
 		9218F73E1876AB7C00742F99 /* LinkBezier.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 9218F73B1876982100742F99 /* LinkBezier.vsh */; };
+		92191A0D1A29DECB009594B1 /* ProblemSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 92191A0C1A29DECB009594B1 /* ProblemSet.m */; };
+		92191A101A29E26C009594B1 /* ProblemSetProblemInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 92191A0F1A29E26C009594B1 /* ProblemSetProblemInfo.m */; };
 		923056A118759577005AE348 /* Configurations.plist in Resources */ = {isa = PBXBuildFile; fileRef = 923056A018759577005AE348 /* Configurations.plist */; };
 		9232AD791A1CB8010030ADB2 /* TutorialPage1ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9232AD781A1CB8010030ADB2 /* TutorialPage1ViewController.m */; };
 		9232AD7B1A1CB9EC0030ADB2 /* ipad-white-vertical-level-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 9232AD7A1A1CB9EC0030ADB2 /* ipad-white-vertical-level-1.png */; };
@@ -75,6 +77,9 @@
 		92575A3E19D2EC57000D5AC7 /* ProblemInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92575A3D19D2EC57000D5AC7 /* ProblemInfoViewController.m */; };
 		926099E0196917CF0048F2BD /* CircuitDocumentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 926099DF196917CF0048F2BD /* CircuitDocumentViewController.m */; };
 		926099E6196919E50048F2BD /* CircuitObjectListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 926099E5196919E50048F2BD /* CircuitObjectListTableViewController.m */; };
+		92771CF61A44FBF3000931D9 /* Analytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 92771CF51A44FBF3000931D9 /* Analytics.m */; };
+		92771CF91A44FD2A000931D9 /* StyleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 92771CF81A44FD2A000931D9 /* StyleManager.m */; };
+		92771CFD1A450891000931D9 /* CircuitManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 92771CFC1A450891000931D9 /* CircuitManager.m */; };
 		92794CB118AF0E5500A39012 /* ic@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92794CB018AF0E5400A39012 /* ic@2x.png */; };
 		92796A3418A668FB00DB690F /* LongPressObjectGesture.m in Sources */ = {isa = PBXBuildFile; fileRef = 92796A3318A668FB00DB690F /* LongPressObjectGesture.m */; };
 		927FC3991A1A12BA00138BCA /* tutorial-bg-2@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 927FC3981A1A12BA00138BCA /* tutorial-bg-2@2x.jpg */; };
@@ -196,6 +201,10 @@
 		9218F7371876978A00742F99 /* LinkBezier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LinkBezier.m; sourceTree = "<group>"; };
 		9218F7391876981900742F99 /* LinkBezier.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = LinkBezier.fsh; sourceTree = "<group>"; };
 		9218F73B1876982100742F99 /* LinkBezier.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = LinkBezier.vsh; sourceTree = "<group>"; };
+		92191A0B1A29DECB009594B1 /* ProblemSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProblemSet.h; sourceTree = "<group>"; };
+		92191A0C1A29DECB009594B1 /* ProblemSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProblemSet.m; sourceTree = "<group>"; };
+		92191A0E1A29E26C009594B1 /* ProblemSetProblemInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProblemSetProblemInfo.h; sourceTree = "<group>"; };
+		92191A0F1A29E26C009594B1 /* ProblemSetProblemInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProblemSetProblemInfo.m; sourceTree = "<group>"; };
 		923056A018759577005AE348 /* Configurations.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Configurations.plist; sourceTree = "<group>"; };
 		9232AD771A1CB8000030ADB2 /* TutorialPage1ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialPage1ViewController.h; sourceTree = "<group>"; };
 		9232AD781A1CB8010030ADB2 /* TutorialPage1ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialPage1ViewController.m; sourceTree = "<group>"; };
@@ -229,6 +238,12 @@
 		926099DF196917CF0048F2BD /* CircuitDocumentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircuitDocumentViewController.m; sourceTree = "<group>"; };
 		926099E4196919E50048F2BD /* CircuitObjectListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircuitObjectListTableViewController.h; sourceTree = "<group>"; };
 		926099E5196919E50048F2BD /* CircuitObjectListTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircuitObjectListTableViewController.m; sourceTree = "<group>"; };
+		92771CF41A44FBF3000931D9 /* Analytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Analytics.h; sourceTree = "<group>"; };
+		92771CF51A44FBF3000931D9 /* Analytics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Analytics.m; sourceTree = "<group>"; };
+		92771CF71A44FD2A000931D9 /* StyleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StyleManager.h; sourceTree = "<group>"; };
+		92771CF81A44FD2A000931D9 /* StyleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StyleManager.m; sourceTree = "<group>"; };
+		92771CFB1A450891000931D9 /* CircuitManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircuitManager.h; sourceTree = "<group>"; };
+		92771CFC1A450891000931D9 /* CircuitManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircuitManager.m; sourceTree = "<group>"; };
 		92794CB018AF0E5400A39012 /* ic@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic@2x.png"; sourceTree = "<group>"; };
 		92796A3218A668FB00DB690F /* LongPressObjectGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LongPressObjectGesture.h; sourceTree = "<group>"; };
 		92796A3318A668FB00DB690F /* LongPressObjectGesture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LongPressObjectGesture.m; sourceTree = "<group>"; };
@@ -376,6 +391,7 @@
 		9204C37D182E2F5C006A008D /* Circuitry */ = {
 			isa = PBXGroup;
 			children = (
+				92771CFA1A450886000931D9 /* Managers */,
 				9288BBB1196AD5810090455A /* Images */,
 				92794CB018AF0E5400A39012 /* ic@2x.png */,
 				92FC7F9518A5906900EA329A /* large-plus@2x.png */,
@@ -392,6 +408,8 @@
 				926099E5196919E50048F2BD /* CircuitObjectListTableViewController.m */,
 				92FC7F9318A50E7300EA329A /* CircuitListImageView.m */,
 				9204C389182E2F5C006A008D /* Main.storyboard */,
+				92191A0B1A29DECB009594B1 /* ProblemSet.h */,
+				92191A0C1A29DECB009594B1 /* ProblemSet.m */,
 				92575A3C19D2EC57000D5AC7 /* ProblemInfoViewController.h */,
 				9232AD771A1CB8000030ADB2 /* TutorialPage1ViewController.h */,
 				9232AD781A1CB8010030ADB2 /* TutorialPage1ViewController.m */,
@@ -407,6 +425,8 @@
 				9232AD7F1A1CBC090030ADB2 /* TutorialPage3ViewController.h */,
 				9232AD801A1CBC090030ADB2 /* TutorialPage3ViewController.m */,
 				9288BBB7196AD6470090455A /* ToolbeltItem.h */,
+				92191A0E1A29E26C009594B1 /* ProblemSetProblemInfo.h */,
+				92191A0F1A29E26C009594B1 /* ProblemSetProblemInfo.m */,
 				9288BBB8196AD6470090455A /* ToolbeltItem.m */,
 				9288BBB4196AD6230090455A /* ToolbeltItemTableViewCell.h */,
 				9288BBB5196AD6230090455A /* ToolbeltItemTableViewCell.m */,
@@ -428,6 +448,10 @@
 				9204C37E182E2F5C006A008D /* Supporting Files */,
 				92FC7F8F18A50C1000EA329A /* CircuitListViewController.h */,
 				92FC7F9018A50C1000EA329A /* CircuitListViewController.m */,
+				92771CF41A44FBF3000931D9 /* Analytics.h */,
+				92771CF51A44FBF3000931D9 /* Analytics.m */,
+				92771CF71A44FD2A000931D9 /* StyleManager.h */,
+				92771CF81A44FD2A000931D9 /* StyleManager.m */,
 			);
 			path = Circuitry;
 			sourceTree = "<group>";
@@ -480,6 +504,15 @@
 				923C143718826D960017BAF3 /* HUD.m */,
 			);
 			name = HUD;
+			sourceTree = "<group>";
+		};
+		92771CFA1A450886000931D9 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				92771CFB1A450891000931D9 /* CircuitManager.h */,
+				92771CFC1A450891000931D9 /* CircuitManager.m */,
+			);
+			name = Managers;
 			sourceTree = "<group>";
 		};
 		927D1A131875A97000457367 /* Sprite */ = {
@@ -820,6 +853,7 @@
 				9232AD841A1CBD6D0030ADB2 /* BoringInfoViewController.m in Sources */,
 				92D90E3D1838E9CD00387FAC /* Grid.vsh in Sources */,
 				92FC7F9118A50C1000EA329A /* CircuitListViewController.m in Sources */,
+				92771CFD1A450891000931D9 /* CircuitManager.m in Sources */,
 				92D90E3B1838D7AB00387FAC /* Grid.m in Sources */,
 				92575A3719D2D510000D5AC7 /* MainViewController.m in Sources */,
 				9232B6551878353A00E45C7E /* BatchedSprite.fsh in Sources */,
@@ -830,6 +864,7 @@
 				9200469F189D037F007124DA /* SevenSegmentDisplay.fsh in Sources */,
 				923C143818826D960017BAF3 /* HUD.m in Sources */,
 				920046A1189D0390007124DA /* SevenSegmentDisplay.vsh in Sources */,
+				92771CF91A44FD2A000931D9 /* StyleManager.m in Sources */,
 				9204C388182E2F5C006A008D /* AppDelegate.m in Sources */,
 				92D90E321837807000387FAC /* Sprite.m in Sources */,
 				92FC7F9918A5B39E00EA329A /* CircuitCollectionViewCell.m in Sources */,
@@ -847,9 +882,12 @@
 				9232AD791A1CB8010030ADB2 /* TutorialPage1ViewController.m in Sources */,
 				9232AD7E1A1CBBF40030ADB2 /* TutorialPage2ViewController.m in Sources */,
 				9288BBB6196AD6230090455A /* ToolbeltItemTableViewCell.m in Sources */,
+				92191A0D1A29DECB009594B1 /* ProblemSet.m in Sources */,
 				9218F7381876978A00742F99 /* LinkBezier.m in Sources */,
 				92A861B2189E402900F64673 /* MongoID.m in Sources */,
 				9253C409188545EC00D2509C /* CreateGatePanGestureRecognizer.m in Sources */,
+				92771CF61A44FBF3000931D9 /* Analytics.m in Sources */,
+				92191A101A29E26C009594B1 /* ProblemSetProblemInfo.m in Sources */,
 				9232B6531878140500E45C7E /* BatchedSprite.vsh in Sources */,
 				926099E0196917CF0048F2BD /* CircuitDocumentViewController.m in Sources */,
 				92796A3418A668FB00DB690F /* LongPressObjectGesture.m in Sources */,

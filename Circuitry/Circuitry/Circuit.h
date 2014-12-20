@@ -48,6 +48,8 @@ struct CircuitObject {
 @property(nonatomic) NSString *license;
 @property(nonatomic) NSMutableDictionary *dependencies;
 @property(nonatomic) NSMutableDictionary *meta;
+@property(nonatomic) NSURL *problemSet;
+@property(nonatomic) NSNumber *problemSetNumber;
 
 - (NSArray *) tests;
 

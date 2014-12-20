@@ -28,12 +28,6 @@
     return NO;
 }
 
-- (UIStatusBarStyle) preferredStatusBarStyle {
-    return UIStatusBarStyleDefault;
-//    return UIStatusBarStyleLightContent;
-}
-
-
 - (void) setDocument:(CircuitDocument *) document {
     _objectListViewController.document = document;
     _glkViewController.document = document;
@@ -118,7 +112,8 @@
 
 #pragma mark - Problem Info delegate
 - (void) problemInfoViewController:(ProblemInfoViewController *)problemInfoViewController didPressContinueButton:(id)sender {
-    
+    NSLog(@"Completed problem: %@", self.document);
+    NSLog(@"Finding next problem...");
 }
 
 #pragma mark - Navigation

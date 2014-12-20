@@ -20,6 +20,14 @@
     // Do any additional setup after loading the view.
 }
 
+
+- (UIStatusBarStyle) preferredStatusBarStyle {
+    return UIStatusBarStyleDefault;
+//    return UIStatusBarStyleLightContent;
+}
+
+
+
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     if (![NSUserDefaults.standardUserDefaults boolForKey:@"openedBefore"]) {

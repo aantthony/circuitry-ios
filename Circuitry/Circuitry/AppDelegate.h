@@ -4,7 +4,6 @@
 
 @property (strong, nonatomic) UIWindow *window;
 
-+ (NSURL *) documentsDirectory;
-+ (void) trackView:(NSString *)screenName;
+- (NSURL *) documentsDirectory;
 
 @end

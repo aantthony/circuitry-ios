@@ -1,0 +1,17 @@
+//
+//  ProblemSetProblemInfo.h
+//  Circuitry
+//
+//  Created by Anthony Foster on 29/11/2014.
+//  Copyright (c) 2014 Circuitry. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface ProblemSetProblemInfo : NSObject
+@property (nonatomic) NSString *title;
+@property (nonatomic) BOOL completed;
+@property (nonatomic) NSURL *imageURL;
+@property (nonatomic) NSURL *documentURL;
+@property (nonatomic) BOOL visible;
+@end

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14B23" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="rnE-YD-fev">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="rnE-YD-fev">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -125,7 +125,7 @@
                         <outlet property="delegate" destination="BV1-FR-VrT" id="Uk0-53-9Mk"/>
                     </connections>
                 </panGestureRecognizer>
-                <pongPressGestureRecognizer allowableMovement="4" minimumPressDuration="0.5" id="W0R-Er-cpe" customClass="LongPressObjectGesture">
+                <pongPressGestureRecognizer allowableMovement="4" minimumPressDuration="1" id="W0R-Er-cpe" customClass="LongPressObjectGesture">
                     <connections>
                         <action selector="handleLongPressObject:" destination="BV1-FR-VrT" id="r4e-gd-rpx"/>
                     </connections>
@@ -157,8 +157,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" editable="NO" text="This box will be automatically replaced with the contents of Terms.rtf." translatesAutoresizingMaskIntoConstraints="NO" id="YRN-8Z-2sB">
-                                <rect key="frame" x="4" y="0.0" width="760" height="1024"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" editable="NO" text="This box will be automatically replaced with the contents of Terms.rtf." translatesAutoresizingMaskIntoConstraints="NO" id="YRN-8Z-2sB">
+                                <rect key="frame" x="4" y="44" width="760" height="980"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -405,8 +405,11 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Circuitry is a logic game that helps you understand boolean algebra, logic gates and digital circuits." textAlignment="center" lineBreakMode="clip" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="500" translatesAutoresizingMaskIntoConstraints="NO" id="hRk-6H-ar2">
-                                <rect key="frame" x="135" y="613" width="499" height="112"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Circuitry is a logic game that helps you understand boolean algebra, logic gates and digital circuits." textAlignment="center" lineBreakMode="clip" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="500" translatesAutoresizingMaskIntoConstraints="NO" id="hRk-6H-ar2">
+                                <rect key="frame" x="135" y="613" width="499" height="99"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="499" id="sea-3t-L28"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="24"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
@@ -414,6 +417,7 @@
                         </subviews>
                         <color key="backgroundColor" white="0.57499999999999996" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="hRk-6H-ar2" firstAttribute="top" secondItem="2DZ-xc-hfg" secondAttribute="bottom" constant="228" id="2oV-lA-FiX"/>
                             <constraint firstAttribute="centerX" secondItem="hRk-6H-ar2" secondAttribute="centerX" id="7Jd-4F-eJ9"/>
                             <constraint firstItem="2DZ-xc-hfg" firstAttribute="centerX" secondItem="hRk-6H-ar2" secondAttribute="centerX" id="ClZ-JT-zhx"/>
                             <constraint firstItem="2DZ-xc-hfg" firstAttribute="top" secondItem="djV-x2-gDX" secondAttribute="top" constant="286" id="Jfq-bf-MyM"/>
@@ -538,13 +542,18 @@
                                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="or.png" translatesAutoresizingMaskIntoConstraints="NO" id="HAG-xY-fkt">
-                                            <rect key="frame" x="139" y="2" width="95" height="77"/>
+                                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="or.png" translatesAutoresizingMaskIntoConstraints="NO" id="HAG-xY-fkt">
+                                            <rect key="frame" x="139" y="0.0" width="95" height="79"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="95" id="myI-lr-zzX"/>
                                             </constraints>
                                         </imageView>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="trailingMargin" secondItem="HAG-xY-fkt" secondAttribute="trailing" constant="-5" id="Ev7-Ml-7Ta"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="HAG-xY-fkt" secondAttribute="bottom" constant="-8" id="fnm-fS-rko"/>
+                                        <constraint firstItem="HAG-xY-fkt" firstAttribute="top" secondItem="GI7-Kf-vdT" secondAttribute="topMargin" constant="-8" id="wPx-3A-tex"/>
+                                    </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="image" destination="HAG-xY-fkt" id="GYB-Wb-Qvy"/>
@@ -561,7 +570,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q5p-fw-2hb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="960.5" y="444"/>
+            <point key="canvasLocation" x="960.5" y="442"/>
         </scene>
         <!--Problem Info View Controller-->
         <scene sceneID="Jrn-cL-WbJ">
@@ -575,7 +584,43 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="258"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Vuh-ES-eXS">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="31s-zx-ivU">
+                                <rect key="frame" x="0.0" y="0.0" width="768" height="258"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gcl-aN-Xel">
+                                        <rect key="frame" x="198" y="115" width="378" height="36"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="23"/>
+                                        <state key="normal" title="Continue to next problem">
+                                            <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="continueButton:" destination="jZw-XZ-G2q" eventType="touchUpInside" id="9Ws-Il-Ged"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Congratulations, you solved it!" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UDI-Xp-EuQ">
+                                        <rect key="frame" x="238" y="72" width="292" height="27"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="continue-arrow.png" translatesAutoresizingMaskIntoConstraints="NO" id="Ywh-1w-sac">
+                                        <rect key="frame" x="0.0" y="151" width="768" height="57"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="57" id="Xpz-5f-ZKN"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="Ywh-1w-sac" secondAttribute="bottom" constant="50" id="9Rc-eb-hdT"/>
+                                    <constraint firstItem="Ywh-1w-sac" firstAttribute="leading" secondItem="31s-zx-ivU" secondAttribute="leading" id="Kpf-cN-atW"/>
+                                    <constraint firstItem="UDI-Xp-EuQ" firstAttribute="top" secondItem="31s-zx-ivU" secondAttribute="top" constant="72" id="k4X-rA-bt5"/>
+                                    <constraint firstAttribute="centerX" secondItem="UDI-Xp-EuQ" secondAttribute="centerX" id="qbu-NC-h7B"/>
+                                    <constraint firstAttribute="trailing" secondItem="Ywh-1w-sac" secondAttribute="trailing" id="xPb-Mu-Bdf"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vuh-ES-eXS">
                                 <rect key="frame" x="0.0" y="0.0" width="768" height="258"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Problem #1 - How to link gates" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MHQ-DL-SWj">
@@ -597,46 +642,17 @@ This logic diagram describes the rule:
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="31s-zx-ivU">
-                                <rect key="frame" x="4" y="0.0" width="760" height="258"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gcl-aN-Xel">
-                                        <rect key="frame" x="194" y="115" width="378" height="36"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="23"/>
-                                        <state key="normal" title="Continue to next problem">
-                                            <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="continueButton:" destination="jZw-XZ-G2q" eventType="touchUpInside" id="9Ws-Il-Ged"/>
-                                        </connections>
-                                    </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Congratulations, you solved it!" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UDI-Xp-EuQ">
-                                        <rect key="frame" x="234" y="72" width="292" height="27"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="22"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="continue-arrow.png" translatesAutoresizingMaskIntoConstraints="NO" id="Ywh-1w-sac">
-                                        <rect key="frame" x="0.0" y="151" width="768" height="57"/>
-                                    </imageView>
-                                </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="centerX" secondItem="UDI-Xp-EuQ" secondAttribute="centerX" id="qbu-NC-h7B"/>
-                                </constraints>
-                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="trailingMargin" secondItem="31s-zx-ivU" secondAttribute="trailing" constant="-16" id="4Sb-6K-1ha"/>
-                            <constraint firstItem="Vuh-ES-eXS" firstAttribute="leading" secondItem="DYY-Xe-7wt" secondAttribute="leadingMargin" constant="-16" id="8Ub-tg-VBo"/>
-                            <constraint firstItem="31s-zx-ivU" firstAttribute="leading" secondItem="DYY-Xe-7wt" secondAttribute="leadingMargin" constant="-16" id="DUb-V1-DGp"/>
                             <constraint firstItem="31s-zx-ivU" firstAttribute="top" secondItem="sdb-LF-RUA" secondAttribute="bottom" id="L0W-jl-vnI"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="Vuh-ES-eXS" secondAttribute="trailing" constant="-16" id="NQh-EC-FmJ"/>
+                            <constraint firstAttribute="trailing" secondItem="Vuh-ES-eXS" secondAttribute="trailing" id="LKd-w6-KuC"/>
+                            <constraint firstItem="31s-zx-ivU" firstAttribute="leading" secondItem="DYY-Xe-7wt" secondAttribute="leading" id="MEu-PS-cGK"/>
                             <constraint firstItem="Vuh-ES-eXS" firstAttribute="top" secondItem="sdb-LF-RUA" secondAttribute="bottom" id="P7d-9d-OE7"/>
                             <constraint firstItem="yVF-Ml-L4M" firstAttribute="top" secondItem="Vuh-ES-eXS" secondAttribute="bottom" id="Qq1-kQ-vi4"/>
                             <constraint firstItem="yVF-Ml-L4M" firstAttribute="top" secondItem="31s-zx-ivU" secondAttribute="bottom" id="RVK-rq-FNG"/>
+                            <constraint firstAttribute="trailing" secondItem="31s-zx-ivU" secondAttribute="trailing" id="YWS-im-sdh"/>
+                            <constraint firstItem="Vuh-ES-eXS" firstAttribute="leading" secondItem="DYY-Xe-7wt" secondAttribute="leading" id="gcn-H1-QY5"/>
                         </constraints>
                     </view>
                     <toolbarItems/>
@@ -685,6 +701,6 @@ This logic diagram describes the rule:
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="gnN-9s-ocl"/>
+        <segue reference="l2a-A5-LGd"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -9,6 +9,7 @@
 #import "CircuitListViewController.h"
 
 #import "CircuitDocument.h"
+#import "ProblemSet.h"
 #import "AppDelegate.h"
 #import "CircuitCollectionViewCell.h"
 
@@ -45,6 +46,14 @@
 
     return self;
 }
+- (id) initWithProblemSetProblemInfo: (ProblemSetProblemInfo *) info {
+    self = [super init];
+    _url = info.documentURL;
+    _title = info.title;
+    _lastModified = nil;
+    return self;
+}
+
 @end
 
 @interface CircuitListViewController () <UIActionSheetDelegate, UIViewControllerTransitioningDelegate, UINavigationControllerDelegate>
@@ -60,15 +69,6 @@
 @end
 
 @implementation CircuitListViewController
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 -(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return 1;
@@ -125,16 +125,16 @@
     }
 }
 
+
 - (IBAction) createDocument:(id)sender {
     if (_items == _problems) return;
     
     NSString *_id = [MongoID stringWithId:[MongoID id]];
-    NSURL *url = [[AppDelegate documentsDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.circuit", _id]];
+    NSURL *url = [[(AppDelegate *)[UIApplication sharedApplication].delegate documentsDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.circuit", _id]];
     
     int index = 0;
     
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index + 1 inSection:0];
-    NSLog(@"Old length: %lu", _circuits.count);
     
     // TODO: Use fetched results controller somehow?
     [self.collectionView performBatchUpdates:^{
@@ -142,9 +142,7 @@
         NSArray *selectedItemsIndexPaths = @[indexPath];
         
         DocumentListItem *item = [[DocumentListItem alloc] initWithURL:url];
-        NSLog(@"Old length: %lu", _circuits.count);
         [_circuits insertObject:item atIndex:index];
-        NSLog(@"New length: %lu", _circuits.count);
         if (_items == _circuits) {
             [self.collectionView insertItemsAtIndexPaths:selectedItemsIndexPaths];
         }
@@ -419,33 +417,22 @@
     [self.collectionView reloadData];
 }
 
-
 - (void) reloadProblemListData {
     NSString *directoryPath = [[NSBundle mainBundle] pathForResource:@"Problems" ofType:nil];
-    
-    NSArray* localDocuments = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:
-                               directoryPath error:nil];
-    
-    
+    ProblemSet *problemSet = [[ProblemSet alloc] initWithDirectoryPath:directoryPath];
     NSMutableArray *items = [NSMutableArray array];
-    
-    for (NSString* document in localDocuments) {
-        NSURL *url = [NSURL fileURLWithPath:[directoryPath
-                                             stringByAppendingPathComponent:document]];
+    for (ProblemSetProblemInfo* info in problemSet.problems) {
+        DocumentListItem *item = [[DocumentListItem alloc] initWithProblemSetProblemInfo: info];
         
-        DocumentListItem *item = [[DocumentListItem alloc] initWithURL:url];
         [items addObject:item];
     }
     
-    _problems = [[items sortedArrayUsingComparator:^NSComparisonResult(DocumentListItem *obj1, DocumentListItem *obj2) {
-        return [obj2.lastModified compare: obj1.lastModified];
-    }] mutableCopy];
-    
+    _problems = items;
 }
 
 - (void) reloadCircuitListData {
-    
-    NSString *directoryPath = [AppDelegate.documentsDirectory path];
+    AppDelegate *delegate = [UIApplication sharedApplication].delegate;
+    NSString *directoryPath = delegate.documentsDirectory.path;
     
     NSArray* localDocuments = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:
                                directoryPath error:nil];
@@ -465,11 +452,8 @@
     _circuits = [[items sortedArrayUsingComparator:^NSComparisonResult(DocumentListItem *obj1, DocumentListItem *obj2) {
         return [obj2.lastModified compare: obj1.lastModified];
     }] mutableCopy];
-    NSLog(@"Loaded list of %lu circuits", _circuits.count);
-    
 }
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
