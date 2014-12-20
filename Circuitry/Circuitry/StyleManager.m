@@ -10,6 +10,12 @@
 
 @implementation StyleManager
 
++ (instancetype) shared {
+    static id shared = nil;
+    if (!shared) shared = [self new];
+    return shared;
+}
+
 + (UIColor *) rgb:(NSInteger) color {
     NSInteger blue  = color % 0x100;
     color >>= 8;
@@ -20,7 +26,7 @@
     return [UIColor colorWithRed:red/255.0 green:green/255.0 blue:blue/255.0 alpha:1.0];
 }
 
-+ (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     return YES;
     UINavigationBar *prototype = [UINavigationBar appearance];

@@ -9,5 +9,10 @@
 #import <Foundation/Foundation.h>
 
 @interface Analytics : NSObject
-+ (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
+
++ (instancetype) shared;
+
+- (BOOL) application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
+- (void) application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
+- (void) track:(NSString *) event properties:(NSDictionary *)properties;
 @end

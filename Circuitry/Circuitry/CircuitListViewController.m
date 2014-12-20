@@ -14,6 +14,7 @@
 #import "CircuitCollectionViewCell.h"
 
 #import "UIAlertView+MKBlockAdditions.h"
+#import "Analytics.h"
 
 //#import "OpenDocumentFromDocumentsListSegue.h"
 
@@ -122,6 +123,17 @@
         
         CircuitDocumentViewController *controller = [segue destinationViewController];
         controller.document = _presentingDocument;
+        NSMutableDictionary *p = [NSMutableDictionary new];
+        p[@"name"] = _presentingDocument.circuit.name;
+        p[@"version"] = _presentingDocument.circuit.version;
+        p[@"title"] = _presentingDocument.circuit.title;
+        p[@"author"] = _presentingDocument.circuit.author;
+        if (_presentingDocument.circuit.problemSetNumber) {
+            p[@"problem"] = @YES;
+            p[@"problemSetNumber"] =_presentingDocument.circuit.problemSetNumber;
+        }
+        
+        [[Analytics shared] track:@"Open Document" properties:p];
     }
 }
 

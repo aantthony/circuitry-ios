@@ -8,8 +8,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    [Analytics    application:application didFinishLaunchingWithOptions:launchOptions];
-    [StyleManager application:application didFinishLaunchingWithOptions:launchOptions];
+    [Analytics.shared    application:application didFinishLaunchingWithOptions:launchOptions];
+    [StyleManager.shared application:application didFinishLaunchingWithOptions:launchOptions];
     
     return YES;
 }
@@ -53,6 +53,14 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (void) application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    
+}
+
+- (void) application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    [Analytics.shared application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
 }
 
 @end

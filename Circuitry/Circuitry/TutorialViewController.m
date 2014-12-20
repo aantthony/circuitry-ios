@@ -8,6 +8,8 @@
 
 #import "TutorialViewController.h"
 
+#import "Analytics.h"
+
 @interface TutorialViewController () <UIScrollViewDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *image1;
 @property (weak, nonatomic) IBOutlet UIImageView *image2;
@@ -133,7 +135,9 @@ static int pageCount = 3;
 }
 
 - (IBAction)continue:(id)sender {
+    [[Analytics shared] track:@"Finish splash" properties:@{}];
     [self.delegate tutorialViewController:self didFinishWithResult:YES];
+    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

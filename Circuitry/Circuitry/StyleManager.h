@@ -9,5 +9,6 @@
 #import <Foundation/Foundation.h>
 
 @interface StyleManager : NSObject
-+ (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
++ (instancetype) shared;
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
 @end
