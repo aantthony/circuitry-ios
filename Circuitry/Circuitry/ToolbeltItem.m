@@ -10,4 +10,14 @@
 
 @implementation ToolbeltItem
 
+- (instancetype) initWithType:(NSString *)type image:(UIImage *)image name:(NSString *)name subtitle:(NSString *)subtitle {
+    self = [super init];
+    
+    _type     = type;
+    _image    = image;
+    _name     = name;
+    _subtitle = subtitle;
+    
+    return self;
+}
 @end

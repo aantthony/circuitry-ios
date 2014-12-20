@@ -584,6 +584,28 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="258"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vuh-ES-eXS">
+                                <rect key="frame" x="0.0" y="0.0" width="768" height="258"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Problem #1 - How to link gates" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MHQ-DL-SWj">
+                                        <rect key="frame" x="15" y="13" width="753" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="10" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qmv-Nm-o5F">
+                                        <rect key="frame" x="15" y="51" width="670" height="162"/>
+                                        <string key="text">Drag a line from the gates on the left into the AND Gate in the middle. Then drag a line from the output of the AND Gate into the rectangle labeled X.
+
+This logic diagram describes the rule:
+</string>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="31s-zx-ivU">
                                 <rect key="frame" x="0.0" y="0.0" width="768" height="258"/>
                                 <subviews>
@@ -604,7 +626,7 @@
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="continue-arrow.png" translatesAutoresizingMaskIntoConstraints="NO" id="Ywh-1w-sac">
+                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="continue-arrow" translatesAutoresizingMaskIntoConstraints="NO" id="Ywh-1w-sac">
                                         <rect key="frame" x="0.0" y="151" width="768" height="57"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="57" id="Xpz-5f-ZKN"/>
@@ -619,28 +641,6 @@
                                     <constraint firstAttribute="centerX" secondItem="UDI-Xp-EuQ" secondAttribute="centerX" id="qbu-NC-h7B"/>
                                     <constraint firstAttribute="trailing" secondItem="Ywh-1w-sac" secondAttribute="trailing" id="xPb-Mu-Bdf"/>
                                 </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vuh-ES-eXS">
-                                <rect key="frame" x="0.0" y="0.0" width="768" height="258"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Problem #1 - How to link gates" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MHQ-DL-SWj">
-                                        <rect key="frame" x="15" y="13" width="753" height="30"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="22"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gKI-fv-H9d">
-                                        <rect key="frame" x="15" y="42" width="659" height="99"/>
-                                        <string key="text">Drag a line from the gates on the left into the AND Gate in the middle. Then drag a line from the output of the AND Gate into the rectangle labeled X.
-
-This logic diagram describes the rule:
-</string>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -685,7 +685,7 @@ This logic diagram describes the rule:
     </scenes>
     <resources>
         <image name="background.jpg" width="2048" height="1536"/>
-        <image name="continue-arrow.png" width="53" height="18"/>
+        <image name="continue-arrow" width="53" height="18"/>
         <image name="dots.png" width="22" height="6"/>
         <image name="ipad-white-vertical-level-1.png" width="882" height="1310"/>
         <image name="large-plus.png" width="54" height="54"/>

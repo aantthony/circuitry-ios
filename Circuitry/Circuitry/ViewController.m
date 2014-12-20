@@ -287,11 +287,13 @@
 - (void) timerTick:(id) sender {
     if (!_document.circuit) return;
     __block int clocks = 0;
-    [_document.circuit enumerateClocksUsingBlock:^(CircuitObject *object, BOOL *stop) {
-        clocks++;
-        object->out = !object->out;
-        [_document.circuit didUpdateObject:object];
+    [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
+        [_document.circuit enumerateClocksUsingBlock:^(CircuitObject *object, BOOL *stop) {
+            clocks++;
+            CircuitObjectSetOutput(internal, object, !object->out);
+        }];
     }];
+    
     if (clocks) {
         [self update];
     }
@@ -408,7 +410,7 @@
     }
     int changes = 0;
     int circuitChanges = [_document.circuit simulate:512];
-//    NSLog(@"%d, %f [%@] %@ - %@)", circuitChanges, dt, _circuit.name, _circuit.title, _circuit.description);
+//    NSLog(@"%d, %f", circuitChanges, dt);
     changes += circuitChanges;
     changes += [_viewport update: dt];
     changes += [_hud update: dt];
@@ -491,10 +493,16 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, locationInView)];
     
     CircuitProcess *process = [_circuit getProcessById:item.type];
-    CircuitObject *o = [_circuit addObject:process];
-    beginLongPressGestureObject = o;
-    o->pos.x = position.x;
-    o->pos.y = position.y;
+    
+    [_circuit performWriteBlock:^(CircuitInternal *internal) {
+        CircuitObject *o = CircuitObjectCreate(internal, process);
+        o->id = [MongoID id];
+        o->pos.x = position.x;
+        o->pos.y = position.y;
+        
+        beginLongPressGestureObject = o;
+    }];
+    
     [self unpause];
 
 }
@@ -572,7 +580,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         return NO;
     } else if ([gestureRecognizer isKindOfClass:[CreateGatePanGestureRecognizer class]]) {
         // only starts if the finger is on the toolbelt
-        CGPoint location = [gestureRecognizer locationInView:self.view];
+//        CGPoint location = [gestureRecognizer locationInView:self.view];
 //        if (!CGRectContainsPoint(_hud.toolbelt.bounds, location)) {
             return NO;
 //        }
@@ -582,7 +590,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         
         draggingOutFromToolbeltLockY = YES;
 //        int index = [_hud.toolbelt indexAtPosition:p];
-        if (index == -1) return NO;
+//        if (index == -1) return NO;
 //        _hud.toolbelt.currentObjectIndex = index;
         draggingOutFromToolbeltStart = p;
         return YES;
@@ -636,12 +644,14 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 #pragma mark UIActionSheetDelegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 0) {
-        for(id obj in _selectedObjects) {
-            CircuitObject *object = [obj pointerValue];
-            [_document.circuit removeObject:object];
-            [_document updateChangeCount:UIDocumentChangeDone];
-            [self unpause];
-        }
+        [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
+            for(id obj in _selectedObjects) {
+                CircuitObject *object = [obj pointerValue];
+                CircuitObjectRemove(internal, object);
+                [self unpause];
+            }
+        }];
+        [_document updateChangeCount:UIDocumentChangeDone];
     }
 }
 
@@ -786,12 +796,16 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
                 _viewport.currentEditingLinkTarget = target;
                 if (_viewport.currentEditingLink) {
                     // if we are dragging a link out from another inlet, then delete that old link (we will create a new link to target instead of modifying the old one to make circuit simulation refreshes simpler)
-                    [_circuit removeLink:_viewport.currentEditingLink];
+                    [_circuit performWriteBlock:^(CircuitInternal *internal) {
+                        CircuitLinkRemove(internal, _viewport.currentEditingLink);
+                    }];
                 }
                 // Create a new link and tell the viewport renderer that it is the one being edited:
                 _viewport.currentEditingLinkTargetIndex = targetIndex;
-                CircuitLink *newLink = [_circuit addLink:_viewport.currentEditingLinkSource index:_viewport.currentEditingLinkSourceIndex to:target index:targetIndex];
-                _viewport.currentEditingLink = newLink;
+                [_circuit performWriteBlock:^(CircuitInternal *internal) {
+                    CircuitLink *newLink = CircuitLinkCreate(internal, _viewport.currentEditingLinkSource, _viewport.currentEditingLinkSourceIndex, target, targetIndex);
+                    _viewport.currentEditingLink = newLink;
+                }];
             }
         }
         
@@ -799,7 +813,9 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     } else {
         // Couldn't find a gate under the touch, remove the link being dragged if one exists
         if (_viewport.currentEditingLink) {
-           [_circuit removeLink:_viewport.currentEditingLink];
+            [_circuit performWriteBlock:^(CircuitInternal *internal) {
+                CircuitLinkRemove(internal, _viewport.currentEditingLink); 
+            }];
             _viewport.currentEditingLink = NULL;
             _viewport.currentEditingLinkTarget = NULL;
         }
@@ -913,8 +929,9 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         if (object->type == [_document.circuit getProcessById:@"button"]) {
             // Toggle a switch:
             hit = YES;
-            object->out = !object->out;
-            [_document.circuit didUpdateObject:object];
+            [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
+                CircuitObjectSetOutput(internal, object, !object->out);
+            }];
         }
     }
     if (!hit && sender.numberOfTouches == 1) {

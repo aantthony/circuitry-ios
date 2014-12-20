@@ -99,7 +99,7 @@
     NSURL *path = [[NSBundle mainBundle] URLForResource:@"blank" withExtension:@"json"];
     NSInputStream *stream = [NSInputStream inputStreamWithURL:path];
     [stream open];
-    Circuit *circuit = [Circuit circuitWithStream: stream];
+    Circuit *circuit = [[Circuit alloc] initWithPackage:[NSJSONSerialization JSONObjectWithStream:stream options:0 error:nil] items:@[]];
     
     CircuitDocument *doc = [[CircuitDocument alloc] initWithFileURL:url];
     doc.circuit = circuit;

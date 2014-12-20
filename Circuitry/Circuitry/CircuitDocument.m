@@ -19,7 +19,9 @@
     NSError *err;
     
     if ([typeName isEqualToString:@"public.json"]) {
-        _circuit = [[Circuit alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:contents options:0 error:&err]];
+        NSDictionary *full = [NSJSONSerialization JSONObjectWithData:contents options:0 error:&err];
+        
+        _circuit = [[Circuit alloc] initWithPackage:full items:full[@"items"]];
         if (err) return NO;
         return YES;
     }
@@ -43,6 +45,70 @@
     
     return YES;
 }
+
+
+- (NSArray *) exportItems {
+    
+    NSMutableArray *items = [NSMutableArray array];
+    [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
+        
+        NSMutableArray *outputs = [NSMutableArray arrayWithCapacity:object->type->numOutputs];
+        for(int i = 0; i < object->type->numOutputs; i++) {
+            NSMutableArray *linksFromOutlet = [NSMutableArray array];
+            CircuitLink *link = object->outputs[i];
+            while (link) {
+                [linksFromOutlet addObject:@[[MongoID stringWithId:link->target->id], @(link->targetIndex)]];
+                link = link->nextSibling;
+            }
+            [outputs addObject:linksFromOutlet];
+        }
+        
+        NSString *name = nil;
+        if (object->name) {
+            name = [NSString stringWithUTF8String:object->name];
+        }
+        [items addObject:@{
+                           @"type": [NSString stringWithUTF8String:object->type->id],
+                           @"_id": [MongoID stringWithId:object->id],
+                           @"pos": @[@(object->pos.x), @(object->pos.y), @(object->pos.z)],
+                           @"name": name ? name : @"",
+                           @"in": @(object->in),
+                           @"out": @(object->out),
+                           @"outputs": outputs
+                           }];
+    }];
+    return items;
+}
+
+
+- (NSDictionary *) exportPackageDictionaryWithoutItems {
+    NSMutableArray *testsArray = [NSMutableArray arrayWithCapacity:_circuit.tests.count];
+    [_circuit.tests enumerateObjectsUsingBlock:^(CircuitTest *test, NSUInteger idx, BOOL *stop) {
+        [testsArray addObject:@{
+                                @"name": test.name,
+                                @"inputs": test.inputIds,
+                                @"outputs": test.outputIds,
+                                @"spec": test.spec
+                                }];
+    }];
+    
+    return @{
+        @"_id": [MongoID stringWithId:_circuit.id],
+        @"name": _circuit.name,
+        @"version": _circuit.version,
+        @"description": _circuit.userDescription,
+        @"title": _circuit.title,
+        @"author": _circuit.author,
+        @"license": _circuit.license,
+        @"engines": @{@"circuitry": @">=0.0"},
+        @"tests" : testsArray,
+        @"meta": _circuit.meta
+    };
+    
+}
+
+
+
 - (id)contentsForType:(NSString *)typeName error:(NSError **)outError {
 
 //    if (!_circuit) {
@@ -50,19 +116,19 @@
 //        return nil;
 //    }
     if ([typeName isEqualToString:@"public.json"]) {
+        NSMutableDictionary *dict = [[self exportPackageDictionaryWithoutItems] mutableCopy];
+        dict[@"items"] = [self exportItems];
         // Export the entire circuit into a single JSON object:
-        return [NSJSONSerialization dataWithJSONObject:[_circuit toDictionary] options:0 error:NULL];
+        return [NSJSONSerialization dataWithJSONObject:dict options:0 error:NULL];
     }
 
     NSFileWrapper *wrapper = [[NSFileWrapper alloc] initDirectoryWithFileWrappers:nil];
-    NSData *metaJson = [NSJSONSerialization dataWithJSONObject:[_circuit exportPackageDictionaryWithoutItems] options:0 error:NULL];
-    NSData *itemsJSON = [NSJSONSerialization dataWithJSONObject:[_circuit toDictionary][@"items"] options:0 error:NULL];
+    NSData *metaJson = [NSJSONSerialization dataWithJSONObject:[self exportPackageDictionaryWithoutItems] options:0 error:NULL];
+    NSData *itemsJSON = [NSJSONSerialization dataWithJSONObject:[self exportItems] options:0 error:NULL];
 
     [wrapper addRegularFileWithContents:metaJson preferredFilename:@"package.json"];
     [wrapper addRegularFileWithContents:itemsJSON preferredFilename:@"items.json"];
 //    [wrapper addRegularFileWithContents:_screenshot preferredFilename:@"Default@2x~ipad.jpg"];
-    
-//    NSLog(@"saved jpeg of size %d", [_screenshot length]);
     return wrapper;
 }
 

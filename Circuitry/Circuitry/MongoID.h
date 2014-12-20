@@ -1,7 +1,4 @@
-#import <Foundation/Foundation.h>
-typedef struct {
-    UInt32 m[3];
-} ObjectID;
+#import "MongoIDType.h"
 
 @interface MongoID : NSObject
 + (ObjectID) id;

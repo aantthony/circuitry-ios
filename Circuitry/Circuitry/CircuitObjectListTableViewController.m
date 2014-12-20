@@ -51,92 +51,23 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
+    self.items = @[
+                   [[ToolbeltItem alloc] initWithType:@"button"  image:[UIImage imageNamed:@"switch"]   name:@"Button" subtitle:@"Toggle button"],
+                   [[ToolbeltItem alloc] initWithType:@"light"   image:[UIImage imageNamed:@"led"]      name:@"Light" subtitle:@"Light Emitting Diode"],
+                   [[ToolbeltItem alloc] initWithType:@"or"      image:[UIImage imageNamed:@"or"]       name:@"OR" subtitle:@"2 in, 1 out"],
+                   [[ToolbeltItem alloc] initWithType:@"and"     image:[UIImage imageNamed:@"and"]      name:@"AND" subtitle:@"2 in, 1 out"],
+                   [[ToolbeltItem alloc] initWithType:@"not"     image:[UIImage imageNamed:@"not"]      name:@"NOT" subtitle:@"1 in, 1 out"],
+                   [[ToolbeltItem alloc] initWithType:@"xor"     image:[UIImage imageNamed:@"xor"]      name:@"XOR" subtitle:@"2 in, 1 out"],
+                   [[ToolbeltItem alloc] initWithType:@"xnor"    image:[UIImage imageNamed:@"xnor"]     name:@"XNOR" subtitle:@"2 in, 1 out"],
+                   [[ToolbeltItem alloc] initWithType:@"nand"    image:[UIImage imageNamed:@"nand"]     name:@"NAND" subtitle:@"2 in, 1 out"],
+                   [[ToolbeltItem alloc] initWithType:@"nor"     image:[UIImage imageNamed:@"nor"]      name:@"NOR" subtitle:@"2 in, 1 out"],
+                   [[ToolbeltItem alloc] initWithType:@"add8"    image:[UIImage imageNamed:@"add4"]     name:@"4-bit adder" subtitle:@"8 in, 4 out"],
+                   [[ToolbeltItem alloc] initWithType:@"add8"    image:[UIImage imageNamed:@"mult4"]    name:@"4-bit multiplier" subtitle:@"8 in, 4 out"],
+                   [[ToolbeltItem alloc] initWithType:@"bin7seg" image:[UIImage imageNamed:@"bin7seg"]  name:@"7 Segment Decoder" subtitle:@"4 in, 7 out"],
+                   [[ToolbeltItem alloc] initWithType:@"7seg"    image:[UIImage imageNamed:@"7seg"]     name:@"7-Segment Display" subtitle:@"Display"],
+                   [[ToolbeltItem alloc] initWithType:@"clock"   image:[UIImage imageNamed:@"clock"]    name:@"Clock" subtitle:@"Square wave"]
+    ];
     
-    ToolbeltItem *itemButton = [ToolbeltItem new];
-    itemButton.name = @"Button";
-    itemButton.type = @"button";
-    itemButton.subtitle = @"Toggle button";
-    itemButton.image = [UIImage imageNamed:@"switch.png"];
-    
-    ToolbeltItem *itemLight = [ToolbeltItem new];
-    itemLight.name = @"Light";
-    itemLight.type = @"light";
-    itemLight.subtitle = @"Light Emitting Diode";
-    itemLight.image = [UIImage imageNamed:@"led.png"];
-    
-    ToolbeltItem *item1 = [ToolbeltItem new];
-    item1.name = @"OR";
-    item1.type = @"or";
-    item1.subtitle = @"2 in, 1 out";
-    item1.image = [UIImage imageNamed:@"or.png"];
-    
-    ToolbeltItem *item2 = [ToolbeltItem new];
-    item2.name = @"AND";
-    item2.type = @"and";
-    item2.subtitle = @"2 in, 1 out";
-    item2.image = [UIImage imageNamed:@"and.png"];
-    
-    ToolbeltItem *item3 = [ToolbeltItem new];
-    item3.name = @"NOT";
-    item3.type = @"not";
-    item3.subtitle = @"1 in, 1 out";
-    item3.image = [UIImage imageNamed:@"not.png"];
-    
-    ToolbeltItem *item4 = [ToolbeltItem new];
-    item4.name = @"XOR";
-    item4.type = @"xor";
-    item4.subtitle = @"2 in, 1 out";
-    item4.image = [UIImage imageNamed:@"xor.png"];
-    
-    ToolbeltItem *item5 = [ToolbeltItem new];
-    item5.name = @"XNOR";
-    item5.type = @"xnor";
-    item5.subtitle = @"1 in, 1 out";
-    item5.image = [UIImage imageNamed:@"xnor.png"];
-    
-    ToolbeltItem *item6 = [ToolbeltItem new];
-    item6.name = @"NAND";
-    item6.type = @"nand";
-    item6.subtitle = @"2 in, 1 out";
-    item6.image = [UIImage imageNamed:@"nand.png"];
-    
-    ToolbeltItem *item7 = [ToolbeltItem new];
-    item7.name = @"NOR";
-    item7.type = @"nor";
-    item7.subtitle = @"2 in, 1 out";
-    item7.image = [UIImage imageNamed:@"nor.png"];
-    
-    ToolbeltItem *item8 = [ToolbeltItem new];
-    item8.name = @"4-bit adder";
-    item8.type = @"add8";
-    item8.subtitle = @"8 in, 4 out";
-    item8.image = [UIImage imageNamed:@"add4.png"];
-    
-    ToolbeltItem *item9 = [ToolbeltItem new];
-    item9.name = @"4-bit multiplier";
-    item9.type = @"add8";
-    item9.subtitle = @"8 in, 4 out";
-    item9.image = [UIImage imageNamed:@"mult4.png"];
-    
-    ToolbeltItem *item10 = [ToolbeltItem new];
-    item10.name = @"7 Segment Decoder";
-    item10.type = @"bin7seg";
-    item10.subtitle = @"4 in, 7 out";
-    item10.image = [UIImage imageNamed:@"bin7seg.png"];
-    
-    ToolbeltItem *item11 = [ToolbeltItem new];
-    item11.name = @"7-Segment Display";
-    item11.type = @"7seg";
-    item11.subtitle = @"Display";
-    item11.image = [UIImage imageNamed:@"7seg.png"];
-
-    ToolbeltItem *item12 = [ToolbeltItem new];
-    item12.name = @"Clock";
-    item12.type = @"clock";
-    item12.subtitle = @"Square wave";
-    item12.image = [UIImage imageNamed:@"clock.png"];
-
-    self.items = @[itemButton, itemLight, item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, item11, item12];
     self.results = self.items;
 }
 

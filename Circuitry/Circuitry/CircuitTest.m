@@ -83,7 +83,10 @@
         [inputStates enumerateObjectsUsingBlock:^(id obj, NSUInteger i, BOOL *stop) {
             CircuitObject * inputNode = [_inputNodes[i] pointerValue];
             inputNode->out = [obj intValue];
-            [circuit didUpdateObject:inputNode];
+            
+            [circuit performWriteBlock:^(CircuitInternal *internal) {
+                CircuitObjectSetOutput(internal, inputNode, [obj intValue]);
+            }];
         }];
 
         [circuit simulate:512];
@@ -112,10 +115,12 @@
     }];
     
     // Re-apply inital input state:
-    [initalStates enumerateObjectsUsingBlock:^(id obj, NSUInteger i, BOOL *stop) {
-        CircuitObject * inputNode = [_inputNodes[i] pointerValue];
-        inputNode->out = [obj intValue];
-        [circuit didUpdateObject:inputNode];
+    [circuit performWriteBlock:^(CircuitInternal *internal) {
+        
+        [initalStates enumerateObjectsUsingBlock:^(id obj, NSUInteger i, BOOL *stop) {
+            CircuitObject * inputNode = [_inputNodes[i] pointerValue];
+            CircuitObjectSetOutput(internal, inputNode, [obj intValue]);
+        }];
     }];
 
     CircuitTestResult *result = [[CircuitTestResult alloc] init];

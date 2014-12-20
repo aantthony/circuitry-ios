@@ -2,39 +2,7 @@
 #import "MongoID.h"
 #import "CircuitTest.h"
 
-struct CircuitObject;
-typedef struct CircuitObject CircuitObject;
-typedef struct CircuitProcess CircuitProcess;
-typedef struct CircuitLink CircuitLink;
-
-struct CircuitProcess {
-    const char *id;
-    int numInputs;
-    int numOutputs;
-    int (*calculate)(int, void*);
-};
-
-struct CircuitLink {
-    CircuitLink *nextSibling;
-    int sourceIndex;
-    int targetIndex;
-    CircuitObject *source;
-    CircuitObject *target;
-};
-
-struct CircuitObject {
-    ObjectID id;
-    int in;
-    int out;
-    CircuitProcess *type;
-    void *data;
-    
-    union { struct {float x, y, z;}; struct {float v[3];}; } pos;
-    
-    char name[4];
-    CircuitLink **outputs;
-    CircuitLink **inputs;
-};
+#import "CircuitInternal.h"
 
 @interface Circuit : NSObject
 
@@ -53,24 +21,7 @@ struct CircuitObject {
 
 - (NSArray *) tests;
 
-- (NSData *) toJSON;
-- (NSDictionary *) exportPackageDictionaryWithoutItems;
-+ (Circuit *) circuitWithJSON:(NSData *) data;
-- (NSDictionary *) toDictionary;
-+ (Circuit *) circuitWithStream:(NSInputStream *) stream;
-- (Circuit *) initWithDictionary: (NSDictionary *) dictionary;
-
 - (CircuitProcess *) getProcessById:(NSString *)_id;
-
-- (void) didUpdateObject:(CircuitObject *)object outlet:(int) sourceIndex;
-- (void) didUpdateObject:(CircuitObject *)object;
-- (void) didUpdateLinks:(CircuitLink *) link;
-
-- (CircuitLink *) addLink:(CircuitObject *)object index: (int)sourceIndex to:(CircuitObject *)target index:(int)targetIndex;
-- (void) removeLink:(CircuitLink *)link;
-
-- (CircuitObject *) addObject: (CircuitProcess*) process;
-- (void) removeObject:(CircuitObject *) object;
 
 - (int) simulate: (int) ticks;
 
@@ -82,5 +33,5 @@ struct CircuitObject {
 - (CircuitObject *) findObjectById:(NSString *)_id;
 
 - (Circuit *) initWithPackage:(NSDictionary *) package items: (NSArray *) items;
-
+- (void) performWriteBlock:(void (^)(CircuitInternal *internal)) block;
 @end

@@ -9,8 +9,10 @@
 #import <Foundation/Foundation.h>
 
 @interface ToolbeltItem : NSObject
-@property (nonatomic) NSString *type;
-@property (nonatomic) UIImage *image;
-@property (nonatomic) NSString *name;
-@property (nonatomic) NSString *subtitle;
+- (instancetype) initWithType:(NSString *) type image:(UIImage *)image name:(NSString *)name subtitle:(NSString *) subtitle;
+
+@property (nonatomic, readonly) NSString *type;
+@property (nonatomic, readonly) UIImage *image;
+@property (nonatomic, readonly) NSString *name;
+@property (nonatomic, readonly) NSString *subtitle;
 @end
