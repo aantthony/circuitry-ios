@@ -15,7 +15,9 @@
 @interface CircuitDocumentViewController () <CircuitObjectListTableViewControllerDelegate, ProblemInfoViewControllerDelegate>
 @property (nonatomic) CircuitDocument *document;
 @property (nonatomic, weak) CircuitObjectListTableViewController *objectListViewController;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *objectListLeft;
 @property (nonatomic, weak) ProblemInfoViewController *problemInfoViewController;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *problemInfoHeight;
 @property (nonatomic, weak) ViewController *glkViewController;
 @property (nonatomic) BOOL objectListVisible;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *checkAnswerButton;
@@ -46,6 +48,7 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    [self setObjectListVisible:!_objectListVisible animate:YES];
 }
 
 - (void) viewDidAppear:(BOOL)animated {
@@ -66,13 +69,32 @@
 }
 
 - (void) setObjectListVisible:(BOOL)objectListVisible {
+    [self setObjectListVisible:objectListVisible animate:NO];
+}
+
+- (void) setObjectListVisible:(BOOL)objectListVisible animate:(BOOL)animate {
     _objectListVisible = objectListVisible;
-    _objectListView.hidden = !_objectListVisible;
+    if (!animate) {
+        _objectListView.hidden = !_objectListVisible;
+        _objectListLeft.constant = _objectListVisible ? 0 : -_objectListView.frame.size.width;
+        [self.view layoutIfNeeded];
+        return;
+    }
+    
+    _objectListView.hidden = NO;
+    [self.view layoutIfNeeded];
+    [UIView animateWithDuration:0.2 animations:^{
+        _objectListLeft.constant = _objectListVisible ? 0 : -_objectListView.frame.size.width;
+        [self.view layoutIfNeeded];
+    } completion:^(BOOL finished) {
+        _objectListView.hidden = !_objectListVisible;
+    }];
 }
 
 - (void) setProblemInfoVisible:(BOOL) problemInfoVisible {
     _problemInfoVisible = problemInfoVisible;
     _problemInfoView.hidden = !problemInfoVisible;
+    _problemInfoHeight.constant = problemInfoVisible ? 258 : 0;
 }
 
 - (IBAction)configureDocument:(id)sender {

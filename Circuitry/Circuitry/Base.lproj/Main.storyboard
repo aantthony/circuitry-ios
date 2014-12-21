@@ -25,16 +25,19 @@
                                 </connections>
                             </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8GE-Pt-Sug">
-                                <rect key="frame" x="0.0" y="44" width="237" height="980"/>
+                                <rect key="frame" x="0.0" y="44" width="237" height="722"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="237" id="Okd-AR-v4t"/>
+                                    <constraint firstAttribute="width" constant="237" id="fK9-5Q-bOU"/>
                                 </constraints>
                                 <connections>
                                     <segue destination="92d-HQ-qId" kind="embed" id="Ado-jK-saD"/>
                                 </connections>
                             </containerView>
-                            <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0G8-Qd-p90">
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0G8-Qd-p90">
                                 <rect key="frame" x="0.0" y="766" width="768" height="258"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="258" id="rD4-Nt-mKk"/>
+                                </constraints>
                                 <connections>
                                     <segue destination="jZw-XZ-G2q" kind="embed" id="8bY-YS-sDo"/>
                                 </connections>
@@ -42,13 +45,16 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="0Ys-4M-3pE" firstAttribute="bottom" secondItem="isi-1p-ZHn" secondAttribute="bottom" id="1NR-Ds-kbU"/>
-                            <constraint firstItem="0Ys-4M-3pE" firstAttribute="bottom" secondItem="8GE-Pt-Sug" secondAttribute="bottom" id="9e3-JD-cyz"/>
-                            <constraint firstAttribute="trailing" secondItem="isi-1p-ZHn" secondAttribute="trailing" id="D8w-5r-iLY"/>
-                            <constraint firstItem="isi-1p-ZHn" firstAttribute="top" secondItem="U6a-IS-6io" secondAttribute="top" id="JqZ-Tu-jsn"/>
-                            <constraint firstItem="8GE-Pt-Sug" firstAttribute="top" secondItem="aYZ-yF-N0r" secondAttribute="bottom" id="Ocn-iZ-2aI"/>
-                            <constraint firstItem="8GE-Pt-Sug" firstAttribute="leading" secondItem="U6a-IS-6io" secondAttribute="leading" id="Zbk-XP-KwI"/>
-                            <constraint firstItem="isi-1p-ZHn" firstAttribute="leading" secondItem="U6a-IS-6io" secondAttribute="leading" id="rx5-Zg-Mbz"/>
+                            <constraint firstItem="0G8-Qd-p90" firstAttribute="top" secondItem="8GE-Pt-Sug" secondAttribute="bottom" id="7FU-5F-qXc"/>
+                            <constraint firstAttribute="trailing" secondItem="0G8-Qd-p90" secondAttribute="trailing" id="GAY-u2-Wch"/>
+                            <constraint firstItem="isi-1p-ZHn" firstAttribute="top" secondItem="U6a-IS-6io" secondAttribute="top" id="IIB-Kb-NYX"/>
+                            <constraint firstItem="isi-1p-ZHn" firstAttribute="leading" secondItem="U6a-IS-6io" secondAttribute="leading" id="Jqn-1k-3nr"/>
+                            <constraint firstItem="8GE-Pt-Sug" firstAttribute="top" secondItem="aYZ-yF-N0r" secondAttribute="bottom" id="NlX-MW-rX4"/>
+                            <constraint firstItem="0Ys-4M-3pE" firstAttribute="top" secondItem="0G8-Qd-p90" secondAttribute="bottom" id="R5J-2P-60i"/>
+                            <constraint firstItem="8GE-Pt-Sug" firstAttribute="leading" secondItem="U6a-IS-6io" secondAttribute="leading" id="VKu-Gt-L8u"/>
+                            <constraint firstAttribute="trailing" secondItem="isi-1p-ZHn" secondAttribute="trailing" id="ezk-0B-41R"/>
+                            <constraint firstItem="0G8-Qd-p90" firstAttribute="leading" secondItem="U6a-IS-6io" secondAttribute="leading" id="oBv-W6-v2G"/>
+                            <constraint firstItem="0Ys-4M-3pE" firstAttribute="top" secondItem="isi-1p-ZHn" secondAttribute="bottom" id="ttf-Kg-M0G"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="test" id="eXc-qK-JHX">
@@ -60,7 +66,9 @@
                     </navigationItem>
                     <connections>
                         <outlet property="checkAnswerButton" destination="nPY-62-rYn" id="4Ka-7c-DOa"/>
+                        <outlet property="objectListLeft" destination="VKu-Gt-L8u" id="kth-9d-aNY"/>
                         <outlet property="objectListView" destination="8GE-Pt-Sug" id="O64-gb-akG"/>
+                        <outlet property="problemInfoHeight" destination="rD4-Nt-mKk" id="VZb-UB-zuk"/>
                         <outlet property="problemInfoView" destination="0G8-Qd-p90" id="Tou-jP-Xp3"/>
                     </connections>
                 </viewController>
@@ -519,7 +527,7 @@
             <objects>
                 <tableViewController id="92d-HQ-qId" customClass="CircuitObjectListTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="80" sectionHeaderHeight="22" sectionFooterHeight="22" id="anR-55-epr">
-                        <rect key="frame" x="0.0" y="0.0" width="237" height="980"/>
+                        <rect key="frame" x="0.0" y="0.0" width="237" height="722"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
@@ -542,7 +550,7 @@
                                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="or.png" translatesAutoresizingMaskIntoConstraints="NO" id="HAG-xY-fkt">
+                                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="or" translatesAutoresizingMaskIntoConstraints="NO" id="HAG-xY-fkt">
                                             <rect key="frame" x="139" y="0.0" width="95" height="79"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="95" id="myI-lr-zzX"/>
@@ -689,7 +697,7 @@ This logic diagram describes the rule:
         <image name="dots.png" width="22" height="6"/>
         <image name="ipad-white-vertical-level-1.png" width="882" height="1310"/>
         <image name="large-plus.png" width="54" height="54"/>
-        <image name="or.png" width="90" height="50"/>
+        <image name="or" width="90" height="50"/>
         <image name="tutorial-bg-1.jpg" width="768" height="1024"/>
         <image name="tutorial-bg-2.jpg" width="768" height="1024"/>
         <image name="tutorial-bg-3.jpg" width="768" height="1024"/>

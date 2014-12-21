@@ -140,7 +140,7 @@
 		9200469E189D037F007124DA /* SevenSegmentDisplay.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = SevenSegmentDisplay.fsh; sourceTree = "<group>"; };
 		920046A0189D0390007124DA /* SevenSegmentDisplay.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = SevenSegmentDisplay.vsh; sourceTree = "<group>"; };
 		92020C08189A54ED00B6D8F5 /* background.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = background.jpg; sourceTree = SOURCE_ROOT; };
-		9204C370182E2F5C006A008D /* circuitry.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = circuitry.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9204C370182E2F5C006A008D /* Circuitry.dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Circuitry.dev.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9204C373182E2F5C006A008D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9204C375182E2F5C006A008D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		9204C377182E2F5C006A008D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -165,7 +165,6 @@
 		92061DE619BDF0720081E3B9 /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TutorialViewController.h; path = Circuitry/TutorialViewController.h; sourceTree = "<group>"; };
 		92061DE719BDF0720081E3B9 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TutorialViewController.m; path = Circuitry/TutorialViewController.m; sourceTree = "<group>"; };
 		9208B106187565390038A52A /* Circuitry.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Circuitry.entitlements; sourceTree = "<group>"; };
-		9208BDF71965851C00980D70 /* circuitry.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = circuitry.entitlements; path = circuitry/circuitry.entitlements; sourceTree = "<group>"; };
 		92121A751A16E8CF0071ABEF /* blank.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = blank.json; sourceTree = "<group>"; };
 		9218F7361876978A00742F99 /* LinkBezier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkBezier.h; sourceTree = "<group>"; };
 		9218F7371876978A00742F99 /* LinkBezier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LinkBezier.m; sourceTree = "<group>"; };
@@ -226,6 +225,7 @@
 		9288BBB5196AD6230090455A /* ToolbeltItemTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ToolbeltItemTableViewCell.m; path = Circuitry/ToolbeltItemTableViewCell.m; sourceTree = "<group>"; };
 		9288BBB7196AD6470090455A /* ToolbeltItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolbeltItem.h; sourceTree = "<group>"; };
 		9288BBB8196AD6470090455A /* ToolbeltItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolbeltItem.m; sourceTree = "<group>"; };
+		928FDF3E1A465C950042319C /* circuitry.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = circuitry.entitlements; path = circuitry/circuitry.entitlements; sourceTree = "<group>"; };
 		929CB69318A7833C00BEE7D6 /* TransitionFromDocumentListToDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitionFromDocumentListToDocument.h; sourceTree = "<group>"; };
 		929CB69418A7833C00BEE7D6 /* TransitionFromDocumentListToDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitionFromDocumentListToDocument.m; sourceTree = "<group>"; };
 		92A28A5C187433E800F0D934 /* Circuit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Circuit.h; sourceTree = "<group>"; };
@@ -328,8 +328,8 @@
 		9204C367182E2F5C006A008D = {
 			isa = PBXGroup;
 			children = (
+				928FDF3E1A465C950042319C /* circuitry.entitlements */,
 				92C62F4B197BFCD500A3E939 /* Problems */,
-				9208BDF71965851C00980D70 /* circuitry.entitlements */,
 				92FC7FA018A601A200EA329A /* UIKitCategoryAdditions */,
 				92A28A59187428A600F0D934 /* Circuits */,
 				9204C37D182E2F5C006A008D /* Circuitry */,
@@ -343,7 +343,7 @@
 		9204C371182E2F5C006A008D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9204C370182E2F5C006A008D /* circuitry.app */,
+				9204C370182E2F5C006A008D /* Circuitry.dev.app */,
 				9204C399182E2F5C006A008D /* CircuitryTests.xctest */,
 			);
 			name = Products;
@@ -372,9 +372,9 @@
 			children = (
 				92771D401A454ECE000931D9 /* Services */,
 				92771D3E1A454E78000931D9 /* Useless */,
-				92771D3C1A454E4A000931D9 /* UI */,
+				927D1A181875A9B400457367 /* OpenGL Views */,
+				92771D3C1A454E4A000931D9 /* UI Elements */,
 				927D1A191875A9F000457367 /* Models */,
-				92771D371A454CA5000931D9 /* Models */,
 				92771D301A454BC8000931D9 /* Controllers */,
 				92FA32BC19B2C00C0046A7FE /* Tutorial */,
 				92771CFA1A450886000931D9 /* Managers */,
@@ -382,7 +382,6 @@
 				92794CB018AF0E5400A39012 /* ic@2x.png */,
 				92FC7F9518A5906900EA329A /* large-plus@2x.png */,
 				92DE44AD187C153F00014CB9 /* circuit.image-atlas */,
-				927D1A181875A9B400457367 /* OpenGL Views */,
 				927D1A151875A98F00457367 /* ShaderEffect */,
 				9208B106187565390038A52A /* Circuitry.entitlements */,
 				9204C386182E2F5C006A008D /* AppDelegate.h */,
@@ -532,19 +531,6 @@
 			name = Toolbar;
 			sourceTree = "<group>";
 		};
-		92771D371A454CA5000931D9 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				92191A0B1A29DECB009594B1 /* ProblemSet.h */,
-				92191A0C1A29DECB009594B1 /* ProblemSet.m */,
-				9288BBB7196AD6470090455A /* ToolbeltItem.h */,
-				9288BBB8196AD6470090455A /* ToolbeltItem.m */,
-				92191A0E1A29E26C009594B1 /* ProblemSetProblemInfo.h */,
-				92191A0F1A29E26C009594B1 /* ProblemSetProblemInfo.m */,
-			);
-			name = Models;
-			sourceTree = "<group>";
-		};
 		92771D381A454CC8000931D9 /* Problem Info */ = {
 			isa = PBXGroup;
 			children = (
@@ -581,13 +567,12 @@
 			name = "Page 3";
 			sourceTree = "<group>";
 		};
-		92771D3C1A454E4A000931D9 /* UI */ = {
+		92771D3C1A454E4A000931D9 /* UI Elements */ = {
 			isa = PBXGroup;
 			children = (
-				92771D3F1A454E94000931D9 /* Shaders */,
 				92771D3D1A454E4F000931D9 /* Transitions */,
 			);
-			name = UI;
+			name = "UI Elements";
 			sourceTree = "<group>";
 		};
 		92771D3D1A454E4F000931D9 /* Transitions */ = {
@@ -702,6 +687,7 @@
 		927D1A181875A9B400457367 /* OpenGL Views */ = {
 			isa = PBXGroup;
 			children = (
+				92771D3F1A454E94000931D9 /* Shaders */,
 				9218F735187696A100742F99 /* LinkBezier */,
 				92A4F86F18728A1F00EEB367 /* Drawable.m */,
 				9200469D189D021D007124DA /* SevenSegmentDisplay */,
@@ -722,6 +708,12 @@
 		927D1A191875A9F000457367 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				92191A0B1A29DECB009594B1 /* ProblemSet.h */,
+				92191A0C1A29DECB009594B1 /* ProblemSet.m */,
+				9288BBB7196AD6470090455A /* ToolbeltItem.h */,
+				9288BBB8196AD6470090455A /* ToolbeltItem.m */,
+				92191A0E1A29E26C009594B1 /* ProblemSetProblemInfo.h */,
+				92191A0F1A29E26C009594B1 /* ProblemSetProblemInfo.m */,
 				927D1A141875A98400457367 /* Circuit */,
 			);
 			name = Models;
@@ -767,9 +759,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		9204C36F182E2F5C006A008D /* circuitry */ = {
+		9204C36F182E2F5C006A008D /* Circuitry */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9204C3AA182E2F5C006A008D /* Build configuration list for PBXNativeTarget "circuitry" */;
+			buildConfigurationList = 9204C3AA182E2F5C006A008D /* Build configuration list for PBXNativeTarget "Circuitry" */;
 			buildPhases = (
 				BC3AC6D7B3254235807EDC14 /* Check Pods Manifest.lock */,
 				9204C36C182E2F5C006A008D /* Sources */,
@@ -782,9 +774,9 @@
 			);
 			dependencies = (
 			);
-			name = circuitry;
+			name = Circuitry;
 			productName = circuitry;
-			productReference = 9204C370182E2F5C006A008D /* circuitry.app */;
+			productReference = 9204C370182E2F5C006A008D /* Circuitry.dev.app */;
 			productType = "com.apple.product-type.application";
 		};
 		9204C398182E2F5C006A008D /* CircuitryTests */ = {
@@ -840,7 +832,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				9204C36F182E2F5C006A008D /* circuitry */,
+				9204C36F182E2F5C006A008D /* Circuitry */,
 				9204C398182E2F5C006A008D /* CircuitryTests */,
 			);
 		};
@@ -1001,7 +993,7 @@
 /* Begin PBXTargetDependency section */
 		9204C39F182E2F5C006A008D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 9204C36F182E2F5C006A008D /* circuitry */;
+			target = 9204C36F182E2F5C006A008D /* Circuitry */;
 			targetProxy = 9204C39E182E2F5C006A008D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1048,6 +1040,7 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1087,6 +1080,7 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1121,7 +1115,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Circuitry/Circuitry-Prefix.pch";
 				INFOPLIST_FILE = "Circuitry/Circuitry-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Circuitry.dev;
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1144,7 +1138,7 @@
 				GCC_PREFIX_HEADER = "Circuitry/Circuitry-Prefix.pch";
 				INFOPLIST_FILE = "Circuitry/Circuitry-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "d5c0e20f-5e07-4163-8bc9-dc7ccaadef93";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -1152,7 +1146,7 @@
 		9204C3AE182E2F5C006A008D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Circuitry.app/Circuitry";
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -1166,7 +1160,7 @@
 				);
 				INFOPLIST_FILE = "CircuitryTests/CircuitryTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Circuitry.dev.app/Circuitry.dev";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Debug;
@@ -1174,7 +1168,7 @@
 		9204C3AF182E2F5C006A008D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Circuitry.app/Circuitry";
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -1184,7 +1178,7 @@
 				GCC_PREFIX_HEADER = "Circuitry/Circuitry-Prefix.pch";
 				INFOPLIST_FILE = "CircuitryTests/CircuitryTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Circuitry.dev.app/Circuitry.dev";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Release;
@@ -1201,7 +1195,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9204C3AA182E2F5C006A008D /* Build configuration list for PBXNativeTarget "circuitry" */ = {
+		9204C3AA182E2F5C006A008D /* Build configuration list for PBXNativeTarget "Circuitry" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9204C3AB182E2F5C006A008D /* Debug */,

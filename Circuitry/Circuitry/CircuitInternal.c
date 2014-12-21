@@ -100,14 +100,6 @@ static void needsUpdate(CircuitInternal *c, CircuitObject *object) {
     c->needsUpdate[c->needsUpdate_count - 1] = object;
 }
 
-// Queue a link for a re-calculation (i.e, queue the links targets for recalculation)
-static void linksNeedsUpdate(CircuitInternal *c, CircuitLink * link) {
-    while(link) {
-        needsUpdate(c, link->target);
-        link = link->nextSibling;
-    }
-}
-
 // Create a new circuit object (and queue it for recalculation)
 CircuitObject * CircuitObjectCreate(CircuitInternal *c, CircuitProcess *type) {
     
