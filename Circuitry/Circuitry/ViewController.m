@@ -826,11 +826,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 }
 -(void)snapUIImage
 {
-    int s = 1;
-    UIScreen* screen = [ UIScreen mainScreen ];
-    if ( [ screen respondsToSelector:@selector(scale) ] )
-        s = (int) [ screen scale ];
-    
+    int s = [ UIScreen mainScreen ].scale;
     s = 1;
     const int w = self.view.frame.size.width;
     const int h = self.view.frame.size.height;
