@@ -35,12 +35,26 @@ static int pageCount = 3;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self initScrollView];
     _buttonEnabled = NO;
     _button.alpha = 0.0;
     _button.layer.cornerRadius = 4.0;
     _button.layer.borderColor = [[UIColor whiteColor] CGColor];
     _button.layer.borderWidth = 2.0;
+    
+    CGFloat width = self.view.bounds.size.width;
+    CGFloat height = self.view.bounds.size.height;
+    _scrollView.contentSize = CGSizeMake(pageCount * width, height);
+    
+    for(int i = 0; i < pageCount; i++) {
+        UIViewController *v1 = [self viewControllerAtIndex:i storyboard:self.storyboard];
+        [self addChildViewController:v1];
+        v1.view.backgroundColor = [UIColor clearColor];
+        v1.view.frame = CGRectMake(i * width, 0, width, height);
+        [_scrollView addSubview:v1.view];
+        [v1 didMoveToParentViewController:self];
+    }
+    
+    [self configureBackgroundFade];
 }
 
 - (UIImageView *) imageViewForIndex:(int)index {
@@ -71,10 +85,19 @@ static int pageCount = 3;
 - (void) setButtonEnabled:(BOOL) buttonEnabled {
     if (_buttonEnabled == buttonEnabled) return;
     _button.enabled = buttonEnabled;
+    _pageControl.enabled = !buttonEnabled;
+    
     [UIView animateWithDuration:0.3 animations:^{
         _button.alpha = buttonEnabled ? 1.0 : 0.0;
+        _pageControl.alpha = buttonEnabled ? 0.0 : 1.0;
     }];
     _buttonEnabled = buttonEnabled;
+}
+- (IBAction)changePageControl:(id)sender {
+    [UIView animateWithDuration:0.4 animations:^{
+        CGFloat x = _pageControl.currentPage * self.view.bounds.size.width;
+        _scrollView.contentOffset = CGPointMake(x, 0);
+    }];
 }
 
 - (void) configureSubviewLayouts {
@@ -91,6 +114,9 @@ static int pageCount = 3;
         UIView *v  = [[_scrollView subviews] objectAtIndex:i];
         v.frame = CGRectMake(i * width, 0, width, height);
     }
+    
+    CGFloat x = _pageControl.currentPage * self.view.bounds.size.width;
+    _scrollView.contentOffset = CGPointMake(x, 0);
 }
 
 - (void) scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
@@ -112,22 +138,6 @@ static int pageCount = 3;
 - (void) viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     [self configureSubviewLayouts];
-}
-
-- (void) initScrollView {
-    CGFloat width = self.view.bounds.size.width;
-    CGFloat height = self.view.bounds.size.height;
-    _scrollView.contentSize = CGSizeMake(pageCount * width, height);
-    
-    for(int i = 0; i < pageCount; i++) {
-        UIViewController *v1 = [self viewControllerAtIndex:i storyboard:self.storyboard];
-        [self addChildViewController:v1];
-        v1.view.backgroundColor = [UIColor clearColor];
-        v1.view.frame = CGRectMake(i * width, 0, width, height);
-        [_scrollView addSubview:v1.view];
-        [v1 didMoveToParentViewController:self];
-    }
-    [self configureBackgroundFade];
 }
 
 - (UIStatusBarStyle) preferredStatusBarStyle {

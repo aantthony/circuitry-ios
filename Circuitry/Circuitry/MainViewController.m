@@ -10,16 +10,9 @@
 #import "TutorialViewController.h"
 
 @interface MainViewController () <TutorialViewControllerDelegate>
-
 @end
 
 @implementation MainViewController
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-}
-
 
 - (UIStatusBarStyle) preferredStatusBarStyle {
     return UIStatusBarStyleDefault;
@@ -30,14 +23,11 @@
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    if (![NSUserDefaults.standardUserDefaults boolForKey:@"openedBefore"]) {
+    static BOOL hasOpenedBefore = NO;
+    if (!hasOpenedBefore && [NSUserDefaults.standardUserDefaults boolForKey:@"openedBefore"]) {
+        hasOpenedBefore = YES;
         [self performSegueWithIdentifier:@"ShowTutorial" sender:self];
     }
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

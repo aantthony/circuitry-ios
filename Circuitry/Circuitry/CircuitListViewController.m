@@ -64,6 +64,7 @@
 @property (nonatomic) ViewController *documentViewController;
 @property (nonatomic) NSIndexPath *actionSheetIndexPath;
 @property (nonatomic) CGRect selectionRect;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *createButton;
 @property (nonatomic) BOOL openDocumentAnimationShouldFadeIn;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentControl;
 @property (nonatomic) CircuitDocument *presentingDocument;
@@ -202,9 +203,13 @@
 - (IBAction)didChangeCircuitsProblemsSegment:(UISegmentedControl *)sender {
     if (sender.selectedSegmentIndex == 0) {
         _items = _problems;
+        _createButton.enabled = NO;
+        self.title = @"Problems";
         [self.collectionView reloadData];
     } else {
         _items = _circuits;
+        _createButton.enabled = YES;
+        self.title = @"Circuits";
         [self.collectionView reloadData];
     }
     _segmentControl = sender;

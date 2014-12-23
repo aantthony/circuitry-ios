@@ -196,7 +196,7 @@
             </objects>
             <point key="canvasLocation" x="3451" y="-1912"/>
         </scene>
-        <!--Circuitry-->
+        <!--Problems-->
         <scene sceneID="fYR-El-sOZ">
             <objects>
                 <collectionViewController autoresizesArchivedViewToFullSize="NO" id="bMV-Gg-1ab" customClass="CircuitListViewController" sceneMemberID="viewController">
@@ -226,7 +226,7 @@
                                             <rect key="frame" x="6" y="8" width="188" height="188"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </imageView>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="large-plus.png" translatesAutoresizingMaskIntoConstraints="NO" id="wH0-hs-g7y">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="large-plus" translatesAutoresizingMaskIntoConstraints="NO" id="wH0-hs-g7y">
                                             <rect key="frame" x="73" y="75" width="54" height="54"/>
                                         </imageView>
                                     </subviews>
@@ -292,8 +292,8 @@
                             <outlet property="delegate" destination="bMV-Gg-1ab" id="ftb-KT-sCu"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" title="Circuitry" id="Bj2-Se-1Yq">
-                        <barButtonItem key="leftBarButtonItem" systemItem="add" id="vXF-Ph-Sji">
+                    <navigationItem key="navigationItem" title="Problems" id="Bj2-Se-1Yq">
+                        <barButtonItem key="leftBarButtonItem" enabled="NO" systemItem="add" id="vXF-Ph-Sji">
                             <connections>
                                 <action selector="createDocument:" destination="bMV-Gg-1ab" id="4Yh-wA-5AZ"/>
                             </connections>
@@ -305,6 +305,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="createButton" destination="vXF-Ph-Sji" id="g0o-mm-xOa"/>
                         <segue destination="2hA-su-58g" kind="push" identifier="presentDocument" id="MpB-7m-KJD"/>
                         <segue destination="SLJ-zi-R7l" kind="modal" identifier="ShowTutorialAgain" modalTransitionStyle="flipHorizontal" id="gnN-9s-ocl"/>
                         <segue destination="fgr-9P-fIo" kind="modal" identifier="ShowBoringInfo" modalTransitionStyle="coverVertical" id="0tP-rl-eoO"/>
@@ -348,7 +349,7 @@
                                 </connections>
                             </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VYP-BM-iwz">
-                                <rect key="frame" x="266" y="910" width="237" height="64"/>
+                                <rect key="frame" x="266" y="940" width="237" height="64"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.20000000000000001" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="237" id="2vP-n7-a5d"/>
@@ -364,14 +365,17 @@
                                 </connections>
                             </button>
                             <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="jvE-f8-6kx">
-                                <rect key="frame" x="365" y="865" width="39" height="37"/>
+                                <rect key="frame" x="365" y="980" width="39" height="37"/>
+                                <connections>
+                                    <action selector="changePageControl:" destination="SLJ-zi-R7l" eventType="valueChanged" id="MJW-HG-olN"/>
+                                </connections>
                             </pageControl>
                         </subviews>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="VYP-BM-iwz" firstAttribute="top" secondItem="jvE-f8-6kx" secondAttribute="bottom" constant="8" id="IFv-FA-vxJ"/>
                             <constraint firstAttribute="centerX" secondItem="jvE-f8-6kx" secondAttribute="centerX" id="UQn-ad-EWF"/>
-                            <constraint firstItem="l7p-V8-rhg" firstAttribute="top" secondItem="VYP-BM-iwz" secondAttribute="bottom" constant="50" id="iQy-Rz-qnr"/>
+                            <constraint firstItem="l7p-V8-rhg" firstAttribute="top" secondItem="jvE-f8-6kx" secondAttribute="bottom" constant="7" id="eD7-UF-kiW"/>
+                            <constraint firstItem="l7p-V8-rhg" firstAttribute="top" secondItem="VYP-BM-iwz" secondAttribute="bottom" constant="20" id="iQy-Rz-qnr"/>
                             <constraint firstAttribute="centerX" secondItem="VYP-BM-iwz" secondAttribute="centerX" id="uag-72-VMi"/>
                         </constraints>
                     </view>
@@ -413,26 +417,38 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Circuitry is a logic game that helps you understand boolean algebra, logic gates and digital circuits." textAlignment="center" lineBreakMode="clip" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="500" translatesAutoresizingMaskIntoConstraints="NO" id="hRk-6H-ar2">
-                                <rect key="frame" x="135" y="613" width="499" height="99"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lSl-Ab-KFq">
+                                <rect key="frame" x="0.0" y="407" width="768" height="617"/>
+                                <subviews>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Circuitry is a logic game that helps you understand boolean algebra, logic gates and digital circuits." textAlignment="center" lineBreakMode="clip" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="500" translatesAutoresizingMaskIntoConstraints="NO" id="hRk-6H-ar2">
+                                        <rect key="frame" x="134" y="259" width="499" height="99"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="499" id="fSd-7j-0ma"/>
+                                            <constraint firstAttribute="width" constant="499" id="sea-3t-L28"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="24"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="499" id="sea-3t-L28"/>
+                                    <constraint firstAttribute="centerY" secondItem="hRk-6H-ar2" secondAttribute="centerY" id="3ea-qz-5SR"/>
+                                    <constraint firstAttribute="centerX" secondItem="hRk-6H-ar2" secondAttribute="centerX" id="fdF-8b-DDp"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="24"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.57499999999999996" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="hRk-6H-ar2" firstAttribute="top" secondItem="2DZ-xc-hfg" secondAttribute="bottom" constant="228" id="2oV-lA-FiX"/>
-                            <constraint firstAttribute="centerX" secondItem="hRk-6H-ar2" secondAttribute="centerX" id="7Jd-4F-eJ9"/>
-                            <constraint firstItem="2DZ-xc-hfg" firstAttribute="centerX" secondItem="hRk-6H-ar2" secondAttribute="centerX" id="ClZ-JT-zhx"/>
                             <constraint firstItem="2DZ-xc-hfg" firstAttribute="top" secondItem="djV-x2-gDX" secondAttribute="top" constant="286" id="Jfq-bf-MyM"/>
                             <constraint firstAttribute="centerX" secondItem="2DZ-xc-hfg" secondAttribute="centerX" id="Ori-TH-BPs"/>
+                            <constraint firstItem="lSl-Ab-KFq" firstAttribute="leading" secondItem="djV-x2-gDX" secondAttribute="leading" id="PSL-dN-Eyq"/>
                             <constraint firstItem="2DZ-xc-hfg" firstAttribute="centerX" secondItem="Jtd-SE-Qql" secondAttribute="centerX" id="RpU-ML-tou"/>
+                            <constraint firstAttribute="trailing" secondItem="lSl-Ab-KFq" secondAttribute="trailing" id="SWP-WT-X9q"/>
                             <constraint firstItem="2DZ-xc-hfg" firstAttribute="centerX" secondItem="djV-x2-gDX" secondAttribute="centerX" id="Um4-ij-Zqs"/>
                             <constraint firstItem="2DZ-xc-hfg" firstAttribute="top" secondItem="Jtd-SE-Qql" secondAttribute="bottom" constant="8" symbolic="YES" id="W0V-WG-kGk"/>
+                            <constraint firstItem="lSl-Ab-KFq" firstAttribute="top" secondItem="2DZ-xc-hfg" secondAttribute="bottom" constant="22" id="irT-vG-fsx"/>
+                            <constraint firstItem="TJ5-L3-mNu" firstAttribute="top" secondItem="lSl-Ab-KFq" secondAttribute="bottom" id="rjM-TJ-gf0"/>
                         </constraints>
                     </view>
                     <connections>
@@ -455,17 +471,41 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ipad-white-vertical-level-1.png" translatesAutoresizingMaskIntoConstraints="NO" id="mzK-eN-2zw">
-                                <rect key="frame" x="158" y="80" width="453" height="538"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cMc-ch-mPw">
+                                <rect key="frame" x="0.0" y="616" width="768" height="358"/>
+                                <subviews>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Construct solutions to complicated logic gate problems linking AND gates, OR gates, XOR gates, and so on." textAlignment="center" lineBreakMode="clip" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="500" translatesAutoresizingMaskIntoConstraints="NO" id="LqF-H5-SNk">
+                                        <rect key="frame" x="134" y="130" width="499" height="99"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="499" id="quk-CT-QBI"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="24"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="centerX" secondItem="LqF-H5-SNk" secondAttribute="centerX" id="TJg-pW-SVr"/>
+                                    <constraint firstAttribute="centerY" secondItem="LqF-H5-SNk" secondAttribute="centerY" id="n1x-bG-cBf"/>
+                                </constraints>
+                            </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ipad-white-vertical-level-1.png" translatesAutoresizingMaskIntoConstraints="NO" id="mzK-eN-2zw">
+                                <rect key="frame" x="158" y="45" width="453" height="538"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="453" id="GOJ-U5-Jr3"/>
+                                    <constraint firstAttribute="height" constant="538" id="qw5-qz-K5f"/>
+                                </constraints>
                             </imageView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Construct solutions to complicated logic gate problems linking AND gates, OR gates, XOR gates, and so on." textAlignment="center" lineBreakMode="clip" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="500" translatesAutoresizingMaskIntoConstraints="NO" id="LqF-H5-SNk">
-                                <rect key="frame" x="135" y="751" width="499" height="132"/>
-                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="24"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.59474611282348633" green="0.48714275069322927" blue="0.41777814864485741" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="cMc-ch-mPw" secondAttribute="trailing" id="0Od-xA-x7F"/>
+                            <constraint firstItem="mzK-eN-2zw" firstAttribute="top" secondItem="PGG-BL-aDQ" secondAttribute="bottom" constant="45" id="3kp-ZF-3c8"/>
+                            <constraint firstItem="rcS-cb-0qB" firstAttribute="top" secondItem="cMc-ch-mPw" secondAttribute="bottom" constant="50" id="56K-Ja-Org"/>
+                            <constraint firstItem="cMc-ch-mPw" firstAttribute="leading" secondItem="Vff-66-ktq" secondAttribute="leading" id="7iv-iw-Ie9"/>
+                            <constraint firstAttribute="centerX" secondItem="mzK-eN-2zw" secondAttribute="centerX" id="q3t-KD-obs"/>
+                            <constraint firstItem="cMc-ch-mPw" firstAttribute="top" secondItem="mzK-eN-2zw" secondAttribute="bottom" constant="33" id="vUB-w2-Kgx"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Moy-52-UG6" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -481,29 +521,53 @@
                         <viewControllerLayoutGuide type="bottom" id="6Kr-rB-iSk"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="XMt-Ix-xBI">
-                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="center" lineBreakMode="clip" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="500" translatesAutoresizingMaskIntoConstraints="NO" id="Zx9-i6-yMt">
-                                <rect key="frame" x="136" y="692" width="465" height="164"/>
-                                <string key="text">Progressing through the levels will unlock various logical elements and contraptions which you can use to develop circuits in Playground Mode. This is where things can get interesting!</string>
-                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="24"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ipad-white-vertical-level-1.png" translatesAutoresizingMaskIntoConstraints="NO" id="eoz-vI-Ld4">
-                                <rect key="frame" x="142" y="45" width="453" height="538"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ipad-white-vertical-level-1.png" translatesAutoresizingMaskIntoConstraints="NO" id="eoz-vI-Ld4">
+                                <rect key="frame" x="71" y="45" width="882" height="432"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="453" id="nSc-C8-Ucb"/>
+                                </constraints>
                             </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g5c-E0-yAK" userLabel="DescView">
+                                <rect key="frame" x="0.0" y="501" width="1024" height="168"/>
+                                <subviews>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="clip" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="500" translatesAutoresizingMaskIntoConstraints="NO" id="Zx9-i6-yMt" userLabel="Description">
+                                        <rect key="frame" x="152" y="2" width="721" height="164"/>
+                                        <string key="text">Progressing through the levels will unlock various logical elements and contraptions which you can use to develop circuits in Playground Mode. This is where things can get interesting!</string>
+                                        <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="24"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="Zx9-i6-yMt" secondAttribute="trailing" constant="151" id="1jW-UH-5Zv"/>
+                                    <constraint firstAttribute="centerY" secondItem="Zx9-i6-yMt" secondAttribute="centerY" id="C45-uS-8u3"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="168" id="DxF-os-7fa"/>
+                                    <constraint firstItem="Zx9-i6-yMt" firstAttribute="leading" secondItem="g5c-E0-yAK" secondAttribute="leading" constant="152" id="MSK-JY-hFQ"/>
+                                    <constraint firstAttribute="centerX" secondItem="Zx9-i6-yMt" secondAttribute="centerX" id="pyC-kT-OTz"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.55326310582550797" green="0.53577800666664499" blue="0.57594609260559082" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="centerX" secondItem="eoz-vI-Ld4" secondAttribute="centerX" id="JaC-cd-Q4Z"/>
+                            <constraint firstItem="6Kr-rB-iSk" firstAttribute="top" secondItem="g5c-E0-yAK" secondAttribute="bottom" constant="99" id="T03-k2-8re"/>
+                            <constraint firstItem="g5c-E0-yAK" firstAttribute="top" secondItem="eoz-vI-Ld4" secondAttribute="bottom" constant="24" id="UAt-zw-okV"/>
+                            <constraint firstItem="eoz-vI-Ld4" firstAttribute="top" secondItem="1ej-VG-PRl" secondAttribute="bottom" constant="45" id="XJg-t5-HHp"/>
+                            <constraint firstItem="g5c-E0-yAK" firstAttribute="leading" secondItem="XMt-Ix-xBI" secondAttribute="leading" id="nf6-Tg-vaU"/>
+                            <constraint firstAttribute="trailing" secondItem="g5c-E0-yAK" secondAttribute="trailing" id="xsT-yN-LDW"/>
+                        </constraints>
                     </view>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <connections>
                         <outlet property="descriptionText" destination="Zx9-i6-yMt" id="htv-gM-KI9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="I8q-bf-zCk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2316" y="-3069"/>
+            <point key="canvasLocation" x="2431" y="-3079"/>
         </scene>
         <!--Main View Controller-->
         <scene sceneID="s1P-ht-551">
@@ -696,7 +760,7 @@ This logic diagram describes the rule:
         <image name="continue-arrow" width="53" height="18"/>
         <image name="dots.png" width="22" height="6"/>
         <image name="ipad-white-vertical-level-1.png" width="882" height="1310"/>
-        <image name="large-plus.png" width="54" height="54"/>
+        <image name="large-plus" width="54" height="54"/>
         <image name="or" width="90" height="50"/>
         <image name="tutorial-bg-1.jpg" width="768" height="1024"/>
         <image name="tutorial-bg-2.jpg" width="768" height="1024"/>

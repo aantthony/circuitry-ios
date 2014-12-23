@@ -57,7 +57,6 @@
 		92771CFD1A450891000931D9 /* CircuitManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 92771CFC1A450891000931D9 /* CircuitManager.m */; };
 		92771D431A455301000931D9 /* CircuitInternal.c in Sources */ = {isa = PBXBuildFile; fileRef = 92771D411A455301000931D9 /* CircuitInternal.c */; };
 		92771D461A456939000931D9 /* MongoIDType.c in Sources */ = {isa = PBXBuildFile; fileRef = 92771D441A456939000931D9 /* MongoIDType.c */; };
-		92794CB118AF0E5500A39012 /* ic@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92794CB018AF0E5400A39012 /* ic@2x.png */; };
 		92796A3418A668FB00DB690F /* LongPressObjectGesture.m in Sources */ = {isa = PBXBuildFile; fileRef = 92796A3318A668FB00DB690F /* LongPressObjectGesture.m */; };
 		927FC3991A1A12BA00138BCA /* tutorial-bg-2@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 927FC3981A1A12BA00138BCA /* tutorial-bg-2@2x.jpg */; };
 		9288062418725AB20096A1CA /* Sprite.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 92880620187243800096A1CA /* Sprite.vsh */; };
@@ -90,7 +89,6 @@
 		92FA32C719B2E1B70046A7FE /* tutorial-bg-3@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 92FA32C619B2E1B70046A7FE /* tutorial-bg-3@2x.jpg */; };
 		92FC7F9118A50C1000EA329A /* CircuitListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FC7F9018A50C1000EA329A /* CircuitListViewController.m */; };
 		92FC7F9418A50E7300EA329A /* CircuitListImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FC7F9318A50E7300EA329A /* CircuitListImageView.m */; };
-		92FC7F9618A5906900EA329A /* large-plus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92FC7F9518A5906900EA329A /* large-plus@2x.png */; };
 		92FC7F9918A5B39E00EA329A /* CircuitCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FC7F9818A5B39E00EA329A /* CircuitCollectionViewCell.m */; };
 		92FC7FA618A601BD00EA329A /* UIAlertView+MKBlockAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FC7FA518A601BD00EA329A /* UIAlertView+MKBlockAdditions.m */; };
 		CBCFD569C58147F5B4C87DD5 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB58C125A61B4A21B04D8C5D /* libPods.a */; };
@@ -204,7 +202,6 @@
 		92771D421A455301000931D9 /* CircuitInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircuitInternal.h; sourceTree = "<group>"; };
 		92771D441A456939000931D9 /* MongoIDType.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MongoIDType.c; sourceTree = "<group>"; };
 		92771D451A456939000931D9 /* MongoIDType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoIDType.h; sourceTree = "<group>"; };
-		92794CB018AF0E5400A39012 /* ic@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic@2x.png"; sourceTree = "<group>"; };
 		92796A3218A668FB00DB690F /* LongPressObjectGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LongPressObjectGesture.h; sourceTree = "<group>"; };
 		92796A3318A668FB00DB690F /* LongPressObjectGesture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LongPressObjectGesture.m; sourceTree = "<group>"; };
 		927FC3981A1A12BA00138BCA /* tutorial-bg-2@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial-bg-2@2x.jpg"; sourceTree = "<group>"; };
@@ -255,7 +252,6 @@
 		92FC7F9018A50C1000EA329A /* CircuitListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CircuitListViewController.m; path = Circuitry/CircuitListViewController.m; sourceTree = "<group>"; };
 		92FC7F9218A50E7300EA329A /* CircuitListImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CircuitListImageView.h; path = Circuitry/CircuitListImageView.h; sourceTree = "<group>"; };
 		92FC7F9318A50E7300EA329A /* CircuitListImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CircuitListImageView.m; path = Circuitry/CircuitListImageView.m; sourceTree = "<group>"; };
-		92FC7F9518A5906900EA329A /* large-plus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "large-plus@2x.png"; sourceTree = "<group>"; };
 		92FC7F9718A5B39E00EA329A /* CircuitCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CircuitCollectionViewCell.h; path = Circuitry/CircuitCollectionViewCell.h; sourceTree = "<group>"; };
 		92FC7F9818A5B39E00EA329A /* CircuitCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CircuitCollectionViewCell.m; path = Circuitry/CircuitCollectionViewCell.m; sourceTree = "<group>"; };
 		92FC7FA418A601BD00EA329A /* UIAlertView+MKBlockAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+MKBlockAdditions.h"; sourceTree = "<group>"; };
@@ -361,17 +357,12 @@
 			children = (
 				92771D401A454ECE000931D9 /* Services */,
 				92771D3E1A454E78000931D9 /* Useless */,
-				927D1A181875A9B400457367 /* OpenGL Views */,
 				92771D3C1A454E4A000931D9 /* UI Elements */,
 				927D1A191875A9F000457367 /* Models */,
 				92771D301A454BC8000931D9 /* Controllers */,
-				92FA32BC19B2C00C0046A7FE /* Tutorial */,
 				92771CFA1A450886000931D9 /* Managers */,
 				9288BBB1196AD5810090455A /* Images */,
-				92794CB018AF0E5400A39012 /* ic@2x.png */,
-				92FC7F9518A5906900EA329A /* large-plus@2x.png */,
 				92DE44AD187C153F00014CB9 /* circuit.image-atlas */,
-				927D1A151875A98F00457367 /* ShaderEffect */,
 				9208B106187565390038A52A /* Circuitry.entitlements */,
 				9204C386182E2F5C006A008D /* AppDelegate.h */,
 				9204C387182E2F5C006A008D /* AppDelegate.m */,
@@ -559,6 +550,7 @@
 		92771D3C1A454E4A000931D9 /* UI Elements */ = {
 			isa = PBXGroup;
 			children = (
+				927D1A181875A9B400457367 /* OpenGL Views */,
 				92771D3D1A454E4F000931D9 /* Transitions */,
 			);
 			name = "UI Elements";
@@ -676,6 +668,7 @@
 		927D1A181875A9B400457367 /* OpenGL Views */ = {
 			isa = PBXGroup;
 			children = (
+				927D1A151875A98F00457367 /* ShaderEffect */,
 				92771D3F1A454E94000931D9 /* Shaders */,
 				9218F735187696A100742F99 /* LinkBezier */,
 				92A4F86F18728A1F00EEB367 /* Drawable.m */,
@@ -711,6 +704,7 @@
 		9288BBB1196AD5810090455A /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				92FA32BC19B2C00C0046A7FE /* Tutorial */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -733,7 +727,7 @@
 				92FA32C619B2E1B70046A7FE /* tutorial-bg-3@2x.jpg */,
 			);
 			name = Tutorial;
-			path = ..;
+			path = ../..;
 			sourceTree = "<group>";
 		};
 		92FC7FA018A601A200EA329A /* UIKitCategoryAdditions */ = {
@@ -832,7 +826,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				92FC7F9618A5906900EA329A /* large-plus@2x.png in Resources */,
 				920046A3189D0A60007124DA /* SevenSegmentDisplay.vsh in Resources */,
 				9232AD861A1CBE120030ADB2 /* Terms.rtf in Resources */,
 				9232B6761878436E00E45C7E /* BatchedSprite.vsh in Resources */,
@@ -845,7 +838,6 @@
 				9232AD7B1A1CB9EC0030ADB2 /* ipad-white-vertical-level-1.png in Resources */,
 				927FC3991A1A12BA00138BCA /* tutorial-bg-2@2x.jpg in Resources */,
 				92121A761A16E8CF0071ABEF /* blank.json in Resources */,
-				92794CB118AF0E5500A39012 /* ic@2x.png in Resources */,
 				92FA32C219B2C21B0046A7FE /* tutorial-logo@2x.png in Resources */,
 				92020C09189A54ED00B6D8F5 /* background.jpg in Resources */,
 				92FA32BE19B2C0140046A7FE /* tutorial-bg-1@2x.jpg in Resources */,

@@ -111,7 +111,7 @@ static NSDictionary *processesById;
                 ObjectID targetId = [MongoID idWithString:[obj objectAtIndex:0]];
                 int targetIndex = [[obj objectAtIndex:1] intValue];
                 CircuitObject *target = CircuitObjectFindById(_internal, targetId);
-                CircuitLinkCreate(_internal, o, sourceIndex, target, targetIndex);
+                CircuitLinkCreate(_internal, o, (int)sourceIndex, target, targetIndex);
             }];
         }];
         

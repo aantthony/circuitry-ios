@@ -24,7 +24,7 @@ static char CANCEL_IDENTIFER;
     objc_setAssociatedObject(self, &DISMISS_IDENTIFER, dismissBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-- (void (^)(int buttonIndex))dismissBlock
+- (void (^)(NSInteger buttonIndex))dismissBlock
 {
     return objc_getAssociatedObject(self, &DISMISS_IDENTIFER);
 }

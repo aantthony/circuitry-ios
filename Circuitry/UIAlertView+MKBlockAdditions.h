@@ -30,5 +30,5 @@
 
 
 - (void)setDismissBlock:(void (^)(int buttonIndex))dismissBlock;
-- (void (^)(int buttonIndex))dismissBlock;
+- (void (^)(NSInteger buttonIndex))dismissBlock;
 @end
