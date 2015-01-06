@@ -31,7 +31,6 @@
     
     CGPoint panVelocity;
     
-    
     BOOL isAnimatingScaleToSnap;
     BOOL toolbeltTouchIntercept;
     
@@ -44,16 +43,12 @@
     
     void (^ _onNextDraw)(UIImage *);
     
-    
-    CircuitDocument *_document;
-    
 }
 @property (nonatomic) NSArray *selectedObjects;
 @property (nonatomic) Viewport *viewport;
 @property (nonatomic) HUD *hud;
 @property (nonatomic) NSTimer *timer;
 
-- (void)setupGL;
 - (void)tearDownGL;
 
 @end
@@ -90,17 +85,10 @@
 //    [_document publish];
 }
 
-
-- (CircuitDocument *) document {
-    return _document;
-}
 - (void) setDocument:(CircuitDocument *) document {
     _document = document;
-    
-    _viewport.circuit = _document.circuit;
-    
+    _viewport.document = _document;
     self.navigationItem.title = _document.circuit.title;
-    
 }
 
 - (UIImage*)snapshot
@@ -205,14 +193,10 @@
     return atlas;
 }
 - (EAGLContext *) context {
-    static EAGLContext *instance;
-    if (instance) return instance;
-    return instance = [ViewController context];
+    return ViewController.context;
 }
 - (ImageAtlas *) atlas {
-    static id instance;
-    if (instance) return instance;
-    return instance = [ViewController atlas];
+    return ViewController.atlas;
 }
 - (Sprite *) backgroundSprite {
     static id instance;
@@ -222,7 +206,13 @@
     return instance = [[Sprite alloc] initWithTexture:bgTexture];
 }
 
-- (id) setup {
+- (IBAction)group:(id)sender {
+    
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
     
     _onNextDraw = NULL;
     
@@ -234,24 +224,6 @@
     beginGestureScale = 0.0;
     
     _stack = GLKMatrixStackCreate(NULL);
-    
-    return self;
-}
-
-- (id) initWithCoder:(NSCoder *)aDecoder {
-    
-    self = [super initWithCoder:aDecoder];
-    [self setup];
-    return self;
-}
-
-- (IBAction)group:(id)sender {
-    
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillTerminate:) name:UIApplicationWillTerminateNotification object:nil];
@@ -267,14 +239,15 @@
     view.context = self.context;
     view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
     
-    [self setupGL];
+    [EAGLContext setCurrentContext:self.context];
+    [self checkError];
+    glEnable(GL_DEPTH_TEST);
+    
     [self checkError];
     
     _viewport = [[Viewport alloc] initWithContext:self.context atlas: self.atlas];
 
     _hud = [[HUD alloc] initWithAtlas:self.atlas];
-    
-    _hud.viewPort = _viewport;
     
     [self checkError];
     if (!bg) {
@@ -286,6 +259,9 @@
 
 - (void) timerTick:(id) sender {
     if (!_document.circuit) return;
+    static int d = 0;
+    d++;
+    if (d > 100) d = 0;
     __block int clocks = 0;
     [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
         [_document.circuit enumerateClocksUsingBlock:^(CircuitObject *object, BOOL *stop) {
@@ -299,10 +275,6 @@
     }
 }
 
-//- (Circuit *) circuit {
-//    return _circuit;
-//}
-
 - (void)dealloc
 {    
     [self tearDownGL];
@@ -310,31 +282,6 @@
     if ([EAGLContext currentContext] == self.context) {
         [EAGLContext setCurrentContext:nil];
     }
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-
-    if ([self isViewLoaded] && ([[self view] window] == nil)) {
-        self.view = nil;
-        
-        [self tearDownGL];
-        
-        if ([EAGLContext currentContext] == self.context) {
-            [EAGLContext setCurrentContext:nil];
-        }
-//        self.context = nil;
-    }
-
-    // Dispose of any resources that can be recreated.
-}
-
-- (void)setupGL
-{
-    [EAGLContext setCurrentContext:self.context];
-    [self checkError];
-    glEnable(GL_DEPTH_TEST);
 }
 
 - (void)tearDownGL
@@ -888,16 +835,8 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 #endif
 }
 
-- (void) viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-//    [self.navigationController setNavigationBarHidden:YES animated:animated];
-}
 - (void) viewWillDisappear:(BOOL)animated {
-//    [EAGLContext setCurrentContext:self.context];
-//    [self glkView:self.view drawInRect:self.view.frame];
-//    [self snapUIImage];
     [super viewWillDisappear:animated];
-//    [self.navigationController setNavigationBarHidden:NO animated:animated];
     [_timer invalidate];
     _timer = nil;
     [_document closeWithCompletionHandler:^(BOOL success) {}];
@@ -905,7 +844,8 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 
 - (void) viewDidAppear:(BOOL)animated {
     if (!_timer) {
-        _timer = [NSTimer scheduledTimerWithTimeInterval:0.005 target:self selector:@selector(timerTick:) userInfo:nil repeats:YES];
+        _timer = [NSTimer timerWithTimeInterval:0.005 target:self selector:@selector(timerTick:) userInfo:nil repeats:YES];
+        [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
     }
     [super viewDidAppear:animated];
 }

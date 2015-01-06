@@ -8,9 +8,7 @@
 
 #import "HUD.h"
 
-@interface HUD() {
-    Viewport *_viewport;
-}
+@interface HUD()
 @end
 
 @implementation HUD
@@ -30,8 +28,4 @@
     return 0;
 }
 
-
-- (void) setViewPort:(Viewport *)viewport {
-    _viewport = viewport;
-}
 @end

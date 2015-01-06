@@ -12,10 +12,6 @@
 #import "ImageAtlas.h"
 
 @interface HUD : Drawable
-
 - (id) initWithAtlas:(ImageAtlas *)atlas;
 - (int) update: (NSTimeInterval) dt;
-
-- (void) setViewPort:(Viewport *)viewport;
-
 @end

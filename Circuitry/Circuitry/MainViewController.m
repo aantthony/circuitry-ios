@@ -19,12 +19,12 @@
 //    return UIStatusBarStyleLightContent;
 }
 
-
+static NSString *kDefaultsOpenedBefore = @"openedBefore";
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     static BOOL hasOpenedBefore = NO;
-    if (!hasOpenedBefore && [NSUserDefaults.standardUserDefaults boolForKey:@"openedBefore"]) {
+    if (!hasOpenedBefore && ![NSUserDefaults.standardUserDefaults boolForKey:kDefaultsOpenedBefore]) {
         hasOpenedBefore = YES;
         [self performSegueWithIdentifier:@"ShowTutorial" sender:self];
     }
@@ -38,7 +38,7 @@
 }
 
 - (void) tutorialViewController:(TutorialViewController *)tutorialViewController didFinishWithResult:(BOOL)result {
-    [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"openedBefore"];
+    [NSUserDefaults.standardUserDefaults setBool:YES forKey:kDefaultsOpenedBefore];
 }
 
 /*

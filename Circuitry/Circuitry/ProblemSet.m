@@ -34,11 +34,10 @@
         info.title = p[@"title"];
         info.completed = NO;
         info.visible = YES;
+        info.set = self;
         info.documentURL = [baseUrl URLByAppendingPathComponent:p[@"path"] isDirectory:YES];
         
-        info.imageURL = [info.documentURL URLByAppendingPathComponent:@"screenshot.png"];
-        //@TODO: Remove this:
-        info.imageURL = nil;
+        info.imageName = [NSString stringWithFormat:@"level-%@", p[@"path"]];
         
         [items addObject:info];
     }

@@ -204,14 +204,15 @@
 		92771D451A456939000931D9 /* MongoIDType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoIDType.h; sourceTree = "<group>"; };
 		92796A3218A668FB00DB690F /* LongPressObjectGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LongPressObjectGesture.h; sourceTree = "<group>"; };
 		92796A3318A668FB00DB690F /* LongPressObjectGesture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LongPressObjectGesture.m; sourceTree = "<group>"; };
+		927C76CA1A5BEF0B004F84ED /* Circuitry.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Circuitry.entitlements; sourceTree = "<group>"; };
 		927FC3981A1A12BA00138BCA /* tutorial-bg-2@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial-bg-2@2x.jpg"; sourceTree = "<group>"; };
+		9281540E1A5BED1E00C0CDF7 /* Pods.distribution.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Pods.distribution.xcconfig; path = "Pods/Target Support Files/Pods/Pods.distribution.xcconfig"; sourceTree = "<group>"; };
 		92880620187243800096A1CA /* Sprite.vsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; name = Sprite.vsh; path = ../Sprite.vsh; sourceTree = "<group>"; };
 		928806221872438E0096A1CA /* Sprite.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; name = Sprite.fsh; path = ../Sprite.fsh; sourceTree = "<group>"; };
 		9288BBB4196AD6230090455A /* ToolbeltItemTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToolbeltItemTableViewCell.h; path = Circuitry/ToolbeltItemTableViewCell.h; sourceTree = "<group>"; };
 		9288BBB5196AD6230090455A /* ToolbeltItemTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ToolbeltItemTableViewCell.m; path = Circuitry/ToolbeltItemTableViewCell.m; sourceTree = "<group>"; };
 		9288BBB7196AD6470090455A /* ToolbeltItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolbeltItem.h; sourceTree = "<group>"; };
 		9288BBB8196AD6470090455A /* ToolbeltItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolbeltItem.m; sourceTree = "<group>"; };
-		928FDF3E1A465C950042319C /* circuitry.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = circuitry.entitlements; path = circuitry/circuitry.entitlements; sourceTree = "<group>"; };
 		929CB69318A7833C00BEE7D6 /* TransitionFromDocumentListToDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitionFromDocumentListToDocument.h; sourceTree = "<group>"; };
 		929CB69418A7833C00BEE7D6 /* TransitionFromDocumentListToDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitionFromDocumentListToDocument.m; sourceTree = "<group>"; };
 		92A28A5C187433E800F0D934 /* Circuit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Circuit.h; sourceTree = "<group>"; };
@@ -295,6 +296,7 @@
 			children = (
 				48DDD9C2212C806BCBFAF5A6 /* Pods.debug.xcconfig */,
 				0C96CDB30484270BE2DD7A4E /* Pods.release.xcconfig */,
+				9281540E1A5BED1E00C0CDF7 /* Pods.distribution.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -313,7 +315,6 @@
 		9204C367182E2F5C006A008D = {
 			isa = PBXGroup;
 			children = (
-				928FDF3E1A465C950042319C /* circuitry.entitlements */,
 				92C62F4B197BFCD500A3E939 /* Problems */,
 				92FC7FA018A601A200EA329A /* UIKitCategoryAdditions */,
 				92A28A59187428A600F0D934 /* Circuits */,
@@ -355,6 +356,7 @@
 		9204C37D182E2F5C006A008D /* Circuitry */ = {
 			isa = PBXGroup;
 			children = (
+				927C76CA1A5BEF0B004F84ED /* Circuitry.entitlements */,
 				92771D401A454ECE000931D9 /* Services */,
 				92771D3E1A454E78000931D9 /* Useless */,
 				92771D3C1A454E4A000931D9 /* UI Elements */,
@@ -1074,12 +1076,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 48DDD9C2212C806BCBFAF5A6 /* Pods.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Beta";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				BUNDLE_IDENTIFIER = com.circuitry.circuitry.debug;
 				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = NO;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
 				CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES = YES;
-				CODE_SIGN_ENTITLEMENTS = circuitry/circuitry.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Circuitry/Circuitry.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1095,12 +1098,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0C96CDB30484270BE2DD7A4E /* Pods.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Beta";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				BUNDLE_IDENTIFIER = com.circuitry.circuitry.debug;
 				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = NO;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
 				CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES = YES;
-				CODE_SIGN_ENTITLEMENTS = circuitry/circuitry.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Circuitry/Circuitry.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_OPTIMIZATION_LEVEL = fast;
@@ -1108,7 +1112,7 @@
 				GCC_PREFIX_HEADER = "Circuitry/Circuitry-Prefix.pch";
 				INFOPLIST_FILE = "Circuitry/Circuitry-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "d5c0e20f-5e07-4163-8bc9-dc7ccaadef93";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -1153,6 +1157,81 @@
 			};
 			name = Release;
 		};
+		92158A0E1A5BDF990009B89C /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Distribution;
+		};
+		92158A0F1A5BDF990009B89C /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9281540E1A5BED1E00C0CDF7 /* Pods.distribution.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				BUNDLE_IDENTIFIER = com.circuitry.circuitry;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = NO;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
+				CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES = YES;
+				CODE_SIGN_ENTITLEMENTS = Circuitry/Circuitry.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Circuitry/Circuitry-Prefix.pch";
+				INFOPLIST_FILE = "Circuitry/Circuitry-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Distribution;
+		};
+		92158A101A5BDF990009B89C /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Circuitry/Circuitry-Prefix.pch";
+				INFOPLIST_FILE = "CircuitryTests/CircuitryTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Circuitry.dev.app/Circuitry.dev";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Distribution;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1161,6 +1240,7 @@
 			buildConfigurations = (
 				9204C3A8182E2F5C006A008D /* Debug */,
 				9204C3A9182E2F5C006A008D /* Release */,
+				92158A0E1A5BDF990009B89C /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1170,6 +1250,7 @@
 			buildConfigurations = (
 				9204C3AB182E2F5C006A008D /* Debug */,
 				9204C3AC182E2F5C006A008D /* Release */,
+				92158A0F1A5BDF990009B89C /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1179,6 +1260,7 @@
 			buildConfigurations = (
 				9204C3AE182E2F5C006A008D /* Debug */,
 				9204C3AF182E2F5C006A008D /* Release */,
+				92158A101A5BDF990009B89C /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

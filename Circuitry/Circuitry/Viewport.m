@@ -15,8 +15,6 @@
     LinkBezier *bezier;
     BatchedSprite *_gateSprites;
     
-    Circuit *_circuit;
-
     BatchedSpriteInstance *_instances;
     int _capacity;
     int _count;
@@ -140,9 +138,10 @@ static SpriteTexturePos symbolNOT;
     return 0;
 }
 
-
-- (void) setCircuit:(Circuit *)circuit {
-    _circuit = circuit;
+- (void) setDocument:(CircuitDocument *)document {
+    _document = document;
+    Circuit *_circuit = document.circuit;
+    
     IN  =[_circuit getProcessById:@"in"];
     OR  =[_circuit getProcessById:@"or"];
     NOR =[_circuit getProcessById:@"nor"];
@@ -156,10 +155,7 @@ static SpriteTexturePos symbolNOT;
     LIGHT  =[_circuit getProcessById:@"light"];
     BUTTON  =[_circuit getProcessById:@"button"];
     SEG7 =[_circuit getProcessById:@"7seg"];
-}
-
-- (Circuit *) circuit {
-    return _circuit;
+    
 }
 
 - (void) setProjectionMatrix: (GLKMatrix4) projectionMatrix {
@@ -251,7 +247,7 @@ CGSize sizeOfObject(CircuitObject *object) {
 - (CircuitObject*) findCircuitObjectAtPosition: (GLKVector3) pos {
     
     __block CircuitObject *o = NULL;
-    
+    Circuit *_circuit = self.document.circuit;
     [_circuit enumerateObjectsInReverseUsingBlock:^(CircuitObject *object, BOOL *stop) {
 
         GLKVector3 oPos = *(GLKVector3 *)&object->pos;
@@ -355,7 +351,7 @@ BOOL expandDrawGate(CircuitObject *object) {
 - (void) bufferSprites {
     
     __block int i = 0;
-    
+    Circuit *_circuit = self.document.circuit;
     [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
         GLKVector3 pos = *(GLKVector3*) &object->pos;
         BatchedSpriteInstance *instance = &_instances[i++];
@@ -451,6 +447,7 @@ BOOL expandDrawGate(CircuitObject *object) {
     
     [ShaderEffect checkError];
     int radius = gateOutletActive.width / 2;
+    Circuit *_circuit = self.document.circuit;
     [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
         for(int sourceIndex = 0; sourceIndex < object->type->numOutputs; sourceIndex++) {
             CircuitLink *link = object->outputs[sourceIndex];
@@ -486,7 +483,6 @@ BOOL expandDrawGate(CircuitObject *object) {
     [ShaderEffect checkError];
     
     [_gateSprites drawIndices:0 count:_count WithTransform:_viewProjectionMatrix];
-    
     
     [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
         

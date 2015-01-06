@@ -3,6 +3,7 @@
 #import "Drawable.h"
 #import "Circuit.h"
 #import "ImageAtlas.h"
+#import "CircuitDocument.h"
 
 @interface Viewport : Drawable
 
@@ -23,10 +24,7 @@
 
 - (GLKVector3) unproject: (CGPoint) screenPos;
 
-
-- (void) setCircuit:(Circuit *) circuit;
-- (Circuit *) circuit;
-
+@property (nonatomic) CircuitDocument *document;
 @property (nonatomic) CircuitLink *currentEditingLink;
 @property (nonatomic) CircuitObject *currentEditingLinkSource;
 @property (nonatomic) CircuitObject *currentEditingLinkTarget;

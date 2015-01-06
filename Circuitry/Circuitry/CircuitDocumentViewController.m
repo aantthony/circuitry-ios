@@ -37,22 +37,16 @@
     [self configureView];
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     [self configureView];
-    // Do any additional setup after loading the view.
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-    [self setObjectListVisible:!_objectListVisible animate:YES];
 }
 
 - (void) viewDidAppear:(BOOL)animated {
-//    self.navigationController.navigationBarHidden = YES;
     [super viewDidAppear:animated];
     [self configureView];
 }

@@ -9,6 +9,13 @@
 		<key>APIEndpoint</key>
 		<string>http://localhost:8000/v1</string>
 	</dict>
+	<key>Distribution</key>
+	<dict>
+		<key>LoggingEnabled</key>
+		<false/>
+		<key>APIEndpoint</key>
+		<string>http://localhost:8000/v1</string>
+	</dict>
 	<key>Debug</key>
 	<dict>
 		<key>APIEndpoint</key>

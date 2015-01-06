@@ -336,6 +336,7 @@
         if (!cell.textLabel.text.length) {
             cell.textLabel.text = @"Untitled";
         }
+        cell.imageView.image = nil;
         return cell;
     } else {
         CircuitCollectionViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:@"CircuitListPrototypeCell" forIndexPath:indexPath];
@@ -343,12 +344,13 @@
         DocumentListItem *item = [_items objectAtIndex:indexPath.row];
         
         cell.textLabel.text = item.title;
+        cell.imageView.image = [UIImage imageNamed:@"tutorial-logo"];
+        
         return cell;
     }
     
 }
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     [self setTransitioningDelegate:self];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{

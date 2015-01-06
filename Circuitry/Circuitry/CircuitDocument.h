@@ -10,5 +10,4 @@
 
 @interface CircuitDocument : UIDocument
 @property (nonatomic) Circuit *circuit;
-
 @end
