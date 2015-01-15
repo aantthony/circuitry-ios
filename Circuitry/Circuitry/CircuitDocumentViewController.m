@@ -34,11 +34,15 @@
     _objectListViewController.document = document;
     _glkViewController.document = document;
     _document = document;
-    [self configureView];
+    if (self.view) {
+        [self configureView];
+    }
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    _objectListViewController.document = _document;
+    _glkViewController.document = _document;
     [self configureView];
 }
 

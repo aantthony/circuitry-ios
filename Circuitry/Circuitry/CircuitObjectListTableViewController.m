@@ -10,10 +10,9 @@
 #import "ToolbeltItem.h"
 #import "ToolbeltItemTableViewCell.h"
 
-@interface CircuitObjectListTableViewController () <UISearchBarDelegate> {
-    CircuitDocument *_document;
-}
+@interface CircuitObjectListTableViewController () <UISearchBarDelegate>
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
+@property (nonatomic) CircuitDocument *document;
 
 @property (nonatomic) NSArray *items;
 @property (nonatomic) NSArray *results;
@@ -21,14 +20,6 @@
 
 @implementation CircuitObjectListTableViewController
 
-- (instancetype)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (void) searchThroughData {
     self.results = nil;
@@ -73,11 +64,6 @@
 
 - (void) setDocument: (CircuitDocument *) document {
     _document = document;
-}
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Table view data source
