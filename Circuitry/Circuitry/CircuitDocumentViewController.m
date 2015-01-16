@@ -11,6 +11,7 @@
 #import "CircuitObjectListTableViewController.h"
 #import "ViewController.h"
 #import "ProblemInfoViewController.h"
+#import "AnalyticsManager.h"
 
 @interface CircuitDocumentViewController () <CircuitObjectListTableViewControllerDelegate, ProblemInfoViewControllerDelegate>
 @property (nonatomic) CircuitDocument *document;
@@ -34,6 +35,7 @@
     _objectListViewController.document = document;
     _glkViewController.document = document;
     _document = document;
+    [[AnalyticsManager shared] trackStartProblem:document];
     if (self.view) {
         [self configureView];
     }
@@ -115,8 +117,10 @@
             }
         }];
         if (failure) {
+            [[AnalyticsManager shared] trackCheckProblem:self.document withResult:failure];
             [[[UIAlertView alloc] initWithTitle:@"Test Result" message: failure.resultDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
         } else {
+            [[AnalyticsManager shared] trackFinishProblem:self.document];
             // Success!
             [_problemInfoViewController showProgressToNextLevelScreen];
         }

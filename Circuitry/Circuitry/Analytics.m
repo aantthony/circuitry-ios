@@ -40,7 +40,9 @@
 - (void) configure {
     NSMutableDictionary *properties = [NSMutableDictionary new];
     [self.mixpanel identify:self.mixpanel.distinctId];
-//    [self.mixpanel.people set:@{}];
+    [self.mixpanel.people set:@{
+         @"$last_login": [NSDate date]
+    }];
     [self.mixpanel registerSuperProperties:properties];
 }
 

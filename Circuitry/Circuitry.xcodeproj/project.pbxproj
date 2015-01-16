@@ -57,6 +57,7 @@
 		92771CFD1A450891000931D9 /* CircuitManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 92771CFC1A450891000931D9 /* CircuitManager.m */; };
 		92771D431A455301000931D9 /* CircuitInternal.c in Sources */ = {isa = PBXBuildFile; fileRef = 92771D411A455301000931D9 /* CircuitInternal.c */; };
 		92771D461A456939000931D9 /* MongoIDType.c in Sources */ = {isa = PBXBuildFile; fileRef = 92771D441A456939000931D9 /* MongoIDType.c */; };
+		9277EEF71A69278D00E65E23 /* AnalyticsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9277EEF61A69278D00E65E23 /* AnalyticsManager.m */; };
 		92796A3418A668FB00DB690F /* LongPressObjectGesture.m in Sources */ = {isa = PBXBuildFile; fileRef = 92796A3318A668FB00DB690F /* LongPressObjectGesture.m */; };
 		927FC3991A1A12BA00138BCA /* tutorial-bg-2@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 927FC3981A1A12BA00138BCA /* tutorial-bg-2@2x.jpg */; };
 		9288062418725AB20096A1CA /* Sprite.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 92880620187243800096A1CA /* Sprite.vsh */; };
@@ -202,6 +203,8 @@
 		92771D421A455301000931D9 /* CircuitInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircuitInternal.h; sourceTree = "<group>"; };
 		92771D441A456939000931D9 /* MongoIDType.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MongoIDType.c; sourceTree = "<group>"; };
 		92771D451A456939000931D9 /* MongoIDType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoIDType.h; sourceTree = "<group>"; };
+		9277EEF51A69278D00E65E23 /* AnalyticsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnalyticsManager.h; sourceTree = "<group>"; };
+		9277EEF61A69278D00E65E23 /* AnalyticsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnalyticsManager.m; sourceTree = "<group>"; };
 		92796A3218A668FB00DB690F /* LongPressObjectGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LongPressObjectGesture.h; path = Circuitry/LongPressObjectGesture.h; sourceTree = "<group>"; };
 		92796A3318A668FB00DB690F /* LongPressObjectGesture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LongPressObjectGesture.m; path = Circuitry/LongPressObjectGesture.m; sourceTree = "<group>"; };
 		927C76CA1A5BEF0B004F84ED /* Circuitry.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Circuitry.entitlements; sourceTree = "<group>"; };
@@ -597,6 +600,8 @@
 			isa = PBXGroup;
 			children = (
 				92771CF41A44FBF3000931D9 /* Analytics.h */,
+				9277EEF51A69278D00E65E23 /* AnalyticsManager.h */,
+				9277EEF61A69278D00E65E23 /* AnalyticsManager.m */,
 				92771CF51A44FBF3000931D9 /* Analytics.m */,
 				92771CF71A44FD2A000931D9 /* StyleManager.h */,
 				92771CF81A44FD2A000931D9 /* StyleManager.m */,
@@ -947,6 +952,7 @@
 				923A0631189D2D660064834C /* CircuitDocument.m in Sources */,
 				92AFE8FE197B728A003680B0 /* CircuitTest.m in Sources */,
 				926099E6196919E50048F2BD /* CircuitObjectListTableViewController.m in Sources */,
+				9277EEF71A69278D00E65E23 /* AnalyticsManager.m in Sources */,
 				9204C384182E2F5C006A008D /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
