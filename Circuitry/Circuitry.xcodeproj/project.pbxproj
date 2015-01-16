@@ -142,8 +142,8 @@
 		9204C38A182E2F5C006A008D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9204C38C182E2F5C006A008D /* Shader.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; name = Shader.fsh; path = Shaders/Shader.fsh; sourceTree = "<group>"; };
 		9204C38E182E2F5C006A008D /* Shader.vsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; name = Shader.vsh; path = Shaders/Shader.vsh; sourceTree = "<group>"; };
-		9204C390182E2F5C006A008D /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		9204C391182E2F5C006A008D /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		9204C390182E2F5C006A008D /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ViewController.h; path = Circuitry/ViewController.h; sourceTree = "<group>"; };
+		9204C391182E2F5C006A008D /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ViewController.m; path = Circuitry/ViewController.m; sourceTree = "<group>"; };
 		9204C393182E2F5C006A008D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		9204C399182E2F5C006A008D /* CircuitryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CircuitryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9204C39A182E2F5C006A008D /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -202,8 +202,8 @@
 		92771D421A455301000931D9 /* CircuitInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircuitInternal.h; sourceTree = "<group>"; };
 		92771D441A456939000931D9 /* MongoIDType.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MongoIDType.c; sourceTree = "<group>"; };
 		92771D451A456939000931D9 /* MongoIDType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoIDType.h; sourceTree = "<group>"; };
-		92796A3218A668FB00DB690F /* LongPressObjectGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LongPressObjectGesture.h; sourceTree = "<group>"; };
-		92796A3318A668FB00DB690F /* LongPressObjectGesture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LongPressObjectGesture.m; sourceTree = "<group>"; };
+		92796A3218A668FB00DB690F /* LongPressObjectGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LongPressObjectGesture.h; path = Circuitry/LongPressObjectGesture.h; sourceTree = "<group>"; };
+		92796A3318A668FB00DB690F /* LongPressObjectGesture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LongPressObjectGesture.m; path = Circuitry/LongPressObjectGesture.m; sourceTree = "<group>"; };
 		927C76CA1A5BEF0B004F84ED /* Circuitry.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Circuitry.entitlements; sourceTree = "<group>"; };
 		927FC3981A1A12BA00138BCA /* tutorial-bg-2@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial-bg-2@2x.jpg"; sourceTree = "<group>"; };
 		9281540E1A5BED1E00C0CDF7 /* Pods.distribution.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Pods.distribution.xcconfig; path = "Pods/Target Support Files/Pods/Pods.distribution.xcconfig"; sourceTree = "<group>"; };
@@ -461,6 +461,10 @@
 		92771D321A454BE3000931D9 /* Circuit Edit */ = {
 			isa = PBXGroup;
 			children = (
+				9204C390182E2F5C006A008D /* ViewController.h */,
+				9204C391182E2F5C006A008D /* ViewController.m */,
+				92796A3218A668FB00DB690F /* LongPressObjectGesture.h */,
+				92796A3318A668FB00DB690F /* LongPressObjectGesture.m */,
 				926099DE196917CF0048F2BD /* CircuitDocumentViewController.h */,
 				926099DF196917CF0048F2BD /* CircuitDocumentViewController.m */,
 				92771D381A454CC8000931D9 /* Problem Info */,
@@ -676,10 +680,6 @@
 				92A4F86F18728A1F00EEB367 /* Drawable.m */,
 				9200469D189D021D007124DA /* SevenSegmentDisplay */,
 				92020C08189A54ED00B6D8F5 /* background.jpg */,
-				9204C390182E2F5C006A008D /* ViewController.h */,
-				9204C391182E2F5C006A008D /* ViewController.m */,
-				92796A3218A668FB00DB690F /* LongPressObjectGesture.h */,
-				92796A3318A668FB00DB690F /* LongPressObjectGesture.m */,
 				92A4F86E18728A1F00EEB367 /* Drawable.h */,
 				927D1A131875A97000457367 /* Sprite */,
 				927D1A161875A99800457367 /* Grid */,

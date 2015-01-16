@@ -11,6 +11,9 @@
   "dependencies": {
 
   },
+  "view": {
+    "center": [65, 180, 0]
+  },
   "tests": [
     {
       "name": "Must match truth table",
@@ -45,7 +48,7 @@
       "type": "in",
       "name": "B",
       "outputs": [ [] ],
-      "pos": [ 0, 200, 0 ],
+      "pos": [ 0, 800, 0 ],
       "out": 0
     },
     {
@@ -54,7 +57,7 @@
       "type": "out",
       "name": "X",
       "outputs": [ [] ],
-      "pos": [ 500, 0, 0 ],
+      "pos": [ 1000, 400, 0 ],
       "out": 0
     },
     {
@@ -62,17 +65,8 @@
       "in": 0,
       "type": "and",
       "name": "",
-      "outputs": [ [] ],
-      "pos": [ 1332, 856.9999, 0 ],
-      "out": 0
-    },
-    {
-      "_id": "53c3cedb45f5603a030041a8",
-      "in": 0,
-      "type": "button",
-      "name": "",
-      "outputs": [ [ [ "53c3cdc945f56030030041aa", 0 ] ] ],
-      "pos": [ 635, 779, 0 ],
+      "outputs": [ [["53c3cdc945f5603003000009", 0]] ],
+      "pos": [ 500, 400, 0 ],
       "out": 0
     }
   ]

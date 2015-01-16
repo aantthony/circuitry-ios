@@ -324,9 +324,9 @@
     }
 
     if (isAnimatingScaleToSnap) {
-        float lEnd = round(log2f(_viewport.scale));
+        float lEnd = round(log2f(_viewport.scaleWithFloat));
         if (lEnd > 2.0) lEnd = 2.0; // maximum zoom
-        float lNow = log2f(_viewport.scale);
+        float lNow = log2f(_viewport.scaleWithFloat);
         float k = 0.1;
         if (fabsf(lEnd - lNow) < 0.001) {
             k = 1.0;
@@ -336,13 +336,13 @@
         // TODO: this is a bit of a hack. Clean up the translate / scale math so that isn't so disgusting:
         CGPoint screenPos = PX(self.view.contentScaleFactor, CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2));
         GLKVector3 aPos = [_viewport unproject: screenPos];
-        _viewport.scale = exp2f(lNow + (lEnd - lNow) * k);
+        _viewport.scaleWithFloat = exp2f(lNow + (lEnd - lNow) * k);
         GLKVector3 bPos = [_viewport unproject: screenPos];
         
         // We want modelViewMatrix * curPos = newModelViewMatrix * curPos
         
         // A v = B v.. so what is B...
-        [_viewport translate: GLKVector3Make(_viewport.scale * (bPos.x - aPos.x), _viewport.scale * (bPos.y - aPos.y), 0.0)];
+        [_viewport translate: GLKVector3Make(_viewport.scaleWithFloat * (bPos.x - aPos.x), _viewport.scaleWithFloat * (bPos.y - aPos.y), 0.0)];
         
     }
     
@@ -814,17 +814,17 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     CGPoint screenPos = PX(self.view.contentScaleFactor, [recognizer locationInView:self.view]);
     
     if (recognizer.state == UIGestureRecognizerStateBegan) {
-        beginGestureScale = _viewport.scale;
+        beginGestureScale = _viewport.scaleWithFloat;
     }
     
     GLKVector3 aPos = [_viewport unproject: screenPos];
-    _viewport.scale = beginGestureScale * recognizer.scale;
+    _viewport.scaleWithFloat = beginGestureScale * recognizer.scale;
     GLKVector3 bPos = [_viewport unproject: screenPos];
     
     // We want modelViewMatrix * curPos = newModelViewMatrix * curPos (i.e., scaling should not translate the center point of the gesture)
     
     // A v = B v.. so what is B...
-    [_viewport translate: GLKVector3Make(_viewport.scale * (bPos.x - aPos.x), _viewport.scale * (bPos.y - aPos.y), 0.0)];
+    [_viewport translate: GLKVector3Make(_viewport.scaleWithFloat * (bPos.x - aPos.x), _viewport.scaleWithFloat * (bPos.y - aPos.y), 0.0)];
     [self unpause];
     
 //#define LOG_TEST 0
@@ -862,7 +862,9 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         CircuitObject *object = [_viewport findCircuitObjectAtPosition:position];
         
         if (!object) break;
-        if (object->type == [_document.circuit getProcessById:@"button"]) {
+        BOOL isButton = object->type == [_document.circuit getProcessById:@"button"];
+        BOOL isInput = object->type == [_document.circuit getProcessById:@"in"];
+        if (isButton || isInput) {
             // Toggle a switch:
             hit = YES;
             [_document.circuit performWriteBlock:^(CircuitInternal *internal) {

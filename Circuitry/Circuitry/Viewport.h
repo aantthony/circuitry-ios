@@ -13,8 +13,8 @@
 - (void) translate: (GLKVector3) translate;
 - (void) setProjectionMatrix: (GLKMatrix4) projectionMatrix;
 
-- (void) setScale: (float) scale;
-- (float) scale;
+- (void) setScaleWithFloat: (float) scale;
+- (float) scaleWithFloat;
 
 - (int) findOutletIndexAtOffset:(GLKVector3) offset attachedToObject:(CircuitObject *)object;
 - (int) findInletIndexAtOffset:(GLKVector3) offset attachedToObject:(CircuitObject *)object;

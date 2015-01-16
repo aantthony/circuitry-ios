@@ -10,8 +10,6 @@
     GLKMatrix4 _viewMatrix;
     GLKMatrix4 _viewProjectionMatrix;
     GLKMatrix4 _projectionMatrix;
-    GLKVector3 _translate;
-    GLKVector3 _scale;
     LinkBezier *bezier;
     BatchedSprite *_gateSprites;
     
@@ -19,23 +17,11 @@
     int _capacity;
     int _count;
     
-    CircuitProcess *OR  ;
-    CircuitProcess *IN  ;
-    CircuitProcess *OUT ;
-    CircuitProcess *LIGHT;
-    CircuitProcess *BUTTON;
-    CircuitProcess *NOR ;
-    CircuitProcess *XOR ;
-    CircuitProcess *XNOR;
-    CircuitProcess *AND ;
-    CircuitProcess *NAND;
-    CircuitProcess *NOT ;
-    
-    CircuitProcess *SEG7 ;
-    
     SevenSegmentDisplay *sevenSegment;
 }
 @property (nonatomic) Grid *grid;
+@property (nonatomic) GLKVector3 translate;
+@property (nonatomic) GLKVector3 scale;
 @end
 
 @implementation Viewport
@@ -140,22 +126,7 @@ static SpriteTexturePos symbolNOT;
 
 - (void) setDocument:(CircuitDocument *)document {
     _document = document;
-    Circuit *_circuit = document.circuit;
-    
-    IN  =[_circuit getProcessById:@"in"];
-    OR  =[_circuit getProcessById:@"or"];
-    NOR =[_circuit getProcessById:@"nor"];
-    XOR =[_circuit getProcessById:@"xor"];
-    XNOR=[_circuit getProcessById:@"xnor"];
-    AND =[_circuit getProcessById:@"and"];
-    NAND=[_circuit getProcessById:@"nand"];
-    NOT =[_circuit getProcessById:@"not"];
-    OUT =[_circuit getProcessById:@"out"];
-    
-    LIGHT  =[_circuit getProcessById:@"light"];
-    BUTTON  =[_circuit getProcessById:@"button"];
-    SEG7 =[_circuit getProcessById:@"7seg"];
-    
+    self.translate = GLKVector3Make(document.circuit.viewCenterX, document.circuit.viewCenterY, 0.0);
 }
 
 - (void) setProjectionMatrix: (GLKMatrix4) projectionMatrix {
@@ -282,19 +253,28 @@ CGSize sizeOfObject(CircuitObject *object) {
 }
 
 
-- (void) translate: (GLKVector3) translate {
-    _translate.x += translate.x;
-    _translate.y += translate.y;
+- (void) setTranslate:(GLKVector3)translate {
+    _translate = translate;
     [_grid setScale:_scale translate:_translate];
     [self recalculateMatrices];
 }
-- (void) setScale: (float) scale {
-    _scale.x = _scale.y = scale;
+- (void) setScale:(GLKVector3)scale {
+    _scale = scale;
     [_grid setScale:_scale translate:_translate];
     [self recalculateMatrices];
 }
 
-- (float) scale {
+- (void) translate: (GLKVector3) translate {
+    _translate.x += translate.x;
+    _translate.y += translate.y;
+    self.translate = _translate;
+}
+- (void) setScaleWithFloat: (float) scale {
+    _scale.x = _scale.y = scale;
+    self.scale = _scale;
+}
+
+- (float) scaleWithFloat {
     return _scale.x;
 }
 
@@ -326,13 +306,13 @@ GLKVector3 offsetForInlet(CircuitProcess *process, int index) {
 }
 
 - (SpriteTexturePos) textureForProcess:(CircuitProcess *)process {
-    if (process == OR) return symbolOR;
-    else if (process == NOR) return symbolNOR;
-    else if (process == XOR) return symbolXOR;
-    else if (process == XNOR) return symbolXNOR;
-    else if (process == AND) return symbolAND;
-    else if (process == NAND) return symbolNAND;
-    else if (process == NOT) return symbolNOT;
+    if (process == &CircuitProcessOr) return symbolOR;
+    else if (process == &CircuitProcessNor) return symbolNOR;
+    else if (process == &CircuitProcessXor) return symbolXOR;
+    else if (process == &CircuitProcessXnor) return symbolXNOR;
+    else if (process == &CircuitProcessAnd) return symbolAND;
+    else if (process == &CircuitProcessNand) return symbolNAND;
+    else if (process == &CircuitProcessNot) return symbolNOT;
     else {
         SpriteTexturePos pos;
         pos.u = pos.v = pos.theight = pos.twidth = pos.width = pos.height = 0.0;
@@ -381,11 +361,11 @@ BOOL expandDrawGate(CircuitObject *object) {
         }
         
         
-        if (object->type == BUTTON) {
+        if (object->type == &CircuitProcessIn || object->type == &CircuitProcessButton) {
             instance->tex = object->out ? switchOn : switchOff;
             instance->x -= 50.0;
             instance->y -= 50.0;
-        } else if (object->type == LIGHT) {
+        } else if (object->type == &CircuitProcessLight) {
             BatchedSpriteInstance *symbol = &_instances[i++];
             symbol->x = pos.x + 70.0;
             symbol->y = pos.y - 85.0;
@@ -486,7 +466,7 @@ BOOL expandDrawGate(CircuitObject *object) {
     
     [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
         
-        if (object->type == SEG7) {
+        if (object->type == &CircuitProcess7Seg) {
             GLKVector3 pos = *(GLKVector3*) &object->pos;
             [sevenSegment drawAt:GLKVector3Make(pos.x + 40.0, pos.y + 40.0, 0.0) withInput:object->in withTransform:_viewProjectionMatrix];
         }

@@ -72,6 +72,18 @@ static NSDictionary *processesById;
     [fields enumerateObjectsUsingBlock:^(id key, NSUInteger idx, BOOL *stop) {
         [self setValue:[package valueForKey:key] forKey:key];
     }];
+
+    _viewCenterX = _viewCenterY = 0;
+    
+    if (package[@"view"]) {
+        NSArray *viewCenter = package[@"view"][@"center"];
+        if (viewCenter.count >= 2) {
+            NSNumber *x = viewCenter[0];
+            NSNumber *y = viewCenter[1];
+            _viewCenterX = x.floatValue;
+            _viewCenterY = y.floatValue;
+        }
+    }
     
     self.userDescription = package[@"description"];
     

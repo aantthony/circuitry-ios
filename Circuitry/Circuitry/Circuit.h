@@ -18,6 +18,8 @@
 @property(nonatomic) NSMutableDictionary *meta;
 @property(nonatomic) NSURL *problemSet;
 @property(nonatomic) NSNumber *problemSetNumber;
+@property(nonatomic) float viewCenterX;
+@property(nonatomic) float viewCenterY;
 
 - (NSArray *) tests;
 
