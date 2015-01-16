@@ -6,12 +6,15 @@
 
 #import "ToolbeltItem.h"
 
+@protocol ViewControllerTutorialProtocol;
+
 @interface ViewController : GLKViewController <UIGestureRecognizerDelegate>
 
 + (EAGLContext *) context;
 + (ImageAtlas *) atlas;
 
 @property (nonatomic) CircuitDocument *document;
+@property (nonatomic, weak) id <ViewControllerTutorialProtocol> tutorialDelegate;
 
 // Gesture events:
 - (IBAction) handlePanGesture:(UIPanGestureRecognizer *) recognizer;
@@ -26,5 +29,14 @@
 - (void) update;
 
 - (void) startCreatingObjectFromItem: (ToolbeltItem *) item;
+
+@end
+
+
+
+
+@protocol ViewControllerTutorialProtocol <NSObject>
+
+- (void) viewControllerTutorial:(ViewController *)viewController didBeginLinkFromTutorialObject1:(id) sender;
 
 @end

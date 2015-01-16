@@ -76,6 +76,7 @@ static NSDictionary *processesById;
     _viewCenterX = _viewCenterY = 0;
     
     if (package[@"view"]) {
+        _viewDetails = package[@"view"];
         NSArray *viewCenter = package[@"view"][@"center"];
         if (viewCenter.count >= 2) {
             NSNumber *x = viewCenter[0];

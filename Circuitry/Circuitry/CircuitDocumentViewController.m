@@ -13,7 +13,7 @@
 #import "ProblemInfoViewController.h"
 #import "AnalyticsManager.h"
 
-@interface CircuitDocumentViewController () <CircuitObjectListTableViewControllerDelegate, ProblemInfoViewControllerDelegate>
+@interface CircuitDocumentViewController () <CircuitObjectListTableViewControllerDelegate, ProblemInfoViewControllerDelegate, ViewControllerTutorialProtocol>
 @property (nonatomic) CircuitDocument *document;
 @property (nonatomic, weak) CircuitObjectListTableViewController *objectListViewController;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *objectListLeft;
@@ -23,6 +23,9 @@
 @property (nonatomic) BOOL objectListVisible;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *checkAnswerButton;
 @property (nonatomic) BOOL problemInfoVisible;
+@property (nonatomic) UIImageView *hintViewTapAndHoldLeft;
+@property (nonatomic) UIImageView *hintViewDragHereRight;
+@property (nonatomic) NSInteger hintStep;
 @end
 
 @implementation CircuitDocumentViewController
@@ -48,6 +51,64 @@
     [self configureView];
 }
 
+static CGPoint hvrTapAndHoldLeft = {225, 611};
+static CGPoint hvrDragHereRight = {88,428};
+
+- (UIImageView *) hintViewTapAndHoldLeft {
+    if (_hintViewTapAndHoldLeft) return _hintViewTapAndHoldLeft;
+    UIImageView *view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"TapAndHoldOutlet"]];
+    view.frame = CGRectMake(hvrTapAndHoldLeft.x, hvrTapAndHoldLeft.y, view.frame.size.width, view.frame.size.height);
+    _hintViewTapAndHoldLeft = view;
+    [self.view addSubview:view];
+    return view;
+}
+
+- (UIImageView *) hintViewDragHereRight {
+    if (_hintViewDragHereRight) return _hintViewDragHereRight;
+    UIImageView *view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"DragIntoHere"]];
+    view.frame = CGRectMake(hvrDragHereRight.x, hvrDragHereRight.y, view.frame.size.width, view.frame.size.height);
+    _hintViewDragHereRight = view;
+    [self.view addSubview:view];
+    return view;
+}
+
+- (void) setHintStep:(NSInteger)hintStep {
+    NSInteger prevStep = _hintStep;
+    _hintStep = hintStep;
+    if (_hintStep == prevStep) return;
+    
+    if (_hintStep == 1) {
+        UIView *tapHold = self.hintViewTapAndHoldLeft;
+        tapHold.alpha = 0;
+        CGRect targetFrame = CGRectMake(hvrTapAndHoldLeft.x, hvrTapAndHoldLeft.y, tapHold.frame.size.width, tapHold.frame.size.height);
+        targetFrame.origin.x += 150;
+        tapHold.frame = targetFrame;
+        targetFrame.origin.x -= 150;
+        [UIView animateWithDuration:0.5 animations:^{
+            tapHold.alpha = 1;
+            tapHold.frame = targetFrame;
+        }];
+    } else if (hintStep == 2) {
+        UIView *dragHere = self.hintViewDragHereRight;
+        CGRect targetFrame = CGRectMake(hvrDragHereRight.x, hvrDragHereRight.y, dragHere.frame.size.width, dragHere.frame.size.height);
+        targetFrame.origin.x -= 20;
+        dragHere.frame = targetFrame;
+        targetFrame.origin.x += 20;
+        dragHere.alpha = 0;
+        [UIView animateWithDuration:0.3 animations:^{
+            dragHere.alpha = 1;
+            _hintViewTapAndHoldLeft.alpha = 0;
+        } completion:^(BOOL finished) {
+            
+        }];
+    }
+    
+}
+
+- (void) viewControllerTutorial:(ViewController *)viewController didBeginLinkFromTutorialObject1:(id)sender {
+    self.hintStep = 2;
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
@@ -55,6 +116,7 @@
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self configureView];
+    self.hintStep = 1;
 }
 
 - (void) configureView {
@@ -153,6 +215,7 @@
     } else if ([segue.destinationViewController isKindOfClass:[ViewController class]]) {
         ViewController *controller = (ViewController *) segue.destinationViewController;
         _glkViewController = controller;
+        _glkViewController.tutorialDelegate = self;
         controller.document = self.document;
     } else if ([segue.destinationViewController isKindOfClass:ProblemInfoViewController.class]) {
         ProblemInfoViewController * controller = (ProblemInfoViewController *) segue.destinationViewController;

@@ -48,6 +48,7 @@
 @property (nonatomic) Viewport *viewport;
 @property (nonatomic) HUD *hud;
 @property (nonatomic) NSTimer *timer;
+@property (nonatomic) BOOL canPan;
 
 - (void)tearDownGL;
 
@@ -89,6 +90,13 @@
     _document = document;
     _viewport.document = _document;
     self.navigationItem.title = _document.circuit.title;
+    _canPan = YES;
+    if (_document.circuit.viewDetails) {
+        NSNumber *num = _document.circuit.viewDetails[@"pan"];
+        if (num && !num.boolValue) {
+            _canPan = NO;
+        }
+    }
 }
 
 - (UIImage*)snapshot
@@ -504,6 +512,9 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
                 _viewport.currentEditingLinkSource = o;
                 _viewport.currentEditingLinkSourceIndex = index;
                 _viewport.currentEditingLinkTargetPosition = position;
+                if (index == 0 && [[MongoID stringWithId:o->id] isEqualToString:@"53c3cdc945f5603003000888"]) {
+                    [self.tutorialDelegate viewControllerTutorial:self didBeginLinkFromTutorialObject1:nil];
+                }
                 return YES;
             }
         }
@@ -607,6 +618,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 }
 
 - (IBAction) handlePanGesture:(UIPanGestureRecognizer *)recognizer {
+    if (!_canPan) return;
     CGPoint translation = [recognizer translationInView:self.view];
     [_viewport translate: GLKVector3Make(translation.x, translation.y, 0.0)];
     // this makes it so next time "handlePanGesture:" is called, translation will be relative to the last one. (ie. translation is a delta)
@@ -843,11 +855,11 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 }
 
 - (void) viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
     if (!_timer) {
         _timer = [NSTimer timerWithTimeInterval:0.005 target:self selector:@selector(timerTick:) userInfo:nil repeats:YES];
         [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
     }
-    [super viewDidAppear:animated];
 }
 
 - (IBAction) handleTapGesture:(UITapGestureRecognizer *)sender {
