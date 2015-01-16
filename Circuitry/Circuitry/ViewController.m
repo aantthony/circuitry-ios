@@ -45,10 +45,10 @@
     
 }
 @property (nonatomic) NSArray *selectedObjects;
-@property (nonatomic) Viewport *viewport;
 @property (nonatomic) HUD *hud;
 @property (nonatomic) NSTimer *timer;
 @property (nonatomic) BOOL canPan;
+@property (nonatomic) BOOL canZoom;
 
 - (void)tearDownGL;
 
@@ -91,10 +91,15 @@
     _viewport.document = _document;
     self.navigationItem.title = _document.circuit.title;
     _canPan = YES;
+    _canZoom = YES;
     if (_document.circuit.viewDetails) {
-        NSNumber *num = _document.circuit.viewDetails[@"pan"];
+        NSNumber *num = _document.circuit.viewDetails[@"canPan"];
         if (num && !num.boolValue) {
             _canPan = NO;
+        }
+        num = _document.circuit.viewDetails[@"canZoom"];
+        if (num && !num.boolValue) {
+            _canZoom = NO;
         }
     }
 }
@@ -302,9 +307,16 @@
 
 #pragma mark - GLKView and GLKViewController delegate methods
 
+- (void) updateTuturialState {
+    [self.tutorialDelegate viewControllerTutorial:self didChange:nil];
+}
+
 - (void)update
 {
     [self checkError];
+    
+    // Tutorial:
+    [self updateTuturialState];
     
     // time differnce in seconds (float)
     NSTimeInterval dt = self.timeSinceLastUpdate;
@@ -512,9 +524,6 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
                 _viewport.currentEditingLinkSource = o;
                 _viewport.currentEditingLinkSourceIndex = index;
                 _viewport.currentEditingLinkTargetPosition = position;
-                if (index == 0 && [[MongoID stringWithId:o->id] isEqualToString:@"53c3cdc945f5603003000888"]) {
-                    [self.tutorialDelegate viewControllerTutorial:self didBeginLinkFromTutorialObject1:nil];
-                }
                 return YES;
             }
         }
@@ -822,6 +831,9 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     free(buffer2);
 }
 - (IBAction) handlePinchGesture:(UIPinchGestureRecognizer *)recognizer {
+    if (!_canZoom) {
+        return;
+    }
     // Zoom:
     CGPoint screenPos = PX(self.view.contentScaleFactor, [recognizer locationInView:self.view]);
     

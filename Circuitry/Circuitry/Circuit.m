@@ -139,16 +139,25 @@ static NSDictionary *processesById;
         Circuit * _self = self;
         NSArray *tests = package[@"tests"];
         NSMutableArray *circuitTests = [NSMutableArray arrayWithCapacity:tests.count];
+        __block BOOL fail = NO;
         [tests enumerateObjectsUsingBlock:^(NSDictionary *testObj, NSUInteger idx, BOOL *stop) {
         
             NSArray * inputIds = testObj[@"inputs"];
             NSArray * outputIds = testObj[@"outputs"];
             
             NSMutableArray *inputNodes = [NSMutableArray arrayWithCapacity:inputIds.count];
+
             [inputIds enumerateObjectsUsingBlock:^(NSString *objectId, NSUInteger idx, BOOL *stop) {
                 CircuitObject *object = [_self findObjectById:objectId];
+                if (!object) {
+                    *stop = YES;
+                    fail = YES;
+                }
                 [inputNodes addObject:[NSValue valueWithPointer:object]];
             }];
+            if (fail) {
+                *stop = YES;
+            }
             
             NSMutableArray *outputNodes = [NSMutableArray arrayWithCapacity:outputIds.count];
             [outputIds enumerateObjectsUsingBlock:^(NSString *objectId, NSUInteger idx, BOOL *stop) {
@@ -156,8 +165,10 @@ static NSDictionary *processesById;
                 [outputNodes addObject:[NSValue valueWithPointer:object]];
             }];
             
-            [circuitTests addObject:[[CircuitTest alloc]  initWithName:testObj[@"name"] inputs:inputNodes outputs:outputNodes spec:testObj[@"spec"]]];
+            [circuitTests addObject:[[CircuitTest alloc] initWithName:testObj[@"name"] inputs:inputNodes outputs:outputNodes spec:testObj[@"spec"]]];
         }];
+        
+        if (fail) return nil;
         
         _tests = circuitTests;
     }

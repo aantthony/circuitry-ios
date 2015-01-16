@@ -25,7 +25,8 @@
 @property (nonatomic) BOOL problemInfoVisible;
 @property (nonatomic) UIImageView *hintViewTapAndHoldLeft;
 @property (nonatomic) UIImageView *hintViewDragHereRight;
-@property (nonatomic) NSInteger hintStep;
+@property (nonatomic) UIImageView *hintViewCheckCorrect;
+@property (nonatomic) NSInteger tutorialState;
 @end
 
 @implementation CircuitDocumentViewController
@@ -72,12 +73,55 @@ static CGPoint hvrDragHereRight = {88,428};
     return view;
 }
 
-- (void) setHintStep:(NSInteger)hintStep {
-    NSInteger prevStep = _hintStep;
-    _hintStep = hintStep;
-    if (_hintStep == prevStep) return;
+- (UIImageView *) hintViewCheckCorrect {
+    if (_hintViewCheckCorrect) return _hintViewCheckCorrect;
+    UIImageView *view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"CheckCorrect"]];
+    view.frame = CGRectMake(350,100, view.frame.size.width, view.frame.size.height);
+    _hintViewCheckCorrect = view;
+    [self.view addSubview:view];
+    return view;
+}
+
+- (void) updateTutorialState {
     
-    if (_hintStep == 1) {
+    CircuitObject *A = [self.document.circuit findObjectById:@"53c3cdc945f5603003000000"];
+    CircuitObject *B = [self.document.circuit findObjectById:@"53c3cdc945f5603003000888"];
+    
+    if (B->outputs[0]) {
+        if (A->outputs[0]) {
+            self.tutorialState = 6;
+            return;
+        }
+        if (_glkViewController.viewport.currentEditingLinkSource == A && _glkViewController.viewport.currentEditingLinkSourceIndex == 0) {
+            self.tutorialState = 5;
+            return;
+        }
+        if (_glkViewController.viewport.currentEditingLinkSource == B && _glkViewController.viewport.currentEditingLinkSourceIndex == 0) {
+            self.tutorialState = 3;
+            return;
+        }
+        self.tutorialState = 4;
+    } else {
+        
+        if (_glkViewController.viewport.currentEditingLinkSource == B && _glkViewController.viewport.currentEditingLinkSourceIndex == 0) {
+            self.tutorialState = 2;
+            return;
+        }
+        self.tutorialState = 1;
+        return;
+    }
+}
+
+- (void) viewControllerTutorial:(ViewController *)viewController didChange:(id)sender {
+    [self updateTutorialState];
+}
+
+- (void) setTutorialState:(NSInteger)tutorialState {
+    if (_tutorialState == tutorialState) return;
+    _tutorialState = tutorialState;
+    NSLog(@"tutorialState: %d", tutorialState);
+    
+    if (tutorialState == 1) {
         UIView *tapHold = self.hintViewTapAndHoldLeft;
         tapHold.alpha = 0;
         CGRect targetFrame = CGRectMake(hvrTapAndHoldLeft.x, hvrTapAndHoldLeft.y, tapHold.frame.size.width, tapHold.frame.size.height);
@@ -87,8 +131,10 @@ static CGPoint hvrDragHereRight = {88,428};
         [UIView animateWithDuration:0.5 animations:^{
             tapHold.alpha = 1;
             tapHold.frame = targetFrame;
+            _hintViewDragHereRight.alpha = 0;
+            _hintViewCheckCorrect.alpha = 0;
         }];
-    } else if (hintStep == 2) {
+    } else if (tutorialState == 2) {
         UIView *dragHere = self.hintViewDragHereRight;
         CGRect targetFrame = CGRectMake(hvrDragHereRight.x, hvrDragHereRight.y, dragHere.frame.size.width, dragHere.frame.size.height);
         targetFrame.origin.x -= 20;
@@ -98,15 +144,48 @@ static CGPoint hvrDragHereRight = {88,428};
         [UIView animateWithDuration:0.3 animations:^{
             dragHere.alpha = 1;
             _hintViewTapAndHoldLeft.alpha = 0;
+            _hintViewCheckCorrect.alpha = 0;
         } completion:^(BOOL finished) {
             
         }];
+    } else if (tutorialState == 4) {
+        UIView *tapHold = self.hintViewTapAndHoldLeft;
+        tapHold.alpha = 0;
+        CGRect targetFrame = CGRectMake(hvrTapAndHoldLeft.x, hvrTapAndHoldLeft.y - 400, tapHold.frame.size.width, tapHold.frame.size.height);
+        targetFrame.origin.x += 150;
+        tapHold.frame = targetFrame;
+        targetFrame.origin.x -= 150;
+        [UIView animateWithDuration:0.5 animations:^{
+            tapHold.alpha = 1;
+            tapHold.frame = targetFrame;
+            _hintViewDragHereRight.alpha = 0;
+        }];
+    } else if (tutorialState == 5) {
+        UIView *dragHere = self.hintViewDragHereRight;
+        CGRect targetFrame = CGRectMake(hvrDragHereRight.x, hvrDragHereRight.y - 40, dragHere.frame.size.width, dragHere.frame.size.height);
+        targetFrame.origin.x -= 20;
+        dragHere.frame = targetFrame;
+        targetFrame.origin.x += 20;
+        dragHere.alpha = 0;
+        [UIView animateWithDuration:0.3 animations:^{
+            dragHere.alpha = 1;
+            _hintViewTapAndHoldLeft.alpha = 0;
+            _hintViewCheckCorrect.alpha = 0;
+        } completion:^(BOOL finished) {
+            
+        }];
+    } else if (tutorialState == 6) {
+        UIView *arrow = self.hintViewCheckCorrect;
+        arrow.alpha = 0;
+        [UIView animateWithDuration:0.3 animations:^{
+            _hintViewTapAndHoldLeft.alpha = 0;
+            _hintViewDragHereRight.alpha = 0;
+        }];
+        [UIView animateWithDuration:1.0 animations:^{
+            arrow.alpha = 1;
+        }];
     }
     
-}
-
-- (void) viewControllerTutorial:(ViewController *)viewController didBeginLinkFromTutorialObject1:(id)sender {
-    self.hintStep = 2;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -116,7 +195,6 @@ static CGPoint hvrDragHereRight = {88,428};
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self configureView];
-    self.hintStep = 1;
 }
 
 - (void) configureView {

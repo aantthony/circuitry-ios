@@ -29,6 +29,10 @@
     __block CircuitTest *blockSelf = self;
     [_inputNodes enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         CircuitObject *circuitObject = [obj pointerValue];
+        if (circuitObject == NULL) {
+            NSLog(@"Input Nodes: %@", _inputNodes);
+            NSLog(@"idx: %d", idx);
+        }
         [ids addObject: [MongoID stringWithId:circuitObject->id]];
     }];
     return ids;
