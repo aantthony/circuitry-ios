@@ -47,20 +47,12 @@
 
     return self;
 }
-- (id) initWithProblemSetProblemInfo: (ProblemSetProblemInfo *) info {
-    self = [super init];
-    _url = info.documentURL;
-    _title = info.title;
-    _lastModified = nil;
-    return self;
-}
 
 @end
 
-@interface CircuitListViewController () <UIActionSheetDelegate, UIViewControllerTransitioningDelegate, UINavigationControllerDelegate>
-@property (nonatomic) NSMutableArray *items;
+@interface CircuitListViewController () <UIActionSheetDelegate, UIViewControllerTransitioningDelegate, UINavigationControllerDelegate, CircuitDocumentViewControllerDelegate>
 @property (nonatomic) NSMutableArray *circuits;
-@property (nonatomic) NSMutableArray *problems;
+@property (nonatomic) ProblemSet *problemSet;
 @property (nonatomic) ViewController *documentViewController;
 @property (nonatomic) NSIndexPath *actionSheetIndexPath;
 @property (nonatomic) CGRect selectionRect;
@@ -68,6 +60,7 @@
 @property (nonatomic) BOOL openDocumentAnimationShouldFadeIn;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentControl;
 @property (nonatomic) CircuitDocument *presentingDocument;
+@property (nonatomic) BOOL displayingProblems;
 @end
 
 @implementation CircuitListViewController
@@ -77,10 +70,11 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    if (_items == _circuits) {
+    if (_displayingProblems) {
+        return _problemSet.problems.count;
+    } else {
         return _circuits.count + 1;
     }
-    return _items.count;
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
@@ -111,10 +105,26 @@
     }];
 }
 
-- (void) openDocument: (NSURL *)url {
-    CircuitDocument *doc = [[CircuitDocument alloc] initWithFileURL:url];
-    _presentingDocument = doc;
-    [doc openWithCompletionHandler:^(BOOL success){
+- (void) openProblem: (ProblemSetProblemInfo *) problemInfo {
+    self.presentingDocument = [[CircuitDocument alloc] initWithFileURL:problemInfo.documentURL];
+    self.presentingDocument.problemInfo = problemInfo;
+    [self.presentingDocument openWithCompletionHandler:^(BOOL success){
+        [self performSegueWithIdentifier:@"presentDocument" sender:self];
+    }];
+}
+
+- (CircuitDocument *) circuitDocumentViewController:(CircuitDocumentViewController *)viewController nextDocumentAfterDocument:(CircuitDocument *)document {
+    ProblemSetProblemInfo *info = document.problemInfo;
+    ProblemSetProblemInfo *nextInfo = [info.set problemAfterProblem:info];
+    if (!nextInfo) return nil;
+    CircuitDocument *next = [[CircuitDocument alloc] initWithFileURL:nextInfo.documentURL];
+    next.problemInfo = nextInfo;
+    return next;
+}
+
+- (void) openDocumentItem:(DocumentListItem *)documentListItem {
+    self.presentingDocument = [[CircuitDocument alloc] initWithFileURL:documentListItem.url];
+    [self.presentingDocument openWithCompletionHandler:^(BOOL success){
         [self performSegueWithIdentifier:@"presentDocument" sender:self];
     }];
 }
@@ -123,6 +133,7 @@
     if ([segue.identifier isEqualToString:@"presentDocument"]) {
         
         CircuitDocumentViewController *controller = [segue destinationViewController];
+        controller.delegate = self;
         controller.document = _presentingDocument;
         
         [[AnalyticsManager shared] trackOpenDocument:_presentingDocument];
@@ -131,7 +142,7 @@
 
 
 - (IBAction) createDocument:(id)sender {
-    if (_items == _problems) return;
+    if (_displayingProblems) return;
     
     NSString *_id = [MongoID stringWithId:[MongoID id]];
     NSURL *url = [[(AppDelegate *)[UIApplication sharedApplication].delegate documentsDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.circuit", _id]];
@@ -147,43 +158,36 @@
         
         DocumentListItem *item = [[DocumentListItem alloc] initWithURL:url];
         [_circuits insertObject:item atIndex:index];
-        if (_items == _circuits) {
-            [self.collectionView insertItemsAtIndexPaths:selectedItemsIndexPaths];
-        }
+        [self.collectionView insertItemsAtIndexPaths:selectedItemsIndexPaths];
 
     } completion:^(BOOL finished) {
-        if (_items == _circuits) {
-            CircuitCollectionViewCell *cell = (CircuitCollectionViewCell *) [self.collectionView cellForItemAtIndexPath:indexPath];
-            _selectionRect = [self.view convertRect:cell.imageView.frame fromView:cell];
-        }
+        CircuitCollectionViewCell *cell = (CircuitCollectionViewCell *) [self.collectionView cellForItemAtIndexPath:indexPath];
+        _selectionRect = [self.view convertRect:cell.imageView.frame fromView:cell];
         [self createAndOpenNewDocumentWithURL:url];
     }];
 }
 
 - (void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     [collectionView deselectItemAtIndexPath:indexPath animated:YES];
-    if (_items == _circuits) {
-        NSURL *docURL = nil;
+    if (!_displayingProblems) {
         if (indexPath.row) {
-            DocumentListItem *item = [_items objectAtIndex:indexPath.row - 1];
-            docURL = item.url;
+            DocumentListItem *item = [_circuits objectAtIndex:indexPath.row - 1];
             CircuitCollectionViewCell *cell = (CircuitCollectionViewCell *) [collectionView cellForItemAtIndexPath:indexPath];
             _selectionRect = [self.view convertRect:cell.imageView.frame fromView:cell];
             _openDocumentAnimationShouldFadeIn = NO;
-            [self openDocument:docURL];
+            [self openDocumentItem:item];
         } else {
             CircuitCollectionViewCell *cell = (CircuitCollectionViewCell *) [collectionView cellForItemAtIndexPath:indexPath];
             _selectionRect = [self.view convertRect:cell.imageView.frame fromView:cell];
             _openDocumentAnimationShouldFadeIn = YES;
             [self createDocument:collectionView];
         }
-    } else if(_items == _problems) {
-        DocumentListItem *item = [_items objectAtIndex:indexPath.row];
-        NSURL *docURL = item.url;
+    } else {
+        ProblemSetProblemInfo *item = [_problemSet.problems objectAtIndex:indexPath.row];
         CircuitCollectionViewCell *cell = (CircuitCollectionViewCell *) [collectionView cellForItemAtIndexPath:indexPath];
         _selectionRect = [self.view convertRect:cell.imageView.frame fromView:cell];
         _openDocumentAnimationShouldFadeIn = NO;
-        [self openDocument:docURL];
+        [self openProblem:item];
     }
 }
 
@@ -193,14 +197,14 @@
 
 - (IBAction)didChangeCircuitsProblemsSegment:(UISegmentedControl *)sender {
     if (sender.selectedSegmentIndex == 0) {
-        _items = _problems;
+        self.displayingProblems = YES;
         _createButton.enabled = NO;
         self.title = @"Problems";
         [self.collectionView reloadData];
     } else {
-        _items = _circuits;
+        self.displayingProblems = NO;
         _createButton.enabled = YES;
-        self.title = @"Circuits";
+        self.title = @"Saved Circuits";
         [self.collectionView reloadData];
     }
     _segmentControl = sender;
@@ -215,7 +219,7 @@
 
 - (IBAction) didLongPress:(UILongPressGestureRecognizer *)sender {
     if (sender.state == UIGestureRecognizerStateBegan) {
-        if (_items == _circuits) {
+        if (!_displayingProblems) {
             _actionSheetIndexPath = [self.collectionView indexPathForItemAtPoint: [sender locationInView:self.collectionView]];
             CircuitCollectionViewCell *cell = (CircuitCollectionViewCell *) [self.collectionView cellForItemAtIndexPath:_actionSheetIndexPath];
             UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:cell.textLabel.text delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete" otherButtonTitles:@"Share", nil];
@@ -272,11 +276,11 @@
             [[NSException exceptionWithName:@"Could not remove \"Create Circuit\" item from list" reason:nil userInfo:nil] raise];
         }
         long index = itemPath.row - 1;
-        DocumentListItem *item = [_items objectAtIndex:index];
+        DocumentListItem *item = [_circuits objectAtIndex:index];
         [self deleteURL:item.url];
         [indexSet addIndex:index];
     }
-    [_items removeObjectsAtIndexes:indexSet];
+    [_circuits removeObjectsAtIndexes:indexSet];
 }
 - (IBAction)optionsPanel:(UIBarButtonItem *)sender {
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
@@ -314,14 +318,14 @@
 #pragma mark UICollectionViewDataSource methods
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    if (_items == _circuits) {
+    if (!_displayingProblems) {
         if (indexPath.row == 0) {
             return [self.collectionView dequeueReusableCellWithReuseIdentifier:@"CircuitCreatePrototypeCell" forIndexPath:indexPath];
         }
         
         CircuitCollectionViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:@"CircuitListPrototypeCell" forIndexPath:indexPath];
         
-        DocumentListItem *item = [_items objectAtIndex:indexPath.row - 1];
+        DocumentListItem *item = [_circuits objectAtIndex:indexPath.row - 1];
         
         cell.textLabel.text = item.title;
         if (!cell.textLabel.text.length) {
@@ -332,7 +336,7 @@
     } else {
         CircuitCollectionViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:@"CircuitListPrototypeCell" forIndexPath:indexPath];
         
-        DocumentListItem *item = [_items objectAtIndex:indexPath.row];
+        ProblemSetProblemInfo *item = [_problemSet.problems objectAtIndex:indexPath.row];
         
         cell.textLabel.text = item.title;
         cell.imageView.image = [UIImage imageNamed:@"tutorial-logo"];
@@ -343,6 +347,7 @@
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
+    _displayingProblems = YES;
     [self setTransitioningDelegate:self];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         [self preload];
@@ -378,21 +383,10 @@
             ViewController * controller = (ViewController *) fromVC;
             NSURL *url = controller.document.fileURL;
             NSString *urlPath = url.path;
-            __block BOOL found = NO;
-            [_items enumerateObjectsUsingBlock:^(DocumentListItem *item, NSUInteger idx, BOOL *stop) {
-                if ([item.url.path isEqualToString:urlPath]) {
-                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:idx + 1 inSection:0];
-                    
-                    CircuitCollectionViewCell * cell = (CircuitCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
-                    delegate.originatingRect = [self.view convertRect:cell.imageView.frame fromView:cell];
-                    found = YES;
-                    *stop = YES;
-                }
-            }];
             
-            if (!found) {
-                NSLog(@"Could not find rect");
-            }
+            CircuitCollectionViewCell * cell = nil;
+            delegate.originatingRect = [self.view convertRect:cell.imageView.frame fromView:cell];
+            
         }
         return delegate;
     }
@@ -419,9 +413,9 @@
     [self reloadCircuitListData];
     
     if (_segmentControl && _segmentControl.selectedSegmentIndex == 1) {
-        _items = _circuits;
+        self.displayingProblems = NO;
     } else {
-        _items = _problems;
+        self.displayingProblems = YES;
     }
     // TODO: This only needs to be called when the data is reloaded (on initial launch, it loads automatically, making this call unecessary)
     [self.collectionView reloadData];
@@ -429,15 +423,7 @@
 
 - (void) reloadProblemListData {
     NSString *directoryPath = [[NSBundle mainBundle] pathForResource:@"Problems" ofType:nil];
-    ProblemSet *problemSet = [[ProblemSet alloc] initWithDirectoryPath:directoryPath];
-    NSMutableArray *items = [NSMutableArray array];
-    for (ProblemSetProblemInfo* info in problemSet.problems) {
-        DocumentListItem *item = [[DocumentListItem alloc] initWithProblemSetProblemInfo: info];
-        
-        [items addObject:item];
-    }
-    
-    _problems = items;
+    self.problemSet = [[ProblemSet alloc] initWithDirectoryPath:directoryPath];
 }
 
 - (void) reloadCircuitListData {

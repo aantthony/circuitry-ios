@@ -7,7 +7,10 @@
 //
 
 #import "Circuit.h"
+#import "ProblemSetProblemInfo.h"
 
 @interface CircuitDocument : UIDocument
 @property (nonatomic) Circuit *circuit;
+@property (nonatomic, readonly) BOOL isProblem;
+@property (nonatomic) ProblemSetProblemInfo *problemInfo;
 @end

@@ -3,6 +3,10 @@
     {
       "path": "1",
       "title": "Connect an AND gate"
+    },
+    {
+      "path": "2",
+      "title": "3-way OR gate"
     }
   ]
 }

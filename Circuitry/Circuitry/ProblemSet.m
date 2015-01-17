@@ -29,8 +29,10 @@
     
     NSMutableArray *items = [NSMutableArray array];
     
+    NSUInteger i = 0;
     for (NSDictionary *p in index[@"problems"]) {
         ProblemSetProblemInfo *info = [ProblemSetProblemInfo new];
+        info.problemIndex = i++;
         info.title = p[@"title"];
         info.completed = NO;
         info.visible = YES;
@@ -47,6 +49,12 @@
 
 - (NSArray *) problems {
     return _problems;
+}
+
+- (ProblemSetProblemInfo *) problemAfterProblem:(ProblemSetProblemInfo *)info {
+    NSUInteger nextIndex = info.problemIndex + 1;
+    if (nextIndex >= _problems.count) return nil;
+    return [_problems objectAtIndex:nextIndex];
 }
 
 @end

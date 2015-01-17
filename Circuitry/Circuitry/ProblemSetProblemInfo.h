@@ -9,10 +9,11 @@
 #import <Foundation/Foundation.h>
 @class ProblemSet;
 @interface ProblemSetProblemInfo : NSObject
+@property (nonatomic) NSUInteger problemIndex;
 @property (nonatomic) NSString *title;
 @property (nonatomic) BOOL completed;
 @property (nonatomic) NSString *imageName;
 @property (nonatomic) NSURL *documentURL;
 @property (nonatomic) BOOL visible;
-@property (nonatomic, weak) ProblemSet *set;
+@property (nonatomic) ProblemSet *set;
 @end
