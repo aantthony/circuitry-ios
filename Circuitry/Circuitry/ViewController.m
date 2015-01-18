@@ -85,6 +85,9 @@
         NSLog(@"View details missing!");
     }
     NSLog(@"Set canPan: %@, %@", _canPan ? @"YES" : @"NO", _document.circuit.viewDetails);
+    if (self.view) {
+        [self update];
+    }
 }
 
 - (UIImage*)snapshot

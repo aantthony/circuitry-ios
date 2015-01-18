@@ -333,11 +333,14 @@ static CGPoint hvrDragHereRight = {88,428};
         NSLog(@"finished %@, %@", assetURL, error);
     }];
     
-    
+    imgView.image = nil;
+    imgView.backgroundColor = UIColor.whiteColor;
     [self.view addSubview:imgView];
+    
     [_problemInfoViewController showProblemDescription];
     self.document = self.nextDocument;
-    [UIView animateWithDuration:3.0 animations:^{
+    
+    [UIView animateWithDuration:0.5 animations:^{
         imgView.alpha = 0.0;
     } completion:^(BOOL finished) {
         [imgView removeFromSuperview];
