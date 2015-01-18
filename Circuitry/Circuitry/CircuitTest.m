@@ -67,19 +67,36 @@
     return s;
 }
 
+- (NSArray *) inputNames {
+    NSMutableArray *array = [NSMutableArray arrayWithCapacity:self.inputNodes.count];
+    [self.inputNodes enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
+        CircuitObject *inputNode = [obj pointerValue];
+        if (!inputNode || !inputNode->name) {
+            [array addObject:@"?"];
+            return;
+        }
+        NSString *str = [NSString stringWithUTF8String:inputNode->name];
+        [array addObject:str];
+    }];
+    return [array copy];
+}
+
 - (CircuitTestResult *) runAndSimulate:(Circuit *)circuit {
     __block BOOL pass = YES;
     
+    
+    
     // determine initial input state:
     NSMutableArray *initalStates = [NSMutableArray arrayWithCapacity:_inputNodes.count];
-    
     [_inputNodes enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         CircuitObject * inputNode = [obj pointerValue];
         [initalStates addObject:@(inputNode->out)];
     }];
     
     __block NSString *failure = @"";
-
+    
+    NSMutableArray *checks = [NSMutableArray arrayWithCapacity:_spec.count];
+    
     [_spec enumerateObjectsUsingBlock:^(NSArray *inputOutputPair, NSUInteger idx, BOOL *stop) {
         NSArray *inputStates = inputOutputPair[0];
         NSArray *outputStates = inputOutputPair[1];
@@ -96,13 +113,14 @@
 
         [circuit simulate:512];
         
+        __block BOOL isMatchForInput = YES;
         // Validate output state:
         [outputStates enumerateObjectsUsingBlock:^(id obj, NSUInteger i, BOOL *stop) {
             CircuitObject * outputNode = [_outputNodes[i] pointerValue];
             int expected = [obj intValue];
             if (outputNode->in != expected) {
                 pass = NO;
-                
+                isMatchForInput = NO;
                 NSString *inputStateSpecification = [inputStates componentsJoinedByString:@", "];
                 NSString *outputStateSpecification = [outputStates componentsJoinedByString:@", "];
                 
@@ -114,6 +132,10 @@
                 //*stop = YES;
             }
         }];
+        
+        CircuitTestResultCheck *check = [[CircuitTestResultCheck alloc] initWithInputs:inputStates expectedOutputs:outputStates match:isMatchForInput];
+        
+        [checks addObject:check];
         
         //if (!pass) *stop = YES;
 
@@ -128,15 +150,10 @@
         }];
     }];
 
-    CircuitTestResult *result = [[CircuitTestResult alloc] init];
-    result.passed = pass;
     
-    if (pass) {
-        result.resultDescription = [NSString stringWithFormat:@"Passed."];
-    } else {
-        result.resultDescription = failure;
-    }
+    NSString *rDescription = pass ? @"Passed." : failure;
     
+    CircuitTestResult *result = [[CircuitTestResult alloc] initWithResultDescription:rDescription passed:pass checks:checks inputNames:self.inputNames];
     return result;
 }
 

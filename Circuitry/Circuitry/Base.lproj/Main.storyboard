@@ -70,11 +70,91 @@
                         <outlet property="objectListView" destination="8GE-Pt-Sug" id="O64-gb-akG"/>
                         <outlet property="problemInfoHeight" destination="rD4-Nt-mKk" id="VZb-UB-zuk"/>
                         <outlet property="problemInfoView" destination="0G8-Qd-p90" id="Tou-jP-Xp3"/>
+                        <segue destination="I59-4J-Dmz" kind="modal" identifier="ShowTestResult" modalPresentationStyle="formSheet" id="7en-7Z-luh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GmU-f2-KCc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1647" y="478"/>
+        </scene>
+        <!--Test Result View Controller-->
+        <scene sceneID="CSt-Hc-tqW">
+            <objects>
+                <viewController id="I59-4J-Dmz" customClass="TestResultViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="RSx-fP-3W0"/>
+                        <viewControllerLayoutGuide type="bottom" id="DlK-iC-nDP"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="dMm-j0-Qxt">
+                        <rect key="frame" x="0.0" y="44" width="540" height="620"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="50" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="VjK-Vs-avk">
+                                <rect key="frame" x="0.0" y="0.0" width="540" height="547"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="HeaderCell" id="46l-YW-aue" customClass="TestResultItemCell">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="46l-YW-aue" id="o5B-DD-aKq">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hAP-tJ-bDg">
+                                                    <rect key="frame" x="0.0" y="49" width="540" height="1"/>
+                                                    <color key="backgroundColor" white="0.7901731005" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Result" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BiB-Cq-F3d">
+                                                    <rect key="frame" x="461" y="14" width="71" height="21"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" id="Ffp-F2-vuw" customClass="TestResultItemCell">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Ffp-F2-vuw" id="f5g-We-EdU">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView autoresizesSubviews="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="TestResultMatch" translatesAutoresizingMaskIntoConstraints="NO" id="1C1-wR-vVI">
+                                                    <rect key="frame" x="542" y="0.0" width="50" height="50"/>
+                                                </imageView>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="resultMarkView" destination="1C1-wR-vVI" id="uGj-nR-tiC"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="I59-4J-Dmz" id="Dkq-VO-epA"/>
+                                </connections>
+                            </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8I5-to-qvU">
+                                <rect key="frame" x="0.0" y="546" width="540" height="74"/>
+                                <state key="normal" title="OK">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="dismiss:" destination="I59-4J-Dmz" eventType="touchUpInside" id="rUT-BI-ZBb"/>
+                                </connections>
+                            </button>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jSh-rU-Qai">
+                                <rect key="frame" x="0.0" y="546" width="540" height="1"/>
+                                <color key="backgroundColor" white="0.79017310049019618" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <connections>
+                        <outlet property="tableView" destination="VjK-Vs-avk" id="wry-sq-GKA"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oYs-lm-PE4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2381" y="-617"/>
         </scene>
         <!--GLKit View Controller-->
         <scene sceneID="tXr-a1-R10">
@@ -249,7 +329,7 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.1403878127" green="0.52914172739999998" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="background.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="2Ig-BZ-iW3" customClass="CircuitListImageView">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="level2" translatesAutoresizingMaskIntoConstraints="NO" id="2Ig-BZ-iW3" customClass="CircuitListImageView">
                                             <rect key="frame" x="6" y="8" width="188" height="188"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </imageView>
@@ -756,11 +836,12 @@ This logic diagram describes the rule:
         </scene>
     </scenes>
     <resources>
-        <image name="background.jpg" width="2048" height="1536"/>
+        <image name="TestResultMatch" width="29" height="23"/>
         <image name="continue-arrow" width="53" height="18"/>
         <image name="dots" width="22" height="6"/>
         <image name="ipad-white-vertical-level-1.png" width="882" height="1310"/>
         <image name="large-plus" width="54" height="54"/>
+        <image name="level2" width="188" height="188"/>
         <image name="or" width="90" height="50"/>
         <image name="tutorial-bg-1.jpg" width="768" height="1024"/>
         <image name="tutorial-bg-2.jpg" width="768" height="1024"/>
