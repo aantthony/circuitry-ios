@@ -10,5 +10,6 @@
 
 @interface StyleManager : NSObject
 + (instancetype) shared;
++ (UIColor *) rgb:(NSInteger) color;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
 @end

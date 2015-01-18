@@ -339,7 +339,7 @@
         ProblemSetProblemInfo *item = [_problemSet.problems objectAtIndex:indexPath.row];
         
         cell.textLabel.text = item.title;
-        cell.imageView.image = [UIImage imageNamed:@"tutorial-logo"];
+        cell.imageView.image = [UIImage imageNamed:@"level2"];
         
         return cell;
     }

@@ -12,7 +12,7 @@
 #import "ViewController.h"
 #import "ProblemInfoViewController.h"
 #import "AnalyticsManager.h"
-
+#import "TestResultViewController.h"
 
 // TODO: remove this
 #import <AssetsLibrary/AssetsLibrary.h>
@@ -31,7 +31,7 @@
 @property (nonatomic) UIImageView *hintViewCheckCorrect;
 @property (nonatomic) NSInteger tutorialState;
 @property (nonatomic) BOOL isTutorial;
-
+@property (nonatomic) CircuitTestResult *testResult;
 @property (nonatomic) CircuitDocument *nextDocument;
 @end
 
@@ -284,7 +284,9 @@ static CGPoint hvrDragHereRight = {88,428};
         }];
         if (failure) {
             [[AnalyticsManager shared] trackCheckProblem:self.document withResult:failure];
-            [[[UIAlertView alloc] initWithTitle:@"Test Result" message: failure.resultDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
+            self.testResult = failure;
+            [self performSegueWithIdentifier:@"ShowTestResult" sender:self];
+//            [[[UIAlertView alloc] initWithTitle:@"Test Result" message: failure.resultDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
         } else {
             [[AnalyticsManager shared] trackFinishProblem:self.document];
             if (self.isTutorial) {
@@ -352,21 +354,25 @@ static CGPoint hvrDragHereRight = {88,428};
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([segue.destinationViewController isKindOfClass:[CircuitObjectListTableViewController class]]) {
-        CircuitObjectListTableViewController *controller = (CircuitObjectListTableViewController *) segue.destinationViewController;
+    UIViewController *d = segue.destinationViewController;
+    if ([d isKindOfClass:[CircuitObjectListTableViewController class]]) {
+        CircuitObjectListTableViewController *controller = (CircuitObjectListTableViewController *) d;
         _objectListViewController = controller;
         controller.delegate = self;
         controller.document = self.document;
-    } else if ([segue.destinationViewController isKindOfClass:[ViewController class]]) {
-        ViewController *controller = (ViewController *) segue.destinationViewController;
+    } else if ([d isKindOfClass:[ViewController class]]) {
+        ViewController *controller = (ViewController *) d;
         _glkViewController = controller;
         _glkViewController.tutorialDelegate = self;
         controller.document = self.document;
-    } else if ([segue.destinationViewController isKindOfClass:ProblemInfoViewController.class]) {
-        ProblemInfoViewController * controller = (ProblemInfoViewController *) segue.destinationViewController;
+    } else if ([d isKindOfClass:ProblemInfoViewController.class]) {
+        ProblemInfoViewController * controller = (ProblemInfoViewController *) d;
         _problemInfoViewController = controller;
         controller.delegate = self;
         controller.document = self.document;
+    } else if ([d isKindOfClass:[TestResultViewController class]]) {
+        TestResultViewController *vc = (TestResultViewController *)d;
+        vc.testResult = self.testResult;
     }
 }
 
