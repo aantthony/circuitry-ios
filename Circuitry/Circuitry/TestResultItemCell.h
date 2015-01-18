@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CircuitTestResult.h"
+@class CircuitTestResult;
+@class CircuitTestResultCheck;
 @interface TestResultItemCell : UITableViewCell
 @property (nonatomic) CircuitTestResultCheck *check;
 @property (nonatomic) CircuitTestResult *result;

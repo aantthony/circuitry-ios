@@ -8,6 +8,7 @@
 
 #import "TestResultItemCell.h"
 #import "StyleManager.h"
+#import "CircuitTestResult.h"
 
 @interface TestResultItemCell()
 @property (weak, nonatomic) IBOutlet UIImageView *resultMarkView;

@@ -8,8 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "CircuitTestResult.h"
-
+@class CircuitTestResult;
 @interface TestResultViewController : UIViewController
 @property (nonatomic) CircuitTestResult *testResult;
 @end

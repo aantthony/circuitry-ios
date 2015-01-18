@@ -1,6 +1,7 @@
 #import "Circuit.h"
 
 #import "MongoID.h"
+#import "CircuitTest.h"
 
 @interface Circuit()
 @property (nonatomic, assign) CircuitInternal *internal;

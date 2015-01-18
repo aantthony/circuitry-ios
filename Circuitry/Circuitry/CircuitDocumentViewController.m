@@ -13,6 +13,7 @@
 #import "ProblemInfoViewController.h"
 #import "AnalyticsManager.h"
 #import "TestResultViewController.h"
+#import "CircuitTest.h"
 
 // TODO: remove this
 #import <AssetsLibrary/AssetsLibrary.h>

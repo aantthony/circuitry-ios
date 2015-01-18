@@ -8,6 +8,9 @@
 
 #import "AnalyticsManager.h"
 #import "Analytics.h"
+#import "CircuitDocument.h"
+#import "CircuitTestResult.h"
+
 @implementation AnalyticsManager
 
 + (instancetype) shared {

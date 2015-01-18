@@ -10,8 +10,6 @@
 #define __Circuitry__CircuitInternal__
 #include <stdio.h>
 #include "MongoIDType.h"
-#endif
-
 
 struct CircuitInternal;
 
@@ -135,3 +133,5 @@ struct CircuitObject {
     CircuitLink **inputs;
 };
 
+
+#endif

@@ -8,6 +8,7 @@
 
 #import "CircuitDocument.h"
 #import "AppDelegate.h"
+#import "CircuitTest.h"
 
 @interface CircuitDocument() <NSURLSessionTaskDelegate>
 

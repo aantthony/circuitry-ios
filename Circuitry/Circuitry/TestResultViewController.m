@@ -8,6 +8,7 @@
 
 #import "TestResultViewController.h"
 #import "TestResultItemCell.h"
+#import "CircuitTestResult.h"
 
 @interface TestResultViewController () <UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;

@@ -7,7 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CircuitDocument.h"
+
+@class CircuitDocument;
+@class CircuitTestResult;
+
 @interface AnalyticsManager : NSObject
 
 + (instancetype) shared;

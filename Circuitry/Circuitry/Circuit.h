@@ -1,8 +1,8 @@
 #import <Foundation/Foundation.h>
 #import "MongoID.h"
-#import "CircuitTest.h"
 
 #import "CircuitInternal.h"
+@class CircuitTest;
 
 @interface Circuit : NSObject
 
