@@ -22,11 +22,7 @@
     p[@"Title"]   = document.circuit.title;
     p[@"Author"]  = document.circuit.author;
     
-    // Problems:
-    if (document.circuit.problemSetNumber) {
-        p[@"Problem"]        = @YES;
-        p[@"Problem Number"] = document.circuit.problemSetNumber;
-    }
+    p[@"Problem"] = @(document.isProblem);
     
     // User-Generated:
     

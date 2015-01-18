@@ -40,6 +40,10 @@
     }];
 }
 
+- (void) showProblemDescription {
+    _congratsView.hidden = YES;
+}
+
 - (IBAction)continueButton:(id)sender {
     [self.delegate problemInfoViewController:self didPressContinueButton:sender];
 }

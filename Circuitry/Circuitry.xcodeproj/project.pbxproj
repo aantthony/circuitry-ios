@@ -464,6 +464,7 @@
 		92771D321A454BE3000931D9 /* Circuit Edit */ = {
 			isa = PBXGroup;
 			children = (
+				9277EEF81A69397D00E65E23 /* Hints */,
 				9204C390182E2F5C006A008D /* ViewController.h */,
 				9204C391182E2F5C006A008D /* ViewController.m */,
 				92796A3218A668FB00DB690F /* LongPressObjectGesture.h */,
@@ -607,6 +608,13 @@
 				92771CF81A44FD2A000931D9 /* StyleManager.m */,
 			);
 			name = Services;
+			sourceTree = "<group>";
+		};
+		9277EEF81A69397D00E65E23 /* Hints */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Hints;
 			sourceTree = "<group>";
 		};
 		927D1A131875A97000457367 /* Sprite */ = {

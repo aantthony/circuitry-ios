@@ -41,13 +41,12 @@
     
     BOOL animatingPan;
     
-    void (^ _onNextDraw)(UIImage *);
-    
 }
 @property (nonatomic) NSArray *selectedObjects;
-@property (nonatomic) Viewport *viewport;
 @property (nonatomic) HUD *hud;
 @property (nonatomic) NSTimer *timer;
+@property (nonatomic) BOOL canPan;
+@property (nonatomic) BOOL canZoom;
 
 - (void)tearDownGL;
 
@@ -60,23 +59,6 @@
     NSLog(@"getting screenshot...");
     
     CircuitDocument * doc = _document;
-
-    _onNextDraw = ^(UIImage * snapshot) {
-        NSLog(@"renderered screenshot...");
-        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//            if (doc == nil) return;
-            NSLog(@"compressing screenshot...");
-//            doc.screenshot = UIImageJPEGRepresentation(snapshot, 0.5);
-            
-            dispatch_async(dispatch_get_main_queue(), ^(void){
-//                if (doc == nil) return;
-                NSLog(@"saving screenshot...");
-                [doc updateChangeCount:UIDocumentChangeDone];
-                [doc savePresentedItemChangesWithCompletionHandler:^(NSError *errorOrNil) {}];
-            });
-        });
-        
-    };
     
     [self unpause];
 }
@@ -88,7 +70,24 @@
 - (void) setDocument:(CircuitDocument *) document {
     _document = document;
     _viewport.document = _document;
-    self.navigationItem.title = _document.circuit.title;
+    _canPan = YES;
+    _canZoom = YES;
+    if (_document.circuit.viewDetails) {
+        NSNumber *num = _document.circuit.viewDetails[@"canPan"];
+        if (num && !num.boolValue) {
+            _canPan = NO;
+        }
+        num = _document.circuit.viewDetails[@"canZoom"];
+        if (num && !num.boolValue) {
+            _canZoom = NO;
+        }
+    } else {
+        NSLog(@"View details missing!");
+    }
+    NSLog(@"Set canPan: %@, %@", _canPan ? @"YES" : @"NO", _document.circuit.viewDetails);
+    if (self.view) {
+        [self update];
+    }
 }
 
 - (UIImage*)snapshot
@@ -214,8 +213,6 @@
 {
     [super viewDidLoad];
     
-    _onNextDraw = NULL;
-    
     panVelocity = CGPointMake(0.0, 0.0);
     
     isAnimatingScaleToSnap = NO;
@@ -294,9 +291,16 @@
 
 #pragma mark - GLKView and GLKViewController delegate methods
 
+- (void) updateTuturialState {
+    [self.tutorialDelegate viewControllerTutorial:self didChange:nil];
+}
+
 - (void)update
 {
     [self checkError];
+    
+    // Tutorial:
+    [self updateTuturialState];
     
     // time differnce in seconds (float)
     NSTimeInterval dt = self.timeSinceLastUpdate;
@@ -414,11 +418,6 @@
     [_viewport drawWithStack:_stack];
     [_hud drawWithStack:_stack];
     [self checkError];
-    if (_onNextDraw) {
-        _onNextDraw([self snapshot]);
-        _onNextDraw = NULL;
-    }
-    
 }
 
 // Take a pt screen coordinate and translate it to pixel screen coordinates, because OpenGL only deals with pixels.
@@ -598,8 +597,13 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
                 [self unpause];
             }
         }];
-        [_document updateChangeCount:UIDocumentChangeDone];
+        [self updateChangeCount:UIDocumentChangeDone];
     }
+}
+
+- (void) updateChangeCount:(UIDocumentChangeKind)change {
+    if (self.document.isProblem) return;
+    [self.document updateChangeCount:change];
 }
 
 - (void) unpause {
@@ -607,6 +611,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 }
 
 - (IBAction) handlePanGesture:(UIPanGestureRecognizer *)recognizer {
+    if (!_canPan) return;
     CGPoint translation = [recognizer translationInView:self.view];
     [_viewport translate: GLKVector3Make(translation.x, translation.y, 0.0)];
     // this makes it so next time "handlePanGesture:" is called, translation will be relative to the last one. (ie. translation is a delta)
@@ -627,13 +632,13 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     
     CircuitObject *object = beginLongPressGestureObject;
     if (sender.state == UIGestureRecognizerStateEnded) {
-        [_document updateChangeCount:UIDocumentChangeDone];
+        [self updateChangeCount:UIDocumentChangeDone];
         [self unpause];
         return;
     } else if ([sender numberOfTouches] != 1) {
         sender.enabled = NO;
         sender.enabled = YES;
-        [_document updateChangeCount:UIDocumentChangeDone];
+        [self updateChangeCount:UIDocumentChangeDone];
         [self unpause];
         return;
     }
@@ -702,7 +707,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         _viewport.currentEditingLinkTarget = NULL;
         [self unpause];
 
-        [_document updateChangeCount:UIDocumentChangeDone];
+        [self updateChangeCount:UIDocumentChangeDone];
         
         return;
     }
@@ -810,6 +815,9 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     free(buffer2);
 }
 - (IBAction) handlePinchGesture:(UIPinchGestureRecognizer *)recognizer {
+    if (!_canZoom) {
+        return;
+    }
     // Zoom:
     CGPoint screenPos = PX(self.view.contentScaleFactor, [recognizer locationInView:self.view]);
     
@@ -843,11 +851,11 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 }
 
 - (void) viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
     if (!_timer) {
         _timer = [NSTimer timerWithTimeInterval:0.005 target:self selector:@selector(timerTick:) userInfo:nil repeats:YES];
         [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
     }
-    [super viewDidAppear:animated];
 }
 
 - (IBAction) handleTapGesture:(UITapGestureRecognizer *)sender {

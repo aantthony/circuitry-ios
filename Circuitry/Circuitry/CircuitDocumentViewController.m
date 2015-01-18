@@ -13,8 +13,11 @@
 #import "ProblemInfoViewController.h"
 #import "AnalyticsManager.h"
 
-@interface CircuitDocumentViewController () <CircuitObjectListTableViewControllerDelegate, ProblemInfoViewControllerDelegate>
-@property (nonatomic) CircuitDocument *document;
+
+// TODO: remove this
+#import <AssetsLibrary/AssetsLibrary.h>
+
+@interface CircuitDocumentViewController () <CircuitObjectListTableViewControllerDelegate, ProblemInfoViewControllerDelegate, ViewControllerTutorialProtocol>
 @property (nonatomic, weak) CircuitObjectListTableViewController *objectListViewController;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *objectListLeft;
 @property (nonatomic, weak) ProblemInfoViewController *problemInfoViewController;
@@ -23,6 +26,13 @@
 @property (nonatomic) BOOL objectListVisible;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *checkAnswerButton;
 @property (nonatomic) BOOL problemInfoVisible;
+@property (nonatomic) UIImageView *hintViewTapAndHoldLeft;
+@property (nonatomic) UIImageView *hintViewDragHereRight;
+@property (nonatomic) UIImageView *hintViewCheckCorrect;
+@property (nonatomic) NSInteger tutorialState;
+@property (nonatomic) BOOL isTutorial;
+
+@property (nonatomic) CircuitDocument *nextDocument;
 @end
 
 @implementation CircuitDocumentViewController
@@ -35,6 +45,10 @@
     _objectListViewController.document = document;
     _glkViewController.document = document;
     _document = document;
+    self.title = document.circuit.title;
+    
+    self.isTutorial = YES;
+    
     [[AnalyticsManager shared] trackStartProblem:document];
     if (self.view) {
         [self configureView];
@@ -46,6 +60,158 @@
     _objectListViewController.document = _document;
     _glkViewController.document = _document;
     [self configureView];
+}
+
+static CGPoint hvrTapAndHoldLeft = {225, 611};
+static CGPoint hvrDragHereRight = {88,428};
+
+- (UIImageView *) hintViewTapAndHoldLeft {
+    if (_hintViewTapAndHoldLeft) return _hintViewTapAndHoldLeft;
+    UIImageView *view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"TapAndHoldOutlet"]];
+    view.frame = CGRectMake(hvrTapAndHoldLeft.x, hvrTapAndHoldLeft.y, view.frame.size.width, view.frame.size.height);
+    _hintViewTapAndHoldLeft = view;
+    [self.view addSubview:view];
+    return view;
+}
+
+- (UIImageView *) hintViewDragHereRight {
+    if (_hintViewDragHereRight) return _hintViewDragHereRight;
+    UIImageView *view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"DragIntoHere"]];
+    view.frame = CGRectMake(hvrDragHereRight.x, hvrDragHereRight.y, view.frame.size.width, view.frame.size.height);
+    _hintViewDragHereRight = view;
+    [self.view addSubview:view];
+    return view;
+}
+
+- (UIImageView *) hintViewCheckCorrect {
+    if (_hintViewCheckCorrect) return _hintViewCheckCorrect;
+    UIImageView *view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"CheckCorrect"]];
+    view.frame = CGRectMake(350,100, view.frame.size.width, view.frame.size.height);
+    _hintViewCheckCorrect = view;
+    [self.view addSubview:view];
+    return view;
+}
+
+- (void) updateTutorialState {
+    
+    CircuitObject *A = [self.document.circuit findObjectById:@"53c3cdc945f5603003000000"];
+    CircuitObject *B = [self.document.circuit findObjectById:@"53c3cdc945f5603003000888"];
+    
+    if (!A || !B) {
+        // TODO: No need to check here, we are not in the tutorial!
+        return;
+    }
+    
+    if (B->outputs[0]) {
+        if (A->outputs[0]) {
+            self.tutorialState = 6;
+            return;
+        }
+        if (_glkViewController.viewport.currentEditingLinkSource == A && _glkViewController.viewport.currentEditingLinkSourceIndex == 0) {
+            self.tutorialState = 5;
+            return;
+        }
+        if (_glkViewController.viewport.currentEditingLinkSource == B && _glkViewController.viewport.currentEditingLinkSourceIndex == 0) {
+            self.tutorialState = 3;
+            return;
+        }
+        self.tutorialState = 4;
+    } else {
+        
+        if (_glkViewController.viewport.currentEditingLinkSource == B && _glkViewController.viewport.currentEditingLinkSourceIndex == 0) {
+            self.tutorialState = 2;
+            return;
+        }
+        self.tutorialState = 1;
+        return;
+    }
+}
+
+- (void) viewControllerTutorial:(ViewController *)viewController didChange:(id)sender {
+    if (!self.isTutorial) return;
+    [self updateTutorialState];
+}
+
+- (void) finishTutorial {
+    self.isTutorial = NO;
+    self.tutorialState = 0;
+}
+
+- (void) setTutorialState:(NSInteger)tutorialState {
+    if (_tutorialState == tutorialState) return;
+    _tutorialState = tutorialState;
+    NSLog(@"tutorialState: %d", tutorialState);
+    if (tutorialState == 0) {
+        [UIView animateWithDuration:0.5 animations:^{
+            _hintViewTapAndHoldLeft.alpha = 0;
+            _hintViewDragHereRight.alpha = 0;
+            _hintViewCheckCorrect.alpha = 0;
+        }];
+    } else if (tutorialState == 1) {
+        UIView *tapHold = self.hintViewTapAndHoldLeft;
+        tapHold.alpha = 0;
+        CGRect targetFrame = CGRectMake(hvrTapAndHoldLeft.x, hvrTapAndHoldLeft.y, tapHold.frame.size.width, tapHold.frame.size.height);
+        targetFrame.origin.x += 150;
+        tapHold.frame = targetFrame;
+        targetFrame.origin.x -= 150;
+        [UIView animateWithDuration:0.5 animations:^{
+            tapHold.alpha = 1;
+            tapHold.frame = targetFrame;
+            _hintViewDragHereRight.alpha = 0;
+            _hintViewCheckCorrect.alpha = 0;
+        }];
+    } else if (tutorialState == 2) {
+        UIView *dragHere = self.hintViewDragHereRight;
+        CGRect targetFrame = CGRectMake(hvrDragHereRight.x, hvrDragHereRight.y, dragHere.frame.size.width, dragHere.frame.size.height);
+        targetFrame.origin.x -= 20;
+        dragHere.frame = targetFrame;
+        targetFrame.origin.x += 20;
+        dragHere.alpha = 0;
+        [UIView animateWithDuration:0.3 animations:^{
+            dragHere.alpha = 1;
+            _hintViewTapAndHoldLeft.alpha = 0;
+            _hintViewCheckCorrect.alpha = 0;
+        } completion:^(BOOL finished) {
+            
+        }];
+    } else if (tutorialState == 4) {
+        UIView *tapHold = self.hintViewTapAndHoldLeft;
+        tapHold.alpha = 0;
+        CGRect targetFrame = CGRectMake(hvrTapAndHoldLeft.x, hvrTapAndHoldLeft.y - 400, tapHold.frame.size.width, tapHold.frame.size.height);
+        targetFrame.origin.x += 150;
+        tapHold.frame = targetFrame;
+        targetFrame.origin.x -= 150;
+        [UIView animateWithDuration:0.5 animations:^{
+            tapHold.alpha = 1;
+            tapHold.frame = targetFrame;
+            _hintViewDragHereRight.alpha = 0;
+        }];
+    } else if (tutorialState == 5) {
+        UIView *dragHere = self.hintViewDragHereRight;
+        CGRect targetFrame = CGRectMake(hvrDragHereRight.x, hvrDragHereRight.y - 40, dragHere.frame.size.width, dragHere.frame.size.height);
+        targetFrame.origin.x -= 20;
+        dragHere.frame = targetFrame;
+        targetFrame.origin.x += 20;
+        dragHere.alpha = 0;
+        [UIView animateWithDuration:0.3 animations:^{
+            dragHere.alpha = 1;
+            _hintViewTapAndHoldLeft.alpha = 0;
+            _hintViewCheckCorrect.alpha = 0;
+        } completion:^(BOOL finished) {
+            
+        }];
+    } else if (tutorialState == 6) {
+        UIView *arrow = self.hintViewCheckCorrect;
+        arrow.alpha = 0;
+        [UIView animateWithDuration:0.3 animations:^{
+            _hintViewTapAndHoldLeft.alpha = 0;
+            _hintViewDragHereRight.alpha = 0;
+        }];
+        [UIView animateWithDuration:1.0 animations:^{
+            arrow.alpha = 1;
+        }];
+    }
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -121,8 +287,20 @@
             [[[UIAlertView alloc] initWithTitle:@"Test Result" message: failure.resultDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
         } else {
             [[AnalyticsManager shared] trackFinishProblem:self.document];
+            if (self.isTutorial) {
+                [self finishTutorial];
+            }
+            
+            CircuitDocument *doc = [self.delegate circuitDocumentViewController:self nextDocumentAfterDocument:self.document];
+            self.nextDocument = doc;
+            [doc openWithCompletionHandler:nil];
+            
+            if (self.nextDocument) {
+                [_problemInfoViewController showProgressToNextLevelScreen];
+            } else {
+                [self.navigationController popViewControllerAnimated:YES];
+            }
             // Success!
-            [_problemInfoViewController showProgressToNextLevelScreen];
         }
     }
 }
@@ -134,10 +312,39 @@
     [_glkViewController startCreatingObjectFromItem: item];
 }
 
+
+- (UIImage *) screenshotForView:(UIView *)view {
+    UIImage *img;
+    UIGraphicsBeginImageContextWithOptions(view.bounds.size, view.opaque, 0.0);
+    {
+        [view.layer renderInContext:UIGraphicsGetCurrentContext()];
+        img = UIGraphicsGetImageFromCurrentImageContext();
+    }
+    UIGraphicsEndImageContext();
+    return img;
+}
+
 #pragma mark - Problem Info delegate
 - (void) problemInfoViewController:(ProblemInfoViewController *)problemInfoViewController didPressContinueButton:(id)sender {
-    NSLog(@"Completed problem: %@", self.document);
-    NSLog(@"Finding next problem...");
+    UIImage *screenShotView = [self screenshotForView:self.view];
+    UIImageView *imgView = [[UIImageView alloc] initWithImage:screenShotView];
+    
+    [[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[screenShotView CGImage] orientation:ALAssetOrientationUp completionBlock:^(NSURL *assetURL, NSError *error) {
+        NSLog(@"finished %@, %@", assetURL, error);
+    }];
+    
+    imgView.image = nil;
+    imgView.backgroundColor = UIColor.whiteColor;
+    [self.view addSubview:imgView];
+    
+    [_problemInfoViewController showProblemDescription];
+    self.document = self.nextDocument;
+    
+    [UIView animateWithDuration:0.5 animations:^{
+        imgView.alpha = 0.0;
+    } completion:^(BOOL finished) {
+        [imgView removeFromSuperview];
+    }];
 }
 
 #pragma mark - Navigation
@@ -153,6 +360,7 @@
     } else if ([segue.destinationViewController isKindOfClass:[ViewController class]]) {
         ViewController *controller = (ViewController *) segue.destinationViewController;
         _glkViewController = controller;
+        _glkViewController.tutorialDelegate = self;
         controller.document = self.document;
     } else if ([segue.destinationViewController isKindOfClass:ProblemInfoViewController.class]) {
         ProblemInfoViewController * controller = (ProblemInfoViewController *) segue.destinationViewController;

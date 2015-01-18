@@ -8,13 +8,22 @@
 
 #import <UIKit/UIKit.h>
 #import "CircuitDocument.h"
-
+@protocol CircuitDocumentViewControllerDelegate;
 @interface CircuitDocumentViewController : UIViewController
 
+@property (weak, nonatomic) id<CircuitDocumentViewControllerDelegate> delegate;
 // Container views:
 @property (weak, nonatomic) IBOutlet UIView *objectListView;
 @property (weak, nonatomic) IBOutlet UIView *problemInfoView;
 
-// Document bindings:
-- (void) setDocument:(CircuitDocument *) document;
+@property (nonatomic) CircuitDocument *document;
+
+@end
+
+
+@protocol CircuitDocumentViewControllerDelegate <NSObject>
+
+@required
+- (CircuitDocument *) circuitDocumentViewController:(CircuitDocumentViewController *)viewController nextDocumentAfterDocument:(CircuitDocument *)document;
+
 @end

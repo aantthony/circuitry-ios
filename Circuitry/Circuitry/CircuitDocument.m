@@ -14,6 +14,13 @@
 @end
 
 @implementation CircuitDocument
+- (void) setProblemInfo:(ProblemSetProblemInfo *)problemInfo {
+    _isProblem = problemInfo != nil;
+    _problemInfo = problemInfo;
+}
+- (instancetype) initWithFileURL:(NSURL *)url {
+    return [super initWithFileURL:url];
+}
 - (BOOL)loadFromContents:(id)contents ofType:(NSString *)typeName error:(NSError **)outError {
     
     NSError *err;
@@ -110,7 +117,9 @@
 
 
 - (id)contentsForType:(NSString *)typeName error:(NSError **)outError {
-
+    if (self.isProblem) {
+        [NSException raise:@"Attempted to modify problem" format:@""];
+    }
 //    if (!_circuit) {
 //        *outError = [NSError errorWithDomain:@"au.id.af" code:501 userInfo:@{@"name": @"Circuit does not exist"}];
 //        return nil;

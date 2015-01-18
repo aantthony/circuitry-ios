@@ -6,6 +6,7 @@
 @property (nonatomic, weak) id <ProblemInfoViewControllerDelegate> delegate;
 - (void) setDocument: (CircuitDocument *) document;
 - (void) showProgressToNextLevelScreen;
+- (void) showProblemDescription;
 @end
 
 
