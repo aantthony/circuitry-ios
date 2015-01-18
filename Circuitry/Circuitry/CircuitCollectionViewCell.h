@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Circuitry. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #import "CircuitListImageView.h"
 
 @interface CircuitCollectionViewCell : UICollectionViewCell

@@ -1,4 +1,3 @@
-#import <Foundation/Foundation.h>
 #import "MongoID.h"
 
 #import "CircuitInternal.h"

@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Circuitry. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 #import "ProblemSetProblemInfo.h"
 
 @interface ProblemSet : NSObject

@@ -6,8 +6,6 @@
 //  Copyright (c) 2015 Circuitry. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
 @class CircuitDocument;
 @class CircuitTestResult;
 

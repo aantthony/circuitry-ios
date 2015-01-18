@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 Circuitry. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
 @interface ToolbeltItem : NSObject
 - (instancetype) initWithType:(NSString *) type image:(UIImage *)image name:(NSString *)name subtitle:(NSString *) subtitle;
 

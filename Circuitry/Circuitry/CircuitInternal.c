@@ -12,7 +12,7 @@
 
 
 void fail(const char * message) {
-    fprintf(stderr, "Internal Consistency Exception: %s", message);
+//    fprintf(stderr, "Internal Consistency Exception: %s", message);
     exit(500);
 }
 

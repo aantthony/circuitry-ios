@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 Circuitry. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 @class CircuitTestResult;
 @class CircuitTestResultCheck;
 @interface TestResultItemCell : UITableViewCell

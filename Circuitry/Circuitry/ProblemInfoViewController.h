@@ -1,5 +1,4 @@
-#import <UIKit/UIKit.h>
-#import "CircuitDocument.h"
+@class CircuitDocument;
 @protocol ProblemInfoViewControllerDelegate;
 
 @interface ProblemInfoViewController : UIViewController

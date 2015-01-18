@@ -11,6 +11,8 @@
 
 #import "AppDelegate.h"
 
+#import "ToolbeltItem.h"
+
 // For iOS 8 support:
 #import <OpenGLES/ES1/glext.h>
 

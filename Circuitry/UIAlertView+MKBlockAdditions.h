@@ -8,8 +8,6 @@
 //  Modified by Anthony Foster on 08/02/14
 //
 
-#import <Foundation/Foundation.h>
-
 @interface UIAlertView (Block) <UIAlertViewDelegate> 
 + (UIAlertView*) alertViewWithTitle:(NSString*) title 
                             message:(NSString*) message;

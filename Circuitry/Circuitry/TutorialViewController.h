@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Circuitry. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 @protocol TutorialViewControllerDelegate;
 
 @interface TutorialViewController : UIViewController

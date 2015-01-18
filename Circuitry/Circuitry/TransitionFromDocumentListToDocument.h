@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 Circuitry. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
 @interface TransitionFromDocumentListToDocument : NSObject <UIViewControllerAnimatedTransitioning>
 @property (nonatomic) BOOL reverse;
 @property (nonatomic) CGRect originatingRect;

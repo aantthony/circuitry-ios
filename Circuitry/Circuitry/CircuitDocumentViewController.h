@@ -5,9 +5,7 @@
 //  Created by Anthony Foster on 6/07/2014.
 //  Copyright (c) 2014 Circuitry. All rights reserved.
 //
-
-#import <UIKit/UIKit.h>
-#import "CircuitDocument.h"
+@class CircuitDocument;
 @protocol CircuitDocumentViewControllerDelegate;
 @interface CircuitDocumentViewController : UIViewController
 

@@ -9,8 +9,6 @@
 #ifndef __Circuitry__MongoIDType__
 #define __Circuitry__MongoIDType__
 
-#include <stdio.h>
-
 #endif /* defined(__Circuitry__MongoIDType__) */
 #include <unistd.h>
 typedef struct {

@@ -8,7 +8,6 @@
 
 #ifndef __Circuitry__CircuitInternal__
 #define __Circuitry__CircuitInternal__
-#include <stdio.h>
 #include "MongoIDType.h"
 
 struct CircuitInternal;

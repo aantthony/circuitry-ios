@@ -6,9 +6,6 @@
 //  Copyright (c) 2014 Circuitry. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import "ViewController.h"
-
 @interface CircuitListViewController : UICollectionViewController <UINavigationControllerDelegate>
 - (IBAction)edit:(UIBarButtonItem *)sender;
 

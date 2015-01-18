@@ -6,10 +6,8 @@
 //  Copyright (c) 2014 Circuitry. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import "CircuitDocument.h"
-
-#import "ToolbeltItem.h"
+@class CircuitDocument;
+@class ToolbeltItem;
 
 @protocol CircuitObjectListTableViewControllerDelegate;
 

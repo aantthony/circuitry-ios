@@ -14,9 +14,10 @@
 #import "AnalyticsManager.h"
 #import "TestResultViewController.h"
 #import "CircuitTest.h"
-
+#import "Viewport.h"
 // TODO: remove this
 #import <AssetsLibrary/AssetsLibrary.h>
+#import "CircuitDocument.h"
 
 @interface CircuitDocumentViewController () <CircuitObjectListTableViewControllerDelegate, ProblemInfoViewControllerDelegate, ViewControllerTutorialProtocol>
 @property (nonatomic, weak) CircuitObjectListTableViewController *objectListViewController;

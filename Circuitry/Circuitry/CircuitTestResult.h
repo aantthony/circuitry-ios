@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 Circuitry. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
 @interface CircuitTestResultCheck : NSObject
 @property (nonatomic, readonly) NSArray *inputs;
 @property (nonatomic, readonly) NSArray *expectedOutputs;

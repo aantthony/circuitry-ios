@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 Circuitry. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
 @interface Analytics : NSObject
 
 + (instancetype) shared;

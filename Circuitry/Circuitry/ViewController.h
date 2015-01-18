@@ -1,13 +1,9 @@
-#import <UIKit/UIKit.h>
-#import <GLKit/GLKit.h>
-
-#import "ImageAtlas.h"
-#import "CircuitDocument.h"
-
-#import "ToolbeltItem.h"
-#import "Viewport.h"
+@class ImageAtlas;
+@class CircuitDocument;
+@class ToolbeltItem;
+@class Viewport;
 @protocol ViewControllerTutorialProtocol;
-
+#import <GLKit/GLKViewController.h>
 @interface ViewController : GLKViewController <UIGestureRecognizerDelegate>
 
 + (EAGLContext *) context;

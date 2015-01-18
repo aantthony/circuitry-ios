@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Circuitry. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 @class ProblemSet;
 @interface ProblemSetProblemInfo : NSObject
 @property (nonatomic) NSUInteger problemIndex;

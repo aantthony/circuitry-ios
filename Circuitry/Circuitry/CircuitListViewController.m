@@ -21,7 +21,7 @@
 #import "TransitionFromDocumentListToDocument.h"
 
 #import "CircuitDocumentViewController.h"
-
+#import "ViewController.h"
 
 @interface DocumentListItem : NSObject
 @property (nonatomic) NSURL *url;
