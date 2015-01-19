@@ -34,8 +34,11 @@
         ProblemSetProblemInfo *info = [ProblemSetProblemInfo new];
         info.problemIndex = i++;
         info.title = p[@"title"];
-        info.completed = NO;
-        info.visible = YES;
+        
+        info.isCompleted = i < 3;
+        info.isVisible = YES;
+        info.isAccessible = i < 3;
+        
         info.set = self;
         info.documentURL = [baseUrl URLByAppendingPathComponent:p[@"path"] isDirectory:YES];
         

@@ -338,13 +338,20 @@
         
         ProblemSetProblemInfo *item = [_problemSet.problems objectAtIndex:indexPath.row];
         
-        cell.textLabel.text = item.title;
-        cell.imageView.image = [UIImage imageNamed:item.imageName];
-        
+        if (item.isAccessible) {
+            cell.textLabel.text = item.title;
+            cell.imageView.image = [UIImage imageNamed:item.imageName];
+            cell.textLabel.textColor = self.view.tintColor;
+        } else {
+            cell.imageView.image = [UIImage imageNamed:@"level-locked"];
+            cell.textLabel.text = @"Locked";
+            cell.textLabel.textColor = [UIColor colorWithWhite:0.3 alpha:1.0];
+        }
         return cell;
     }
     
 }
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     _displayingProblems = YES;

@@ -10,9 +10,12 @@
 @interface ProblemSetProblemInfo : NSObject
 @property (nonatomic) NSUInteger problemIndex;
 @property (nonatomic) NSString *title;
-@property (nonatomic) BOOL completed;
+
+@property (nonatomic) BOOL isCompleted;
+@property (nonatomic) BOOL isAccessible;
+@property (nonatomic) BOOL isVisible;
+
 @property (nonatomic) NSString *imageName;
 @property (nonatomic) NSURL *documentURL;
-@property (nonatomic) BOOL visible;
 @property (nonatomic) ProblemSet *set;
 @end
