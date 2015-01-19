@@ -2,10 +2,12 @@
   "problems": [
     {
       "path": "1",
+      "image": "level-1",
       "title": "Connect an AND gate"
     },
     {
       "path": "2",
+      "image": "level-2",
       "title": "3-way OR gate"
     }
   ]

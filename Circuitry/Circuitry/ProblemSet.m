@@ -39,7 +39,10 @@
         info.set = self;
         info.documentURL = [baseUrl URLByAppendingPathComponent:p[@"path"] isDirectory:YES];
         
-        info.imageName = [NSString stringWithFormat:@"level-%@", p[@"path"]];
+        info.imageName = p[@"image"];
+        if (!info.imageName) {
+            info.imageName = [NSString stringWithFormat:@"level-%@", p[@"path"]];
+        }
         
         [items addObject:info];
     }
