@@ -3,8 +3,10 @@
 #import "Grid.h"
 #import "LinkBezier.h"
 #import "SevenSegmentDisplay.h"
+#import "TouchHighlight.h"
 #import "Sprite.h"
 #import "BatchedSprite.h"
+#import "CircuitDocument.h"
 
 @interface Viewport() {
     GLKMatrix4 _viewMatrix;
@@ -22,6 +24,9 @@
 @property (nonatomic) Grid *grid;
 @property (nonatomic) GLKVector3 translate;
 @property (nonatomic) GLKVector3 scale;
+@property (nonatomic) TouchHighlight *highlighter;
+@property (nonatomic) float highlightProgress;
+@property (nonatomic) GLKVector2 highlightLinkLocation;
 @end
 
 @implementation Viewport
@@ -50,11 +55,13 @@ static SpriteTexturePos symbolXNOR;
 static SpriteTexturePos symbolAND;
 static SpriteTexturePos symbolNAND;
 static SpriteTexturePos symbolNOT;
+static GLfloat radius;
 
 
 - (id) initWithContext: (EAGLContext*) context atlas:(ImageAtlas *)atlas {
     self = [self init];
-        
+    
+    _highlightProgress = 10000.0;
     float initialScale = 0.5;
     _translate = GLKVector3Make(0.0, 0.0, 0.0);
     _scale     = GLKVector3Make(initialScale, initialScale, initialScale);
@@ -90,6 +97,8 @@ static SpriteTexturePos symbolNOT;
     gateBackgroundMiddle.v+=1;
     gateBackgroundMiddle.theight-=2;
     
+    radius = gateOutletActive.width / 2;
+    
     gateBackgroundBottom = [atlas positionForSprite:@"gate-bottom"];
     symbolOR = [atlas positionForSprite:@"symbol-or@2x"];
     symbolNOR = [atlas positionForSprite:@"symbol-nor@2x"];
@@ -118,10 +127,27 @@ static SpriteTexturePos symbolNOT;
     [ShaderEffect checkError];
     sevenSegment = [[SevenSegmentDisplay alloc] initWithTexture: atlas.texture component:[atlas positionForSprite:@"7seg"]];
     [ShaderEffect checkError];
+    
+    _highlighter = [[TouchHighlight alloc] init];
+    
     return self;
 }
 - (int) update: (NSTimeInterval) dt{
+    if (_highlightProgress <= 1) {
+        _highlightProgress += 1.5 * dt;
+        return 1;
+    }
     return 0;
+}
+
+- (void) didAttachLink:(CircuitLink *)link {
+    _highlightProgress = 0.0;
+    GLKVector3 dotPos = offsetForInlet(link->target->type, link->targetIndex);
+    GLKVector2 B = GLKVector2Make(link->target->pos.x + dotPos.x + radius, link->target->pos.y + dotPos.y + radius);
+    _highlightLinkLocation = B;
+}
+- (void) didDetachEditingLink {
+    _highlightProgress = 10.0;
 }
 
 - (void) setDocument:(CircuitDocument *)document {
@@ -425,8 +451,10 @@ BOOL expandDrawGate(CircuitObject *object) {
     [ShaderEffect checkError];
     [_grid drawWithStack:stack];
     
+    
+    
+    
     [ShaderEffect checkError];
-    int radius = gateOutletActive.width / 2;
     Circuit *_circuit = self.document.circuit;
     [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
         for(int sourceIndex = 0; sourceIndex < object->type->numOutputs; sourceIndex++) {
@@ -493,7 +521,12 @@ BOOL expandDrawGate(CircuitObject *object) {
     }];
     
 
+    if (_highlightProgress <= 1.0) {
+        [_highlighter drawTouchMatchingAtPosition:_highlightLinkLocation progress:_highlightProgress withTransform:_viewProjectionMatrix];
+    }
+
     [ShaderEffect checkError];
     GLKMatrixStackPop(stack);
 }
+
 @end

@@ -1,14 +1,17 @@
 #import <GLKit/GLKit.h>
 
 #import "Drawable.h"
-#import "Circuit.h"
+#import "CircuitInternal.h"
 #import "ImageAtlas.h"
-#import "CircuitDocument.h"
+@class CircuitDocument;
 
 @interface Viewport : Drawable
 
 - (id) initWithContext: (EAGLContext*) context atlas:(ImageAtlas *)atlas;
 - (int) update: (NSTimeInterval) dt;
+
+- (void) didDetachEditingLink;
+- (void) didAttachLink:(CircuitLink *)link;
 
 - (void) translate: (GLKVector3) translate;
 - (void) setProjectionMatrix: (GLKMatrix4) projectionMatrix;

@@ -1,7 +1,7 @@
 #import "ViewController.h"
 
 #import "Viewport.h"
-#import "Circuit.h"
+#import "CircuitDocument.h"
 #import "Sprite.h"
 #import "HUD.h"
 #import "DragGateGestureRecognizer.h"
@@ -752,6 +752,8 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
                     // if we are dragging a link out from another inlet, then delete that old link (we will create a new link to target instead of modifying the old one to make circuit simulation refreshes simpler)
                     [_circuit performWriteBlock:^(CircuitInternal *internal) {
                         CircuitLinkRemove(internal, _viewport.currentEditingLink);
+                        // It is going to change anyway, but to be consistent, this is now considered deleted.
+                        _viewport.currentEditingLink = NULL;
                     }];
                 }
                 // Create a new link and tell the viewport renderer that it is the one being edited:
@@ -760,6 +762,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
                     CircuitLink *newLink = CircuitLinkCreate(internal, _viewport.currentEditingLinkSource, _viewport.currentEditingLinkSourceIndex, target, targetIndex);
                     _viewport.currentEditingLink = newLink;
                 }];
+                [_viewport didAttachLink:_viewport.currentEditingLink];
             }
         }
         
@@ -769,8 +772,9 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         if (_viewport.currentEditingLink) {
             [_circuit performWriteBlock:^(CircuitInternal *internal) {
                 CircuitLinkRemove(internal, _viewport.currentEditingLink); 
+                _viewport.currentEditingLink = NULL;
             }];
-            _viewport.currentEditingLink = NULL;
+            [_viewport didDetachEditingLink];
             _viewport.currentEditingLinkTarget = NULL;
         }
     }

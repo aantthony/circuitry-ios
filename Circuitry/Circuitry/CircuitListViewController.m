@@ -348,7 +348,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     _displayingProblems = YES;
-    [self setTransitioningDelegate:self];
+    self.transitioningDelegate = self;
+    UIImage *img = [UIImage imageNamed:@"tutorial-bg-1.jpg"];
+    UIImageView *imgView = [[UIImageView alloc] initWithImage:img];
+    imgView.alpha = 0.2;
+    self.collectionView.backgroundView = imgView;
+    self.collectionView.backgroundColor = [UIColor whiteColor];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         [self preload];
         dispatch_async(dispatch_get_main_queue(), ^(void){

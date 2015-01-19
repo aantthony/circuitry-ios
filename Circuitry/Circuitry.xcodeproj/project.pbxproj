@@ -34,6 +34,9 @@
 		9218F73E1876AB7C00742F99 /* LinkBezier.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 9218F73B1876982100742F99 /* LinkBezier.vsh */; };
 		92191A0D1A29DECB009594B1 /* ProblemSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 92191A0C1A29DECB009594B1 /* ProblemSet.m */; };
 		92191A101A29E26C009594B1 /* ProblemSetProblemInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 92191A0F1A29E26C009594B1 /* ProblemSetProblemInfo.m */; };
+		921C7A541A6D096B00CBEECE /* TouchHighlight.m in Sources */ = {isa = PBXBuildFile; fileRef = 921C7A531A6D096B00CBEECE /* TouchHighlight.m */; };
+		921C7A561A6D0ABD00CBEECE /* TouchHighlight.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 921C7A551A6D0ABD00CBEECE /* TouchHighlight.fsh */; };
+		921C7A581A6D0ACC00CBEECE /* TouchHighlight.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 921C7A571A6D0ACC00CBEECE /* TouchHighlight.vsh */; };
 		923056A118759577005AE348 /* Configurations.plist in Resources */ = {isa = PBXBuildFile; fileRef = 923056A018759577005AE348 /* Configurations.plist */; };
 		9232AD791A1CB8010030ADB2 /* TutorialPage1ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9232AD781A1CB8010030ADB2 /* TutorialPage1ViewController.m */; };
 		9232AD7B1A1CB9EC0030ADB2 /* ipad-white-vertical-level-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 9232AD7A1A1CB9EC0030ADB2 /* ipad-white-vertical-level-1.png */; };
@@ -164,6 +167,10 @@
 		92191A0C1A29DECB009594B1 /* ProblemSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProblemSet.m; sourceTree = "<group>"; };
 		92191A0E1A29E26C009594B1 /* ProblemSetProblemInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProblemSetProblemInfo.h; sourceTree = "<group>"; };
 		92191A0F1A29E26C009594B1 /* ProblemSetProblemInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProblemSetProblemInfo.m; sourceTree = "<group>"; };
+		921C7A521A6D096B00CBEECE /* TouchHighlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchHighlight.h; sourceTree = "<group>"; };
+		921C7A531A6D096B00CBEECE /* TouchHighlight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TouchHighlight.m; sourceTree = "<group>"; };
+		921C7A551A6D0ABD00CBEECE /* TouchHighlight.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = TouchHighlight.fsh; sourceTree = "<group>"; };
+		921C7A571A6D0ACC00CBEECE /* TouchHighlight.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = TouchHighlight.vsh; sourceTree = "<group>"; };
 		923056A018759577005AE348 /* Configurations.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Configurations.plist; sourceTree = "<group>"; };
 		9232AD771A1CB8000030ADB2 /* TutorialPage1ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TutorialPage1ViewController.h; path = Circuitry/TutorialPage1ViewController.h; sourceTree = "<group>"; };
 		9232AD781A1CB8010030ADB2 /* TutorialPage1ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TutorialPage1ViewController.m; path = Circuitry/TutorialPage1ViewController.m; sourceTree = "<group>"; };
@@ -372,7 +379,6 @@
 				927D1A191875A9F000457367 /* Models */,
 				92771D301A454BC8000931D9 /* Controllers */,
 				92771CFA1A450886000931D9 /* Managers */,
-				9288BBB1196AD5810090455A /* Images */,
 				92DE44AD187C153F00014CB9 /* circuit.image-atlas */,
 				9208B106187565390038A52A /* Circuitry.entitlements */,
 				9204C386182E2F5C006A008D /* AppDelegate.h */,
@@ -425,6 +431,17 @@
 				9218F73B1876982100742F99 /* LinkBezier.vsh */,
 			);
 			name = LinkBezier;
+			sourceTree = "<group>";
+		};
+		921C7A511A6D095200CBEECE /* TouchHighlight */ = {
+			isa = PBXGroup;
+			children = (
+				921C7A521A6D096B00CBEECE /* TouchHighlight.h */,
+				921C7A531A6D096B00CBEECE /* TouchHighlight.m */,
+				921C7A551A6D0ABD00CBEECE /* TouchHighlight.fsh */,
+				921C7A571A6D0ACC00CBEECE /* TouchHighlight.vsh */,
+			);
+			name = TouchHighlight;
 			sourceTree = "<group>";
 		};
 		923C143918826DC00017BAF3 /* HUD */ = {
@@ -498,6 +515,7 @@
 		92771D331A454BED000931D9 /* Tutorial */ = {
 			isa = PBXGroup;
 			children = (
+				92FA32BC19B2C00C0046A7FE /* Images */,
 				92061DE619BDF0720081E3B9 /* TutorialViewController.h */,
 				92061DE719BDF0720081E3B9 /* TutorialViewController.m */,
 				92771D3B1A454CE8000931D9 /* Page 3 */,
@@ -705,6 +723,7 @@
 		927D1A181875A9B400457367 /* OpenGL Views */ = {
 			isa = PBXGroup;
 			children = (
+				921C7A511A6D095200CBEECE /* TouchHighlight */,
 				927D1A151875A98F00457367 /* ShaderEffect */,
 				92771D3F1A454E94000931D9 /* Shaders */,
 				9218F735187696A100742F99 /* LinkBezier */,
@@ -734,14 +753,6 @@
 			name = Models;
 			sourceTree = "<group>";
 		};
-		9288BBB1196AD5810090455A /* Images */ = {
-			isa = PBXGroup;
-			children = (
-				92FA32BC19B2C00C0046A7FE /* Tutorial */,
-			);
-			path = Images;
-			sourceTree = "<group>";
-		};
 		92A28A59187428A600F0D934 /* Circuits */ = {
 			isa = PBXGroup;
 			children = (
@@ -750,7 +761,7 @@
 			name = Circuits;
 			sourceTree = "<group>";
 		};
-		92FA32BC19B2C00C0046A7FE /* Tutorial */ = {
+		92FA32BC19B2C00C0046A7FE /* Images */ = {
 			isa = PBXGroup;
 			children = (
 				92FA32C119B2C21B0046A7FE /* tutorial-logo@2x.png */,
@@ -759,8 +770,7 @@
 				927FC3981A1A12BA00138BCA /* tutorial-bg-2@2x.jpg */,
 				92FA32C619B2E1B70046A7FE /* tutorial-bg-3@2x.jpg */,
 			);
-			name = Tutorial;
-			path = ../..;
+			name = Images;
 			sourceTree = "<group>";
 		};
 		92FC7FA018A601A200EA329A /* UIKitCategoryAdditions */ = {
@@ -877,7 +887,9 @@
 				923056A118759577005AE348 /* Configurations.plist in Resources */,
 				92A4F872187295EF00EEB367 /* Grid.fsh in Resources */,
 				9288062418725AB20096A1CA /* Sprite.vsh in Resources */,
+				921C7A561A6D0ABD00CBEECE /* TouchHighlight.fsh in Resources */,
 				9288062518725AB20096A1CA /* Sprite.fsh in Resources */,
+				921C7A581A6D0ACC00CBEECE /* TouchHighlight.vsh in Resources */,
 				9204C394182E2F5C006A008D /* Images.xcassets in Resources */,
 				928FDF761A46644A0042319C /* SevenSegmentDisplay.fsh in Resources */,
 				92C62F4C197BFCD600A3E939 /* Problems in Resources */,
@@ -952,6 +964,7 @@
 				923C143818826D960017BAF3 /* HUD.m in Sources */,
 				92771D431A455301000931D9 /* CircuitInternal.c in Sources */,
 				92771CF91A44FD2A000931D9 /* StyleManager.m in Sources */,
+				921C7A541A6D096B00CBEECE /* TouchHighlight.m in Sources */,
 				9204C388182E2F5C006A008D /* AppDelegate.m in Sources */,
 				92D90E321837807000387FAC /* Sprite.m in Sources */,
 				92FC7F9918A5B39E00EA329A /* CircuitCollectionViewCell.m in Sources */,
