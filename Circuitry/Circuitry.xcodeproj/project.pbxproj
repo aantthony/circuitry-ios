@@ -1159,7 +1159,7 @@
 				GCC_PREFIX_HEADER = "Circuitry/Circuitry-Prefix.pch";
 				INFOPLIST_FILE = "Circuitry/Circuitry-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "0a2a3935-4620-4b4e-b650-74f82399672a";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -1256,7 +1256,7 @@
 				GCC_PREFIX_HEADER = "Circuitry/Circuitry-Prefix.pch";
 				INFOPLIST_FILE = "Circuitry/Circuitry-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "1356b156-d16b-4e0c-8f4a-76e95596944a";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Distribution;
