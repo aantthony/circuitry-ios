@@ -38,7 +38,7 @@ typedef void (^Function)();
         UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
         if (!cell) continue;
         if (cell.tag == 500) continue;
-        TestResultItemCell *itemCell = (TestResultItemCell *)cell;
+//        TestResultItemCell *itemCell = (TestResultItemCell *)cell;
         [cellsToAnimate addObject:cell];
     }
     

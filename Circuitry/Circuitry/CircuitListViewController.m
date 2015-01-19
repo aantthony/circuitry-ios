@@ -185,6 +185,9 @@
     } else {
         ProblemSetProblemInfo *item = [_problemSet.problems objectAtIndex:indexPath.row];
         CircuitCollectionViewCell *cell = (CircuitCollectionViewCell *) [collectionView cellForItemAtIndexPath:indexPath];
+        if (!item.isAccessible) {
+            return;
+        }
         _selectionRect = [self.view convertRect:cell.imageView.frame fromView:cell];
         _openDocumentAnimationShouldFadeIn = NO;
         [self openProblem:item];
@@ -332,6 +335,8 @@
             cell.textLabel.text = @"Untitled";
         }
         cell.imageView.image = nil;
+        cell.textLabel.textColor = self.view.tintColor;
+        cell.tickView.hidden = YES;
         return cell;
     } else {
         CircuitCollectionViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:@"CircuitListPrototypeCell" forIndexPath:indexPath];
@@ -347,9 +352,19 @@
             cell.textLabel.text = @"Locked";
             cell.textLabel.textColor = [UIColor colorWithWhite:0.3 alpha:1.0];
         }
+        cell.tickView.hidden = !item.isCompleted;
+        
         return cell;
     }
     
+}
+
+- (BOOL) collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (_displayingProblems) {
+        ProblemSetProblemInfo *item = _problemSet.problems[indexPath.row];
+        if (!item.isAccessible) return NO;
+    }
+    return YES;
 }
 
 - (void)viewDidLoad {
@@ -394,7 +409,7 @@
         if (_openDocumentAnimationShouldFadeIn) {
             ViewController * controller = (ViewController *) fromVC;
             NSURL *url = controller.document.fileURL;
-            NSString *urlPath = url.path;
+//            NSString *urlPath = url.path;
             
             CircuitCollectionViewCell * cell = nil;
             delegate.originatingRect = [self.view convertRect:cell.imageView.frame fromView:cell];

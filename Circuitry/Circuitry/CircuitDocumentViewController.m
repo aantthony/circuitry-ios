@@ -142,7 +142,6 @@ static CGPoint hvrDragHereRight = {88,428};
 - (void) setTutorialState:(NSInteger)tutorialState {
     if (_tutorialState == tutorialState) return;
     _tutorialState = tutorialState;
-    NSLog(@"tutorialState: %d", tutorialState);
     if (tutorialState == 0) {
         [UIView animateWithDuration:0.5 animations:^{
             _hintViewTapAndHoldLeft.alpha = 0;

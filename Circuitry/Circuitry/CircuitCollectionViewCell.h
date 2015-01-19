@@ -11,4 +11,5 @@
 @interface CircuitCollectionViewCell : UICollectionViewCell
 @property (nonatomic) IBOutlet UILabel *textLabel;
 @property (nonatomic) IBOutlet CircuitListImageView *imageView;
+@property (nonatomic) IBOutlet UIView *tickView;
 @end

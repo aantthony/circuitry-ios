@@ -333,6 +333,9 @@
                                             <rect key="frame" x="6" y="8" width="188" height="188"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </imageView>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ProblemTick" translatesAutoresizingMaskIntoConstraints="NO" id="hN9-VK-l66">
+                                            <rect key="frame" x="145" y="146" width="40" height="40"/>
+                                        </imageView>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
@@ -340,6 +343,7 @@
                                 <connections>
                                     <outlet property="imageView" destination="2Ig-BZ-iW3" id="fVD-J4-kbL"/>
                                     <outlet property="textLabel" destination="qlO-wE-HbB" id="FjC-1r-JMh"/>
+                                    <outlet property="tickView" destination="hN9-VK-l66" id="tHC-Fy-AfZ"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
@@ -836,6 +840,7 @@ This logic diagram describes the rule:
         </scene>
     </scenes>
     <resources>
+        <image name="ProblemTick" width="40" height="40"/>
         <image name="TestResultMatch" width="29" height="23"/>
         <image name="continue-arrow" width="53" height="18"/>
         <image name="dots" width="22" height="6"/>

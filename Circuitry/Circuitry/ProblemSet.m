@@ -29,23 +29,22 @@
     
     NSMutableArray *items = [NSMutableArray array];
     
+    NSUInteger playerCurrentLevelIndex = 1;
     NSUInteger i = 0;
     for (NSDictionary *p in index[@"problems"]) {
-        ProblemSetProblemInfo *info = [ProblemSetProblemInfo new];
-        info.problemIndex = i++;
-        info.title = p[@"title"];
+        NSUInteger index = i++;
         
-        info.isCompleted = i < 3;
-        info.isVisible = YES;
-        info.isAccessible = i < 3;
+        BOOL completed = index < playerCurrentLevelIndex;
+        BOOL accessible = index <= playerCurrentLevelIndex;
+
+        NSURL *url = [baseUrl URLByAppendingPathComponent:p[@"path"] isDirectory:YES];
         
-        info.set = self;
-        info.documentURL = [baseUrl URLByAppendingPathComponent:p[@"path"] isDirectory:YES];
-        
-        info.imageName = p[@"image"];
-        if (!info.imageName) {
-            info.imageName = [NSString stringWithFormat:@"level-%@", p[@"path"]];
+        NSString *imageName = p[@"image"];
+        if (!imageName) {
+            imageName = [NSString stringWithFormat:@"level-%@", p[@"path"]];
         }
+        
+        ProblemSetProblemInfo *info = [[ProblemSetProblemInfo alloc] initWithProblemIndex:index title:p[@"title"] completed:completed accessible:accessible visible:YES imageName:imageName documentUrl:url set:self];
         
         [items addObject:info];
     }

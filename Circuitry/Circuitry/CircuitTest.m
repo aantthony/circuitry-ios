@@ -26,12 +26,12 @@
 
 - (NSArray *) inputIds {
     NSMutableArray *ids = [NSMutableArray arrayWithCapacity:_inputNodes.count];
-    __block CircuitTest *blockSelf = self;
+//    __block CircuitTest *blockSelf = self;
     [_inputNodes enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         CircuitObject *circuitObject = [obj pointerValue];
         if (circuitObject == NULL) {
             NSLog(@"Input Nodes: %@", _inputNodes);
-            NSLog(@"idx: %d", idx);
+//            NSLog(@"idx: %d", idx);
         }
         [ids addObject: [MongoID stringWithId:circuitObject->id]];
     }];

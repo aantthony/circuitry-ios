@@ -60,7 +60,7 @@
     
     NSLog(@"getting screenshot...");
     
-    CircuitDocument * doc = _document;
+//    CircuitDocument * doc = _document;
     
     [self unpause];
 }
