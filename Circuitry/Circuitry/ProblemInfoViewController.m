@@ -12,6 +12,7 @@
 
 @interface ProblemInfoViewController ()
 @property (weak, nonatomic) IBOutlet UIView *congratsView;
+@property (weak, nonatomic) IBOutlet UIImageView *upArrow;
 @property (weak, nonatomic) CircuitDocument *document;
 @end
 
@@ -21,6 +22,7 @@
     [super viewDidLoad];
     _congratsView.alpha = 0.0;
     _congratsView.hidden = YES;
+    self.isMinimised = NO;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -38,6 +40,14 @@
     } completion:^(BOOL finished) {
         
     }];
+}
+- (IBAction)didTapProblemDescriptionToHide:(id)sender {
+    [self.delegate problemInfoViewController:self requestToggleVisibility:sender];
+}
+
+- (void) setIsMinimised:(BOOL)isMinimised {
+    _isMinimised = isMinimised;
+    _upArrow.alpha = _isMinimised ? 1.0 : 0.0;
 }
 
 - (void) showProblemDescription {

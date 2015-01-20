@@ -259,6 +259,81 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     }
     
     self.document = _document;
+    if (self.isTutorial) {
+        [self configureTutorialGatesToPosition];
+    }
+}
+
+- (void) configureTutorialGatesToPosition {
+    CircuitObject *A = [self.document.circuit findObjectById:@"53c3cdc945f5603003000000"];
+    CircuitObject *B = [self.document.circuit findObjectById:@"53c3cdc945f5603003000888"];
+    CircuitObject *andGate = [self.document.circuit findObjectById:@"53c3cdc945f56030030041aa"];
+    CircuitObject *output = [self.document.circuit findObjectById:@"53c3cdc945f5603003000009"];
+    BOOL isLandscape = self.view.frame.size.width > self.view.frame.size.height;
+    if (!A || !B || !andGate || !output) {
+        NSParameterAssert(nil);
+        return;
+    }
+    if (isLandscape) {
+        A->pos.x = 0;
+        A->pos.y = 0;
+        B->pos.x = 0;
+        B->pos.y = 400;
+        andGate->pos.x = 700;
+        andGate->pos.y = 200;
+        output->pos.x = 1400;
+        output->pos.y = 200;
+    } else {
+        A->pos.x = 0;
+        A->pos.y = 0;
+        B->pos.x = 0;
+        B->pos.y = 800;
+        andGate->pos.x = 500;
+        andGate->pos.y = 400;
+        output->pos.x = 1000;
+        output->pos.y = 400;
+    }
+}
+
+- (BOOL) animateTutorialObjectsToPosition {
+    CircuitObject *A = [self.document.circuit findObjectById:@"53c3cdc945f5603003000000"];
+    CircuitObject *B = [self.document.circuit findObjectById:@"53c3cdc945f5603003000888"];
+    CircuitObject *andGate = [self.document.circuit findObjectById:@"53c3cdc945f56030030041aa"];
+    CircuitObject *output = [self.document.circuit findObjectById:@"53c3cdc945f5603003000009"];
+    if (!A || !B || !andGate || !output) {
+        NSParameterAssert(nil);
+        return NO;
+    }
+    BOOL isLandscape = self.view.frame.size.width > self.view.frame.size.height;
+    BOOL changes = NO;
+    if (isLandscape) {
+        if (beginLongPressGestureObject != A && animateGateToLockedPosition(A, 0, 0)) {
+            changes = YES;
+        }
+        if (beginLongPressGestureObject != B && animateGateToLockedPosition(B, 0, 400)) {
+            changes = YES;
+        }
+        if (beginLongPressGestureObject != andGate && animateGateToLockedPosition(andGate, 700, 200)) {
+            changes = YES;
+        }
+        if (beginLongPressGestureObject != output && animateGateToLockedPosition(output, 1400, 200)) {
+            changes = YES;
+        }
+    } else {
+        if (beginLongPressGestureObject != A && animateGateToLockedPosition(A, 0, 0)) {
+            changes = YES;
+        }
+        if (beginLongPressGestureObject != B && animateGateToLockedPosition(B, 0, 800)) {
+            changes = YES;
+        }
+        if (beginLongPressGestureObject != andGate && animateGateToLockedPosition(andGate, 500, 400)) {
+            changes = YES;
+        }
+        if (beginLongPressGestureObject != output && animateGateToLockedPosition(output, 1000, 400)) {
+            changes = YES;
+        }
+    }
+    return changes;
 }
 
 - (void) timerTick:(id) sender {
@@ -387,16 +462,7 @@ static BOOL animateGateToLockedPosition(CircuitObject *object, float x, float y)
     int changes = 0;
     
     if (_isTutorial) {
-        CircuitObject *A = [self.document.circuit findObjectById:@"53c3cdc945f5603003000000"];
-        CircuitObject *B = [self.document.circuit findObjectById:@"53c3cdc945f5603003000888"];
-        CircuitObject *andGate = [self.document.circuit findObjectById:@"53c3cdc945f56030030041aa"];
-        if (beginLongPressGestureObject != A && animateGateToLockedPosition(A, 0, 0)) {
-            changes++;
-        }
-        if (beginLongPressGestureObject != B && animateGateToLockedPosition(B, 0, 800)) {
-            changes++;
-        }
-        if (beginLongPressGestureObject != andGate && animateGateToLockedPosition(andGate, 500, 400)) {
+        if ([self animateTutorialObjectsToPosition]) {
             changes++;
         }
     }

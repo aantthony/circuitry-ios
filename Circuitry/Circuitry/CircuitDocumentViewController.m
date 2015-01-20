@@ -22,12 +22,13 @@
 @interface CircuitDocumentViewController () <CircuitObjectListTableViewControllerDelegate, ProblemInfoViewControllerDelegate, ViewControllerTutorialProtocol>
 @property (nonatomic, weak) CircuitObjectListTableViewController *objectListViewController;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *objectListLeft;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *problemInfoBottom;
 @property (nonatomic, weak) ProblemInfoViewController *problemInfoViewController;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *problemInfoHeight;
 @property (nonatomic, weak) ViewController *glkViewController;
 @property (nonatomic) BOOL objectListVisible;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *checkAnswerButton;
 @property (nonatomic) BOOL problemInfoVisible;
+@property (nonatomic) BOOL problemInfoMinimised;
 @property (nonatomic) UIImageView *hintViewTapAndHoldLeft;
 @property (nonatomic) UIImageView *hintViewDragHereRight;
 @property (nonatomic) UIImageView *hintViewCheckCorrect;
@@ -67,31 +68,70 @@
 static CGPoint hvrTapAndHoldLeft = {225, 611};
 static CGPoint hvrDragHereRight = {88,428};
 
+- (BOOL) landscape {
+    return self.view.frame.size.width > self.view.frame.size.height;
+}
+
 - (UIImageView *) hintViewTapAndHoldLeft {
-    if (_hintViewTapAndHoldLeft) return _hintViewTapAndHoldLeft;
-    UIImageView *view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"TapAndHoldOutlet"]];
-    view.frame = CGRectMake(hvrTapAndHoldLeft.x, hvrTapAndHoldLeft.y, view.frame.size.width, view.frame.size.height);
-    _hintViewTapAndHoldLeft = view;
-    [self.view addSubview:view];
-    return view;
+    if (!_hintViewTapAndHoldLeft) {
+        _hintViewTapAndHoldLeft = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"TapAndHoldOutlet"]];
+        [self.view addSubview:_hintViewTapAndHoldLeft];
+    }
+    
+    if (self.landscape) {
+        hvrTapAndHoldLeft.y = 411;
+    } else {
+        hvrTapAndHoldLeft.y = 611;
+    }
+    
+    _hintViewTapAndHoldLeft.frame = CGRectMake(
+                                               hvrTapAndHoldLeft.x,
+                                               hvrTapAndHoldLeft.y,
+                                               _hintViewTapAndHoldLeft.frame.size.width,
+                                               _hintViewTapAndHoldLeft.frame.size.height
+                                               );
+    return _hintViewTapAndHoldLeft;
 }
 
 - (UIImageView *) hintViewDragHereRight {
-    if (_hintViewDragHereRight) return _hintViewDragHereRight;
-    UIImageView *view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"DragIntoHere"]];
-    view.frame = CGRectMake(hvrDragHereRight.x, hvrDragHereRight.y, view.frame.size.width, view.frame.size.height);
-    _hintViewDragHereRight = view;
-    [self.view addSubview:view];
-    return view;
+    if (!_hintViewDragHereRight) {
+        _hintViewDragHereRight = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"DragIntoHere"]];
+        [self.view addSubview:_hintViewDragHereRight];
+    }
+    if (self.landscape) {
+        hvrDragHereRight.y = 326;
+        hvrDragHereRight.x = 200;
+    } else {
+        hvrDragHereRight.y = 428;
+        hvrDragHereRight.x = 88;
+    }
+    _hintViewDragHereRight.frame = CGRectMake(
+                                              hvrDragHereRight.x,
+                                              hvrDragHereRight.y,
+                                              _hintViewDragHereRight.frame.size.width,
+                                              _hintViewDragHereRight.frame.size.height
+                                              );
+    return _hintViewDragHereRight;
 }
 
 - (UIImageView *) hintViewCheckCorrect {
-    if (_hintViewCheckCorrect) return _hintViewCheckCorrect;
-    UIImageView *view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"CheckCorrect"]];
-    view.frame = CGRectMake(350,100, view.frame.size.width, view.frame.size.height);
-    _hintViewCheckCorrect = view;
-    [self.view addSubview:view];
-    return view;
+    if (!_hintViewCheckCorrect) {
+        _hintViewCheckCorrect = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"CheckCorrect"]];
+        [self.view addSubview:_hintViewCheckCorrect];
+    }
+    
+    CGRect rect = CGRectMake(
+                                             320,
+                                             80,
+                                             _hintViewCheckCorrect.frame.size.width,
+                                             _hintViewCheckCorrect.frame.size.height
+                                             );
+    
+    if (self.landscape) {
+        rect.origin.x = 570;
+    }
+    _hintViewCheckCorrect.frame = rect;
+    return _hintViewCheckCorrect;
 }
 
 - (void) ensureObjectIsAtPosition:(CircuitObject *)object x:(float)x y:(float)y {
@@ -105,6 +145,14 @@ static CGPoint hvrDragHereRight = {88,428};
     object->pos.y = x;
     object->pos.y = y;
 
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation
+{
+    if (orientation == UIInterfaceOrientationPortrait)
+        return YES;
+    
+    return NO;
 }
 
 - (void) updateTutorialState {
@@ -193,7 +241,8 @@ static CGPoint hvrDragHereRight = {88,428};
     } else if (tutorialState == 4) {
         UIView *tapHold = self.hintViewTapAndHoldLeft;
         tapHold.alpha = 0;
-        CGRect targetFrame = CGRectMake(hvrTapAndHoldLeft.x, hvrTapAndHoldLeft.y - 400, tapHold.frame.size.width, tapHold.frame.size.height);
+        CGFloat offsetY = self.landscape ? 200 : 400;
+        CGRect targetFrame = CGRectMake(hvrTapAndHoldLeft.x, hvrTapAndHoldLeft.y - offsetY, tapHold.frame.size.width, tapHold.frame.size.height);
         targetFrame.origin.x += 150;
         tapHold.frame = targetFrame;
         targetFrame.origin.x -= 150;
@@ -204,7 +253,8 @@ static CGPoint hvrDragHereRight = {88,428};
         }];
     } else if (tutorialState == 5) {
         UIView *dragHere = self.hintViewDragHereRight;
-        CGRect targetFrame = CGRectMake(hvrDragHereRight.x, hvrDragHereRight.y - 40, dragHere.frame.size.width, dragHere.frame.size.height);
+        CGFloat offsetY = self.landscape ? 20 : 40;
+        CGRect targetFrame = CGRectMake(hvrDragHereRight.x, hvrDragHereRight.y - offsetY, dragHere.frame.size.width, dragHere.frame.size.height);
         targetFrame.origin.x -= 20;
         dragHere.frame = targetFrame;
         targetFrame.origin.x += 20;
@@ -227,6 +277,24 @@ static CGPoint hvrDragHereRight = {88,428};
             arrow.alpha = 1;
         }];
     }
+    
+}
+
+- (void) viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    NSInteger tutorialState = _tutorialState;
+    [UIView animateWithDuration:0.01 animations:^{
+        _hintViewTapAndHoldLeft.alpha = 0;
+        _hintViewDragHereRight.alpha = 0;
+        _hintViewCheckCorrect.alpha = 0;
+    }];
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            _tutorialState = 0;
+            self.tutorialState = tutorialState;
+        });
+    }];
     
 }
 
@@ -276,7 +344,33 @@ static CGPoint hvrDragHereRight = {88,428};
 - (void) setProblemInfoVisible:(BOOL) problemInfoVisible {
     _problemInfoVisible = problemInfoVisible;
     _problemInfoView.hidden = !problemInfoVisible;
-    _problemInfoHeight.constant = problemInfoVisible ? 258 : 0;
+    _problemInfoBottom.constant = problemInfoVisible ? 0 : -258;
+    [self.view layoutIfNeeded];
+}
+
+- (void) setProblemInfoMinimised:(BOOL)problemInfoMinimised {
+    _problemInfoMinimised = problemInfoMinimised;
+    _problemInfoBottom.constant = _problemInfoMinimised ? -200 : 0;
+    _problemInfoViewController.isMinimised = _problemInfoMinimised;
+    [self.view layoutIfNeeded];
+}
+
+- (void) setProblemInfoMinimised:(BOOL)problemInfoMinimised animated:(BOOL) animated {
+    if (!animated) {
+        [self setProblemInfoMinimised:problemInfoMinimised];
+        return;
+    }
+    _problemInfoMinimised = problemInfoMinimised;
+    [self.view layoutIfNeeded];
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        self.problemInfoMinimised = _problemInfoMinimised;
+    } completion:nil];
+}
+
+- (void) problemInfoViewController:(ProblemInfoViewController *)problemInfoViewController requestToggleVisibility:(id)sender {
+    
+    BOOL shouldMinimise = !_problemInfoMinimised;
+    [self setProblemInfoMinimised:shouldMinimise animated:YES];
 }
 
 - (IBAction)configureDocument:(id)sender {
