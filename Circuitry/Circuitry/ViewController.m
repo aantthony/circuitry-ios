@@ -16,6 +16,8 @@
 // For iOS 8 support:
 #import <OpenGLES/ES1/glext.h>
 
+static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
+
 @interface ViewController () <UIActionSheetDelegate> {
     IBOutlet UIPinchGestureRecognizer *_pinchGestureRecognizer;
     GLKMatrix4 _modelViewProjectionMatrix;
@@ -49,6 +51,7 @@
 @property (nonatomic) NSTimer *timer;
 @property (nonatomic) BOOL canPan;
 @property (nonatomic) BOOL canZoom;
+@property (nonatomic) BOOL isTutorial;
 
 - (void)tearDownGL;
 
@@ -74,6 +77,8 @@
     _viewport.document = _document;
     _canPan = YES;
     _canZoom = YES;
+    NSString *tutorial = document.circuit.meta[@"tutorial"];
+    _isTutorial = [tutorial isEqualToString:tutorialFlagId];
     if (_document.circuit.viewDetails) {
         NSNumber *num = _document.circuit.viewDetails[@"canPan"];
         if (num && !num.boolValue) {
@@ -294,7 +299,25 @@
 #pragma mark - GLKView and GLKViewController delegate methods
 
 - (void) updateTuturialState {
+    if (!self.isTutorial) return;
     [self.tutorialDelegate viewControllerTutorial:self didChange:nil];
+}
+
+static BOOL animateGateToLockedPosition(CircuitObject *object, float x, float y) {
+    float dx = object->pos.x - x;
+    float dy = object->pos.y - y;
+    float d2 = dx * dx + dy * dy;
+    if (d2 == 0.0) {
+        return NO;
+    }
+    if (d2 <= 0.01 && d2 >= -0.01) {
+        object->pos.x = x;
+        object->pos.y = y;
+    }
+    float k = 0.05;
+    object->pos.x -= k * dx;
+    object->pos.y -= k * dy;
+    return YES;
 }
 
 - (void)update
@@ -362,6 +385,22 @@
         }
     }
     int changes = 0;
+    
+    if (_isTutorial) {
+        CircuitObject *A = [self.document.circuit findObjectById:@"53c3cdc945f5603003000000"];
+        CircuitObject *B = [self.document.circuit findObjectById:@"53c3cdc945f5603003000888"];
+        CircuitObject *andGate = [self.document.circuit findObjectById:@"53c3cdc945f56030030041aa"];
+        if (beginLongPressGestureObject != A && animateGateToLockedPosition(A, 0, 0)) {
+            changes++;
+        }
+        if (beginLongPressGestureObject != B && animateGateToLockedPosition(B, 0, 800)) {
+            changes++;
+        }
+        if (beginLongPressGestureObject != andGate && animateGateToLockedPosition(andGate, 500, 400)) {
+            changes++;
+        }
+    }
+    
     int circuitChanges = [_document.circuit simulate:512];
 //    NSLog(@"%d, %f", circuitChanges, dt);
     changes += circuitChanges;
@@ -636,6 +675,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     if (sender.state == UIGestureRecognizerStateEnded) {
         [self updateChangeCount:UIDocumentChangeDone];
         [self unpause];
+        beginLongPressGestureObject = NULL;
         return;
     } else if ([sender numberOfTouches] != 1) {
         sender.enabled = NO;

@@ -94,6 +94,19 @@ static CGPoint hvrDragHereRight = {88,428};
     return view;
 }
 
+- (void) ensureObjectIsAtPosition:(CircuitObject *)object x:(float)x y:(float)y {
+    float dx = object->pos.x - x;
+    float dy = object->pos.y - y;
+    float d2 = dx * dx + dy * dy;
+    if (d2 == 0.0) {
+        return;
+    }
+    
+    object->pos.y = x;
+    object->pos.y = y;
+
+}
+
 - (void) updateTutorialState {
     
     CircuitObject *A = [self.document.circuit findObjectById:@"53c3cdc945f5603003000000"];
@@ -103,6 +116,8 @@ static CGPoint hvrDragHereRight = {88,428};
         // TODO: No need to check here, we are not in the tutorial!
         return;
     }
+    
+//    [self ensureObjectIsAtPosition:A x:0 y:0];
     
     if (B->outputs[0]) {
         if (A->outputs[0]) {
