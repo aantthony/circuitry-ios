@@ -740,42 +740,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="258"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="31s-zx-ivU">
-                                <rect key="frame" x="0.0" y="0.0" width="768" height="258"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gcl-aN-Xel">
-                                        <rect key="frame" x="198" y="115" width="378" height="36"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="23"/>
-                                        <state key="normal" title="Continue to next problem">
-                                            <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="continueButton:" destination="jZw-XZ-G2q" eventType="touchUpInside" id="9Ws-Il-Ged"/>
-                                        </connections>
-                                    </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Congratulations, you solved it!" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UDI-Xp-EuQ">
-                                        <rect key="frame" x="238" y="72" width="292" height="27"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="22"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="continue-arrow" translatesAutoresizingMaskIntoConstraints="NO" id="Ywh-1w-sac">
-                                        <rect key="frame" x="0.0" y="151" width="768" height="57"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="57" id="Xpz-5f-ZKN"/>
-                                        </constraints>
-                                    </imageView>
-                                </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="Ywh-1w-sac" secondAttribute="bottom" constant="50" id="9Rc-eb-hdT"/>
-                                    <constraint firstItem="Ywh-1w-sac" firstAttribute="leading" secondItem="31s-zx-ivU" secondAttribute="leading" id="Kpf-cN-atW"/>
-                                    <constraint firstItem="UDI-Xp-EuQ" firstAttribute="top" secondItem="31s-zx-ivU" secondAttribute="top" constant="72" id="k4X-rA-bt5"/>
-                                    <constraint firstAttribute="centerX" secondItem="UDI-Xp-EuQ" secondAttribute="centerX" id="qbu-NC-h7B"/>
-                                    <constraint firstAttribute="trailing" secondItem="Ywh-1w-sac" secondAttribute="trailing" id="xPb-Mu-Bdf"/>
-                                </constraints>
-                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vuh-ES-eXS">
                                 <rect key="frame" x="0.0" y="0.0" width="768" height="258"/>
                                 <subviews>
@@ -813,6 +777,42 @@ This logic diagram describes the rule:
                                     <outletCollection property="gestureRecognizers" destination="F9m-vV-ShL" appends="YES" id="pqa-le-dU1"/>
                                 </connections>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="31s-zx-ivU">
+                                <rect key="frame" x="0.0" y="0.0" width="768" height="258"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gcl-aN-Xel">
+                                        <rect key="frame" x="198" y="115" width="378" height="36"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="23"/>
+                                        <state key="normal" title="Continue to next problem">
+                                            <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="continueButton:" destination="jZw-XZ-G2q" eventType="touchUpInside" id="9Ws-Il-Ged"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Congratulations, you solved it!" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UDI-Xp-EuQ">
+                                        <rect key="frame" x="238" y="72" width="292" height="27"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="continue-arrow" translatesAutoresizingMaskIntoConstraints="NO" id="Ywh-1w-sac">
+                                        <rect key="frame" x="0.0" y="151" width="768" height="57"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="57" id="Xpz-5f-ZKN"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="Ywh-1w-sac" secondAttribute="bottom" constant="50" id="9Rc-eb-hdT"/>
+                                    <constraint firstItem="Ywh-1w-sac" firstAttribute="leading" secondItem="31s-zx-ivU" secondAttribute="leading" id="Kpf-cN-atW"/>
+                                    <constraint firstItem="UDI-Xp-EuQ" firstAttribute="top" secondItem="31s-zx-ivU" secondAttribute="top" constant="72" id="k4X-rA-bt5"/>
+                                    <constraint firstAttribute="centerX" secondItem="UDI-Xp-EuQ" secondAttribute="centerX" id="qbu-NC-h7B"/>
+                                    <constraint firstAttribute="trailing" secondItem="Ywh-1w-sac" secondAttribute="trailing" id="xPb-Mu-Bdf"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
@@ -829,7 +829,9 @@ This logic diagram describes the rule:
                     </view>
                     <toolbarItems/>
                     <connections>
+                        <outlet property="bodyLabel" destination="Qmv-Nm-o5F" id="BdU-qf-hth"/>
                         <outlet property="congratsView" destination="31s-zx-ivU" id="kne-ab-oA8"/>
+                        <outlet property="titleLabel" destination="MHQ-DL-SWj" id="aNC-dl-cMC"/>
                         <outlet property="upArrow" destination="Mfd-cb-9WV" id="day-UM-9Sz"/>
                     </connections>
                 </viewController>

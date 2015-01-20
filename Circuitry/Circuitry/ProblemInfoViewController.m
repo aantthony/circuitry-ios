@@ -13,6 +13,8 @@
 @interface ProblemInfoViewController ()
 @property (weak, nonatomic) IBOutlet UIView *congratsView;
 @property (weak, nonatomic) IBOutlet UIImageView *upArrow;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *bodyLabel;
 @property (weak, nonatomic) CircuitDocument *document;
 @end
 
@@ -23,6 +25,7 @@
     _congratsView.alpha = 0.0;
     _congratsView.hidden = YES;
     self.isMinimised = NO;
+    self.document = _document;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -32,6 +35,8 @@
 
 - (void) setDocument: (CircuitDocument *) document {
     _document = document;
+    _titleLabel.text = [NSString stringWithFormat:@"Problem #%@ - %@", _document.circuit.name, _document.circuit.title];
+    _bodyLabel.text = _document.circuit.userDescription;
 }
 - (void) showProgressToNextLevelScreen {
     _congratsView.hidden = NO;
