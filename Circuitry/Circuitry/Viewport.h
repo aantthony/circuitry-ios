@@ -12,6 +12,7 @@
 
 - (void) didDetachEditingLink;
 - (void) didAttachLink:(CircuitLink *)link;
+- (void) didBeginCreatingLink:(CircuitObject *)object outletIndex:(int)outletIndex;
 
 - (void) translate: (GLKVector3) translate;
 - (void) setProjectionMatrix: (GLKMatrix4) projectionMatrix;

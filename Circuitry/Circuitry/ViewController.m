@@ -544,6 +544,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
                 _viewport.currentEditingLinkSource = o;
                 _viewport.currentEditingLinkSourceIndex = index;
                 _viewport.currentEditingLinkTargetPosition = position;
+                [_viewport didBeginCreatingLink:o outletIndex:index];
                 return YES;
             }
         }

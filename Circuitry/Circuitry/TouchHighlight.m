@@ -73,6 +73,44 @@ typedef struct {
 
     return self;
 }
+
+- (BOOL) drawOutFromPosition:(GLKVector2)position progress:(GLfloat)progress withTransform:(GLKMatrix4) viewProjectionMatrix {
+    [_shader prepareToDraw];
+    
+    [ShaderEffect checkError];
+    glEnable(GL_BLEND);
+    //    glEnable(GL_ALPHA_BITS);
+    
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnableVertexAttribArray(GLKVertexAttribPosition);
+    glEnableVertexAttribArray(GLKVertexAttribTexCoord0);
+    
+    [ShaderEffect checkError];
+    
+    glBindBuffer(GL_ARRAY_BUFFER, _quadVertexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _quadIndexBuffer);
+    
+    glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, Position));
+    glVertexAttribPointer(GLKVertexAttribTexCoord0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, TexCoord1));
+    glUniformMatrix4fv(_uModelViewProjectionMatrix, 1, 0, viewProjectionMatrix.m);
+    if (progress < 0.0) progress = 0.0;
+    else if (progress > 1.0) progress = 1.0;
+    GLfloat oneMinusP = (1-progress);
+    GLfloat radius = 100.0 + progress * 100.0;
+    GLfloat alpha = 0.4 - progress;
+    glUniform3f(_uPos,  position.x - radius, position.y - radius, 0);
+    glUniform4f(_uColor, 1.0, 1.0, 1.0, alpha);
+    glUniform1f(_uRadius, radius);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
+    
+    [ShaderEffect checkError];
+    glDisableVertexAttribArray(GLKVertexAttribPosition);
+    glDisableVertexAttribArray(GLKVertexAttribTexCoord0);
+    
+    [ShaderEffect checkError];
+    return NO;
+
+}
 - (BOOL) drawTouchMatchingAtPosition:(GLKVector2)position progress:(GLfloat)progress withTransform:(GLKMatrix4) viewProjectionMatrix {
     [_shader prepareToDraw];
     

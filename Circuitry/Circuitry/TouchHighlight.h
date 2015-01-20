@@ -10,4 +10,5 @@
 
 @interface TouchHighlight : NSObject
 - (BOOL) drawTouchMatchingAtPosition:(GLKVector2)position progress:(GLfloat)progress withTransform:(GLKMatrix4) viewProjectionMatrix;
+- (BOOL) drawOutFromPosition:(GLKVector2)position progress:(GLfloat)progress withTransform:(GLKMatrix4) viewProjectionMatrix;
 @end

@@ -26,7 +26,9 @@
 @property (nonatomic) GLKVector3 scale;
 @property (nonatomic) TouchHighlight *highlighter;
 @property (nonatomic) float highlightProgress;
+@property (nonatomic) float highlightOutProgress;
 @property (nonatomic) GLKVector2 highlightLinkLocation;
+@property (nonatomic) GLKVector2 highlightOutLinkLocation;
 @end
 
 @implementation Viewport
@@ -62,6 +64,8 @@ static GLfloat radius;
     self = [self init];
     
     _highlightProgress = 10000.0;
+    _highlightOutProgress = 10000.0;
+    
     float initialScale = 0.5;
     _translate = GLKVector3Make(0.0, 0.0, 0.0);
     _scale     = GLKVector3Make(initialScale, initialScale, initialScale);
@@ -133,8 +137,16 @@ static GLfloat radius;
     return self;
 }
 - (int) update: (NSTimeInterval) dt{
+    BOOL changing = NO;
     if (_highlightProgress <= 1) {
+        changing = YES;
+    } else if (_highlightOutProgress <= 1) {
+        changing = YES;
+    }
+    
+    if (changing) {
         _highlightProgress += 1.5 * dt;
+        _highlightOutProgress += 2.0 * dt;
         return 1;
     }
     return 0;
@@ -148,6 +160,12 @@ static GLfloat radius;
 }
 - (void) didDetachEditingLink {
     _highlightProgress = 10.0;
+}
+- (void) didBeginCreatingLink:(CircuitObject *)object outletIndex:(int)outletIndex {
+    _highlightOutProgress = 0.0;
+    GLKVector3 dotPos = offsetForOutlet(object->type, outletIndex);
+    GLKVector2 B = GLKVector2Make(object->pos.x + dotPos.x + radius, object->pos.y + dotPos.y + radius);
+    _highlightOutLinkLocation = B;
 }
 
 - (void) setDocument:(CircuitDocument *)document {
@@ -523,6 +541,10 @@ BOOL expandDrawGate(CircuitObject *object) {
 
     if (_highlightProgress <= 1.0) {
         [_highlighter drawTouchMatchingAtPosition:_highlightLinkLocation progress:_highlightProgress withTransform:_viewProjectionMatrix];
+    }
+    
+    if (_highlightOutProgress <= 1.0) {
+        [_highlighter drawOutFromPosition:_highlightOutLinkLocation progress:_highlightOutProgress withTransform:_viewProjectionMatrix];
     }
 
     [ShaderEffect checkError];
