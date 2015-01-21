@@ -7,6 +7,7 @@
 
 @interface Viewport : Drawable
 
+
 - (id) initWithContext: (EAGLContext*) context atlas:(ImageAtlas *)atlas;
 - (int) update: (NSTimeInterval) dt;
 
@@ -35,5 +36,8 @@
 @property (nonatomic) int currentEditingLinkSourceIndex;
 @property (nonatomic) int currentEditingLinkTargetIndex;
 @property (nonatomic) GLKVector3 currentEditingLinkTargetPosition;
+
+@property (nonatomic) GLKVector3 translate;
+@property (nonatomic) GLKVector3 scale;
 
 @end

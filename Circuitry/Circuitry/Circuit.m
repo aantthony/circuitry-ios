@@ -65,6 +65,19 @@ static NSDictionary *processesById;
     return _tests;
 }
 
+- (void) setViewCenterX:(float)viewCenterX {
+    [self setViewCenterX:viewCenterX viewCenterY:_viewCenterY];
+}
+
+- (void) setViewCenterY:(float)viewCenterY {
+    [self setViewCenterX:_viewCenterX viewCenterY:viewCenterY];
+}
+
+- (void) setViewCenterX:(float)viewCenterX viewCenterY:(float)viewCenterY {
+    _viewCenterX = viewCenterX;
+    _viewCenterY = viewCenterY;
+    _viewDetails[@"center"] = @[@(_viewCenterX), @(_viewCenterY)];
+}
 
 - (Circuit *) initWithPackage:(NSDictionary *) package items: (NSArray *) items {
     
@@ -77,7 +90,7 @@ static NSDictionary *processesById;
     _viewCenterX = _viewCenterY = 0;
     
     if (package[@"view"]) {
-        _viewDetails = package[@"view"];
+        _viewDetails = [package[@"view"] mutableCopy];
         NSArray *viewCenter = package[@"view"][@"center"];
         if (viewCenter.count >= 2) {
             NSNumber *x = viewCenter[0];
@@ -85,6 +98,8 @@ static NSDictionary *processesById;
             _viewCenterX = x.floatValue;
             _viewCenterY = y.floatValue;
         }
+    } else {
+        _viewDetails = [NSMutableDictionary dictionary];
     }
     
     self.userDescription = package[@"description"];

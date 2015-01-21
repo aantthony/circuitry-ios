@@ -100,7 +100,6 @@
     doc.circuit = circuit;
     _presentingDocument = doc;
     [doc openWithCompletionHandler:^(BOOL success){
-        [doc saveToURL:doc.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:nil];
         [self performSegueWithIdentifier:@"presentDocument" sender:self];
     }];
 }
@@ -455,21 +454,15 @@
 
 - (void) reloadCircuitListData {
     AppDelegate *delegate = [UIApplication sharedApplication].delegate;
-    NSString *directoryPath = delegate.documentsDirectory.path;
-    
-    NSArray* localDocuments = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:
-                               directoryPath error:nil];
+    NSURL *documentsDirectory = delegate.documentsDirectory;
+    NSArray *localDocuments = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:documentsDirectory includingPropertiesForKeys:@[] options:NSDirectoryEnumerationSkipsHiddenFiles error:nil];
     
     
     
     NSMutableArray *items = [NSMutableArray array];
     
-    for (NSString* document in localDocuments) {
-        NSURL *url = [NSURL fileURLWithPath:[directoryPath
-                                             stringByAppendingPathComponent:document]];
-        
-        DocumentListItem *item = [[DocumentListItem alloc] initWithURL:url];
-        
+    for (NSURL* fileURL in localDocuments) {
+        DocumentListItem *item = [[DocumentListItem alloc] initWithURL:fileURL];
         [items addObject:item];
     }
     _circuits = [[items sortedArrayUsingComparator:^NSComparisonResult(DocumentListItem *obj1, DocumentListItem *obj2) {

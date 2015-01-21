@@ -307,6 +307,14 @@ static CGPoint hvrDragHereRight = {88,428};
     [self configureView];
 }
 
+- (void) viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    NSLog(@"Unsaved changes: %@", self.document.hasUnsavedChanges ? @"YES" : @"NO");
+    [self.document closeWithCompletionHandler:^(BOOL success) {
+        
+    }];
+}
+
 - (void) configureView {
     self.objectListVisible = [self shouldShowToolbeltForDocument:_document];
     BOOL hasTests = _document.circuit.tests.count > 0;

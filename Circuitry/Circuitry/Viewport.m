@@ -22,8 +22,6 @@
     SevenSegmentDisplay *sevenSegment;
 }
 @property (nonatomic) Grid *grid;
-@property (nonatomic) GLKVector3 translate;
-@property (nonatomic) GLKVector3 scale;
 @property (nonatomic) TouchHighlight *highlighter;
 @property (nonatomic) float highlightProgress;
 @property (nonatomic) float highlightOutProgress;

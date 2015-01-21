@@ -711,6 +711,9 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 
 - (void) updateChangeCount:(UIDocumentChangeKind)change {
     if (self.document.isProblem) return;
+    
+    [self.document.circuit setViewCenterX:_viewport.translate.x viewCenterY:_viewport.translate.y];
+    
     [self.document updateChangeCount:change];
 }
 
@@ -960,7 +963,6 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     [super viewWillDisappear:animated];
     [_timer invalidate];
     _timer = nil;
-    [_document closeWithCompletionHandler:^(BOOL success) {}];
 }
 
 - (void) viewDidAppear:(BOOL)animated {
@@ -991,6 +993,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
             [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
                 CircuitObjectSetOutput(internal, object, !object->out);
             }];
+            [self updateChangeCount:UIDocumentChangeDone];
         }
     }
     if (!hit && sender.numberOfTouches == 1) {

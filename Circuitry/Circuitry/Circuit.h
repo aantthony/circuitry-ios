@@ -16,9 +16,11 @@
 @property(nonatomic) NSMutableDictionary *dependencies;
 @property(nonatomic) NSMutableDictionary *meta;
 
-@property(nonatomic) NSDictionary * viewDetails;
+@property(nonatomic, readonly) NSMutableDictionary * viewDetails;
 @property(nonatomic) float viewCenterX;
 @property(nonatomic) float viewCenterY;
+
+- (void) setViewCenterX:(float)viewCenterX viewCenterY:(float)viewCenterY;
 
 - (NSArray *) tests;
 

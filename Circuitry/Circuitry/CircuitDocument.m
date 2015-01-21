@@ -110,6 +110,7 @@
         @"license": _circuit.license,
         @"engines": @{@"circuitry": @">=0.0"},
         @"tests" : testsArray,
+        @"view": _circuit.viewDetails,
         @"meta": _circuit.meta
     };
     
@@ -131,10 +132,16 @@
         // Export the entire circuit into a single JSON object:
         return [NSJSONSerialization dataWithJSONObject:dict options:0 error:NULL];
     }
+    
+    NSJSONWritingOptions jsonOptions = 0;
+    
+#ifdef DEBUG
+    jsonOptions = NSJSONWritingPrettyPrinted;
+#endif
 
     NSFileWrapper *wrapper = [[NSFileWrapper alloc] initDirectoryWithFileWrappers:nil];
-    NSData *metaJson = [NSJSONSerialization dataWithJSONObject:[self exportPackageDictionaryWithoutItems] options:0 error:NULL];
-    NSData *itemsJSON = [NSJSONSerialization dataWithJSONObject:[self exportItems] options:0 error:NULL];
+    NSData *metaJson = [NSJSONSerialization dataWithJSONObject:[self exportPackageDictionaryWithoutItems] options:jsonOptions error:NULL];
+    NSData *itemsJSON = [NSJSONSerialization dataWithJSONObject:[self exportItems] options:jsonOptions error:NULL];
 
     [wrapper addRegularFileWithContents:metaJson preferredFilename:@"package.json"];
     [wrapper addRegularFileWithContents:itemsJSON preferredFilename:@"items.json"];
