@@ -61,6 +61,8 @@
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentControl;
 @property (nonatomic) CircuitDocument *presentingDocument;
 @property (nonatomic) BOOL displayingProblems;
+@property (nonatomic) UIImageView *backgroundImageView;
+@property (nonatomic) BOOL canHandleRoundedViews;
 @end
 
 @implementation CircuitListViewController
@@ -202,11 +204,13 @@
         self.displayingProblems = YES;
         _createButton.enabled = NO;
         self.title = @"Problems";
+        self.backgroundImageView.image = [UIImage imageNamed:@"tutorial-bg-2.jpg"];
         [self.collectionView reloadData];
     } else {
         self.displayingProblems = NO;
         _createButton.enabled = YES;
         self.title = @"Saved Circuits";
+        self.backgroundImageView.image = [UIImage imageNamed:@"tutorial-bg-1.jpg"];
         [self.collectionView reloadData];
     }
     _segmentControl = sender;
@@ -333,23 +337,24 @@
         if (!cell.textLabel.text.length) {
             cell.textLabel.text = @"Untitled";
         }
+        cell.rounded = NO;
         cell.imageView.image = nil;
-        cell.textLabel.textColor = self.view.tintColor;
+        cell.textLabel.textColor = [UIColor whiteColor];
         cell.tickView.hidden = YES;
         return cell;
     } else {
         CircuitCollectionViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:@"CircuitListPrototypeCell" forIndexPath:indexPath];
         
         ProblemSetProblemInfo *item = [_problemSet.problems objectAtIndex:indexPath.row];
-        
+        cell.rounded = _canHandleRoundedViews;
         if (item.isAccessible) {
             cell.textLabel.text = item.title;
             cell.imageView.image = [UIImage imageNamed:item.imageName];
-            cell.textLabel.textColor = self.view.tintColor;
+            cell.textLabel.textColor = [UIColor whiteColor];
         } else {
             cell.imageView.image = [UIImage imageNamed:@"level-locked"];
             cell.textLabel.text = @"Locked";
-            cell.textLabel.textColor = [UIColor colorWithWhite:0.3 alpha:1.0];
+            cell.textLabel.textColor = [UIColor colorWithWhite:1.0 alpha:0.8];
         }
         cell.tickView.hidden = !item.isCompleted;
         
@@ -366,21 +371,32 @@
     return YES;
 }
 
+- (UIImageView *) backgroundImageView {
+    if (!_backgroundImageView) {
+        UIImage *img = [UIImage imageNamed:@"tutorial-bg-2.jpg"];
+        _backgroundImageView = [[UIImageView alloc] initWithImage:img];
+        _backgroundImageView.alpha = 0.7;
+    }
+    return _backgroundImageView;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     _displayingProblems = YES;
     self.transitioningDelegate = self;
-    UIImage *img = [UIImage imageNamed:@"tutorial-bg-1.jpg"];
-    UIImageView *imgView = [[UIImageView alloc] initWithImage:img];
-    imgView.alpha = 0.2;
-    self.collectionView.backgroundView = imgView;
-    self.collectionView.backgroundColor = [UIColor whiteColor];
+    self.collectionView.backgroundView = self.backgroundImageView;
+    self.collectionView.backgroundColor = [UIColor blackColor];
+    
+    _canHandleRoundedViews = YES;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         [self preload];
         dispatch_async(dispatch_get_main_queue(), ^(void){
         });
     });
 }
+
+
+
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
