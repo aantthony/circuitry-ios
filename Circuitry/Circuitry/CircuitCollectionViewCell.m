@@ -20,6 +20,7 @@
 
 - (void) setRounded:(BOOL)rounded {
     if (rounded == _rounded) return;
+    _rounded = rounded;
     if (rounded) {
         self.imageView.layer.cornerRadius = 8.0;
         self.imageView.layer.borderWidth = 4.0;
