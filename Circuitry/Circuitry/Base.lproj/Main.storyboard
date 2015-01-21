@@ -284,6 +284,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.96324805964052296" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="0.0" id="HCZ-Hp-ZHD">
                             <size key="itemSize" width="200" height="250"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -351,6 +352,8 @@
                         <connections>
                             <outlet property="dataSource" destination="bMV-Gg-1ab" id="aJo-VW-fcN"/>
                             <outlet property="delegate" destination="bMV-Gg-1ab" id="ftb-KT-sCu"/>
+                            <outletCollection property="gestureRecognizers" destination="hmd-4M-72U" appends="YES" id="D9A-7U-LG5"/>
+                            <outletCollection property="gestureRecognizers" destination="PGQ-ft-pHF" appends="YES" id="yFJ-St-sNf"/>
                         </connections>
                     </collectionView>
                     <navigationItem key="navigationItem" id="Bj2-Se-1Yq">
@@ -391,6 +394,16 @@
                         <action selector="didLongPress:" destination="bMV-Gg-1ab" id="14G-vQ-Qho"/>
                     </connections>
                 </pongPressGestureRecognizer>
+                <swipeGestureRecognizer direction="right" id="hmd-4M-72U">
+                    <connections>
+                        <action selector="didSwipe:" destination="bMV-Gg-1ab" id="WAq-Me-M9J"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <swipeGestureRecognizer direction="left" id="PGQ-ft-pHF">
+                    <connections>
+                        <action selector="didSwipe:" destination="bMV-Gg-1ab" id="Wgy-Au-YGC"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1647" y="-725"/>
         </scene>

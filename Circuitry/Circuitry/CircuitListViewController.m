@@ -199,21 +199,32 @@
     [self reloadCircuitListData];
 }
 
-- (IBAction)didChangeCircuitsProblemsSegment:(UISegmentedControl *)sender {
-    if (sender.selectedSegmentIndex == 0) {
+- (void) setDisplayingProblems:(BOOL)displayingProblems {
+    if (_displayingProblems == displayingProblems) return;
+    _displayingProblems = displayingProblems;
+    if (_displayingProblems) {
+        _segmentControl.selectedSegmentIndex = 0;
         self.displayingProblems = YES;
         _createButton.enabled = NO;
         self.title = @"Problems";
         self.backgroundImageView.image = [UIImage imageNamed:@"tutorial-bg-2.jpg"];
         [self.collectionView reloadData];
     } else {
+        _segmentControl.selectedSegmentIndex = 1;
         self.displayingProblems = NO;
         _createButton.enabled = YES;
         self.title = @"Saved Circuits";
         self.backgroundImageView.image = [UIImage imageNamed:@"tutorial-bg-1.jpg"];
         [self.collectionView reloadData];
     }
-    _segmentControl = sender;
+}
+
+- (IBAction)didChangeCircuitsProblemsSegment:(UISegmentedControl *)sender {
+    if (sender.selectedSegmentIndex == 0) {
+        self.displayingProblems = YES;
+    } else {
+        self.displayingProblems = NO;
+    }
 }
 
 - (void) preload {
@@ -369,6 +380,15 @@
         if (!item.isAccessible) return NO;
     }
     return YES;
+}
+- (IBAction)didSwipe:(UISwipeGestureRecognizer *)sender {
+    // Disabled, as it is a bit confusing. It would need animation, which means not using a UICollectionViewControler...
+    return;
+    if (sender.direction == UISwipeGestureRecognizerDirectionLeft && self.displayingProblems) {
+        self.displayingProblems = NO;
+    } else if (sender.direction == UISwipeGestureRecognizerDirectionRight && !self.displayingProblems) {
+        self.displayingProblems = YES;
+    }
 }
 
 - (UIImageView *) backgroundImageView {
