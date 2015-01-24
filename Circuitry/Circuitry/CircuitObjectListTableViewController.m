@@ -44,6 +44,7 @@
     
     self.items = @[
                    [[ToolbeltItem alloc] initWithType:@"button"  image:[UIImage imageNamed:@"switch"]   name:@"Button" subtitle:@"Toggle button"],
+//                   [[ToolbeltItem alloc] initWithType:@"pbtn"    image:[UIImage imageNamed:@"pushbutton"] name:@"Button" subtitle:@"Push button"],
                    [[ToolbeltItem alloc] initWithType:@"light"   image:[UIImage imageNamed:@"led"]      name:@"Light" subtitle:@"Light Emitting Diode"],
                    [[ToolbeltItem alloc] initWithType:@"or"      image:[UIImage imageNamed:@"or"]       name:@"OR" subtitle:@"2 in, 1 out"],
                    [[ToolbeltItem alloc] initWithType:@"and"     image:[UIImage imageNamed:@"and"]      name:@"AND" subtitle:@"2 in, 1 out"],

@@ -56,6 +56,7 @@ void CircuitObjectSetOutputBit(CircuitInternal *c, CircuitObject *o, int outputI
 CircuitProcess CircuitProcessIn;
 CircuitProcess CircuitProcessOut;
 CircuitProcess CircuitProcessButton;
+CircuitProcess CircuitProcessPushButton;
 CircuitProcess CircuitProcessLight;
 CircuitProcess CircuitProcessOr;
 CircuitProcess CircuitProcessNot; 

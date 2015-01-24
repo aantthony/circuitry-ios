@@ -90,6 +90,7 @@
 		92DD078E18AFC12300FB684A /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92DD078D18AFC12300FB684A /* CoreData.framework */; };
 		92DD079018AFC12D00FB684A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 92DD078F18AFC12D00FB684A /* libz.dylib */; };
 		92E037BF188425E80047F736 /* DragGateGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 92E037BE188425E80047F736 /* DragGateGestureRecognizer.m */; };
+		92EF38A71A73C73F008401B1 /* HoldDownGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 92EF38A61A73C73F008401B1 /* HoldDownGestureRecognizer.m */; };
 		92FA32BE19B2C0140046A7FE /* tutorial-bg-1@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 92FA32BD19B2C0140046A7FE /* tutorial-bg-1@2x.jpg */; };
 		92FA32C219B2C21B0046A7FE /* tutorial-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92FA32C119B2C21B0046A7FE /* tutorial-logo@2x.png */; };
 		92FA32C719B2E1B70046A7FE /* tutorial-bg-3@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 92FA32C619B2E1B70046A7FE /* tutorial-bg-3@2x.jpg */; };
@@ -262,6 +263,8 @@
 		92DE44AD187C153F00014CB9 /* circuit.image-atlas */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "circuit.image-atlas"; sourceTree = "<group>"; };
 		92E037BD188425E80047F736 /* DragGateGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DragGateGestureRecognizer.h; sourceTree = "<group>"; };
 		92E037BE188425E80047F736 /* DragGateGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DragGateGestureRecognizer.m; sourceTree = "<group>"; };
+		92EF38A51A73C73F008401B1 /* HoldDownGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HoldDownGestureRecognizer.h; sourceTree = "<group>"; };
+		92EF38A61A73C73F008401B1 /* HoldDownGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HoldDownGestureRecognizer.m; sourceTree = "<group>"; };
 		92FA32BD19B2C0140046A7FE /* tutorial-bg-1@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial-bg-1@2x.jpg"; sourceTree = "<group>"; };
 		92FA32C119B2C21B0046A7FE /* tutorial-logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tutorial-logo@2x.png"; sourceTree = "<group>"; };
 		92FA32C619B2E1B70046A7FE /* tutorial-bg-3@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial-bg-3@2x.jpg"; sourceTree = "<group>"; };
@@ -620,6 +623,8 @@
 				9253C408188545EC00D2509C /* CreateGatePanGestureRecognizer.m */,
 				92E037BD188425E80047F736 /* DragGateGestureRecognizer.h */,
 				92E037BE188425E80047F736 /* DragGateGestureRecognizer.m */,
+				92EF38A51A73C73F008401B1 /* HoldDownGestureRecognizer.h */,
+				92EF38A61A73C73F008401B1 /* HoldDownGestureRecognizer.m */,
 			);
 			name = Useless;
 			sourceTree = "<group>";
@@ -962,6 +967,7 @@
 				9204C392182E2F5C006A008D /* ViewController.m in Sources */,
 				92AFE901197B90AC003680B0 /* CircuitTestResult.m in Sources */,
 				923C143818826D960017BAF3 /* HUD.m in Sources */,
+				92EF38A71A73C73F008401B1 /* HoldDownGestureRecognizer.m in Sources */,
 				92771D431A455301000931D9 /* CircuitInternal.c in Sources */,
 				92771CF91A44FD2A000931D9 /* StyleManager.m in Sources */,
 				921C7A541A6D096B00CBEECE /* TouchHighlight.m in Sources */,

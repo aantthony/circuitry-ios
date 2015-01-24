@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C94b" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="rnE-YD-fev">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C106a" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="rnE-YD-fev">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
@@ -177,6 +177,7 @@
                             <outletCollection property="gestureRecognizers" destination="7bN-zV-gIM" appends="YES" id="3Sa-so-PtL"/>
                             <outletCollection property="gestureRecognizers" destination="h4l-Nq-EiU" appends="YES" id="HxE-bB-5P9"/>
                             <outletCollection property="gestureRecognizers" destination="W0R-Er-cpe" appends="YES" id="s9W-GF-sNq"/>
+                            <outletCollection property="gestureRecognizers" destination="II3-Do-ZfR" appends="YES" id="NfD-57-9La"/>
                         </connections>
                     </glkView>
                     <keyCommands/>
@@ -228,6 +229,12 @@
                     <connections>
                         <action selector="handleCreateLinkGesture:" destination="BV1-FR-VrT" id="Qlg-8g-Ac5"/>
                         <outlet property="delegate" destination="BV1-FR-VrT" id="14P-8p-1B8"/>
+                    </connections>
+                </pongPressGestureRecognizer>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.0" id="II3-Do-ZfR" customClass="HoldDownGestureRecognizer">
+                    <connections>
+                        <action selector="handleHoldDownGesture:" destination="BV1-FR-VrT" id="Ecb-2I-QQY"/>
+                        <outlet property="delegate" destination="BV1-FR-VrT" id="4KI-Tq-He7"/>
                     </connections>
                 </pongPressGestureRecognizer>
             </objects>

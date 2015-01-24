@@ -403,7 +403,7 @@ BOOL expandDrawGate(CircuitObject *object) {
         }
         
         
-        if (object->type == &CircuitProcessIn || object->type == &CircuitProcessButton) {
+        if (object->type == &CircuitProcessIn || object->type == &CircuitProcessButton || object->type == &CircuitProcessPushButton) {
             instance->tex = object->out ? switchOn : switchOff;
             instance->x -= 50.0;
             instance->y -= 50.0;

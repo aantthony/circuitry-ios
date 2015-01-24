@@ -8,6 +8,7 @@
 #import "CreateGatePanGestureRecognizer.h"
 #import "CreateLinkGestureRecognizer.h"
 #import "LongPressObjectGesture.h"
+#import "HoldDownGestureRecognizer.h"
 
 #import "AppDelegate.h"
 
@@ -52,6 +53,7 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 @property (nonatomic) BOOL canPan;
 @property (nonatomic) BOOL canZoom;
 @property (nonatomic) BOOL isTutorial;
+@property (nonatomic, assign) CircuitObject *holdDownGestureObject;
 
 - (void)tearDownGL;
 
@@ -88,10 +90,8 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
         if (num && !num.boolValue) {
             _canZoom = NO;
         }
-    } else {
-        NSLog(@"View details missing!");
     }
-    NSLog(@"Set canPan: %@, %@", _canPan ? @"YES" : @"NO", _document.circuit.viewDetails);
+    
     if (self.view) {
         [self update];
     }
@@ -565,6 +565,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
+//    NSLog(@"gestureRecognizerShouldBegin: %@", gestureRecognizer);
     [self unpause];
     [self stopPanAnimation];
 	if ( [gestureRecognizer isKindOfClass:[UIPinchGestureRecognizer class]] ) {
@@ -579,6 +580,20 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         if (!object) return NO;
         
         return YES;
+    }
+    
+    if ([gestureRecognizer isKindOfClass:[HoldDownGestureRecognizer class]]) {
+        GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [gestureRecognizer locationInView:self.view])];
+        
+        CircuitObject *object = [_viewport findCircuitObjectAtPosition:position];
+        if (!object) return NO;
+        
+        if (object->type != [_document.circuit getProcessById:@"pbtn"]) return NO;
+        
+        _holdDownGestureObject = object;
+        
+        return YES;
+        
     }
     
     if ([gestureRecognizer isKindOfClass:[CreateLinkGestureRecognizer class]]) {
@@ -733,6 +748,28 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         animatingPan = YES;
     }
     [self unpause];
+}
+- (IBAction)handleHoldDownGesture:(UILongPressGestureRecognizer *)sender {
+    
+    CircuitObject *object = _holdDownGestureObject;
+    if (!object) return;
+    if (sender.state == UIGestureRecognizerStateBegan) {
+        [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
+            if (object->out != 0) return;
+            CircuitObjectSetOutput(internal, object, 1);
+        }];
+        
+        [self updateChangeCount:UIDocumentChangeDone];
+        [self unpause];
+    } else if (sender.state == UIGestureRecognizerStateEnded) {
+        _holdDownGestureObject = NULL;
+        [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
+            CircuitObjectSetOutput(internal, object, 0);
+        }];
+        
+        [self updateChangeCount:UIDocumentChangeDone];
+        [self unpause];
+    }
 }
 
 - (IBAction)handleDragGateGesture:(UIPanGestureRecognizer *)sender {
@@ -994,6 +1031,21 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
                 CircuitObjectSetOutput(internal, object, !object->out);
             }];
             [self updateChangeCount:UIDocumentChangeDone];
+        } else {
+            if (object->type == [_document.circuit getProcessById:@"pbtn"]) {
+                hit = YES;
+                [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
+                    if (object->out != 0) return;
+                    CircuitObjectSetOutput(internal, object, 1);
+                }];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
+                        CircuitObjectSetOutput(internal, object, 0);
+                    }];
+                    [self updateChangeCount:UIDocumentChangeDone];
+                    [self unpause];
+                });
+            }
         }
     }
     if (!hit && sender.numberOfTouches == 1) {
