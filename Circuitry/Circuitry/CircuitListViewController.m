@@ -43,7 +43,6 @@
                                 error:NULL];
     
     _lastModified = [properties objectForKey:NSFileModificationDate];
-    NSLog(@"Loaded circuit: %@", _title);
 
     return self;
 }
@@ -100,8 +99,19 @@
     
     CircuitDocument *doc = [[CircuitDocument alloc] initWithFileURL:url];
     doc.circuit = circuit;
-    _presentingDocument = doc;
-    [doc openWithCompletionHandler:^(BOOL success){
+    // Give our new document a name:
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    static NSString *kLastBlankName = @"LastBlankName";
+    
+    NSInteger lastBlankNameIndex = [defaults integerForKey:kLastBlankName];
+    lastBlankNameIndex++;
+    doc.circuit.title = [NSString stringWithFormat:@"Blank %d", lastBlankNameIndex];
+    [defaults setInteger:lastBlankNameIndex forKey:kLastBlankName];
+    
+    self.presentingDocument = doc;
+    [doc saveToURL:doc.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
         [self performSegueWithIdentifier:@"presentDocument" sender:self];
     }];
 }
@@ -120,7 +130,20 @@
     if (!nextInfo) return nil;
     CircuitDocument *next = [[CircuitDocument alloc] initWithFileURL:nextInfo.documentURL];
     next.problemInfo = nextInfo;
+    
+    [next openWithCompletionHandler:nil];
+    
     return next;
+}
+
+- (void) circuitDocumentViewController:(CircuitDocumentViewController *)viewController didFinish:(CircuitDocument *)sender {
+    CircuitDocument *doc = viewController.document;
+    self.presentingDocument = doc;
+    NSLog(@"Unsaved changes: %@", doc.hasUnsavedChanges ? @"YES" : @"NO");
+    [doc closeWithCompletionHandler:^(BOOL success) {
+        [self reloadCircuitListData];
+        [self.collectionView reloadData];
+    }];
 }
 
 - (void) openDocumentItem:(DocumentListItem *)documentListItem {
@@ -193,10 +216,6 @@
         _openDocumentAnimationShouldFadeIn = NO;
         [self openProblem:item];
     }
-}
-
-- (IBAction)edit:(UIBarButtonItem *)sender {
-    [self reloadCircuitListData];
 }
 
 - (void) setDisplayingProblems:(BOOL)displayingProblems {

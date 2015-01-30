@@ -19,7 +19,7 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "CircuitDocument.h"
 
-@interface CircuitDocumentViewController () <CircuitObjectListTableViewControllerDelegate, ProblemInfoViewControllerDelegate, ViewControllerTutorialProtocol>
+@interface CircuitDocumentViewController () <CircuitObjectListTableViewControllerDelegate, ProblemInfoViewControllerDelegate, ViewControllerTutorialProtocol, UITextFieldDelegate>
 @property (nonatomic, weak) CircuitObjectListTableViewController *objectListViewController;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *objectListLeft;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *problemInfoBottom;
@@ -33,6 +33,7 @@
 @property (nonatomic) UIImageView *hintViewDragHereRight;
 @property (nonatomic) UIImageView *hintViewCheckCorrect;
 @property (nonatomic) NSInteger tutorialState;
+@property (nonatomic) UIView *titleView;
 @property (nonatomic) BOOL isTutorial;
 @property (nonatomic) CircuitTestResult *testResult;
 @property (nonatomic) CircuitDocument *nextDocument;
@@ -44,6 +45,61 @@
     return NO;
 }
 
+- (void) textFieldDidEndEditing:(UITextField *)textField {
+    
+}
+
+- (UIView *) titleView {
+    if (!_titleView) {
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 200)];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapTitleView:)];
+        [label addGestureRecognizer:tap];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.userInteractionEnabled = YES;
+        _titleView = label;
+    }
+    
+    UILabel *label = (UILabel *)_titleView;
+    
+    label.text = self.document.circuit.title;
+    if (!label.text.length) {
+        label.text = @"Untitled";
+    }
+    
+    return _titleView;
+}
+
+- (void) didTapTitleView:(id) sender {
+    UITextField *field = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 300, 30)];
+    field.borderStyle = UITextBorderStyleRoundedRect;
+    field.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.2];
+    field.textAlignment = NSTextAlignmentCenter;
+    field.text = self.document.circuit.title;
+    NSRange r = [field.text rangeOfString:@"Blank "];
+    if (r.location != NSNotFound) {
+        field.text = @"";
+    }
+    field.delegate = self;
+    field.returnKeyType = UIReturnKeyDone;
+    self.navigationItem.titleView = field;
+    [self.navigationController.navigationBar layoutSubviews];
+    
+    [field becomeFirstResponder];
+}
+
+- (void) configureTitleView {
+    self.navigationItem.titleView = self.titleView;
+    [self.navigationController.navigationBar layoutIfNeeded];
+}
+
+- (BOOL) textFieldShouldReturn:(UITextField *)textField {
+    _document.circuit.title = textField.text;
+    [_document updateChangeCount:UIDocumentChangeDone];
+    [self configureTitleView];
+
+    return YES;
+}
+
 - (void) setDocument:(CircuitDocument *) document {
     _objectListViewController.document = document;
     _glkViewController.document = document;
@@ -51,6 +107,8 @@
     self.title = document.circuit.title;
     
     self.isTutorial = YES;
+    
+    [self configureTitleView];
     
     [[AnalyticsManager shared] trackStartProblem:document];
     if (self.view) {
@@ -63,6 +121,7 @@
     _objectListViewController.document = _document;
     _glkViewController.document = _document;
     [self configureView];
+    [self configureTitleView];
 }
 
 static CGPoint hvrTapAndHoldLeft = {225, 611};
@@ -309,10 +368,7 @@ static CGPoint hvrDragHereRight = {88,428};
 
 - (void) viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    NSLog(@"Unsaved changes: %@", self.document.hasUnsavedChanges ? @"YES" : @"NO");
-    [self.document closeWithCompletionHandler:^(BOOL success) {
-        
-    }];
+    [self.delegate circuitDocumentViewController:self didFinish:self.document];
 }
 
 - (void) configureView {
@@ -322,7 +378,7 @@ static CGPoint hvrDragHereRight = {88,428};
     if (hasTests) {
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Check Answer" style:UIBarButtonItemStyleDone target:self action:@selector(checkAnswer:)];
     } else {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Configure" style:UIBarButtonItemStyleDone target:self action:@selector(configureDocument:)];
+        self.navigationItem.rightBarButtonItem = nil;
     }
 }
 
@@ -381,10 +437,6 @@ static CGPoint hvrDragHereRight = {88,428};
     [self setProblemInfoMinimised:shouldMinimise animated:YES];
 }
 
-- (IBAction)configureDocument:(id)sender {
-    
-}
-
 - (BOOL) shouldShowToolbeltForDocument: (CircuitDocument *) doc {
     id toolbeltFlag = doc.circuit.meta[@"toolbelt"];
     if (toolbeltFlag == nil) return YES;
@@ -413,7 +465,6 @@ static CGPoint hvrDragHereRight = {88,428};
             
             CircuitDocument *doc = [self.delegate circuitDocumentViewController:self nextDocumentAfterDocument:self.document];
             self.nextDocument = doc;
-            [doc openWithCompletionHandler:nil];
             
             if (self.nextDocument) {
                 [_problemInfoViewController showProgressToNextLevelScreen];
@@ -448,10 +499,6 @@ static CGPoint hvrDragHereRight = {88,428};
 - (void) problemInfoViewController:(ProblemInfoViewController *)problemInfoViewController didPressContinueButton:(id)sender {
     UIImage *screenShotView = [self screenshotForView:self.view];
     UIImageView *imgView = [[UIImageView alloc] initWithImage:screenShotView];
-    
-    [[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[screenShotView CGImage] orientation:ALAssetOrientationUp completionBlock:^(NSURL *assetURL, NSError *error) {
-        NSLog(@"finished %@, %@", assetURL, error);
-    }];
     
     imgView.image = nil;
     imgView.backgroundColor = UIColor.whiteColor;

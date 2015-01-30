@@ -49,7 +49,6 @@ static GLint uModelViewProjectMatrix;
 
 + (void)setContext: (EAGLContext*) context {
     if (!shader) {
-        NSLog(@"compiling....");
         NSDictionary *uniforms = @{@"opacity": @1.0};
         NSDictionary *attributes = @{
                                      @"aTarget": @{},

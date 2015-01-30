@@ -23,5 +23,6 @@
 
 @required
 - (CircuitDocument *) circuitDocumentViewController:(CircuitDocumentViewController *)viewController nextDocumentAfterDocument:(CircuitDocument *)document;
+- (void) circuitDocumentViewController:(CircuitDocumentViewController *)viewController didFinish:(CircuitDocument *) sender;
 
 @end

@@ -52,10 +52,11 @@ float dx = (B.x - A.x) / 2.0;
 
 void main()
 {
-    v = 0.0;
-    float rem = mod(position, 2.0);
-    float displacement = (rem >= 1.0) ? 1.0 : -1.0;
-    v = max(displacement, 0.0);
+    // are we at an even or odd vertex?
+    lowp float rem = mod(position, 2.0);
+    
+    lowp float displacement = 2.0 * rem - 1.0;
+    v = rem;
     float t = (position - rem) / NVERTSM2;
     vec2 z = bezier(A, vec2(A.x + dx, A.y), vec2(A.x + dx, B.y), B, t);
     float radius = 8.0;

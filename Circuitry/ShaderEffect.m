@@ -19,7 +19,8 @@
     if (logLength > 0) {
         GLchar *log = (GLchar *)malloc(logLength);
         glGetProgramInfoLog(prog, logLength, &logLength, log);
-        NSLog(@"Program link log:\n%s", log);
+        // TODO: check this
+        // NSLog(@"Program link log:\n%s", log);
         free(log);
     }
 #endif
