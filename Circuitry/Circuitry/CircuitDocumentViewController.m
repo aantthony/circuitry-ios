@@ -37,16 +37,13 @@
 @property (nonatomic) BOOL isTutorial;
 @property (nonatomic) CircuitTestResult *testResult;
 @property (nonatomic) CircuitDocument *nextDocument;
+@property (nonatomic) UITapGestureRecognizer *tapToDismissKeyboard;
 @end
 
 @implementation CircuitDocumentViewController
 
 - (BOOL) prefersStatusBarHidden {
     return NO;
-}
-
-- (void) textFieldDidEndEditing:(UITextField *)textField {
-    
 }
 
 - (UIView *) titleView {
@@ -56,10 +53,13 @@
         [label addGestureRecognizer:tap];
         label.textAlignment = NSTextAlignmentCenter;
         label.userInteractionEnabled = YES;
+        label.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:17];
         _titleView = label;
     }
     
     UILabel *label = (UILabel *)_titleView;
+    
+    label.textColor = self.view.tintColor;
     
     label.text = self.document.circuit.title;
     if (!label.text.length) {
@@ -69,19 +69,41 @@
     return _titleView;
 }
 
+- (UITapGestureRecognizer* ) tapToDismissKeyboard {
+    if (!_tapToDismissKeyboard) {
+        _tapToDismissKeyboard = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboard:)];
+    }
+    
+    return _tapToDismissKeyboard;
+}
+
+- (void) dismissKeyboard:(id)sender {
+    UIView *titleView = self.navigationItem.titleView;
+    if (![titleView isKindOfClass:[UITextField class]]) {
+        return;
+    }
+    UITextField *field = (UITextField *)titleView;
+    [field resignFirstResponder];
+    [self textFieldShouldReturn:field];
+}
+
 - (void) didTapTitleView:(id) sender {
     UITextField *field = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 300, 30)];
     field.borderStyle = UITextBorderStyleRoundedRect;
-    field.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.2];
+    field.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.1];
     field.textAlignment = NSTextAlignmentCenter;
     field.text = self.document.circuit.title;
     NSRange r = [field.text rangeOfString:@"Blank "];
     if (r.location != NSNotFound) {
         field.text = @"";
     }
+    field.clearButtonMode = UITextFieldViewModeWhileEditing;
     field.delegate = self;
+    field.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:17];
     field.returnKeyType = UIReturnKeyDone;
     self.navigationItem.titleView = field;
+    [self.view addGestureRecognizer:self.tapToDismissKeyboard];
+    self.glkViewController.view.userInteractionEnabled = NO;
     [self.navigationController.navigationBar layoutSubviews];
     
     [field becomeFirstResponder];
@@ -96,6 +118,10 @@
     _document.circuit.title = textField.text;
     [_document updateChangeCount:UIDocumentChangeDone];
     [self configureTitleView];
+    
+    [self.view removeGestureRecognizer:_tapToDismissKeyboard];
+    self.tapToDismissKeyboard = nil;
+    self.glkViewController.view.userInteractionEnabled = YES;
 
     return YES;
 }
