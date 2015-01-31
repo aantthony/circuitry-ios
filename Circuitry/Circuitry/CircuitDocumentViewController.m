@@ -88,6 +88,8 @@
 }
 
 - (void) didTapTitleView:(id) sender {
+    if (!self.document) return;
+    if (self.document.isProblem) return;
     UITextField *field = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 300, 30)];
     field.borderStyle = UITextBorderStyleRoundedRect;
     field.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.1];
@@ -115,7 +117,9 @@
 }
 
 - (BOOL) textFieldShouldReturn:(UITextField *)textField {
-    _document.circuit.title = textField.text;
+    if (textField.text.length) {
+        _document.circuit.title = textField.text;
+    }
     [_document updateChangeCount:UIDocumentChangeDone];
     [self configureTitleView];
     
