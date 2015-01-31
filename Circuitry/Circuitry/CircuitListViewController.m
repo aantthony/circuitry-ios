@@ -226,14 +226,14 @@
         self.displayingProblems = YES;
         _createButton.enabled = NO;
         self.title = @"Problems";
-        self.backgroundImageView.image = [UIImage imageNamed:@"tutorial-bg-2.jpg"];
+        self.backgroundImageView.image = [UIImage imageNamed:@"bg-blur.jpg"];
         [self.collectionView reloadData];
     } else {
         _segmentControl.selectedSegmentIndex = 1;
         self.displayingProblems = NO;
         _createButton.enabled = YES;
         self.title = @"Saved Circuits";
-        self.backgroundImageView.image = [UIImage imageNamed:@"tutorial-bg-1.jpg"];
+        self.backgroundImageView.image = [UIImage imageNamed:@"tutorial-bg-3.jpg"];
         [self.collectionView reloadData];
     }
 }
@@ -412,7 +412,7 @@
 
 - (UIImageView *) backgroundImageView {
     if (!_backgroundImageView) {
-        UIImage *img = [UIImage imageNamed:@"tutorial-bg-2.jpg"];
+        UIImage *img = [UIImage imageNamed:@"bg-blur.jpg"];
         _backgroundImageView = [[UIImageView alloc] initWithImage:img];
         _backgroundImageView.alpha = 0.7;
     }
