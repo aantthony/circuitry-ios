@@ -502,18 +502,33 @@ static BOOL animateGateToLockedPosition(CircuitObject *object, float x, float y)
     }
 }
 
+
+static CGFloat gridSize = 33.0;
+
 - (void) snapObjectsToGrid {
     [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
         [_document.circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
             CGFloat x = object->pos.x;
             CGFloat y = object->pos.y;
-            x = roundf(x / 50) * 50.0;
-            y = roundf(y / 50) * 50.0;
+            x = roundf(x / gridSize) * gridSize;
+            y = roundf(y / gridSize) * gridSize;
             object->pos.x = x;
             object->pos.y = y;
         }];
     }];
-    self.paused = NO;
+    [self unpause];
+}
+
+- (void) snapObjectToGrid:(CircuitObject *)object {
+    [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
+        CGFloat x = object->pos.x;
+        CGFloat y = object->pos.y;
+        x = roundf(x / gridSize) * gridSize;
+        y = roundf(y / gridSize) * gridSize;
+        object->pos.x = x;
+        object->pos.y = y;
+    }];
+    [self unpause];
 }
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
@@ -794,6 +809,9 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     CircuitObject *object = beginLongPressGestureObject;
     if (sender.state == UIGestureRecognizerStateEnded) {
         [self updateChangeCount:UIDocumentChangeDone];
+        if (beginLongPressGestureObject && !self.document.isProblem) {
+            [self snapObjectToGrid:beginLongPressGestureObject];
+        }
         [self unpause];
         beginLongPressGestureObject = NULL;
         return;
