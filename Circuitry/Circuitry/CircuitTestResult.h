@@ -18,5 +18,6 @@
 @property (nonatomic, readonly) BOOL passed;
 @property (nonatomic, readonly) NSArray *checks;
 @property (nonatomic, readonly) NSArray *inputNames;
-- (instancetype) initWithResultDescription:(NSString *)resultDesription passed:(BOOL)passed checks:(NSArray *)checks inputNames:(NSArray *)inputNames;
+@property (nonatomic, readonly) NSArray *outputNames;
+- (instancetype) initWithResultDescription:(NSString *)resultDesription passed:(BOOL)passed checks:(NSArray *)checks inputNames:(NSArray *)inputNames outputNames:(NSArray *) outputNames;
 @end

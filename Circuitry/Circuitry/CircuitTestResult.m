@@ -20,12 +20,13 @@
 
 
 @implementation CircuitTestResult
-- (instancetype) initWithResultDescription:(NSString *)resultDesription passed:(BOOL)passed checks:(NSArray *)checks inputNames:(NSArray *)inputNames {
+- (instancetype) initWithResultDescription:(NSString *)resultDesription passed:(BOOL)passed checks:(NSArray *)checks inputNames:(NSArray *)inputNames outputNames:(NSArray *)outputNames {
     self = [super init];
     _resultDescription = [resultDesription copy];
     _passed = passed;
     _checks = [checks copy];
     _inputNames = [inputNames copy];
+    _outputNames = [outputNames copy];
     return self;
 }
 @end

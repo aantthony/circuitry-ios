@@ -67,18 +67,26 @@
     return s;
 }
 
-- (NSArray *) inputNames {
-    NSMutableArray *array = [NSMutableArray arrayWithCapacity:self.inputNodes.count];
-    [self.inputNodes enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
-        CircuitObject *inputNode = [obj pointerValue];
-        if (!inputNode || !inputNode->name) {
-            [array addObject:@"?"];
+- (NSArray *) namesForNodes:(NSArray *)nodes {
+    NSMutableArray *array = [NSMutableArray arrayWithCapacity:nodes.count];
+    [nodes enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
+        CircuitObject *node = [obj pointerValue];
+        if (!node || !node->name[0]) {
+            [array addObject:@"-"];
             return;
         }
-        NSString *str = [NSString stringWithUTF8String:inputNode->name];
+        NSString *str = [NSString stringWithUTF8String:node->name];
         [array addObject:str];
     }];
     return [array copy];
+}
+
+- (NSArray *) inputNames {
+    return [self namesForNodes:self.inputNodes];
+}
+
+- (NSArray *) outputNames {
+    return [self namesForNodes:self.outputNodes];
 }
 
 - (CircuitTestResult *) runAndSimulate:(Circuit *)circuit {
@@ -153,7 +161,7 @@
     
     NSString *rDescription = pass ? @"Passed." : failure;
     
-    CircuitTestResult *result = [[CircuitTestResult alloc] initWithResultDescription:rDescription passed:pass checks:checks inputNames:self.inputNames];
+    CircuitTestResult *result = [[CircuitTestResult alloc] initWithResultDescription:rDescription passed:pass checks:checks inputNames:self.inputNames outputNames:self.outputNames];
     return result;
 }
 

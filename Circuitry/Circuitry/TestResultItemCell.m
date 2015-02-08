@@ -75,7 +75,11 @@
     UILabel *expected = [self labelAtColumn:column++];
     [self floodLabel:expected withRightSpace:100];
     expected.font = font;
-    expected.text = @"Expected";
+    if (self.result.outputNames.count && ![self.result.outputNames[0] isEqualToString:@"-"]) {
+        expected.text = [NSString stringWithFormat:@"Expected (%@)", [self.result.outputNames componentsJoinedByString:@", "]];
+    } else {
+        expected.text = @"Expected";
+    }
 }
 
 static CGFloat const leftMargin = 20;
