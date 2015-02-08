@@ -48,7 +48,10 @@ static NSDictionary *processesById;
                       @"ha": valueForGate(&CircuitProcessHA),
                       @"fa": valueForGate(&CircuitProcessFA),
                       @"bindec": valueForGate(&CircuitProcessBinDec),
+                      @"add4": valueForGate(&CircuitProcessAdd4),
+                      @"mult4": valueForGate(&CircuitProcessMult4),
                       @"add8": valueForGate(&CircuitProcessAdd8),
+                      @"mult8": valueForGate(&CircuitProcessMult8),
                       @"bin7seg": valueForGate(&CircuitProcessBin7Seg),
                       @"7seg": valueForGate(&CircuitProcess7Seg),
                       @"clock": valueForGate(&CircuitProcessClock)
@@ -58,9 +61,7 @@ static NSDictionary *processesById;
 - (CircuitProcess *) getProcessById:(NSString *)processId {
     CircuitProcess *p;
     id data = [processesById objectForKey:processId];
-    if (!data) {
-        [NSException raise:@"Could not find object type" format:@"Object type \"%@\" does not exist.", processId, nil];
-    }
+    NSParameterAssert(data);
     p = [data pointerValue];
     return p;
 }

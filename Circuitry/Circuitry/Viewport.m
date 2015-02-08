@@ -57,6 +57,8 @@ static SpriteTexturePos symbolNAND;
 static SpriteTexturePos symbolNOT;
 static SpriteTexturePos symbolHA;
 static SpriteTexturePos symbolFA;
+static SpriteTexturePos symbolPlus;
+static SpriteTexturePos symbolMult;
 
 static SpriteTexturePos letterA;
 static SpriteTexturePos letterB;
@@ -134,6 +136,8 @@ static GLfloat radius;
     symbolNAND = [atlas positionForSprite:@"symbol-nand@2x"];
     symbolNOT = [atlas positionForSprite:@"symbol-not@2x"];
     symbolFA = [atlas positionForSprite:@"symbol-fa@2x"];
+    symbolPlus = [atlas positionForSprite:@"symbol-plus@2x"];
+    symbolMult = [atlas positionForSprite:@"symbol-mult@2x"];
     
     // Half adder looks exactly the same as the full adder, except without the bottom left "c".
     // As such, we can simply re-use the fa texture, but cropped a bit.
@@ -422,6 +426,10 @@ GLKVector3 offsetForInlet(CircuitProcess *process, int index) {
     else if (process == &CircuitProcessNot) return symbolNOT;
     else if (process == &CircuitProcessHA) return symbolHA;
     else if (process == &CircuitProcessFA) return symbolFA;
+    else if (process == &CircuitProcessAdd4) return symbolPlus;
+    else if (process == &CircuitProcessAdd8) return symbolPlus;
+    else if (process == &CircuitProcessMult4) return symbolMult;
+    else if (process == &CircuitProcessMult8) return symbolMult;
     else {
         SpriteTexturePos pos;
         pos.u = pos.v = pos.theight = pos.twidth = pos.width = pos.height = 0.0;

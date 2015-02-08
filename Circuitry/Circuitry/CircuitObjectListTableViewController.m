@@ -55,9 +55,11 @@
                    [[ToolbeltItem alloc] initWithType:@"nor"     image:[UIImage imageNamed:@"nor"]      name:@"NOR" subtitle:@"2 in, 1 out"],
                    [[ToolbeltItem alloc] initWithType:@"ha"    image:[UIImage imageNamed:@"ha"]     name:@"Half adder" subtitle:@"2 in, 2 out"],
                    [[ToolbeltItem alloc] initWithType:@"fa"    image:[UIImage imageNamed:@"fa"]     name:@"Full adder" subtitle:@"3 in, 2 out"],
-                   [[ToolbeltItem alloc] initWithType:@"add8"    image:[UIImage imageNamed:@"add4"]     name:@"4-bit adder" subtitle:@"8 in, 4 out"],
-                   [[ToolbeltItem alloc] initWithType:@"add8"    image:[UIImage imageNamed:@"mult4"]    name:@"4-bit multiplier" subtitle:@"8 in, 4 out"],
-                   [[ToolbeltItem alloc] initWithType:@"bin7seg" image:[UIImage imageNamed:@"bin7seg"]  name:@"7 Segment Decoder" subtitle:@"4 in, 7 out"],
+                   [[ToolbeltItem alloc] initWithType:@"add4"    image:[UIImage imageNamed:@"add4"]     name:@"4-bit adder" subtitle:@"8 in, 4 out"],
+                   [[ToolbeltItem alloc] initWithType:@"mult4"   image:[UIImage imageNamed:@"mult4"]    name:@"4-bit multiplier" subtitle:@"8 in, 4 out"],
+                   [[ToolbeltItem alloc] initWithType:@"add8"    image:[UIImage imageNamed:@"add8"]     name:@"8-bit adder" subtitle:@"16 in, 8 out"],
+                   [[ToolbeltItem alloc] initWithType:@"mult8"   image:[UIImage imageNamed:@"mult8"]    name:@"8-bit multiplier" subtitle:@"16 in, 8 out"],
+                   [[ToolbeltItem alloc] initWithType:@"bin7seg" image:[UIImage imageNamed:@"bin7seg"]  name:@"7seg Decoder" subtitle:@"4 bit input, 7 display"],
                    [[ToolbeltItem alloc] initWithType:@"7seg"    image:[UIImage imageNamed:@"7seg"]     name:@"7-Segment Display" subtitle:@"Display"],
                    [[ToolbeltItem alloc] initWithType:@"clock"   image:[UIImage imageNamed:@"clock"]    name:@"Clock" subtitle:@"Square wave"]
     ];
