@@ -1,93 +1,92 @@
 {
   "problems": [
     {
-      "path": "1",
-      "image": "level-1",
+      "path": "001",
       "title": "Connect an AND gate"
     },
     {
-      "path": "2",
-      "image": "level-2",
+      "path": "002",
       "title": "Another AND Gate"
     },
-               {
-               "path": "2",
-               "image": "level-2",
-               "title": "3-way OR gate"
-               },{
-               "path": "2",
-               "image": "level-2",
-               "title": "3-way OR gate"
-               }
-               ,{
-               "path": "2",
-               "image": "level-2",
-               "title": "3-way OR gate"
-               }
-               ,{
-               "path": "2",
-               "image": "level-2",
-               "title": "3-way OR gate"
-               }
-               ,{
-               "path": "2",
-               "image": "level-2",
-               "title": "3-way OR gate"
-               }
-               ,{
-               "path": "2",
-               "image": "level-2",
-               "title": "3-way OR gate"
-               }
-               ,{
-               "path": "2",
-               "image": "level-2",
-               "title": "3-way OR gate"
-               }
-               ,{
-               "path": "2",
-               "image": "level-2",
-               "title": "3-way OR gate"
-               }
-               ,{
-               "path": "2",
-               "image": "level-2",
-               "title": "3-way OR gate"
-               }
-               ,{
-               "path": "2",
-               "image": "level-2",
-               "title": "3-way OR gate"
-               }
-               ,{
-               "path": "2",
-               "image": "level-2",
-               "title": "3-way OR gate"
-               }
-               ,{
-               "path": "2",
-               "image": "level-2",
-               "title": "3-way OR gate"
-               }
-               ,{
-               "path": "2",
-               "image": "level-2",
-               "title": "3-way OR gate"
-               }
-               ,{
-               "path": "2",
-               "image": "level-2",
-               "title": "3-way OR gate"
-               }
-               ,{
-               "path": "2",
-               "image": "level-2",
-               "title": "3-way OR gate"
-               }
-               ,{
-               "path": "2",
-               "image": "level-2",
-               "title": "3-way OR gate"
-               }
+    {
+      "path": "003",
+      "title": "3-way OR gate"
+    },
+    {
+      "path": "004",
+      "title": "Implement a NAND gate"
+    },
+    {
+      "path": "005",
+      "title": "Exclusive OR"
+    },
+    {
+      "path": "006",
+      "title": "3-way OR gate"
+    },
+    {
+      "path": "007",
+      "title": "NOT using a NAND"
+    },
+    {
+      "path": "008",
+      "title": "OR using a NAND"
+    },
+    {
+      "path": "009",
+      "title": "AND using NAND gates"
+    },
+    {
+      "path": "010",
+      "title": "XOR Identity"
+    },
+    {
+      "path": "011",
+      "title": "NAND Gate using four NOR gates"
+    },
+    {
+      "path": "012",
+      "title": "One of Three"
+    },
+    {
+      "path": "013",
+      "title": "Two of Three"
+    },
+    {
+      "path": "014",
+      "title": "Add two binary digits"
+    },
+    {
+      "path": "015",
+      "title": "Full Adder"
+    },
+    {
+      "path": "016",
+      "title": "Add 2 bit numbers"
+    },
+    {
+      "path": "017",
+      "title": "Add two 2-bit numbers using FAs"
+    },
+    {
+      "path": "018",
+      "title": "Add two 4-bit numbers using FAs"
+    },
+    {
+      "path": "019",
+      "title": "Adding signed numbers"
+    },
+    {
+      "path": "020",
+      "title": "Subtraction"
+    },
+    {
+      "path": "021",
+      "title": "Flip Flop"
+    },
+    {
+      "path": "022",
+      "title": "Binary Counter"
+    }
   ]
 }

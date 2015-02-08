@@ -1,0 +1,119 @@
+{
+  "_id" : "54d6f66a004aab62540041a9",
+  "description" : "",
+  "license" : "Copyright",
+  "view" : {
+    "center" : [
+      -200,
+      0
+    ]
+  },
+  "name" : "",
+  "author" : "",
+  "meta" : {
+    "toolbelt" : false,
+    "canZoom": false
+  },
+  "tests": [
+    {
+      "inputs": ["54d6f673004aab62540041aa", "54d6f674004aab62540041ab"],
+      "outputs": ["54d6f692004aab62540041ae"],
+      "spec": [
+        [[0,0],[1]],
+        [[0,1],[1]],
+        [[1,0],[1]],
+        [[1,1],[0]]
+      ]
+    }
+  ],
+  "version" : "1.0.0",
+  "engines" : {
+    "circuitry" : ">=0.0"
+  },
+  "title" : "Implement a NAND Gate",
+  "items": [
+    {
+      "_id" : "54d6f673004aab62540041aa",
+      "in" : 0,
+      "type" : "in",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        600,
+        800,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d6f674004aab62540041ab",
+      "in" : 0,
+      "type" : "in",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        600,
+        1200,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d6f67c004aab62540041ac",
+      "in" : 0,
+      "type" : "and",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        1250,
+        600,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d6f680004aab62540041ad",
+      "in" : 0,
+      "type" : "not",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        900,
+        600,
+        0
+      ],
+      "out" : 1
+    },
+    {
+      "_id" : "54d6f692004aab62540041ae",
+      "in" : 0,
+      "type" : "out",
+      "name" : "",
+      "outputs" : [
+
+      ],
+      "pos" : [
+        1550,
+        950,
+        0
+      ],
+      "out" : 0
+    }
+  ]
+}

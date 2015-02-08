@@ -535,6 +535,9 @@ static CGPoint hvrDragHereRight = {88,428};
     [self.view addSubview:imgView];
     
     [_problemInfoViewController showProblemDescription];
+    
+    // TODO: Ensure this
+    NSParameterAssert(self.nextDocument.circuit);
     self.document = self.nextDocument;
     
     [UIView animateWithDuration:0.5 animations:^{

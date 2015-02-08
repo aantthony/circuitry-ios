@@ -1,0 +1,3152 @@
+[
+  {
+    "__v": 0,
+    "_id": "51a60638ef52360200000002",
+    "author": "Lachlan",
+    "description": "Implement an NAND gate using a NOT gate and an AND gate.",
+    "hints": "In solving the early problems, it helps to think in terms of logical truth. For example, 'not true is false' and 'not false is true'. You can equivalently think of true as the value 1 and false as the value 0 obtaining 'not 1 is 0' and 'not 0 is 1'.\nA NOT gate returns the complement/negation of it's input value:\nNOT(1) = 0\tNOT(0) = 1.\nAn AND gate returns the conjunction of two input values:\nAND(1,0) = AND(0,1) = AND(0,0) = 0\tAND(1,1) = 1\nA NAND (not and) gate returns the complement of the conjunction of two input values:\nNAND(1,1) = 0\tNAND(1,0) = NAND(0,1) = NAND (0,0) = 1.",
+    "title": "Level 1",
+    "completions": 14,
+    "attempts": 42,
+    "spec": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ]
+    ],
+    "items": [
+      {
+        "id": "AND",
+        "n": 1,
+        "_id": "51a60638ef52360200000004"
+      },
+      {
+        "id": "NOT",
+        "n": 1,
+        "_id": "51a60638ef52360200000003"
+      }
+    ],
+    "outputs": [
+      "Output"
+    ],
+    "inputs": [
+      "Input A",
+      "Input B"
+    ],
+    "created": "2013-05-29T11:08:58.279Z"
+  },
+  {
+    "__v": 0,
+    "_id": "51a60644ef52360200000005",
+    "author": "Lachlan",
+    "description": "Implement a NOR gate using a NOT gate and a OR gate.",
+    "hints": "An OR gate returns the disjunction of it's two input values:\nOR(1,0) = OR(0,1) = OR(1,1) = 1\tOR(0,0) = 0\nRemember that a NOT gate returns the complement/negation of it's input values:\nNOT(1) = 0\tNOT(0) = 1\nA NOR (not or) gate returns the complement of the disjunction of two input values:\nNOR(1,1) = NOR(1,0) = NOR(0,1) = 0\tNOR(0,0) = 1. ",
+    "title": "Level 2",
+    "completions": 6,
+    "attempts": 6,
+    "spec": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        3,
+        0
+      ]
+    ],
+    "items": [
+      {
+        "id": "OR",
+        "n": 1,
+        "_id": "51a60644ef52360200000007"
+      },
+      {
+        "id": "NOT",
+        "n": 1,
+        "_id": "51a60644ef52360200000006"
+      }
+    ],
+    "outputs": [
+      "Output"
+    ],
+    "inputs": [
+      "Input A",
+      "Input B"
+    ],
+    "created": "2013-05-29T11:08:59.908Z"
+  },
+  {
+    "__v": 0,
+    "author": "Lachlan",
+    "title": "Level 3",
+    "description": "Make a gate that always returns a true value using a NOT gate and a OR GATE",
+    "hints": "Remember that a NOT gate returns the complement/negation of it's input value:\nNOT(1) = 0\nNOT(0) = 1\nRemember that a OR gate returns the disjunction of it's two input values:\nOR(1,0) = OR(0,1) = OR(1,1) = 1\nOR(0,0) = 0",
+    "_id": "51a606d7ef52360200000008",
+    "completions": 4,
+    "attempts": 8,
+    "spec": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        1
+      ]
+    ],
+    "items": [
+      {
+        "id": "OR",
+        "n": 1,
+        "_id": "51a606d7ef5236020000000a"
+      },
+      {
+        "id": "NOT",
+        "n": 1,
+        "_id": "51a606d7ef52360200000009"
+      }
+    ],
+    "outputs": [
+      "Output"
+    ],
+    "inputs": [
+      "Input A"
+    ],
+    "created": "2013-05-29T11:09:01.209Z"
+  },
+  {
+    "__v": 1,
+    "_id": "51a721569717b60200000002",
+    "author": "Lachlan",
+    "description": "Make a gate that always returns True",
+    "hints": "Remember the NOT gate returns the complement/negation of it's input values:\nNOT(1) = 0\nNOT(0) = 1\nRemeber the AND gate returns the conjunction of two input values:\nAND(1,0) = AND(0,1) = AND(0,0) = 0 \nAND(1,1) = 1",
+    "title": "Level 4",
+    "completions": 15,
+    "attempts": 18,
+    "spec": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        1
+      ]
+    ],
+    "items": [
+      {
+        "id": "AND",
+        "n": 1,
+        "_id": "51a721569717b60200000004"
+      },
+      {
+        "_id": "51a721569717b60200000003",
+        "id": "NOT",
+        "n": 2
+      }
+    ],
+    "outputs": [
+      "Output"
+    ],
+    "inputs": [
+      "Input A"
+    ],
+    "created": "2013-05-29T11:09:02.399Z"
+  },
+  {
+    "__v": 0,
+    "author": "Lachlan",
+    "title": "Level 5",
+    "description": "Implement the XOR (exclusive or) gate using two NOT gates, two AND gate and an OR gate.",
+    "hints": "A XOR (exclusive or) gate returns the exclusive disjunction of two input values:\nXOR(1,1) = XOR(0,0) = 0\nXOR(1,0) = XOR(0,1) = 1",
+    "_id": "51a606dbef5236020000000e",
+    "completions": 0,
+    "attempts": 6,
+    "spec": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ]
+    ],
+    "items": [
+      {
+        "id": "NOT",
+        "n": 2,
+        "_id": "51a606dbef52360200000011"
+      },
+      {
+        "id": "AND",
+        "n": 2,
+        "_id": "51a606dbef52360200000010"
+      },
+      {
+        "id": "OR",
+        "n": 1,
+        "_id": "51a606dbef5236020000000f"
+      }
+    ],
+    "outputs": [
+      "Output"
+    ],
+    "inputs": [
+      "Input A",
+      "Input B"
+    ],
+    "created": "2013-05-29T11:09:03.536Z"
+  },
+  {
+    "author": "Lachlan",
+    "title": "Level 6",
+    "description": "Implement the XNOR (exclusive not or) gate using two NOT gates, two AND gates and an OR gate.",
+    "hints": "A XNOR (exclusive not or) gate returns the complement of the exclusive disjunction of two input values (simply put, it returns logical equality), that is:\nXNOR(1,1) = XNOR(0,0) = 1\nXNOR(1,0) = XNOR(0,1) = 0",
+    "__v": 0,
+    "_id": "51a606dcef52360200000012",
+    "completions": 0,
+    "attempts": 4,
+    "spec": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        3,
+        1
+      ]
+    ],
+    "items": [
+      {
+        "id": "NOT",
+        "n": 2,
+        "_id": "51a606dcef52360200000015"
+      },
+      {
+        "id": "AND",
+        "n": 2,
+        "_id": "51a606dcef52360200000014"
+      },
+      {
+        "id": "OR",
+        "n": 1,
+        "_id": "51a606dcef52360200000013"
+      }
+    ],
+    "outputs": [
+      "Output"
+    ],
+    "inputs": [
+      "Input A",
+      "Input B"
+    ],
+    "created": "2013-05-29T11:09:04.678Z"
+  },
+  {
+    "__v": 0,
+    "author": "Lachlan",
+    "title": "Level 7",
+    "description": "Implement a NOT gate using a NAND gate.",
+    "hints": "Remember that a NAND (not and) gate returns the complement of the conjunction of two input values:\nNAND(1,1) = 0\nNAND(1,0) = NAND(0,1) = NAND (0,0) = 1",
+    "_id": "51a606deef52360200000016",
+    "completions": 0,
+    "attempts": 0,
+    "spec": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ]
+    ],
+    "items": [
+      {
+        "id": "NAND",
+        "n": 1,
+        "_id": "51a606deef52360200000017"
+      }
+    ],
+    "outputs": [
+      "Output"
+    ],
+    "inputs": [
+      "Input A"
+    ],
+    "created": "2013-05-29T11:09:18.558Z"
+  },
+  {
+    "__v": 0,
+    "author": "Lachlan",
+    "title": "Level 8",
+    "description": "Implement a OR gate using three NAND gates.",
+    "hints": "This is similar to the previous question.",
+    "_id": "51a606e0ef52360200000018",
+    "completions": 0,
+    "attempts": 6,
+    "spec": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        1
+      ]
+    ],
+    "items": [
+      {
+        "id": "NAND",
+        "n": 3,
+        "_id": "51a606e0ef52360200000019"
+      }
+    ],
+    "outputs": [
+      "Output"
+    ],
+    "inputs": [
+      "Input A",
+      "Input B"
+    ],
+    "created": "2013-05-29T11:09:19.960Z"
+  },
+  {
+    "__v": 0,
+    "_id": "51a606e2ef5236020000001a",
+    "author": "Lachlan",
+    "description": "Implement a AND gate using two NAND gates.",
+    "hints": "",
+    "title": "Level 9",
+    "completions": 0,
+    "attempts": 4,
+    "spec": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        3,
+        1
+      ]
+    ],
+    "items": [
+      {
+        "id": "NAND",
+        "n": 2,
+        "_id": "51a606e2ef5236020000001b"
+      }
+    ],
+    "outputs": [
+      "Output"
+    ],
+    "inputs": [
+      "Input A",
+      "Input B"
+    ],
+    "created": "2013-05-29T11:09:24.780Z"
+  },
+  {
+    "__v": 0,
+    "author": "Lachlan",
+    "title": "Level 10",
+    "description": "Implement a NOT gate using a NOR gate.",
+    "hints": "Remember that a NOR (not or) gate returns the complement of the disjunction of two input values:\nNOR(1,1) = NOR(1,0) = NOR(0,1) = 0\nNOR(0,0) = 1",
+    "_id": "51a606e4ef5236020000001c",
+    "completions": 2,
+    "attempts": 2,
+    "spec": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ]
+    ],
+    "items": [
+      {
+        "id": "NOR",
+        "n": 1,
+        "_id": "51a606e4ef5236020000001d"
+      }
+    ],
+    "outputs": [
+      "Output"
+    ],
+    "inputs": [
+      "Input A"
+    ],
+    "created": "2013-05-29T11:09:30.851Z"
+  },
+  {
+    "__v": 0,
+    "_id": "51a606f8ef5236020000001e",
+    "author": "Lachlan",
+    "description": "Implement a OR gate using two NOR gates.",
+    "hints": "",
+    "title": "Level 11",
+    "completions": 0,
+    "attempts": 2,
+    "spec": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        1
+      ]
+    ],
+    "items": [
+      {
+        "id": "NOR",
+        "n": 2,
+        "_id": "51a606f8ef5236020000001f"
+      }
+    ],
+    "outputs": [
+      "Output"
+    ],
+    "inputs": [
+      "Input A",
+      "Input B"
+    ],
+    "created": "2013-05-29T11:09:34.534Z"
+  },
+  {
+    "__v": 0,
+    "_id": "51a606faef52360200000020",
+    "author": "Lachlan",
+    "description": "Implement a AND gate using three NOR gates.",
+    "hints": "",
+    "title": "Level 12",
+    "completions": 0,
+    "attempts": 0,
+    "spec": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        3,
+        1
+      ]
+    ],
+    "items": [
+      {
+        "id": "NOR",
+        "n": 3,
+        "_id": "51a606faef52360200000021"
+      }
+    ],
+    "outputs": [
+      "Output"
+    ],
+    "inputs": [
+      "Input A",
+      "Input B"
+    ],
+    "created": "2013-05-29T11:09:35.762Z"
+  },
+  {
+    "__v": 0,
+    "_id": "51a606fcef52360200000022",
+    "author": "Lachlan",
+    "description": "Using just the XOR gate, return the input value.",
+    "hints": "Remember that the XOR (exclusive or) gate returns the exclusive disjunction of two input values:\nXOR(1,1) = XOR(0,0) = 0\nXOR(1,0) = XOR(0,1) = 1",
+    "title": "Level 13",
+    "completions": 0,
+    "attempts": 2,
+    "spec": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "items": [
+      {
+        "id": "XOR",
+        "n": 2,
+        "_id": "51a5f9daab6cfd183d000023"
+      }
+    ],
+    "outputs": [
+      "Output"
+    ],
+    "inputs": [
+      "Input A"
+    ],
+    "created": "2013-05-29T11:09:36.993Z"
+  },
+  {
+    "__v": 0,
+    "_id": "51a606fdef52360200000023",
+    "author": "Lachlan",
+    "description": "Implement an OR gate using three NOT gates and an AND gate.",
+    "hints": "",
+    "title": "Level 14",
+    "completions": 0,
+    "attempts": 2,
+    "spec": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        1
+      ]
+    ],
+    "items": [
+      {
+        "id": "AND",
+        "n": 1,
+        "_id": "51a606fdef52360200000025"
+      },
+      {
+        "id": "NOT",
+        "n": 3,
+        "_id": "51a606fdef52360200000024"
+      }
+    ],
+    "outputs": [
+      "Output"
+    ],
+    "inputs": [
+      "Input A",
+      "Input B"
+    ],
+    "created": "2013-05-29T11:09:38.223Z"
+  },
+  {
+    "__v": 0,
+    "_id": "51a606ffef52360200000026",
+    "author": "Lachlan",
+    "description": "Implement an AND gate using a NOT gate and three OR gates.",
+    "hints": "",
+    "title": "Level 15",
+    "completions": 0,
+    "attempts": 0,
+    "spec": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        3,
+        1
+      ]
+    ],
+    "items": [
+      {
+        "id": "OR",
+        "n": 1,
+        "_id": "51a606ffef52360200000028"
+      },
+      {
+        "id": "NOT",
+        "n": 3,
+        "_id": "51a606ffef52360200000027"
+      }
+    ],
+    "outputs": [
+      "Output"
+    ],
+    "inputs": [
+      "Input A",
+      "Input B"
+    ],
+    "created": "2013-05-29T11:09:39.452Z"
+  },
+  {
+    "__v": 0,
+    "author": "Lachlan",
+    "title": "Level 16",
+    "description": "Implement an NAND gate using only four NOR gates.",
+    "hints": "In level 12 you made an AND gate from NOR gates, it will help to make an AND gate first. Don't forget DeMorgan's laws",
+    "_id": "51a60701ef52360200000029",
+    "completions": 0,
+    "attempts": 2,
+    "spec": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ]
+    ],
+    "items": [
+      {
+        "id": "NOR",
+        "n": 4,
+        "_id": "51a60701ef5236020000002a"
+      }
+    ],
+    "outputs": [
+      "Output"
+    ],
+    "inputs": [
+      "Input A",
+      "Input B"
+    ],
+    "created": "2013-05-29T11:09:40.679Z"
+  },
+  {
+    "__v": 0,
+    "_id": "51a60703ef5236020000002b",
+    "author": "Lachlan",
+    "description": "Implement a NOR gate using only four NAND gates.",
+    "hints": "",
+    "title": "Level 17",
+    "completions": 0,
+    "attempts": 2,
+    "spec": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        3,
+        0
+      ]
+    ],
+    "items": [
+      {
+        "id": "NAND",
+        "n": 4,
+        "_id": "51a60703ef5236020000002c"
+      }
+    ],
+    "outputs": [
+      "Output"
+    ],
+    "inputs": [
+      "Input A",
+      "Input B"
+    ],
+    "created": "2013-05-29T11:09:41.916Z"
+  },
+  {
+    "__v": 0,
+    "author": "Lachlan",
+    "title": "Level 18",
+    "description": "Implement HA (half adder) using a XOR gate and a AND gate.",
+    "hints": "A HA (half adder) adds two single binary digits and outputs the sum and the carry as a tuple (C,S); that is\nHA(0,0) = (0,0)\nHA(1,0) = HA(0,1) = (0,1)\nHA(1,1) = (1,0).\nHINT: It will help to notice that the sum can be seen to have the logical equivalent of a XOR gate and the carry can be seen to have the logical equivalent of a AND gate.\nRemember that XOR (exclusive or) gate returns the exclusive disjunction of two input values:\nXOR(1,1) = XOR(0,0) = 0\nXOR(1,0) = XOR(0,1) = 1",
+    "_id": "51a60704ef5236020000002d",
+    "completions": 0,
+    "attempts": 0,
+    "spec": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        2
+      ]
+    ],
+    "items": [
+      {
+        "id": "XOR",
+        "n": 1,
+        "_id": "51a60704ef5236020000002f"
+      },
+      {
+        "id": "AND",
+        "n": 1,
+        "_id": "51a60704ef5236020000002e"
+      }
+    ],
+    "outputs": [
+      "Output A",
+      "Output B"
+    ],
+    "inputs": [
+      "Input A",
+      "Input B"
+    ],
+    "created": "2013-05-29T11:09:43.136Z"
+  },
+  {
+    "__v": 0,
+    "_id": "51a60707ef52360200000030",
+    "author": "Lachlan",
+    "description": "Implement FA (full adder) using two HA gates and a OR gate.",
+    "hints": "A FA (one bit full adder) adds two binary numbers with a carried in binary number and outputs the sum and carry tuple (S,C):\nFA(0,0,0) = (0,0)\tFA(1,0,0) = (0,1)\tFA(0,1,0) = (0,1)\tFA(1,1,0) = (1,0)\tFA(0,0,1) = (0,1)\tFA(1,0,1) = (1,0)\tFA(0,1,1) = (1,0)\tFA(1,1,1) = (1,1)\nUsing the notation FA(x,y,Cin) = (Cout,S), we define x and y to be the input single digit binary numbers, Cin is the carry input, Cout is the carry output and S is the sum. \nThe FA can be seen to have the logic table of a HA when we ignore the Cin term and set it to zero. It will help to notice that the FA is really adding three binary values together to obtain one output binary two digit value. Think about what the sum and carry terms of a HA mean.",
+    "title": "Level 19",
+    "completions": 0,
+    "attempts": 0,
+    "spec": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        5,
+        2
+      ],
+      [
+        6,
+        2
+      ],
+      [
+        7,
+        3
+      ]
+    ],
+    "items": [
+      {
+        "id": "HA",
+        "n": 2,
+        "_id": "51a60707ef52360200000032"
+      },
+      {
+        "id": "OR",
+        "n": 1,
+        "_id": "51a60707ef52360200000031"
+      }
+    ],
+    "outputs": [
+      "Output A",
+      "Output B"
+    ],
+    "inputs": [
+      "Input A",
+      "Input B",
+      "Input C"
+    ],
+    "created": "2013-05-29T11:09:44.678Z"
+  },
+  {
+    "__v": 0,
+    "author": "Lachlan",
+    "title": "Level 20",
+    "description": "Implement a gate that adds two unsigned two digit binary numbers using two FA's.",
+    "hints": "",
+    "_id": "51a723669717b60200000006",
+    "completions": 0,
+    "attempts": 2,
+    "spec": [
+      [
+        0,
+        0
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        6,
+        2
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        5,
+        2
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        7,
+        3
+      ]
+    ],
+    "items": [
+      {
+        "id": "FA",
+        "n": 2,
+        "_id": "51a723669717b60200000008"
+      },
+      {
+        "id": "IN",
+        "n": 1,
+        "_id": "51a723669717b60200000007"
+      }
+    ],
+    "outputs": [
+      "Output A",
+      "Output B"
+    ],
+    "inputs": [
+      "Input A",
+      "Input B",
+      "Input C",
+      "INPUT D"
+    ],
+    "created": "2013-05-29T11:09:46.515Z"
+  },
+  {
+    "__v": 1,
+    "_id": "51a60711ef52360200000033",
+    "author": "Lachlan",
+    "description": "Implement a gate ADDITION that adds two unsigned four digit binary numbers using four FA's.",
+    "hints": "The ADDITION gate adds two four digit signed binary numbers. The logic table is not presented here since it has 2^8 entries.\nThe signed values are of the form of two's complement. It will help in constructing this circuit to think what the carry and sum terms of a FA really mean.\nThink of the first four bits on the left to be the first binary number, with each bit increasing in value the closer it is to the bottom of the page, the last four bits likewise being the second input binary number.",
+    "title": "Level 21",
+    "completions": 0,
+    "attempts": 0,
+    "spec": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        5,
+        5
+      ],
+      [
+        6,
+        6
+      ],
+      [
+        7,
+        7
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        5,
+        13
+      ],
+      [
+        6,
+        14
+      ],
+      [
+        7,
+        15
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        5,
+        5
+      ],
+      [
+        6,
+        6
+      ],
+      [
+        7,
+        7
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        5,
+        13
+      ],
+      [
+        6,
+        14
+      ],
+      [
+        7,
+        15
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        5,
+        5
+      ],
+      [
+        6,
+        6
+      ],
+      [
+        7,
+        7
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        5,
+        13
+      ],
+      [
+        6,
+        14
+      ],
+      [
+        7,
+        15
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        5,
+        5
+      ],
+      [
+        6,
+        6
+      ],
+      [
+        7,
+        7
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        5,
+        13
+      ],
+      [
+        6,
+        14
+      ],
+      [
+        7,
+        15
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        5,
+        5
+      ],
+      [
+        6,
+        6
+      ],
+      [
+        7,
+        7
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        5,
+        13
+      ],
+      [
+        6,
+        14
+      ],
+      [
+        7,
+        15
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        5,
+        5
+      ],
+      [
+        6,
+        6
+      ],
+      [
+        7,
+        7
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        5,
+        13
+      ],
+      [
+        6,
+        14
+      ],
+      [
+        7,
+        15
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        6,
+        6
+      ],
+      [
+        7,
+        7
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        5,
+        13
+      ],
+      [
+        6,
+        14
+      ],
+      [
+        7,
+        15
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        7,
+        7
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        5,
+        13
+      ],
+      [
+        6,
+        14
+      ],
+      [
+        7,
+        15
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        5,
+        13
+      ],
+      [
+        6,
+        14
+      ],
+      [
+        7,
+        15
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        5,
+        13
+      ],
+      [
+        6,
+        14
+      ],
+      [
+        7,
+        15
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        5,
+        13
+      ],
+      [
+        6,
+        14
+      ],
+      [
+        7,
+        15
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        5,
+        13
+      ],
+      [
+        6,
+        14
+      ],
+      [
+        7,
+        15
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        5,
+        13
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        5,
+        13
+      ],
+      [
+        6,
+        14
+      ],
+      [
+        7,
+        15
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        5,
+        13
+      ],
+      [
+        5,
+        13
+      ],
+      [
+        5,
+        13
+      ],
+      [
+        6,
+        14
+      ],
+      [
+        7,
+        15
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        5,
+        13
+      ],
+      [
+        5,
+        13
+      ],
+      [
+        6,
+        14
+      ],
+      [
+        6,
+        14
+      ],
+      [
+        7,
+        15
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        5,
+        13
+      ],
+      [
+        5,
+        13
+      ],
+      [
+        6,
+        14
+      ],
+      [
+        6,
+        14
+      ],
+      [
+        7,
+        15
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        5,
+        13
+      ],
+      [
+        5,
+        13
+      ],
+      [
+        6,
+        14
+      ],
+      [
+        6,
+        14
+      ],
+      [
+        7,
+        15
+      ]
+    ],
+    "items": [
+      {
+        "id": "FA",
+        "n": 4,
+        "_id": "51a60711ef52360200000034"
+      }
+    ],
+    "outputs": [
+      "Output A",
+      "Output B",
+      "OUTPUT C",
+      "OUTPUT D"
+    ],
+    "inputs": [
+      "Input A",
+      "Input B",
+      "Input C",
+      "INPUT D",
+      "INPUT E",
+      "INPUT F",
+      "INPUT G",
+      "INPUT H"
+    ],
+    "created": "2013-05-29T11:09:48.053Z"
+  },
+  {
+    "__v": 0,
+    "author": "Lachlan",
+    "title": "Level 22",
+    "description": "Implement a gate that finds the complement of a signed four bit binary number using the ADDER made in the previous step, four NOT gates, the TRUE gate and the FALSE gate.",
+    "hints": "The COMPLEMENT gate finds the negative of four digit signed binary number. The logic table is not presented here since it has 2^4 entries.\nTo find the negative of a value in two's complement, a simple algorithm can be applied of which you should be familiar;\nTo find the complement of of some number, flip all its bits individually, then using the addition function add the value of 1 to this number.",
+    "_id": "51a60713ef52360200000035",
+    "completions": 0,
+    "attempts": 10,
+    "spec": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        15
+      ],
+      [
+        2,
+        14
+      ],
+      [
+        3,
+        13
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        5,
+        11
+      ],
+      [
+        6,
+        10
+      ],
+      [
+        7,
+        9
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        7
+      ],
+      [
+        10,
+        6
+      ],
+      [
+        11,
+        5
+      ],
+      [
+        12,
+        4
+      ],
+      [
+        13,
+        3
+      ],
+      [
+        14,
+        2
+      ],
+      [
+        15,
+        1
+      ]
+    ],
+    "items": [
+      {
+        "id": "FA",
+        "n": 4,
+        "_id": "51a60713ef52360200000036"
+      }
+    ],
+    "outputs": [
+      "Output A",
+      "Output B",
+      "OUTPUT C",
+      "OUTPUT D"
+    ],
+    "inputs": [
+      "Input A",
+      "Input B",
+      "Input C",
+      "INPUT D"
+    ],
+    "created": "2013-05-29T11:10:09.482Z"
+  },
+  {
+    "__v": 0,
+    "author": "Lachlan",
+    "title": "Level 23",
+    "description": "Implement a gate that subtracts one signed four bit binary number from another using the ADDITION gate and the COMPLEMENT gate.",
+    "hints": "The SUBTRACTION gate subtracts one four digit signed binary number from another. The logic table is not presented here since it has 2^8 entries.\nIt will help in constructing this logic gate to notice that subtraction can be manipulated into addition by taking the complement of the second operand.",
+    "_id": "51a60715ef52360200000037",
+    "completions": 0,
+    "attempts": 6,
+    "spec": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        15
+      ],
+      [
+        2,
+        14
+      ],
+      [
+        3,
+        13
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        5,
+        11
+      ],
+      [
+        6,
+        10
+      ],
+      [
+        7,
+        9
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        7
+      ],
+      [
+        10,
+        6
+      ],
+      [
+        11,
+        5
+      ],
+      [
+        12,
+        4
+      ],
+      [
+        13,
+        3
+      ],
+      [
+        14,
+        2
+      ],
+      [
+        15,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        6,
+        15
+      ],
+      [
+        7,
+        14
+      ],
+      [
+        12,
+        13
+      ],
+      [
+        13,
+        12
+      ],
+      [
+        14,
+        11
+      ],
+      [
+        15,
+        10
+      ],
+      [
+        24,
+        9
+      ],
+      [
+        25,
+        8
+      ],
+      [
+        26,
+        7
+      ],
+      [
+        27,
+        6
+      ],
+      [
+        28,
+        5
+      ],
+      [
+        29,
+        4
+      ],
+      [
+        30,
+        3
+      ],
+      [
+        31,
+        2
+      ],
+      [
+        4,
+        2
+      ],
+      [
+        5,
+        1
+      ],
+      [
+        10,
+        0
+      ],
+      [
+        11,
+        15
+      ],
+      [
+        20,
+        14
+      ],
+      [
+        21,
+        13
+      ],
+      [
+        22,
+        12
+      ],
+      [
+        23,
+        11
+      ],
+      [
+        40,
+        10
+      ],
+      [
+        41,
+        9
+      ],
+      [
+        42,
+        8
+      ],
+      [
+        43,
+        7
+      ],
+      [
+        44,
+        6
+      ],
+      [
+        45,
+        5
+      ],
+      [
+        46,
+        4
+      ],
+      [
+        47,
+        3
+      ],
+      [
+        6,
+        3
+      ],
+      [
+        7,
+        2
+      ],
+      [
+        14,
+        1
+      ],
+      [
+        15,
+        0
+      ],
+      [
+        28,
+        15
+      ],
+      [
+        29,
+        14
+      ],
+      [
+        30,
+        13
+      ],
+      [
+        31,
+        12
+      ],
+      [
+        56,
+        11
+      ],
+      [
+        57,
+        10
+      ],
+      [
+        58,
+        9
+      ],
+      [
+        59,
+        8
+      ],
+      [
+        60,
+        7
+      ],
+      [
+        61,
+        6
+      ],
+      [
+        62,
+        5
+      ],
+      [
+        63,
+        4
+      ],
+      [
+        8,
+        4
+      ],
+      [
+        9,
+        3
+      ],
+      [
+        18,
+        2
+      ],
+      [
+        19,
+        1
+      ],
+      [
+        36,
+        0
+      ],
+      [
+        37,
+        15
+      ],
+      [
+        38,
+        14
+      ],
+      [
+        39,
+        13
+      ],
+      [
+        72,
+        12
+      ],
+      [
+        73,
+        11
+      ],
+      [
+        74,
+        10
+      ],
+      [
+        75,
+        9
+      ],
+      [
+        76,
+        8
+      ],
+      [
+        77,
+        7
+      ],
+      [
+        78,
+        6
+      ],
+      [
+        79,
+        5
+      ],
+      [
+        10,
+        5
+      ],
+      [
+        11,
+        4
+      ],
+      [
+        22,
+        3
+      ],
+      [
+        23,
+        2
+      ],
+      [
+        44,
+        1
+      ],
+      [
+        45,
+        0
+      ],
+      [
+        46,
+        15
+      ],
+      [
+        47,
+        14
+      ],
+      [
+        88,
+        13
+      ],
+      [
+        89,
+        12
+      ],
+      [
+        90,
+        11
+      ],
+      [
+        91,
+        10
+      ],
+      [
+        92,
+        9
+      ],
+      [
+        93,
+        8
+      ],
+      [
+        94,
+        7
+      ],
+      [
+        95,
+        6
+      ],
+      [
+        12,
+        6
+      ],
+      [
+        13,
+        5
+      ],
+      [
+        26,
+        4
+      ],
+      [
+        27,
+        3
+      ],
+      [
+        52,
+        2
+      ],
+      [
+        53,
+        1
+      ],
+      [
+        54,
+        0
+      ],
+      [
+        55,
+        15
+      ],
+      [
+        104,
+        14
+      ],
+      [
+        105,
+        13
+      ],
+      [
+        106,
+        12
+      ],
+      [
+        107,
+        11
+      ],
+      [
+        108,
+        10
+      ],
+      [
+        109,
+        9
+      ],
+      [
+        110,
+        8
+      ],
+      [
+        111,
+        7
+      ],
+      [
+        14,
+        7
+      ],
+      [
+        15,
+        6
+      ],
+      [
+        30,
+        5
+      ],
+      [
+        31,
+        4
+      ],
+      [
+        60,
+        3
+      ],
+      [
+        61,
+        2
+      ],
+      [
+        62,
+        1
+      ],
+      [
+        63,
+        0
+      ],
+      [
+        120,
+        15
+      ],
+      [
+        121,
+        14
+      ],
+      [
+        122,
+        13
+      ],
+      [
+        123,
+        12
+      ],
+      [
+        124,
+        11
+      ],
+      [
+        125,
+        10
+      ],
+      [
+        126,
+        9
+      ],
+      [
+        127,
+        8
+      ],
+      [
+        16,
+        8
+      ],
+      [
+        17,
+        7
+      ],
+      [
+        34,
+        6
+      ],
+      [
+        35,
+        5
+      ],
+      [
+        68,
+        4
+      ],
+      [
+        69,
+        3
+      ],
+      [
+        70,
+        2
+      ],
+      [
+        71,
+        1
+      ],
+      [
+        136,
+        0
+      ],
+      [
+        137,
+        15
+      ],
+      [
+        138,
+        14
+      ],
+      [
+        139,
+        13
+      ],
+      [
+        140,
+        12
+      ],
+      [
+        141,
+        11
+      ],
+      [
+        142,
+        10
+      ],
+      [
+        143,
+        9
+      ],
+      [
+        18,
+        9
+      ],
+      [
+        19,
+        8
+      ],
+      [
+        38,
+        7
+      ],
+      [
+        39,
+        6
+      ],
+      [
+        76,
+        5
+      ],
+      [
+        77,
+        4
+      ],
+      [
+        78,
+        3
+      ],
+      [
+        79,
+        2
+      ],
+      [
+        152,
+        1
+      ],
+      [
+        153,
+        0
+      ],
+      [
+        154,
+        15
+      ],
+      [
+        155,
+        14
+      ],
+      [
+        156,
+        13
+      ],
+      [
+        157,
+        12
+      ],
+      [
+        158,
+        11
+      ],
+      [
+        159,
+        10
+      ],
+      [
+        20,
+        10
+      ],
+      [
+        21,
+        9
+      ],
+      [
+        42,
+        8
+      ],
+      [
+        43,
+        7
+      ],
+      [
+        84,
+        6
+      ],
+      [
+        85,
+        5
+      ],
+      [
+        86,
+        4
+      ],
+      [
+        87,
+        3
+      ],
+      [
+        168,
+        2
+      ],
+      [
+        169,
+        1
+      ],
+      [
+        170,
+        0
+      ],
+      [
+        171,
+        15
+      ],
+      [
+        172,
+        14
+      ],
+      [
+        173,
+        13
+      ],
+      [
+        174,
+        12
+      ],
+      [
+        175,
+        11
+      ],
+      [
+        22,
+        11
+      ],
+      [
+        23,
+        10
+      ],
+      [
+        46,
+        9
+      ],
+      [
+        47,
+        8
+      ],
+      [
+        92,
+        7
+      ],
+      [
+        93,
+        6
+      ],
+      [
+        94,
+        5
+      ],
+      [
+        95,
+        4
+      ],
+      [
+        184,
+        3
+      ],
+      [
+        185,
+        2
+      ],
+      [
+        186,
+        1
+      ],
+      [
+        187,
+        0
+      ],
+      [
+        188,
+        15
+      ],
+      [
+        189,
+        14
+      ],
+      [
+        190,
+        13
+      ],
+      [
+        191,
+        12
+      ],
+      [
+        24,
+        12
+      ],
+      [
+        25,
+        11
+      ],
+      [
+        50,
+        10
+      ],
+      [
+        51,
+        9
+      ],
+      [
+        100,
+        8
+      ],
+      [
+        101,
+        7
+      ],
+      [
+        102,
+        6
+      ],
+      [
+        103,
+        5
+      ],
+      [
+        200,
+        4
+      ],
+      [
+        201,
+        3
+      ],
+      [
+        202,
+        2
+      ],
+      [
+        203,
+        1
+      ],
+      [
+        204,
+        0
+      ],
+      [
+        205,
+        15
+      ],
+      [
+        206,
+        14
+      ],
+      [
+        207,
+        13
+      ],
+      [
+        26,
+        13
+      ],
+      [
+        27,
+        12
+      ],
+      [
+        54,
+        11
+      ],
+      [
+        55,
+        10
+      ],
+      [
+        108,
+        9
+      ],
+      [
+        109,
+        8
+      ],
+      [
+        110,
+        7
+      ],
+      [
+        111,
+        6
+      ],
+      [
+        216,
+        5
+      ],
+      [
+        217,
+        4
+      ],
+      [
+        218,
+        3
+      ],
+      [
+        219,
+        2
+      ],
+      [
+        220,
+        1
+      ],
+      [
+        221,
+        0
+      ],
+      [
+        222,
+        15
+      ],
+      [
+        223,
+        14
+      ],
+      [
+        28,
+        14
+      ],
+      [
+        29,
+        13
+      ],
+      [
+        58,
+        12
+      ],
+      [
+        59,
+        11
+      ],
+      [
+        116,
+        10
+      ],
+      [
+        117,
+        9
+      ],
+      [
+        118,
+        8
+      ],
+      [
+        119,
+        7
+      ],
+      [
+        232,
+        6
+      ],
+      [
+        233,
+        5
+      ],
+      [
+        234,
+        4
+      ],
+      [
+        235,
+        3
+      ],
+      [
+        236,
+        2
+      ],
+      [
+        237,
+        1
+      ],
+      [
+        238,
+        0
+      ],
+      [
+        239,
+        15
+      ],
+      [
+        30,
+        15
+      ],
+      [
+        31,
+        14
+      ],
+      [
+        62,
+        13
+      ],
+      [
+        63,
+        12
+      ],
+      [
+        124,
+        11
+      ],
+      [
+        125,
+        10
+      ],
+      [
+        126,
+        9
+      ],
+      [
+        127,
+        8
+      ],
+      [
+        248,
+        7
+      ],
+      [
+        249,
+        6
+      ],
+      [
+        250,
+        5
+      ],
+      [
+        251,
+        4
+      ],
+      [
+        252,
+        3
+      ],
+      [
+        253,
+        2
+      ],
+      [
+        254,
+        1
+      ],
+      [
+        255,
+        0
+      ]
+    ],
+    "items": [
+      {
+        "id": "FA",
+        "n": 4,
+        "_id": "51a60715ef52360200000038"
+      }
+    ],
+    "outputs": [
+      "Output A",
+      "Output B",
+      "OUTPUT C",
+      "OUTPUT D"
+    ],
+    "inputs": [
+      "Input A",
+      "Input B",
+      "Input C",
+      "INPUT D",
+      "INPUT E",
+      "INPUT F",
+      "INPUT G",
+      "INPUT H"
+    ],
+    "created": "2013-05-29T11:10:10.482Z"
+  }
+]

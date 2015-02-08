@@ -31,6 +31,9 @@
     
     NSUInteger playerCurrentLevelIndex = 1;
     NSUInteger i = 0;
+    
+    playerCurrentLevelIndex = 8;
+    
     for (NSDictionary *p in index[@"problems"]) {
         NSUInteger index = i++;
         

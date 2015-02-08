@@ -502,6 +502,19 @@ static BOOL animateGateToLockedPosition(CircuitObject *object, float x, float y)
     }
 }
 
+- (void) snapObjectsToGrid {
+    [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
+        [_document.circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
+            CGFloat x = object->pos.x;
+            CGFloat y = object->pos.y;
+            x = roundf(x / 50) * 50.0;
+            y = roundf(y / 50) * 50.0;
+            object->pos.x = x;
+            object->pos.y = y;
+        }];
+    }];
+    self.paused = NO;
+}
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
     [self checkError];

@@ -1,0 +1,140 @@
+{
+  "_id" : "54d6f3f7c81dba6a520041a9",
+  "description" : "",
+  "license" : "Copyright",
+  "view" : {
+    "center" : [
+      -200,
+      -50
+    ]
+  },
+  "name" : "",
+  "author" : "",
+  "meta" : {
+    "toolbelt" : false,
+    "canZoom": false
+  },
+  "tests": [
+    {
+      "inputs": ["54d6f45f004aab9c520041a8", "54d6f460004aab9c520041a9", "54d6f460004aab9c520041aa"],
+      "outputs": ["54d6f4b7c81dbacc520041a8"],
+      "spec": [
+        [[0,0,0],[0]],
+        [[0,0,1],[1]],
+        [[0,1,0],[1]],
+        [[0,1,1],[1]],
+        [[1,0,0],[1]],
+        [[1,0,1],[1]],
+        [[1,1,0],[1]],
+        [[1,1,1],[1]]
+      ]
+    }
+  ],
+  "version" : "1.0.0",
+  "engines" : {
+    "circuitry" : ">=0.0"
+  },
+  "title" : "OR",
+  "items": [
+    {
+      "_id" : "54d6f45f004aab9c520041a8",
+      "in" : 0,
+      "type" : "in",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        600,
+        900,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d6f460004aab9c520041a9",
+      "in" : 0,
+      "type" : "in",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        600,
+        1200,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d6f460004aab9c520041aa",
+      "in" : 0,
+      "type" : "in",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        600,
+        600,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d6f465004aab9c520041ab",
+      "in" : 0,
+      "type" : "or",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        1000,
+        1050,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d6f465004aab9c520041ac",
+      "in" : 0,
+      "type" : "or",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        1000,
+        750,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d6f4b7c81dbacc520041a8",
+      "in" : 0,
+      "type" : "out",
+      "name" : "",
+      "outputs" : [
+
+      ],
+      "pos" : [
+        1450,
+        900,
+        0
+      ],
+      "out" : 0
+    }
+  ]
+}

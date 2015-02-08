@@ -13,7 +13,6 @@
   },
   "view": {
     "center": [65, 180, 0],
-    "canPan": false,
     "canZoom": false
   },
   "tests": [
