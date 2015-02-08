@@ -27,6 +27,9 @@ static void *srealloc(void * d, size_t c) {
     return realloc(d, c);
 }
 
+
+// Logic Gate definitions:
+
 static int XOR  (int x, void *d) { return x == 1 || x == 2;}
 static int XNOR (int x, void *d) { return x == 0 || x == 3;}
 static int AND  (int x, void *d) { return x == 3;}
@@ -35,7 +38,7 @@ static int NOT  (int x, void *d) { return !x; }
 static int NOR  (int x, void *d) { return !x; }
 static int OR   (int x, void *d) { return !!x; }
 static int HA   (int x, void *d) { int a = x & 1; int b = x >> 1; return a+b; }
-static int FA   (int x, void *d) { int a = x & 1; int b = x >> 1; int c = x >> 2; return a+b+c; }
+static int FA   (int x, void *d) { int a = x & 1; int b = (x >> 1) & 1; int c = x >> 2; return a+b+c; }
 static int ADD8 (int x, void *d) { return (x&255) + (x >> 8); }
 
 static int BINDEC (int x, void *d) { return 1 << x; }
