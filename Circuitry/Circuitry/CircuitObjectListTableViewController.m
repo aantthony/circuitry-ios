@@ -53,6 +53,8 @@
                    [[ToolbeltItem alloc] initWithType:@"xnor"    image:[UIImage imageNamed:@"xnor"]     name:@"XNOR" subtitle:@"2 in, 1 out"],
                    [[ToolbeltItem alloc] initWithType:@"nand"    image:[UIImage imageNamed:@"nand"]     name:@"NAND" subtitle:@"2 in, 1 out"],
                    [[ToolbeltItem alloc] initWithType:@"nor"     image:[UIImage imageNamed:@"nor"]      name:@"NOR" subtitle:@"2 in, 1 out"],
+                   [[ToolbeltItem alloc] initWithType:@"ha"    image:[UIImage imageNamed:@"ha"]     name:@"Half adder" subtitle:@"2 in, 2 out"],
+                   [[ToolbeltItem alloc] initWithType:@"fa"    image:[UIImage imageNamed:@"fa"]     name:@"Full adder" subtitle:@"3 in, 2 out"],
                    [[ToolbeltItem alloc] initWithType:@"add8"    image:[UIImage imageNamed:@"add4"]     name:@"4-bit adder" subtitle:@"8 in, 4 out"],
                    [[ToolbeltItem alloc] initWithType:@"add8"    image:[UIImage imageNamed:@"mult4"]    name:@"4-bit multiplier" subtitle:@"8 in, 4 out"],
                    [[ToolbeltItem alloc] initWithType:@"bin7seg" image:[UIImage imageNamed:@"bin7seg"]  name:@"7 Segment Decoder" subtitle:@"4 in, 7 out"],

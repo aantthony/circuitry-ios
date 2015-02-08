@@ -65,6 +65,8 @@ CircuitProcess CircuitProcessXor;
 CircuitProcess CircuitProcessXnor;    
 CircuitProcess CircuitProcessAnd;   
 CircuitProcess CircuitProcessNand; 
+CircuitProcess CircuitProcessHA;
+CircuitProcess CircuitProcessFA;
 CircuitProcess CircuitProcessBinDec;
 CircuitProcess CircuitProcessAdd8;
 CircuitProcess CircuitProcessBin7Seg;

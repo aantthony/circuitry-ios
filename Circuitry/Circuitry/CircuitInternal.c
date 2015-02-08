@@ -34,6 +34,8 @@ static int NAND (int x, void *d) { return x != 3;}
 static int NOT  (int x, void *d) { return !x; }
 static int NOR  (int x, void *d) { return !x; }
 static int OR   (int x, void *d) { return !!x; }
+static int HA   (int x, void *d) { int a = x & 1; int b = x >> 1; return a+b; }
+static int FA   (int x, void *d) { int a = x & 1; int b = x >> 1; int c = x >> 2; return a+b+c; }
 static int ADD8 (int x, void *d) { return (x&255) + (x >> 8); }
 
 static int BINDEC (int x, void *d) { return 1 << x; }
@@ -71,6 +73,8 @@ CircuitProcess CircuitProcessXor     = {"xor",      2,  1, XOR };
 CircuitProcess CircuitProcessXnor    = {"xnor",     2,  1, XNOR };
 CircuitProcess CircuitProcessAnd     = {"and",      2,  1, AND };
 CircuitProcess CircuitProcessNand    = {"nand",     2,  1, NAND };
+CircuitProcess CircuitProcessHA      = {"ha",       2,  2, HA };
+CircuitProcess CircuitProcessFA      = {"fa",       3,  2, FA };
 CircuitProcess CircuitProcessBinDec  = {"bindec",   4, 16, BINDEC };
 CircuitProcess CircuitProcessAdd8    = {"add8",    16,  9, ADD8 };
 CircuitProcess CircuitProcessBin7Seg = {"bin7seg",  4,  7, BIN7SEG };

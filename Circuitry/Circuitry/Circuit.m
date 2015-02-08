@@ -45,6 +45,8 @@ static NSDictionary *processesById;
                       @"and": valueForGate(&CircuitProcessAnd),
                       @"nand": valueForGate(&CircuitProcessNand),
                       @"not": valueForGate(&CircuitProcessNot),
+                      @"ha": valueForGate(&CircuitProcessHA),
+                      @"fa": valueForGate(&CircuitProcessFA),
                       @"bindec": valueForGate(&CircuitProcessBinDec),
                       @"add8": valueForGate(&CircuitProcessAdd8),
                       @"bin7seg": valueForGate(&CircuitProcessBin7Seg),
