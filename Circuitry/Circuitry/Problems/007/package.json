@@ -1,0 +1,82 @@
+{
+  "_id" : "54d71f45004aab645d0041a9",
+  "description" : "",
+  "license" : "Copyright",
+  "view" : {
+    "center" : [
+      0,
+      0
+    ]
+  },
+  "name" : "",
+  "author" : "",
+  "meta" : {
+    "toolbelt" : false
+  },
+  "tests": [
+    {
+      "inputs": ["54d71f4b004aab645d0041aa"],
+      "outputs": ["54d71f69004aab645d0041ad"],
+      "spec": [
+        [[0],[1]],
+        [[1],[0]]
+      ]
+    }
+  ],
+  "version" : "1.0.0",
+  "engines" : {
+    "circuitry" : ">=0.0"
+  },
+  "title" : "Not Using a NAND",
+  "items": [
+    {
+      "_id" : "54d71f4b004aab645d0041aa",
+      "in" : 0,
+      "type" : "in",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        200,
+        1000,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d71f5c004aab645d0041ac",
+      "in" : 0,
+      "type" : "nand",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        650,
+        1000,
+        0
+      ],
+      "out" : 1
+    },
+    {
+      "_id" : "54d71f69004aab645d0041ad",
+      "in" : 0,
+      "type" : "out",
+      "name" : "",
+      "outputs" : [
+
+      ],
+      "pos" : [
+        1150,
+        1000,
+        0
+      ],
+      "out" : 0
+    }
+  ]
+}

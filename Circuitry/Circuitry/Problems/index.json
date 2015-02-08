@@ -22,7 +22,7 @@
     },
     {
       "path": "006",
-      "title": "3-way OR gate"
+      "title": "Two XOR Gates"
     },
     {
       "path": "007",
@@ -30,15 +30,11 @@
     },
     {
       "path": "008",
-      "title": "OR using a NAND"
+      "title": "OR using three NANDs"
     },
     {
       "path": "009",
       "title": "AND using NAND gates"
-    },
-    {
-      "path": "010",
-      "title": "XOR Identity"
     },
     {
       "path": "011",
@@ -78,14 +74,18 @@
     },
     {
       "path": "020",
-      "title": "Subtraction"
+      "title": "Double Binary"
     },
     {
       "path": "021",
-      "title": "Flip Flop"
+      "title": "Subtraction"
     },
     {
       "path": "022",
+      "title": "Flip Flop"
+    },
+    {
+      "path": "023",
       "title": "Binary Counter"
     }
   ]

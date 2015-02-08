@@ -1,0 +1,105 @@
+{
+  "_id" : "54d7228f004aab735e0041b8",
+  "description" : "",
+  "license" : "Copyright",
+  "view" : {
+    "center" : [
+      0,
+      0
+    ]
+  },
+  "name" : "",
+  "author" : "",
+  "meta" : {
+    "toolbelt" : ["button", "or", "and", "not", "xor", "xnor", "nand", "nor"]
+  },
+  "tests": [
+    {
+      "inputs": ["54d72294004aab735e0041b9", "54d72295004aab735e0041ba", "54d72297004aab735e0041bb"],
+      "outputs": ["54d722b0004aab735e0041bd"],
+      "spec": [
+        [[0,0,0],[0]],
+        [[0,0,1],[1]],
+        [[0,1,0],[1]],
+        [[0,1,1],[0]],
+        [[1,0,0],[1]],
+        [[1,0,1],[0]],
+        [[1,1,0],[0]],
+        [[1,1,1],[0]]
+      ]
+    }
+  ],
+  "version" : "1.0.0",
+  "engines" : {
+    "circuitry" : ">=0.0"
+  },
+  "title" : "One of Three",
+  "items": [
+    {
+      "_id" : "54d72294004aab735e0041b9",
+      "in" : 0,
+      "type" : "button",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        650,
+        350,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d72295004aab735e0041ba",
+      "in" : 0,
+      "type" : "button",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        650,
+        650,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d72297004aab735e0041bb",
+      "in" : 0,
+      "type" : "button",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        650,
+        950,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d722b0004aab735e0041bd",
+      "in" : 0,
+      "type" : "light",
+      "name" : "",
+      "outputs" : [
+
+      ],
+      "pos" : [
+        1550,
+        650,
+        0
+      ],
+      "out" : 0
+    }
+  ]
+}

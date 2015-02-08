@@ -1,0 +1,135 @@
+{
+  "_id" : "54d72007004aab005e0041a9",
+  "description" : "",
+  "license" : "Copyright",
+  "view" : {
+    "center" : [
+      -19.30537,
+      -22.59472
+    ]
+  },
+  "name" : "",
+  "author" : "",
+  "meta" : {
+    "toolbelt" : false
+  },
+  "tests": [
+    {
+      "inputs": ["54d72010004aab005e0041aa", "54d72011004aab005e0041ab"],
+      "outputs": ["54d72054004aab005e0041af"],
+      "spec": [
+        [[0,0],[0]],
+        [[0,1],[1]],
+        [[1,0],[1]],
+        [[1,1],[1]]
+      ]
+    }
+  ],
+  "version" : "1.0.0",
+  "engines" : {
+    "circuitry" : ">=0.0"
+  },
+  "title" : "OR Using three NANDs",
+  "items": [
+    {
+      "_id" : "54d72010004aab005e0041aa",
+      "in" : 0,
+      "type" : "in",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        650,
+        650,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d72011004aab005e0041ab",
+      "in" : 0,
+      "type" : "in",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        650,
+        950,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d72016004aab005e0041ac",
+      "in" : 0,
+      "type" : "nand",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        1050,
+        1000,
+        0
+      ],
+      "out" : 1
+    },
+    {
+      "_id" : "54d7204c004aab005e0041ad",
+      "in" : 0,
+      "type" : "nand",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        1050,
+        600,
+        0
+      ],
+      "out" : 1
+    },
+    {
+      "_id" : "54d7204d004aab005e0041ae",
+      "in" : 0,
+      "type" : "nand",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        1050,
+        800,
+        0
+      ],
+      "out" : 1
+    },
+    {
+      "_id" : "54d72054004aab005e0041af",
+      "in" : 0,
+      "type" : "out",
+      "name" : "",
+      "outputs" : [
+
+      ],
+      "pos" : [
+        1450,
+        800,
+        0
+      ],
+      "out" : 0
+    }
+  ]
+}

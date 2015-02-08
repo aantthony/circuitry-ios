@@ -1,0 +1,152 @@
+{
+  "_id" : "54d721f5004aab735e0041b0",
+  "description" : "",
+  "license" : "Copyright",
+  "view" : {
+    "center" : [
+      0,
+      100
+    ]
+  },
+  "name" : "",
+  "author" : "",
+  "meta" : {
+    "toolbelt" : false
+  },
+  "tests": [
+    {
+      "inputs": ["54d72201004aab735e0041b1", "54d72201000aab735e0041b1"],
+      "outputs": ["54d72203004aab735e0041b2"],
+      "spec": [
+        [[0,0],[1]],
+        [[0,1],[1]],
+        [[1,0],[1]],
+        [[1,1],[0]]
+      ]
+    }
+  ],
+  "version" : "1.0.0",
+  "engines" : {
+    "circuitry" : ">=0.0"
+  },
+  "title" : "NAND gate using four NOR gates",
+  "items": [
+    {
+      "_id" : "54d72201004aab735e0041b1",
+      "in" : 0,
+      "type" : "in",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        650,
+        500,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d72201000aab735e0041b1",
+      "in" : 0,
+      "type" : "in",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        650,
+        700,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d72203004aab735e0041b2",
+      "in" : 0,
+      "type" : "out",
+      "name" : "",
+      "outputs" : [
+
+      ],
+      "pos" : [
+        1650,
+        500,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d72208004aab735e0041b3",
+      "in" : 0,
+      "type" : "nor",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        800,
+        800,
+        0
+      ],
+      "out" : 1
+    },
+    {
+      "_id" : "54d72208004aab735e0041b4",
+      "in" : 0,
+      "type" : "nor",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        1150,
+        800,
+        0
+      ],
+      "out" : 1
+    },
+    {
+      "_id" : "54d72208004aab735e0041b5",
+      "in" : 0,
+      "type" : "nor",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        1500,
+        800,
+        0
+      ],
+      "out" : 1
+    },
+    {
+      "_id" : "54d72209004aab735e0041b6",
+      "in" : 0,
+      "type" : "nor",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        1150,
+        600,
+        0
+      ],
+      "out" : 1
+    }
+  ]
+}

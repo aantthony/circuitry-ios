@@ -1,0 +1,169 @@
+{
+  "_id" : "54d71a47004aabc4580041aa",
+  "description" : "",
+  "license" : "Copyright",
+  "view" : {
+    "center" : [
+      -200,
+      -250
+    ]
+  },
+  "name" : "",
+  "author" : "",
+  "meta" : {
+    "toolbelt" : false
+  },
+  "tests": [
+    {
+      "inputs": ["54d71a4d004aabc4580041ab", "54d71a50004aabc4580041ac"],
+      "outputs": ["54d71a79004aabc4580041ae"],
+      "spec": [
+        [[0,0],[0]],
+        [[0,1],[1]],
+        [[1,0],[1]],
+        [[1,1],[0]]
+      ]
+    }
+  ],
+  "version" : "1.0.0",
+  "engines" : {
+    "circuitry" : ">=0.0"
+  },
+  "title" : "Exclusive OR",
+  "items":[
+    {
+      "_id" : "54d71a4d004aabc4580041ab",
+      "in" : 0,
+      "type" : "button",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        750,
+        1000,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d71a50004aabc4580041ac",
+      "in" : 0,
+      "type" : "button",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        750,
+        1350,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d71a54004aabc4580041ad",
+      "in" : 0,
+      "type" : "or",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        1250,
+        900,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d71a79004aabc4580041ae",
+      "in" : 0,
+      "type" : "out",
+      "name" : "",
+      "outputs" : [
+
+      ],
+      "pos" : [
+        1750,
+        1200,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d71aa6004aabc4580041af",
+      "in" : 0,
+      "type" : "and",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        1600,
+        900,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d71aac004aabc4580041b0",
+      "in" : 0,
+      "type" : "not",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        1250,
+        700,
+        0
+      ],
+      "out" : 1
+    },
+    {
+      "_id" : "54d71ae1004aabc4580041b1",
+      "in" : 0,
+      "type" : "and",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        1600,
+        700,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d71b1d004aabc4580041b2",
+      "in" : 0,
+      "type" : "not",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        900,
+        700,
+        0
+      ],
+      "out" : 1
+    }
+  ]
+}
