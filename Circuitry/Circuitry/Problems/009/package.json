@@ -35,7 +35,7 @@
       "_id" : "54d72010004aab005e0041aa",
       "in" : 0,
       "type" : "in",
-      "name" : "",
+      "name" : "A",
       "outputs" : [
         [
 
@@ -52,7 +52,7 @@
       "_id" : "54d72011004aab005e0041ab",
       "in" : 0,
       "type" : "in",
-      "name" : "",
+      "name" : "B",
       "outputs" : [
         [
 

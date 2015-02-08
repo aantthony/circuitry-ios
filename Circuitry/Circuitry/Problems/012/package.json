@@ -38,8 +38,8 @@
     {
       "_id" : "54d72294004aab735e0041b9",
       "in" : 0,
-      "type" : "button",
-      "name" : "",
+      "type" : "in",
+      "name" : "A",
       "outputs" : [
         [
 
@@ -55,8 +55,8 @@
     {
       "_id" : "54d72295004aab735e0041ba",
       "in" : 0,
-      "type" : "button",
-      "name" : "",
+      "type" : "in",
+      "name" : "B",
       "outputs" : [
         [
 
@@ -72,8 +72,8 @@
     {
       "_id" : "54d72297004aab735e0041bb",
       "in" : 0,
-      "type" : "button",
-      "name" : "",
+      "type" : "in",
+      "name" : "C",
       "outputs" : [
         [
 

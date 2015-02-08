@@ -34,8 +34,8 @@
     {
       "_id" : "54d71a4d004aabc4580041ab",
       "in" : 0,
-      "type" : "button",
-      "name" : "",
+      "type" : "in",
+      "name" : "A",
       "outputs" : [
         [
 
@@ -51,8 +51,8 @@
     {
       "_id" : "54d71a50004aabc4580041ac",
       "in" : 0,
-      "type" : "button",
-      "name" : "",
+      "type" : "in",
+      "name" : "B",
       "outputs" : [
         [
 

@@ -31,7 +31,6 @@
     }
   ],
   "meta": {
-    "truthTable": "TODO",
     "toolbelt": false,
     "tutorial": "53c3cdc945f5603003000888"
   },
@@ -40,7 +39,7 @@
       "_id": "53c3cdc945f5603003000000",
       "in": 0,
       "type": "in",
-      "name": "A",
+      "name": "",
       "outputs": [ [] ],
       "pos": [ 0, 0, 0 ],
       "out": 0
@@ -49,7 +48,7 @@
       "_id": "53c3cdc945f5603003000888",
       "in": 0,
       "type": "in",
-      "name": "B",
+      "name": "",
       "outputs": [ [] ],
       "pos": [ 0, 800, 0 ],
       "out": 0
@@ -58,7 +57,7 @@
       "_id": "53c3cdc945f5603003000009",
       "in": 0,
       "type": "out",
-      "name": "X",
+      "name": "",
       "outputs": [ [] ],
       "pos": [ 1000, 400, 0 ],
       "out": 0

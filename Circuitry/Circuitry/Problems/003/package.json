@@ -40,7 +40,7 @@
       "_id" : "54d6f45f004aab9c520041a8",
       "in" : 0,
       "type" : "in",
-      "name" : "",
+      "name" : "A",
       "outputs" : [
         [
 
@@ -57,7 +57,7 @@
       "_id" : "54d6f460004aab9c520041a9",
       "in" : 0,
       "type" : "in",
-      "name" : "",
+      "name" : "B",
       "outputs" : [
         [
 
@@ -74,7 +74,7 @@
       "_id" : "54d6f460004aab9c520041aa",
       "in" : 0,
       "type" : "in",
-      "name" : "",
+      "name" : "C",
       "outputs" : [
         [
 
