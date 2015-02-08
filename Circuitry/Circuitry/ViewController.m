@@ -170,6 +170,7 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 
 -(void)appWillResignActive:(NSNotification*)note {
     NSLog(@"will resign active...");
+    if (_document.isProblem) return;
     [_document savePresentedItemChangesWithCompletionHandler:^(NSError *errorOrNil) {
         NSLog(@"will resign active:: saved");
     }];
