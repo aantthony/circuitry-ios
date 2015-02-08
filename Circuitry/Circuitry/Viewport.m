@@ -57,8 +57,30 @@ static SpriteTexturePos symbolNAND;
 static SpriteTexturePos symbolNOT;
 static SpriteTexturePos symbolHA;
 static SpriteTexturePos symbolFA;
+
+static SpriteTexturePos letterA;
+static SpriteTexturePos letterB;
+static SpriteTexturePos letterC;
+static SpriteTexturePos letterD;
+static SpriteTexturePos letterE;
+static SpriteTexturePos letterF;
+static SpriteTexturePos letterS;
+static SpriteTexturePos letterX;
+static SpriteTexturePos letterY;
+static SpriteTexturePos letterZ;
+static SpriteTexturePos letterDOT;
+static SpriteTexturePos letter1;
+static SpriteTexturePos letter2;
+static SpriteTexturePos letter3;
+
+static SpriteTexturePos* letterTable[255];
+
 static GLfloat radius;
 
+- (void) dealloc {
+    free(_instances);
+    _instances = NULL;
+}
 
 - (id) initWithContext: (EAGLContext*) context atlas:(ImageAtlas *)atlas {
     self = [self init];
@@ -122,9 +144,43 @@ static GLfloat radius;
     switchOff = [atlas positionForSprite:@"switch-off"];
     switchPressed = [atlas positionForSprite:@"switch-press"];
     
-    
     ledOn = [atlas positionForSprite:@"led-on"];
     ledOff = [atlas positionForSprite:@"led-off"];
+    
+    // Letters
+    ;
+    letterB = [atlas positionForSprite:@"B@2x"];
+    letterC = [atlas positionForSprite:@"C@2x"];
+    letterD = [atlas positionForSprite:@"D@2x"];
+    letterE = [atlas positionForSprite:@"E@2x"];
+    letterF = [atlas positionForSprite:@"F@2x"];
+    letterS = [atlas positionForSprite:@"S@2x"];
+    letterX = [atlas positionForSprite:@"X@2x"];
+    letterY = [atlas positionForSprite:@"Y@2x"];
+    letterZ = [atlas positionForSprite:@"Z@2x"];
+    letter1 = [atlas positionForSprite:@"1@2x"];
+    letter2 = [atlas positionForSprite:@"2@2x"];
+    letter3 = [atlas positionForSprite:@"3@2x"];
+    letterDOT = [atlas positionForSprite:@"Dot@2x"];
+    
+    for(int i = 0; i < 256; i++) {
+        letterTable[i] = NULL;
+    }
+    
+    letterTable['A'] = &letterA;
+    letterTable['B'] = &letterB;
+    letterTable['C'] = &letterC;
+    letterTable['D'] = &letterD;
+    letterTable['E'] = &letterE;
+    letterTable['F'] = &letterF;
+    letterTable['S'] = &letterS;
+    letterTable['X'] = &letterX;
+    letterTable['Y'] = &letterY;
+    letterTable['Z'] = &letterZ;
+    letterTable['1'] = &letter1;
+    letterTable['2'] = &letter2;
+    letterTable['3'] = &letter3;
+    letterTable['.'] = &letterDOT;
         
     for(int i = 0; i < _capacity; i++) {
         _instances[i].tex = gateBackgroundHeight2;
@@ -423,12 +479,26 @@ BOOL expandDrawGate(CircuitObject *object) {
             symbol->x = pos.x + 70.0;
             symbol->y = pos.y - 85.0;
             symbol->tex = object->in ? ledOn : ledOff;
-            
         } else {            
             BatchedSpriteInstance *symbol = &_instances[i++];
             symbol->x = pos.x + 9.0;
             symbol->y = pos.y + 0.0;
             symbol->tex = [self textureForProcess:object->type];
+        }
+        
+        if (object->name[0] && !object->name[1]) {
+            
+            char c = object->name[0];
+            
+            SpriteTexturePos *s = letterTable[c];
+
+            if (s) {
+                BatchedSpriteInstance *letter = &_instances[i++];
+                letter->x = pos.x + 105.0;
+                letter->y = pos.y + 43.0;
+                letter->tex = *s;
+            }
+            
         }
         
         for(int o = 0; o < object->type->numOutputs; o++) {
