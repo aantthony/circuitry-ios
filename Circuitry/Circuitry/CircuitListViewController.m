@@ -415,6 +415,7 @@
         UIImage *img = [UIImage imageNamed:@"bg-blur.jpg"];
         _backgroundImageView = [[UIImageView alloc] initWithImage:img];
         _backgroundImageView.alpha = 0.7;
+        _backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
     }
     return _backgroundImageView;
 }
