@@ -152,7 +152,7 @@ static GLfloat radius;
     ledOff = [atlas positionForSprite:@"led-off"];
     
     // Letters
-    ;
+    letterA = [atlas positionForSprite:@"A@2x"];
     letterB = [atlas positionForSprite:@"B@2x"];
     letterC = [atlas positionForSprite:@"C@2x"];
     letterD = [atlas positionForSprite:@"D@2x"];
