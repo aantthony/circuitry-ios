@@ -95,7 +95,6 @@ typedef struct {
     glUniformMatrix4fv(_uModelViewProjectionMatrix, 1, 0, viewProjectionMatrix.m);
     if (progress < 0.0) progress = 0.0;
     else if (progress > 1.0) progress = 1.0;
-    GLfloat oneMinusP = (1-progress);
     GLfloat radius = 100.0 + progress * 100.0;
     GLfloat alpha = 0.4 - progress;
     glUniform3f(_uPos,  position.x - radius, position.y - radius, 0);
