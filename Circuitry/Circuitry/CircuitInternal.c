@@ -23,11 +23,6 @@ static void *scalloc(size_t c, size_t b) {
     return calloc(c, b);
 }
 
-static void *srealloc(void * d, size_t c) {
-    return realloc(d, c);
-}
-
-
 // Logic Gate definitions:
 
 static int XOR  (int x, void *d) { return x == 1 || x == 2;}
@@ -98,6 +93,74 @@ CircuitObject *CircuitObjectFindById(CircuitInternal *c, ObjectID id) {
     return NULL;
 }
 
+
+static void *reallocLinks(CircuitInternal *c) {
+    c->links_size *= 2;
+    void *oldPtr = c->links;
+    void *newPtr = realloc(oldPtr, sizeof(CircuitLink) * c->links_size);
+    c->links = newPtr;
+    
+    int offsetBytes = newPtr - oldPtr;
+    
+    if (!newPtr || offsetBytes == 0) {
+        // nothing moved:
+        return newPtr;
+    }
+    for (int i = 0; i < c->objects_count; i++) {
+        CircuitObject *o = &c->objects[i];
+        if (!o->type) continue;
+        for(int j = 0; j < o->type->numInputs; j++) {
+            void *inputLink = o->inputs[j];
+            // This inputLink will be updated by one of the other passes below.
+            // We only need to update our reference *to* it.
+            o->inputs[j] = inputLink + offsetBytes;
+        }
+        for(int j = 0; j < o->type->numOutputs; j++) {
+            void *first = o->outputs[j];
+            o->outputs[j] = first + offsetBytes;
+            CircuitLink *link = o->outputs[j];
+            while(link) {
+                void *nextSibling = link->nextSibling;
+                link->nextSibling = nextSibling + offsetBytes;
+                link = link->nextSibling;
+            }
+        }
+    }
+    return newPtr;
+}
+
+static void *reallocObjects(CircuitInternal *c) {
+    c->objects_size *= 2;
+    void *oldPtr = &c->objects;
+    void *newPtr = realloc(oldPtr, sizeof(CircuitObject) * c->objects_size);
+    c->objects = newPtr;
+    
+    int offsetBytes = newPtr - oldPtr;
+    
+    if (!newPtr || offsetBytes == 0) {
+        // Nothing moved, all okay.
+        return newPtr;
+    }
+    
+    // Move all of the references to objects:
+    for(int i = 0; i < c->links_count; i++) {
+        CircuitLink *link = &c->links[i];
+        if (!link->source) continue;
+        void *source = link->source;
+        link->source = source + offsetBytes;
+        void *target = link->source;
+        link->target = target + offsetBytes;
+    }
+    return newPtr;
+}
+
+static void reallocBuffer(CircuitInternal * c) {
+    c->needsUpdate_size *= 2;
+    c->needsUpdate  = realloc(&c->needsUpdate,  sizeof(void *) * c->needsUpdate_size);
+    c->needsUpdate2 = realloc(&c->needsUpdate2, sizeof(void *) * c->needsUpdate_size);
+}
+
+
 // Queue a gate for a re-calculation
 static void needsUpdate(CircuitInternal *c, CircuitObject *object) {
     for(int i = 0; i < c->needsUpdate_count; i++) {
@@ -105,10 +168,7 @@ static void needsUpdate(CircuitInternal *c, CircuitObject *object) {
     }
     c->needsUpdate_count++;
     if (c->needsUpdate_count > c->needsUpdate_size) {
-        // dynamically increase array size:
-        c->needsUpdate_size *= 2;
-        c->needsUpdate  = srealloc(&c->needsUpdate,  sizeof(void *) * c->needsUpdate_size);
-        c->needsUpdate2 = srealloc(&c->needsUpdate2, sizeof(void *) * c->needsUpdate_size);
+        reallocBuffer(c);
     }
     c->needsUpdate[c->needsUpdate_count - 1] = object;
 }
@@ -119,8 +179,7 @@ CircuitObject * CircuitObjectCreate(CircuitInternal *c, CircuitProcess *type) {
     c->objects_count++;
     
     if (c->objects_count > c->objects_size) {
-        c->objects_size *= 2;
-        c->objects = srealloc(&c->objects, sizeof(CircuitObject) * c->objects_size);
+        if (!reallocObjects(c)) return NULL;
     }
     
     CircuitObject * o = &c->objects[c->objects_count - 1];
@@ -172,8 +231,7 @@ static CircuitLink *makeLink(CircuitInternal *c) {
     c->links_count++;
     
     if (c->links_count > c->links_size) {
-        c->links_size *= 2;
-        srealloc(&c->links_size, sizeof(CircuitLink) * c->links_size);
+        reallocLinks(c);
     }
     
     CircuitLink *link = &c->links[c->links_count - 1];
