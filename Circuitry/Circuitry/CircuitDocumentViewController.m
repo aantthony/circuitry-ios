@@ -377,6 +377,7 @@ static CGPoint hvrDragHereRight = {88,428};
 - (void) viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     NSInteger tutorialState = _tutorialState;
+    if (tutorialState == 0) return;
     [UIView animateWithDuration:0.01 animations:^{
         _hintViewTapAndHoldLeft.alpha = 0;
         _hintViewDragHereRight.alpha = 0;
