@@ -50,7 +50,7 @@
 
 - (UIImage *) image {
     if (!_image) {
-        _image = [UIImage imageWithContentsOfFile:[_url URLByAppendingPathComponent:@"screenshot.jpg"].path];
+        _image = [UIImage imageWithContentsOfFile:[_url URLByAppendingPathComponent:@"screenshot.png"].path];
     }
     return _image;
 }

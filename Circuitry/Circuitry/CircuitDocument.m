@@ -9,12 +9,13 @@
 #import "CircuitDocument.h"
 #import "AppDelegate.h"
 #import "CircuitTest.h"
+#import <AVFoundation/AVFoundation.h>
 
 @interface CircuitDocument() <NSURLSessionTaskDelegate>
 @property (nonatomic) NSData *originalScreenshotData;
 @end
 
-static NSString *screenshotJpgPath = @"screenshot.jpg";
+static NSString *screenshotPngPath = @"screenshot.png";
 
 @implementation CircuitDocument
 - (void) setProblemInfo:(ProblemSetProblemInfo *)problemInfo {
@@ -49,7 +50,7 @@ static NSString *screenshotJpgPath = @"screenshot.jpg";
         if (err) return NO;
     }
     
-    _originalScreenshotData = [files[screenshotJpgPath] regularFileContents];
+    _originalScreenshotData = [files[screenshotPngPath] regularFileContents];
      
     _circuit = [[Circuit alloc] initWithPackage:package items: items];
     
@@ -57,12 +58,30 @@ static NSString *screenshotJpgPath = @"screenshot.jpg";
 }
 
 - (void) useScreenshot:(UIImage *)image {
-    CGSize newSize = CGSizeMake(128, 128);
-    UIGraphicsBeginImageContextWithOptions(newSize, NO, 0.0);
-    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
-    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();    
-    UIGraphicsEndImageContext();
-    
+    UIImage *newImage;
+    CGSize newSize = CGSizeMake(188, 188);
+    UIGraphicsBeginImageContextWithOptions(newSize, NO, 0.0); {
+        CGSize scaledSize = newSize;
+        
+        CGFloat x0 = 0;
+        CGFloat y0 = 0;
+        
+        float aspect = image.size.width / image.size.height;
+        
+        if (image.size.width > image.size.height) {
+            scaledSize.width = newSize.width * aspect;
+            scaledSize.height = newSize.height;
+            x0 = -(scaledSize.width - newSize.width) / 2;
+        } else {
+            scaledSize.width = newSize.width;
+            scaledSize.height = newSize.height / aspect;
+            y0 = -(scaledSize.height - newSize.height) / 2;
+        }
+        [image drawInRect:CGRectMake(x0, y0, scaledSize.width, scaledSize.height )];
+        
+        newImage = UIGraphicsGetImageFromCurrentImageContext();
+    } UIGraphicsEndImageContext();
+
     _screenshot = newImage;
     
 }
@@ -158,9 +177,9 @@ static NSString *screenshotJpgPath = @"screenshot.jpg";
     [wrapper addRegularFileWithContents:metaJson preferredFilename:@"package.json"];
     [wrapper addRegularFileWithContents:itemsJSON preferredFilename:@"items.json"];
     if (_screenshot) {
-        [wrapper addRegularFileWithContents:UIImageJPEGRepresentation(_screenshot, 0.8) preferredFilename:screenshotJpgPath];
+        [wrapper addRegularFileWithContents:UIImagePNGRepresentation(_screenshot) preferredFilename:screenshotPngPath];
     } else if (_originalScreenshotData) {
-        [wrapper addRegularFileWithContents:_originalScreenshotData preferredFilename:screenshotJpgPath];
+        [wrapper addRegularFileWithContents:_originalScreenshotData preferredFilename:screenshotPngPath];
     }
     return wrapper;
 }
