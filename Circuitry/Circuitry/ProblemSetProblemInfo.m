@@ -7,6 +7,7 @@
 //
 
 #import "ProblemSetProblemInfo.h"
+#import "ProblemSet.h"
 
 @implementation ProblemSetProblemInfo
 

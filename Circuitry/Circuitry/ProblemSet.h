@@ -11,5 +11,7 @@
 @interface ProblemSet : NSObject
 - (ProblemSet *) initWithDirectoryPath:(NSString *) path;
 - (NSArray *) problems;
+- (void) refresh;
 - (ProblemSetProblemInfo *) problemAfterProblem:(ProblemSetProblemInfo *)info;
+- (void) didCompleteProblem:(ProblemSetProblemInfo *)problemInfo;
 @end

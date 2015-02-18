@@ -12,6 +12,8 @@
 @property (nonatomic) NSArray *problems;
 @end
 
+static NSString *kDefaultsCurrentLevelIndex = @"CurrentLevelIndex";
+
 @implementation ProblemSet
 
 + (NSDictionary *) loadIndexAtUrl:(NSURL *) url {
@@ -29,17 +31,13 @@
     
     NSMutableArray *items = [NSMutableArray array];
     
-    NSUInteger playerCurrentLevelIndex = 1;
+    NSUInteger playerCurrentLevelIndex = 0;
     NSUInteger i = 0;
     
     playerCurrentLevelIndex = 30;
     
     for (NSDictionary *p in index[@"problems"]) {
-        NSUInteger index = i++;
-        
-        BOOL completed = index < playerCurrentLevelIndex;
-        BOOL accessible = index <= playerCurrentLevelIndex;
-
+        NSUInteger index = i;
         NSURL *url = [baseUrl URLByAppendingPathComponent:p[@"path"] isDirectory:YES];
         
         NSString *imageName = p[@"image"];
@@ -47,17 +45,42 @@
             imageName = [NSString stringWithFormat:@"level-%@", p[@"path"]];
         }
         
-        ProblemSetProblemInfo *info = [[ProblemSetProblemInfo alloc] initWithProblemIndex:index title:p[@"title"] completed:completed accessible:accessible visible:YES imageName:imageName documentUrl:url set:self];
+        ProblemSetProblemInfo *info = [[ProblemSetProblemInfo alloc] initWithProblemIndex:index title:p[@"title"] completed:NO accessible:NO visible:YES imageName:imageName documentUrl:url set:self];
         if (p[@"hidden"]) continue;
         
         [items addObject:info];
+        
+        i++;
     }
     _problems = items;
+    [self refresh];
     return self;
 }
 
 - (NSArray *) problems {
     return _problems;
+}
+
+- (void) refresh {
+    
+    NSUInteger playerCurrentLevelIndex = [[NSUserDefaults standardUserDefaults] integerForKey:kDefaultsCurrentLevelIndex];
+    
+    [_problems enumerateObjectsUsingBlock:^(ProblemSetProblemInfo *obj, NSUInteger i, BOOL *stop) {
+        BOOL completed = obj.problemIndex < playerCurrentLevelIndex;
+        BOOL accessible = obj.problemIndex <= playerCurrentLevelIndex;
+
+        obj.isCompleted = completed;
+        obj.isAccessible = accessible;
+    }];
+}
+
+- (void) didCompleteProblem:(ProblemSetProblemInfo *)problemInfo {
+    
+    NSUInteger playerCurrentLevelIndex = problemInfo.problemIndex + 1;
+
+    [[NSUserDefaults standardUserDefaults] setInteger:playerCurrentLevelIndex forKey:kDefaultsCurrentLevelIndex];
+    
+    [self refresh];
 }
 
 - (ProblemSetProblemInfo *) problemAfterProblem:(ProblemSetProblemInfo *)info {

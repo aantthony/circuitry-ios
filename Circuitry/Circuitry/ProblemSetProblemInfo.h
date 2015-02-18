@@ -11,8 +11,8 @@
 @property (nonatomic, readonly) NSUInteger problemIndex;
 @property (nonatomic, readonly) NSString *title;
 
-@property (nonatomic, readonly) BOOL isCompleted;
-@property (nonatomic, readonly) BOOL isAccessible;
+@property (nonatomic) BOOL isCompleted;
+@property (nonatomic) BOOL isAccessible;
 @property (nonatomic, readonly) BOOL isVisible;
 
 @property (nonatomic, readonly) NSString *imageName;

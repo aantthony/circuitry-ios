@@ -136,6 +136,8 @@
 
 - (CircuitDocument *) circuitDocumentViewController:(CircuitDocumentViewController *)viewController nextDocumentAfterDocument:(CircuitDocument *)document {
     ProblemSetProblemInfo *info = document.problemInfo;
+    [document.problemInfo.set didCompleteProblem:info];
+    [self.collectionView reloadData];
     ProblemSetProblemInfo *nextInfo = [info.set problemAfterProblem:info];
     if (!nextInfo) return nil;
     CircuitDocument *next = [[CircuitDocument alloc] initWithFileURL:nextInfo.documentURL];
