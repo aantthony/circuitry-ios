@@ -107,7 +107,7 @@
     
     NSInteger lastBlankNameIndex = [defaults integerForKey:kLastBlankName];
     lastBlankNameIndex++;
-    doc.circuit.title = [NSString stringWithFormat:@"Blank %d", lastBlankNameIndex];
+    doc.circuit.title = [NSString stringWithFormat:@"Blank %li", (long)lastBlankNameIndex];
     [defaults setInteger:lastBlankNameIndex forKey:kLastBlankName];
     
     self.presentingDocument = doc;

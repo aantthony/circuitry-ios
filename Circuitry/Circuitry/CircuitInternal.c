@@ -135,7 +135,7 @@ static void *reallocObjects(CircuitInternal *c) {
     void *newPtr = realloc(oldPtr, sizeof(CircuitObject) * c->objects_size);
     c->objects = newPtr;
     
-    int offsetBytes = newPtr - oldPtr;
+    long offsetBytes = newPtr - oldPtr;
     
     if (!newPtr || offsetBytes == 0) {
         // Nothing moved, all okay.
