@@ -39,8 +39,10 @@ static NSString *screenshotPngPath = @"screenshot.png";
     
     NSFileWrapper *wrapper = contents;
     NSDictionary *files = [wrapper fileWrappers];
-
-    NSDictionary *package = [NSJSONSerialization JSONObjectWithData:[files[@"package.json"] regularFileContents] options:0 error:&err];
+    NSData *jsonData = [files[@"package.json"] regularFileContents];
+    if (!jsonData) return NO;
+    
+    NSDictionary *package = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&err];
     if (err) return NO;
     
     NSArray *items = package[@"items"];

@@ -19,6 +19,7 @@
     return shared;
 }
 - (NSDictionary *) forDocument:(CircuitDocument *)document {
+    if (!document) return nil;
     NSMutableDictionary *p = [NSMutableDictionary new];
     p[@"Name"]    = document.circuit.name;
     p[@"Doc Version"] = document.circuit.version;

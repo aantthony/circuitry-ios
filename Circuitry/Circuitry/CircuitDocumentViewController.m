@@ -135,6 +135,7 @@
 }
 
 - (void) setDocument:(CircuitDocument *) document {
+    NSParameterAssert(document.circuit);
     _objectListViewController.document = document;
     _glkViewController.document = document;
     _document = document;
@@ -474,6 +475,9 @@ static CGPoint hvrDragHereRight = {88,428};
 - (BOOL) shouldShowToolbeltForDocument: (CircuitDocument *) doc {
     id toolbeltFlag = doc.circuit.meta[@"toolbelt"];
     if (toolbeltFlag == nil) return YES;
+    if ([toolbeltFlag isKindOfClass:[NSArray class]]) {
+        return YES;
+    }
     return [toolbeltFlag boolValue];
 }
 - (IBAction)checkAnswer:(id)sender {
