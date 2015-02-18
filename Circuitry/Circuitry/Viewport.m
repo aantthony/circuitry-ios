@@ -75,7 +75,7 @@ static SpriteTexturePos letter1;
 static SpriteTexturePos letter2;
 static SpriteTexturePos letter3;
 
-static SpriteTexturePos* letterTable[255];
+static SpriteTexturePos* letterTable[256];
 
 static GLfloat radius;
 
@@ -167,7 +167,7 @@ static GLfloat radius;
     letter3 = [atlas positionForSprite:@"3@2x"];
     letterDOT = [atlas positionForSprite:@"Dot@2x"];
     
-    for(int i = 0; i < 256; i++) {
+    for(int i = 0; i <= 0xff; i++) {
         letterTable[i] = NULL;
     }
     
