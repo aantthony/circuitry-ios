@@ -23,6 +23,8 @@
 #import "CircuitDocumentViewController.h"
 #import "ViewController.h"
 
+#import <MessageUI/MFMailComposeViewController.h>
+
 @interface DocumentListItem : NSObject
 @property (nonatomic) NSURL *url;
 @property (nonatomic) NSString *title;
@@ -57,7 +59,7 @@
 
 @end
 
-@interface CircuitListViewController () <UIActionSheetDelegate, UIViewControllerTransitioningDelegate, UINavigationControllerDelegate, CircuitDocumentViewControllerDelegate>
+@interface CircuitListViewController () <UIActionSheetDelegate, UIViewControllerTransitioningDelegate, UINavigationControllerDelegate, MFMailComposeViewControllerDelegate, CircuitDocumentViewControllerDelegate>
 @property (nonatomic) NSMutableArray *circuits;
 @property (nonatomic) ProblemSet *problemSet;
 @property (nonatomic) ViewController *documentViewController;
@@ -332,6 +334,27 @@
     }
     [_circuits removeObjectsAtIndexes:indexSet];
 }
+
+- (NSString *) versionString {
+    return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+}
+
+- (void) showSendFeedback {
+    MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
+    controller.mailComposeDelegate = self;
+    [controller setSubject:[NSString stringWithFormat:@"Circuitry v%@: Feedback", self.versionString]];
+    [controller setToRecipients:@[@"feedback@circuitry.io"]];
+    
+    if (controller) {
+        [self presentViewController:controller animated:YES completion:nil];
+    }
+    
+}
+
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
+    [controller dismissViewControllerAnimated:YES completion:nil];
+}
+
 - (IBAction)optionsPanel:(UIBarButtonItem *)sender {
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
@@ -346,6 +369,20 @@
                                   }];
     
     [alertController addAction:aboutAction];
+    
+    
+    UIAlertAction *feedbackAction = [UIAlertAction
+                                       actionWithTitle:@"Send Feedback"
+                                       style:UIAlertActionStyleDefault
+                                       handler:^(UIAlertAction *action)
+                                       {
+                                           if (!weakSelf) return;
+                                           
+                                           [weakSelf showSendFeedback];
+                                           
+                                       }];
+    
+    [alertController addAction:feedbackAction];
     
     UIAlertAction *boringInfoAction = [UIAlertAction
                                   actionWithTitle:@"Legal & Attributions"
