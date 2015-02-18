@@ -46,6 +46,10 @@
     return NO;
 }
 
+- (UIImage *) snapshot {
+    return _glkViewController.snapshot;
+}
+
 - (UIView *) titleView {
     if (!_titleView) {
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 200)];
@@ -514,23 +518,10 @@ static CGPoint hvrDragHereRight = {88,428};
 }
 
 
-- (UIImage *) screenshotForView:(UIView *)view {
-    UIImage *img;
-    UIGraphicsBeginImageContextWithOptions(view.bounds.size, view.opaque, 0.0);
-    {
-        [view.layer renderInContext:UIGraphicsGetCurrentContext()];
-        img = UIGraphicsGetImageFromCurrentImageContext();
-    }
-    UIGraphicsEndImageContext();
-    return img;
-}
-
 #pragma mark - Problem Info delegate
 - (void) problemInfoViewController:(ProblemInfoViewController *)problemInfoViewController didPressContinueButton:(id)sender {
-    UIImage *screenShotView = [self screenshotForView:self.view];
-    UIImageView *imgView = [[UIImageView alloc] initWithImage:screenShotView];
     
-    imgView.image = nil;
+    UIView *imgView = [[UIView alloc] init];
     imgView.backgroundColor = UIColor.whiteColor;
     [self.view addSubview:imgView];
     

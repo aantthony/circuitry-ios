@@ -11,8 +11,10 @@
 #import "CircuitTest.h"
 
 @interface CircuitDocument() <NSURLSessionTaskDelegate>
-
+@property (nonatomic) NSData *originalScreenshotData;
 @end
+
+static NSString *screenshotJpgPath = @"screenshot.jpg";
 
 @implementation CircuitDocument
 - (void) setProblemInfo:(ProblemSetProblemInfo *)problemInfo {
@@ -47,13 +49,23 @@
         if (err) return NO;
     }
     
-//    _screenshot = [files[@"Default@2x~ipad.jpg"] regularFileContents];
+    _originalScreenshotData = [files[screenshotJpgPath] regularFileContents];
      
     _circuit = [[Circuit alloc] initWithPackage:package items: items];
     
     return YES;
 }
 
+- (void) useScreenshot:(UIImage *)image {
+    CGSize newSize = CGSizeMake(128, 128);
+    UIGraphicsBeginImageContextWithOptions(newSize, NO, 0.0);
+    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();    
+    UIGraphicsEndImageContext();
+    
+    _screenshot = newImage;
+    
+}
 
 - (NSArray *) exportItems {
     
@@ -145,7 +157,11 @@
 
     [wrapper addRegularFileWithContents:metaJson preferredFilename:@"package.json"];
     [wrapper addRegularFileWithContents:itemsJSON preferredFilename:@"items.json"];
-//    [wrapper addRegularFileWithContents:_screenshot preferredFilename:@"Default@2x~ipad.jpg"];
+    if (_screenshot) {
+        [wrapper addRegularFileWithContents:UIImageJPEGRepresentation(_screenshot, 0.8) preferredFilename:screenshotJpgPath];
+    } else if (_originalScreenshotData) {
+        [wrapper addRegularFileWithContents:_originalScreenshotData preferredFilename:screenshotJpgPath];
+    }
     return wrapper;
 }
 

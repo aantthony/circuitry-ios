@@ -16,6 +16,8 @@
 
 @property (nonatomic) CircuitDocument *document;
 
+- (UIImage *) snapshot;
+
 @end
 
 

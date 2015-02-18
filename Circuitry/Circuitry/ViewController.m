@@ -20,7 +20,6 @@
 static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 
 @interface ViewController () <UIActionSheetDelegate> {
-    IBOutlet UIPinchGestureRecognizer *_pinchGestureRecognizer;
     GLKMatrix4 _modelViewProjectionMatrix;
     GLKMatrix3 _normalMatrix;
     
@@ -31,7 +30,6 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     
     float beginGestureScale;
     
-    CircuitObject *beginLongPressGestureObject;
     GLKVector3 beginLongPressGestureOffset;
     
     CGPoint panVelocity;
@@ -42,8 +40,6 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     BOOL draggingOutFromToolbeltLockY;
     CGPoint draggingOutFromToolbeltStart;
     
-    Sprite *bg;
-    
     BOOL animatingPan;
     
 }
@@ -53,6 +49,9 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 @property (nonatomic) BOOL canPan;
 @property (nonatomic) BOOL canZoom;
 @property (nonatomic) BOOL isTutorial;
+@property (nonatomic) Sprite *bg;
+@property (nonatomic) IBOutlet UIPinchGestureRecognizer *pinchGestureRecognizer;
+@property (nonatomic, assign) CircuitObject *beginLongPressGestureObject;
 @property (nonatomic, assign) CircuitObject *holdDownGestureObject;
 
 - (void)tearDownGL;
@@ -60,19 +59,6 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 @end
 
 @implementation ViewController
-
-- (void) saveScreenshot {
-    
-    NSLog(@"getting screenshot...");
-    
-//    CircuitDocument * doc = _document;
-    
-    [self unpause];
-}
-- (void) publish {
-//    [self save];
-//    [_document publish];
-}
 
 - (void) setDocument:(CircuitDocument *) document {
     _document = document;
@@ -99,6 +85,10 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 
 - (UIImage*)snapshot
 {
+    [EAGLContext setCurrentContext:self.context];
+    GLKView *view = (GLKView *)self.view;
+    return view.snapshot;
+    
     GLint backingWidth, backingHeight;
     
     // Bind the color renderbuffer used to render the OpenGL ES view
@@ -106,11 +96,11 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     // this call is redundant, but it is needed if you're dealing with multiple renderbuffers.
     // Note, replace "_colorRenderbuffer" with the actual name of the renderbuffer object defined in your class.
 //    glBindRenderbufferOES(GL_RENDERBUFFER_OES, _colorRenderbuffer);
-    
+    [view bindDrawable];
     // Get the size of the backing CAEAGLLayer
     glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &backingWidth);
     glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &backingHeight);
-    
+    [self checkError];
     GLint x = 0, y = 0, width = backingWidth, height = backingHeight;
     NSInteger dataLength = width * height * 4;
     GLubyte *data = (GLubyte*)malloc(dataLength * sizeof(GLubyte));
@@ -130,21 +120,14 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     // OpenGL ES measures data in PIXELS
     // Create a graphics context with the target size measured in POINTS
     NSInteger widthInPoints, heightInPoints;
-    if (NULL != UIGraphicsBeginImageContextWithOptions) {
-        // On iOS 4 and later, use UIGraphicsBeginImageContextWithOptions to take the scale into consideration
-        // Set the scale parameter to your OpenGL ES view's contentScaleFactor
-        // so that you get a high-resolution snapshot when its value is greater than 1.0
-        CGFloat scale = self.view.contentScaleFactor;
-        widthInPoints = width / scale;
-        heightInPoints = height / scale;
-        UIGraphicsBeginImageContextWithOptions(CGSizeMake(widthInPoints, heightInPoints), NO, scale);
-    }
-    else {
-        // On iOS prior to 4, fall back to use UIGraphicsBeginImageContext
-        widthInPoints = width;
-        heightInPoints = height;
-        UIGraphicsBeginImageContext(CGSizeMake(widthInPoints, heightInPoints));
-    }
+    
+    // On iOS 4 and later, use UIGraphicsBeginImageContextWithOptions to take the scale into consideration
+    // Set the scale parameter to your OpenGL ES view's contentScaleFactor
+    // so that you get a high-resolution snapshot when its value is greater than 1.0
+    CGFloat scale = self.view.contentScaleFactor;
+    widthInPoints = width / scale;
+    heightInPoints = height / scale;
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(widthInPoints, heightInPoints), NO, scale);
     
     CGContextRef cgcontext = UIGraphicsGetCurrentContext();
     
@@ -171,13 +154,18 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 -(void)appWillResignActive:(NSNotification*)note {
     NSLog(@"will resign active...");
     if (_document.isProblem) return;
-    [_document savePresentedItemChangesWithCompletionHandler:^(NSError *errorOrNil) {
-        NSLog(@"will resign active:: saved");
-    }];
+    
+    if (_document.hasUnsavedChanges) {
+        [_document useScreenshot: self.snapshot];
+        
+        [_document savePresentedItemChangesWithCompletionHandler:^(NSError *errorOrNil) {
+            NSLog(@"will resign active:: saved");
+        }];
+    }
 }
+
 -(void)appWillTerminate:(NSNotification*)note {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillTerminateNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
 }
 + (EAGLContext *) context {
     static dispatch_once_t onceToken = 0;
@@ -231,7 +219,6 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     _stack = GLKMatrixStackCreate(NULL);
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillTerminate:) name:UIApplicationWillTerminateNotification object:nil];
     
     if (!self.context) {
         NSLog(@"Failed to create ES context");
@@ -255,9 +242,8 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     _hud = [[HUD alloc] initWithAtlas:self.atlas];
     
     [self checkError];
-    if (!bg) {
-        bg = self.backgroundSprite;
-    }
+    
+    _bg = self.backgroundSprite;
     
     self.document = _document;
     if (self.isTutorial) {
@@ -308,29 +294,29 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     BOOL isLandscape = self.view.frame.size.width > self.view.frame.size.height;
     BOOL changes = NO;
     if (isLandscape) {
-        if (beginLongPressGestureObject != A && animateGateToLockedPosition(A, 0, 0)) {
+        if (_beginLongPressGestureObject != A && animateGateToLockedPosition(A, 0, 0)) {
             changes = YES;
         }
-        if (beginLongPressGestureObject != B && animateGateToLockedPosition(B, 0, 400)) {
+        if (_beginLongPressGestureObject != B && animateGateToLockedPosition(B, 0, 400)) {
             changes = YES;
         }
-        if (beginLongPressGestureObject != andGate && animateGateToLockedPosition(andGate, 700, 200)) {
+        if (_beginLongPressGestureObject != andGate && animateGateToLockedPosition(andGate, 700, 200)) {
             changes = YES;
         }
-        if (beginLongPressGestureObject != output && animateGateToLockedPosition(output, 1400, 200)) {
+        if (_beginLongPressGestureObject != output && animateGateToLockedPosition(output, 1400, 200)) {
             changes = YES;
         }
     } else {
-        if (beginLongPressGestureObject != A && animateGateToLockedPosition(A, 0, 0)) {
+        if (_beginLongPressGestureObject != A && animateGateToLockedPosition(A, 0, 0)) {
             changes = YES;
         }
-        if (beginLongPressGestureObject != B && animateGateToLockedPosition(B, 0, 800)) {
+        if (_beginLongPressGestureObject != B && animateGateToLockedPosition(B, 0, 800)) {
             changes = YES;
         }
-        if (beginLongPressGestureObject != andGate && animateGateToLockedPosition(andGate, 500, 400)) {
+        if (_beginLongPressGestureObject != andGate && animateGateToLockedPosition(andGate, 500, 400)) {
             changes = YES;
         }
-        if (beginLongPressGestureObject != output && animateGateToLockedPosition(output, 1000, 400)) {
+        if (_beginLongPressGestureObject != output && animateGateToLockedPosition(output, 1000, 400)) {
             changes = YES;
         }
     }
@@ -549,7 +535,7 @@ static CGFloat gridSize = 33.0;
 
     [self checkError];
     GLKMatrixStackLoadMatrix4(_stack, _modelViewProjectionMatrix);
-    [bg drawWithSize:GLKVector2Make(rect.size.width, rect.size.height) withTransform:_modelViewProjectionMatrix];
+    [_bg drawWithSize:GLKVector2Make(rect.size.width, rect.size.height) withTransform:_modelViewProjectionMatrix];
     [self checkError];
     [_viewport drawWithStack:_stack];
     [_hud drawWithStack:_stack];
@@ -582,7 +568,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         o->pos.x = position.x;
         o->pos.y = position.y;
         
-        beginLongPressGestureObject = o;
+        _beginLongPressGestureObject = o;
     }];
     
     [self unpause];
@@ -669,8 +655,8 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         // only accept long presses on circuit objects:
         CircuitObject *o;
         if ((o = [_viewport findCircuitObjectAtPosition:position])) {
-            beginLongPressGestureObject = o;
-            GLKVector3 objectPosition = *(GLKVector3 *) &beginLongPressGestureObject->pos;
+            _beginLongPressGestureObject = o;
+            GLKVector3 objectPosition = *(GLKVector3 *) &_beginLongPressGestureObject->pos;
             beginLongPressGestureOffset = GLKVector3Subtract(objectPosition, position);
             return YES;
         }
@@ -802,19 +788,19 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 }
 
 - (IBAction)handleDragGateGesture:(UIPanGestureRecognizer *)sender {
-    if (!beginLongPressGestureObject) {
+    if (!_beginLongPressGestureObject) {
         NSLog(@"wtf %@", sender);
         return;
     }
     
-    CircuitObject *object = beginLongPressGestureObject;
+    CircuitObject *object = _beginLongPressGestureObject;
     if (sender.state == UIGestureRecognizerStateEnded) {
         [self updateChangeCount:UIDocumentChangeDone];
-        if (beginLongPressGestureObject && !self.document.isProblem) {
-            [self snapObjectToGrid:beginLongPressGestureObject];
+        if (_beginLongPressGestureObject && !self.document.isProblem) {
+            [self snapObjectToGrid:_beginLongPressGestureObject];
         }
         [self unpause];
-        beginLongPressGestureObject = NULL;
+        _beginLongPressGestureObject = NULL;
         return;
     } else if ([sender numberOfTouches] != 1) {
         sender.enabled = NO;
@@ -961,44 +947,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     _viewport.currentEditingLinkTargetPosition = curPos;
     [self unpause];
 }
--(void)snapUIImage
-{
-    int s = [ UIScreen mainScreen ].scale;
-    s = 1;
-    const int w = self.view.frame.size.width;
-    const int h = self.view.frame.size.height;
-    const NSInteger myDataLength = w * h * 4 * s * s;
-    // allocate array and read pixels into it.
-    GLubyte *buffer = (GLubyte *) malloc(myDataLength);
-    glReadPixels(0, 0, w*s, h*s, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-    // gl renders "upside down" so swap top to bottom into new array.
-    // there's gotta be a better way, but this works.
-    GLubyte *buffer2 = (GLubyte *) malloc(myDataLength);
-    for(int y = 0; y < h*s; y++)
-    {
-        memcpy( buffer2 + (h*s - 1 - y) * w * 4 * s, buffer + (y * 4 * w * s), w * 4 * s );
-    }
-    free(buffer); // work with the flipped buffer, so get rid of the original one.
-    
-    // make data provider with data.
-    CGDataProviderRef provider = CGDataProviderCreateWithData(NULL, buffer2, myDataLength, NULL);
-    // prep the ingredients
-    int bitsPerComponent = 8;
-    int bitsPerPixel = 32;
-    int bytesPerRow = 4 * w * s;
-    CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
-    CGBitmapInfo bitmapInfo = kCGBitmapByteOrderDefault;
-    CGColorRenderingIntent renderingIntent = kCGRenderingIntentDefault;
-    // make the cgimage
-    CGImageRef imageRef = CGImageCreate(w*s, h*s, bitsPerComponent, bitsPerPixel, bytesPerRow, colorSpaceRef, bitmapInfo, provider, NULL, NO, renderingIntent);
-    // then make the uiimage from that
-    UIImage *myImage = [ UIImage imageWithCGImage:imageRef scale:s orientation:UIImageOrientationUp ];
-    UIImageWriteToSavedPhotosAlbum( myImage, nil, nil, nil );
-    CGImageRelease( imageRef );
-    CGDataProviderRelease(provider);
-    CGColorSpaceRelease(colorSpaceRef);
-    free(buffer2);
-}
+
 - (IBAction) handlePinchGesture:(UIPinchGestureRecognizer *)recognizer {
     if (!_canZoom) {
         return;

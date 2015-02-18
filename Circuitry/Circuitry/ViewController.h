@@ -27,6 +27,8 @@
 
 - (void) startCreatingObjectFromItem: (ToolbeltItem *) item;
 
+- (UIImage *) snapshot;
+
 @end
 
 

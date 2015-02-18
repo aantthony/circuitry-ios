@@ -27,6 +27,7 @@
 @property (nonatomic) NSURL *url;
 @property (nonatomic) NSString *title;
 @property (nonatomic) NSDate *lastModified;
+@property (nonatomic) UIImage *image;
 
 @end
 @implementation DocumentListItem
@@ -45,6 +46,13 @@
     _lastModified = [properties objectForKey:NSFileModificationDate];
 
     return self;
+}
+
+- (UIImage *) image {
+    if (!_image) {
+        _image = [UIImage imageWithContentsOfFile:[_url URLByAppendingPathComponent:@"screenshot.jpg"].path];
+    }
+    return _image;
 }
 
 @end
@@ -140,6 +148,12 @@
     CircuitDocument *doc = viewController.document;
     self.presentingDocument = doc;
     NSLog(@"Unsaved changes: %@", doc.hasUnsavedChanges ? @"YES" : @"NO");
+    
+    
+    if (doc.hasUnsavedChanges) {
+        [doc useScreenshot: viewController.snapshot];
+    }
+    
     [doc closeWithCompletionHandler:^(BOOL success) {
         [self reloadCircuitListData];
         [self.collectionView reloadData];
@@ -368,7 +382,7 @@
             cell.textLabel.text = @"Untitled";
         }
         cell.rounded = NO;
-        cell.imageView.image = nil;
+        cell.imageView.image = item.image;
         cell.textLabel.textColor = [UIColor whiteColor];
         cell.tickView.hidden = YES;
         return cell;

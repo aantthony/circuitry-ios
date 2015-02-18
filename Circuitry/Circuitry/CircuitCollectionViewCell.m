@@ -27,7 +27,7 @@
         self.imageView.clipsToBounds = YES;
     } else {
         self.imageView.layer.cornerRadius = 0.0;
-        self.imageView.layer.borderWidth = 0.0;
+        self.imageView.layer.borderWidth = 4.0;
         self.imageView.clipsToBounds = NO;
     }
 }
