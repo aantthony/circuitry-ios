@@ -38,7 +38,8 @@
     },
     {
       "path": "011",
-      "title": "NAND Gate using four NOR gates"
+      "title": "NAND Gate using four NOR gates",
+      "hidden": true
     },
     {
       "path": "012",
@@ -58,35 +59,43 @@
     },
     {
       "path": "016",
-      "title": "Add 2 bit numbers"
+      "title": "Add 2 bit numbers",
+      "hidden": true
     },
     {
       "path": "017",
-      "title": "Add two 2-bit numbers using FAs"
+      "title": "Add two 2-bit numbers using FAs",
+      "hidden": true
     },
     {
       "path": "018",
-      "title": "Add two 4-bit numbers using FAs"
+      "title": "Add two 4-bit numbers using FAs",
+      "hidden": true
     },
     {
       "path": "019",
-      "title": "Adding signed numbers"
+      "title": "Adding signed numbers",
+      "hidden": true
     },
     {
       "path": "020",
-      "title": "Double Binary"
+      "title": "Double Binary",
+      "hidden": true
     },
     {
       "path": "021",
-      "title": "Subtraction"
+      "title": "Subtraction",
+      "hidden": true
     },
     {
       "path": "022",
-      "title": "Flip Flop"
+      "title": "Flip Flop",
+      "hidden": true
     },
     {
       "path": "023",
-      "title": "Binary Counter"
+      "title": "Binary Counter",
+      "hidden": true
     }
   ]
 }

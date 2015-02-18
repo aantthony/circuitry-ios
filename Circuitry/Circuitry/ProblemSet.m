@@ -48,6 +48,7 @@
         }
         
         ProblemSetProblemInfo *info = [[ProblemSetProblemInfo alloc] initWithProblemIndex:index title:p[@"title"] completed:completed accessible:accessible visible:YES imageName:imageName documentUrl:url set:self];
+        if (p[@"hidden"]) continue;
         
         [items addObject:info];
     }
