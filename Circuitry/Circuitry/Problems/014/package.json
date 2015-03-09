@@ -1,6 +1,6 @@
 {
   "_id" : "54d72378004aab735e0041bf",
-  "description" : "",
+  "description" : "In this problem, both A and B represent single-bit binary numbers. That is, they are either ones or zeros. Adding these numbers will sum to either a 0, 1, or 2.",
   "license" : "Copyright",
   "view" : {
     "center" : [

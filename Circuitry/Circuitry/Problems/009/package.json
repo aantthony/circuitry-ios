@@ -1,6 +1,6 @@
 {
   "_id" : "54d72007004aab005e0041a9",
-  "description" : "",
+  "description" : "Using NAND gates, make an AND gate. Hint: Using what you built in the level 'Not Using a NAND' solves part of this problem.",
   "license" : "Copyright",
   "view" : {
     "center" : [

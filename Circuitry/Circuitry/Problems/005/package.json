@@ -1,6 +1,6 @@
 {
   "_id" : "54d71a47004aabc4580041aa",
-  "description" : "",
+  "description" : "Using NOT, AND, and OR gates, make the output true only when exactly only one of the inputs A and B is true.\n\nXOR is short for 'Exclsuive Or'. The difference between OR and XOR, is that XOR is not true when both inputs are true.",
   "license" : "Copyright",
   "view" : {
     "center" : [

@@ -1,6 +1,6 @@
 {
   "_id" : "54d72007004aab005e0041a9",
-  "description" : "",
+  "description" : "Make an OR gate using NAND gates. Tap 'Check Answer' to see the desired truth table.",
   "license" : "Copyright",
   "view" : {
     "center" : [

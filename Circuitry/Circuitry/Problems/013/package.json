@@ -1,6 +1,6 @@
 {
   "_id" : "54d7228f004aab735e0041b8",
-  "description" : "",
+  "description" : "Make the output true when exactly two of the inputs are true.",
   "license" : "Copyright",
   "view" : {
     "center" : [

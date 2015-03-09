@@ -1,6 +1,6 @@
 {
   "_id" : "54d71d82004aabf85b0041a9",
-  "description" : "",
+  "description" : "Extending the previous problem, make the output true when an odd number of inputs are true.",
   "license" : "Copyright",
   "view" : {
     "center" : [
