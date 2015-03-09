@@ -518,6 +518,8 @@ static CGPoint hvrDragHereRight = {88,428};
         CircuitDocument *doc = [self.delegate circuitDocumentViewController:self nextDocumentAfterDocument:self.document];
         self.nextDocument = doc;
         
+        [self setProblemInfoMinimised:NO animated:YES];
+        
         sender.enabled = NO;
         
         if (self.nextDocument) {
