@@ -14,6 +14,7 @@
 @interface ProblemInfoViewController ()
 @property (weak, nonatomic) IBOutlet UIView *congratsView;
 @property (weak, nonatomic) IBOutlet UIImageView *upArrow;
+@property (weak, nonatomic) IBOutlet UIImageView *downArrow;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *bodyLabel;
 @property (weak, nonatomic) CircuitDocument *document;
@@ -54,6 +55,7 @@
 - (void) setIsMinimised:(BOOL)isMinimised {
     _isMinimised = isMinimised;
     _upArrow.alpha = _isMinimised ? 1.0 : 0.0;
+    _downArrow.alpha = _isMinimised ? 0.0 : 1.0;
 }
 
 - (void) showProblemDescription {
