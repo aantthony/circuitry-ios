@@ -1,10 +1,10 @@
 {
   "_id" : "54d7228f004aab735e0041b8",
-  "description" : "Make the output true when exactly one of the inputs is true.",
+  "description" : "Make the output true when exactly one of the inputs is true.\nFor this problem, several types of logic gates are available.",
   "license" : "Copyright",
   "view" : {
     "center" : [
-      -50,
+      -100,
       0
     ]
   },

@@ -558,6 +558,11 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         
     GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, locationInView)];
     
+    NSLog(@"Create a %f, %f, %f", position.x, position.y, position.z);
+    position.x += (float)(arc4random_uniform(200)) - 100.0;
+    position.y += (float)(arc4random_uniform(200)) - 100.0;
+    NSLog(@"Create a %f, %f, %f", position.x, position.y, position.z);
+    
     CircuitProcess *process = [_circuit getProcessById:item.type];
     
     [_circuit performWriteBlock:^(CircuitInternal *internal) {
