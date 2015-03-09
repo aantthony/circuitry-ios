@@ -9,6 +9,7 @@
 #import "ProblemInfoViewController.h"
 
 #import "CircuitDocument.h"
+#import "ProblemSetProblemInfo.h"
 
 @interface ProblemInfoViewController ()
 @property (weak, nonatomic) IBOutlet UIView *congratsView;
@@ -35,7 +36,7 @@
 
 - (void) setDocument: (CircuitDocument *) document {
     _document = document;
-    _titleLabel.text = [NSString stringWithFormat:@"Problem #%@ - %@", _document.circuit.name, _document.circuit.title];
+    _titleLabel.text = [NSString stringWithFormat:@"Problem #%lu - %@", (unsigned long)(_document.problemInfo.problemIndex + 1), _document.circuit.title];
     _bodyLabel.text = _document.circuit.userDescription;
 }
 - (void) showProgressToNextLevelScreen {
