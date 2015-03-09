@@ -1,15 +1,12 @@
 {
   "_id" : "54d6f66a004aab62540041a9",
   "description" : "Set the ouput to be equal to 'A NAND B'. That is, make the output signal false only when both inputs are true.\n\n'NAND' is short for 'negative AND'.\n\nTap 'Check Answer' to see the desired truth table for this problem.",
-  "license" : "Copyright",
   "view" : {
     "center" : [
       -200,
       0
     ]
   },
-  "name" : "",
-  "author" : "",
   "meta" : {
     "toolbelt" : false,
     "canZoom": false
@@ -26,10 +23,6 @@
       ]
     }
   ],
-  "version" : "1.0.0",
-  "engines" : {
-    "circuitry" : ">=0.0"
-  },
   "title" : "Implement a NAND Gate",
   "items": [
     {

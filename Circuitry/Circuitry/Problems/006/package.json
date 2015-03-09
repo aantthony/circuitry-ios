@@ -1,15 +1,12 @@
 {
   "_id" : "54d71d82004aabf85b0041a9",
   "description" : "Extending the previous problem, make the output true when an odd number of inputs are true.",
-  "license" : "Copyright",
   "view" : {
     "center" : [
       -200,
       0
     ]
   },
-  "name" : "",
-  "author" : "",
   "meta" : {
     "toolbelt" : false
   },
@@ -29,10 +26,6 @@
       ]
     }
   ],
-  "version" : "1.0.0",
-  "engines" : {
-    "circuitry" : ">=0.0"
-  },
   "title" : "Two XOR Gates",
   "items": [
     {

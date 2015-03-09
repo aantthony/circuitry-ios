@@ -1,15 +1,12 @@
 {
   "_id" : "54d6f3f7c81dba6a520041a9",
   "description" : "Using two OR gates, connect them so that the output is true when at least one of the inputs A, or B, or C is true.",
-  "license" : "Copyright",
   "view" : {
     "center" : [
       -200,
       -50
     ]
   },
-  "name" : "",
-  "author" : "",
   "meta" : {
     "toolbelt" : false,
     "canZoom": false
@@ -30,10 +27,6 @@
       ]
     }
   ],
-  "version" : "1.0.0",
-  "engines" : {
-    "circuitry" : ">=0.0"
-  },
   "title" : "OR",
   "items": [
     {

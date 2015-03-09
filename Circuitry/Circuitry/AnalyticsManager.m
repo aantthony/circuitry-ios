@@ -10,6 +10,7 @@
 #import "Analytics.h"
 #import "CircuitDocument.h"
 #import "CircuitTestResult.h"
+#import "ProblemSetProblemInfo.h"
 
 @implementation AnalyticsManager
 
@@ -21,15 +22,26 @@
 - (NSDictionary *) forDocument:(CircuitDocument *)document {
     if (!document) return nil;
     NSMutableDictionary *p = [NSMutableDictionary new];
-    p[@"Name"]    = document.circuit.name;
-    p[@"Doc Version"] = document.circuit.version;
-    p[@"Title"]   = document.circuit.title;
-    p[@"Author"]  = document.circuit.author;
+    if (document.circuit.name) {
+        p[@"Name"] = document.circuit.name;
+    }
+    if (document.circuit.version) {
+        p[@"Doc Version"] = document.circuit.version;
+    }
+    if (document.circuit.title) {
+        p[@"Title"] = document.circuit.title;
+    }
+    if (document.circuit.author) {
+        p[@"Author"]  = document.circuit.author;
+    }
     
-    p[@"Problem"] = @(document.isProblem);
+    if (document.isProblem) {
+        p[@"Problem"]       = @(document.isProblem);
+        p[@"Problem Index"] = @(document.problemInfo.problemIndex);
+        p[@"Problem Title"] = document.problemInfo.title;
+    }
     
     // User-Generated:
-    
     
     
     return p;

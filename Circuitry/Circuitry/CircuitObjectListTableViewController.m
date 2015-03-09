@@ -23,11 +23,9 @@
 
 @implementation CircuitObjectListTableViewController
 
-
 - (void) searchThroughData {
     self.results = nil;
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name contains [search] %@", self.searchBar.text];
-    NSLog(@"items: %@", self.items);
     self.results = [[self.items filteredArrayUsingPredicate:predicate] mutableCopy];
 }
 
@@ -59,20 +57,6 @@
                       [[ToolbeltItem alloc] initWithType:@"clock"   image:[UIImage imageNamed:@"clock"]    name:@"Clock" subtitle:@"Square wave"]
                       ];
     return _allItems;
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    
-    
-    [self configureItems];
 }
 
 - (void) configureItems {
@@ -136,16 +120,5 @@
     
     [self.delegate tableViewController:self didStartCreatingObject:item];
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end
