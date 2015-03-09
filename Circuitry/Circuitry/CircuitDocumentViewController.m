@@ -144,7 +144,7 @@
     _document = document;
     self.title = document.circuit.title;
     
-    self.isTutorial = document.problemInfo.problemIndex == 0;
+    self.isTutorial = document.isProblem && document.problemInfo.problemIndex == 0;
     
     [self configureTitleView];
     
