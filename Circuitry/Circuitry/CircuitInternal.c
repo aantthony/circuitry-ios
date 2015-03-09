@@ -228,6 +228,8 @@ void CircuitObjectRemove(CircuitInternal *c, CircuitObject *o) {
 
 static CircuitLink *makeLink(CircuitInternal *c) {
     
+    // TODO: search for existing space
+    
     c->links_count++;
     
     if (c->links_count > c->links_size) {
@@ -285,10 +287,6 @@ void CircuitLinkRemove(CircuitInternal *c, CircuitLink *link) {
     link->targetIndex = 0;
     link->source = NULL;
     link->target = NULL;
-    
-    
-    // TODO: we need to know the index of _items for this:
-    // TODO: instead of the memset, move the last link in _links to the the position of this object
 }
 
 // Add a link to the circuit (and will queue the targets recalculation if necessary). *All* links have a target (this is required for the CircuitInteral object to always be a consistent state). The half-made links in the Viewport are fakes.

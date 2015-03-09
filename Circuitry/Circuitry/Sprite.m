@@ -105,7 +105,6 @@ static GLuint _vertexArray;
     
     // TODO: set position, size etc.
     
-    
     _texture = texture;
     
     return self;

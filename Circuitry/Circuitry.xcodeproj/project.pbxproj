@@ -55,6 +55,7 @@
 		9253C40C18854D0B00D2509C /* CreateLinkGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9253C40B18854D0B00D2509C /* CreateLinkGestureRecognizer.m */; };
 		92575A3719D2D510000D5AC7 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92575A3619D2D510000D5AC7 /* MainViewController.m */; };
 		92575A3E19D2EC57000D5AC7 /* ProblemInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92575A3D19D2EC57000D5AC7 /* ProblemInfoViewController.m */; };
+		925BA00D1AAD9153008F0F7E /* IntroTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 925BA00C1AAD9153008F0F7E /* IntroTextViewController.m */; };
 		926099E0196917CF0048F2BD /* CircuitDocumentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 926099DF196917CF0048F2BD /* CircuitDocumentViewController.m */; };
 		926099E6196919E50048F2BD /* CircuitObjectListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 926099E5196919E50048F2BD /* CircuitObjectListTableViewController.m */; };
 		92771CF61A44FBF3000931D9 /* Analytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 92771CF51A44FBF3000931D9 /* Analytics.m */; };
@@ -204,6 +205,8 @@
 		92575A3619D2D510000D5AC7 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		92575A3C19D2EC57000D5AC7 /* ProblemInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProblemInfoViewController.h; path = Circuitry/ProblemInfoViewController.h; sourceTree = "<group>"; };
 		92575A3D19D2EC57000D5AC7 /* ProblemInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProblemInfoViewController.m; path = Circuitry/ProblemInfoViewController.m; sourceTree = "<group>"; };
+		925BA00B1AAD9153008F0F7E /* IntroTextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IntroTextViewController.h; path = Circuitry/IntroTextViewController.h; sourceTree = "<group>"; };
+		925BA00C1AAD9153008F0F7E /* IntroTextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IntroTextViewController.m; path = Circuitry/IntroTextViewController.m; sourceTree = "<group>"; };
 		926099DE196917CF0048F2BD /* CircuitDocumentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CircuitDocumentViewController.h; path = Circuitry/CircuitDocumentViewController.h; sourceTree = "<group>"; };
 		926099DF196917CF0048F2BD /* CircuitDocumentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CircuitDocumentViewController.m; path = Circuitry/CircuitDocumentViewController.m; sourceTree = "<group>"; };
 		926099E4196919E50048F2BD /* CircuitObjectListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CircuitObjectListTableViewController.h; path = Circuitry/CircuitObjectListTableViewController.h; sourceTree = "<group>"; };
@@ -511,6 +514,8 @@
 				92796A3318A668FB00DB690F /* LongPressObjectGesture.m */,
 				926099DE196917CF0048F2BD /* CircuitDocumentViewController.h */,
 				926099DF196917CF0048F2BD /* CircuitDocumentViewController.m */,
+				925BA00B1AAD9153008F0F7E /* IntroTextViewController.h */,
+				925BA00C1AAD9153008F0F7E /* IntroTextViewController.m */,
 				92771D381A454CC8000931D9 /* Problem Info */,
 				92771D361A454C8E000931D9 /* Toolbar */,
 			);
@@ -960,6 +965,7 @@
 				9232B65118780CFE00E45C7E /* BatchedSprite.m in Sources */,
 				9253C40C18854D0B00D2509C /* CreateLinkGestureRecognizer.m in Sources */,
 				92771D461A456939000931D9 /* MongoIDType.c in Sources */,
+				925BA00D1AAD9153008F0F7E /* IntroTextViewController.m in Sources */,
 				92A4F86D187289F300EEB367 /* Viewport.m in Sources */,
 				92E037BF188425E80047F736 /* DragGateGestureRecognizer.m in Sources */,
 				92061DE819BDF0720081E3B9 /* TutorialViewController.m in Sources */,

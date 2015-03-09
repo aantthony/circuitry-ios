@@ -1,5 +1,3 @@
-// TODO: Open source this on github
-
 #import <GLKit/GLKit.h>
 
 typedef GLint GLUniformLocation;

@@ -37,7 +37,6 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     BOOL isAnimatingScaleToSnap;
     BOOL toolbeltTouchIntercept;
     
-    BOOL draggingOutFromToolbeltLockY;
     CGPoint draggingOutFromToolbeltStart;
     
     BOOL animatingPan;
@@ -555,7 +554,6 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 - (void) startCreatingObjectFromItem: (ToolbeltItem *) item {
     Circuit *_circuit = _document.circuit;
     
-    // TODO: delete draggingOutFromToolbeltLockY
     CGPoint locationInView = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
         
     GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, locationInView)];
@@ -672,7 +670,6 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         CGPoint p = [gestureRecognizer locationInView:self.view];
         p.x = 0.0;
         
-        draggingOutFromToolbeltLockY = YES;
 //        int index = [_hud.toolbelt indexAtPosition:p];
 //        if (index == -1) return NO;
 //        _hud.toolbelt.currentObjectIndex = index;

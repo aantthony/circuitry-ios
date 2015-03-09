@@ -193,7 +193,6 @@
     
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index + 1 inSection:0];
     
-    // TODO: Use fetched results controller somehow?
     [self.collectionView performBatchUpdates:^{
         
         NSArray *selectedItemsIndexPaths = @[indexPath];

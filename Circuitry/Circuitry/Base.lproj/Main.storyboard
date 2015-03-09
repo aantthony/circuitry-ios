@@ -72,6 +72,7 @@
                         <outlet property="problemInfoBottom" destination="R5J-2P-60i" id="7Xf-9Y-cab"/>
                         <outlet property="problemInfoView" destination="0G8-Qd-p90" id="Tou-jP-Xp3"/>
                         <segue destination="I59-4J-Dmz" kind="modal" identifier="ShowTestResult" modalPresentationStyle="formSheet" id="7en-7Z-luh"/>
+                        <segue destination="iYz-P6-lDf" kind="modal" identifier="ShowIntroText" modalPresentationStyle="formSheet" id="kHx-lf-iRv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GmU-f2-KCc" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -156,6 +157,57 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oYs-lm-PE4" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2381" y="-617"/>
+        </scene>
+        <!--Intro Text View Controller-->
+        <scene sceneID="Bh7-bQ-ssZ">
+            <objects>
+                <viewController id="iYz-P6-lDf" customClass="IntroTextViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="G15-RF-TxZ"/>
+                        <viewControllerLayoutGuide type="bottom" id="MeE-Yr-aua"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="deF-u9-QbX">
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Hey There!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IXr-fv-SMa">
+                                <rect key="frame" x="47" y="24" width="446" height="64"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-LightItalic" family="Helvetica Neue" pointSize="36"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="A QUICK INTRODUCTION" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QwG-K1-g5v">
+                                <rect key="frame" x="47" y="96" width="446" height="64"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="14"/>
+                                <color key="textColor" white="0.53242442810457513" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kAl-0e-Gyv">
+                                <rect key="frame" x="0.0" y="551" width="540" height="69"/>
+                                <state key="normal" title="Got it! Awesome!">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="didTapButton:" destination="iYz-P6-lDf" eventType="touchUpInside" id="7i9-tc-KBx"/>
+                                </connections>
+                            </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gVH-yn-ogA">
+                                <rect key="frame" x="35" y="184" width="471" height="366"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <string key="text">A Logic gate is an electronic circuit device implementing a Boolean operation. It calculates an output value — a true, or false value — based on one or more input signals.
+
+The linking wires in Circuitry allow these signals to be passed on from the outputs of gates into the inputs of other gates, enabling complex systems to be built upon this basic foundation of ones and zeros.</string>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="23"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="laj-es-jFo" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2984" y="-617"/>
         </scene>
         <!--GLKit View Controller-->
         <scene sceneID="tXr-a1-R10">
@@ -762,7 +814,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="10" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qmv-Nm-o5F">
-                                        <rect key="frame" x="15" y="51" width="670" height="162"/>
+                                        <rect key="frame" x="15" y="51" width="689" height="199"/>
                                         <string key="text">Drag a line from the gates on the left into the AND Gate in the middle. Then drag a line from the output of the AND Gate into the rectangle labeled X.
 
 This logic diagram describes the rule:
@@ -896,6 +948,6 @@ This logic diagram describes the rule:
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="gnN-9s-ocl"/>
+        <segue reference="l2a-A5-LGd"/>
     </inferredMetricsTieBreakers>
 </document>

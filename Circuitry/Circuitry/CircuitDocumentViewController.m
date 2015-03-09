@@ -15,9 +15,8 @@
 #import "TestResultViewController.h"
 #import "CircuitTest.h"
 #import "Viewport.h"
-// TODO: remove this
-#import <AssetsLibrary/AssetsLibrary.h>
 #import "CircuitDocument.h"
+#import "ProblemSetProblemInfo.h"
 
 @interface CircuitDocumentViewController () <CircuitObjectListTableViewControllerDelegate, ProblemInfoViewControllerDelegate, ViewControllerTutorialProtocol, UITextFieldDelegate>
 @property (nonatomic, weak) CircuitObjectListTableViewController *objectListViewController;
@@ -38,6 +37,7 @@
 @property (nonatomic) CircuitTestResult *testResult;
 @property (nonatomic) CircuitDocument *nextDocument;
 @property (nonatomic) UITapGestureRecognizer *tapToDismissKeyboard;
+@property (nonatomic) BOOL hasShownIntroText;
 @end
 
 @implementation CircuitDocumentViewController
@@ -136,12 +136,15 @@
 
 - (void) setDocument:(CircuitDocument *) document {
     NSParameterAssert(document.circuit);
+    
     _objectListViewController.document = document;
     _glkViewController.document = document;
+    _problemInfoViewController.document = document;
+    
     _document = document;
     self.title = document.circuit.title;
     
-    self.isTutorial = YES;
+    self.isTutorial = document.problemInfo.problemIndex == 0;
     
     [self configureTitleView];
     
@@ -400,6 +403,12 @@ static CGPoint hvrDragHereRight = {88,428};
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self configureView];
+    if (self.isTutorial) {
+        if (!_hasShownIntroText) {
+            [self performSegueWithIdentifier:@"ShowIntroText" sender:self];
+            _hasShownIntroText = YES;
+        }
+    }
 }
 
 - (void) viewDidDisappear:(BOOL)animated {
@@ -481,37 +490,42 @@ static CGPoint hvrDragHereRight = {88,428};
     }
     return [toolbeltFlag boolValue];
 }
-- (IBAction)checkAnswer:(id)sender {
-    if (_document.circuit.tests.count) {
-        __block CircuitTestResult *failure = nil;
-        [_document.circuit.tests enumerateObjectsUsingBlock:^(CircuitTest *test, NSUInteger idx, BOOL *stop) {
-            CircuitTestResult *testResult = [test runAndSimulate:_document.circuit];
-            if (!testResult.passed) {
-                failure = testResult;
-                *stop = YES;
-            }
-        }];
-        if (failure) {
-            [[AnalyticsManager shared] trackCheckProblem:self.document withResult:failure];
-            self.testResult = failure;
-            [self performSegueWithIdentifier:@"ShowTestResult" sender:self];
-//            [[[UIAlertView alloc] initWithTitle:@"Test Result" message: failure.resultDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
-        } else {
-            [[AnalyticsManager shared] trackFinishProblem:self.document];
-            if (self.isTutorial) {
-                [self finishTutorial];
-            }
-            
-            CircuitDocument *doc = [self.delegate circuitDocumentViewController:self nextDocumentAfterDocument:self.document];
-            self.nextDocument = doc;
-            
-            if (self.nextDocument) {
-                [_problemInfoViewController showProgressToNextLevelScreen];
-            } else {
-                [self.navigationController popViewControllerAnimated:YES];
-            }
-            // Success!
+- (IBAction)checkAnswer:(UIBarButtonItem *)sender {
+    if (!_document.circuit.tests.count) {
+        [[[UIAlertView alloc] initWithTitle:@"No Test" message:@"Unspecified." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
+        return;
+    }
+    __block CircuitTestResult *failure = nil;
+    [_document.circuit.tests enumerateObjectsUsingBlock:^(CircuitTest *test, NSUInteger idx, BOOL *stop) {
+        CircuitTestResult *testResult = [test runAndSimulate:_document.circuit];
+        if (!testResult.passed) {
+            failure = testResult;
+            *stop = YES;
         }
+    }];
+    
+    if (failure) {
+        [[AnalyticsManager shared] trackCheckProblem:self.document withResult:failure];
+        self.testResult = failure;
+        [self performSegueWithIdentifier:@"ShowTestResult" sender:self];
+        
+    } else {
+        [[AnalyticsManager shared] trackFinishProblem:self.document];
+        if (self.isTutorial) {
+            [self finishTutorial];
+        }
+        
+        CircuitDocument *doc = [self.delegate circuitDocumentViewController:self nextDocumentAfterDocument:self.document];
+        self.nextDocument = doc;
+        
+        sender.enabled = NO;
+        
+        if (self.nextDocument) {
+            [_problemInfoViewController showProgressToNextLevelScreen];
+        } else {
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+        // Success!
     }
 }
 
@@ -534,6 +548,9 @@ static CGPoint hvrDragHereRight = {88,428};
     
     // TODO: Ensure this
     NSParameterAssert(self.nextDocument.circuit);
+    if (!self.nextDocument.circuit) {
+        return;
+    }
     self.document = self.nextDocument;
     
     [UIView animateWithDuration:0.5 animations:^{

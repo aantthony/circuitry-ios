@@ -1,7 +1,7 @@
 {
   "name": "1",
   "version": "1.0.0",
-  "description": "Connect the input buttons to the logical \"AND\" gate in the middle.\n\nPress the buttons on the left to toggle the input. When you toggle the input, it will change from a 0 signal to a 1 signal, therefore changing from grey to green.\n\nThe AND gate works exactly as you'd expect. It's output is 1 (green) precisely when its first input AND it's second input are 1 (green).",
+  "description": "For the first problem, simply connect the input buttons to the \"and\" gate in the middle.\n\nYou can see how the system reacts to different input states by tapping the input buttons. When you toggle the input, it will change from a false/0/disabled/low signal (equivalent terms) to a true/1/enabled/high signal, therefore changing from grey to green.\n\nThe AND gate works exactly as you'd expect; it's output is true (green) precisely when its first input AND it's second input are true.",
   "author": "Anthony Foster",
   "title": "Connect an AND gate",
   "engines": {
