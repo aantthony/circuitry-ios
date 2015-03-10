@@ -35,11 +35,7 @@ static NSString *kDefaultsCurrentLevelIndex = @"CurrentLevelIndex";
     NSDictionary *index = [ProblemSet loadIndexAtUrl:[baseUrl URLByAppendingPathComponent:@"index.json"]];
     
     NSMutableArray *items = [NSMutableArray array];
-    
-    NSUInteger playerCurrentLevelIndex = 0;
     NSUInteger i = 0;
-    
-    playerCurrentLevelIndex = 30;
     
     for (NSDictionary *p in index[@"problems"]) {
         NSUInteger index = i;
@@ -84,9 +80,11 @@ static NSString *kDefaultsCurrentLevelIndex = @"CurrentLevelIndex";
     NSUInteger playerCurrentLevelIndex = [[NSUserDefaults standardUserDefaults] integerForKey:kDefaultsCurrentLevelIndex];
     
     NSUInteger updatedCurrentLevelIndex = problemInfo.problemIndex + 1;
-    if (updatedCurrentLevelIndex <= playerCurrentLevelIndex) return;
+    if (updatedCurrentLevelIndex <= playerCurrentLevelIndex) {
+        return;
+    }
 
-    [[NSUserDefaults standardUserDefaults] setInteger:playerCurrentLevelIndex forKey:kDefaultsCurrentLevelIndex];
+    [[NSUserDefaults standardUserDefaults] setInteger:updatedCurrentLevelIndex forKey:kDefaultsCurrentLevelIndex];
     
     [self refresh];
 }
