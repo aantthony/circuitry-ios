@@ -100,7 +100,7 @@ static void *reallocLinks(CircuitInternal *c) {
     void *newPtr = realloc(oldPtr, sizeof(CircuitLink) * c->links_size);
     c->links = newPtr;
     
-    int offsetBytes = newPtr - oldPtr;
+    long int offsetBytes = newPtr - oldPtr;
     
     if (!newPtr || offsetBytes == 0) {
         // nothing moved:

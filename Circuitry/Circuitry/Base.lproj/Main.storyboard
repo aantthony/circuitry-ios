@@ -884,7 +884,7 @@ The linking wires in Circuitry allow these signals to be passed on from the outp
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="10" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qmv-Nm-o5F">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="10" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="689" translatesAutoresizingMaskIntoConstraints="NO" id="Qmv-Nm-o5F">
                                         <rect key="frame" x="15" y="51" width="689" height="199"/>
                                         <string key="text">Drag a line from the gates on the left into the AND Gate in the middle. Then drag a line from the output of the AND Gate into the rectangle labeled X.
 

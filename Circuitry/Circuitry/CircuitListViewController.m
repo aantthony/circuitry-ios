@@ -515,7 +515,7 @@
         delegate.originatingRect = _selectionRect;
         if (_openDocumentAnimationShouldFadeIn) {
             ViewController * controller = (ViewController *) fromVC;
-            NSURL *url = controller.document.fileURL;
+//            NSURL *url = controller.document.fileURL;
 //            NSString *urlPath = url.path;
             
             CircuitCollectionViewCell * cell = nil;
