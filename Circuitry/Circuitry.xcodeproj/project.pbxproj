@@ -84,6 +84,7 @@
 		92AFE901197B90AC003680B0 /* CircuitTestResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 92AFE900197B90AC003680B0 /* CircuitTestResult.m */; };
 		92B269AF1886B175007E9866 /* ImageAtlas.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B269AE1886B175007E9866 /* ImageAtlas.m */; };
 		92C62F4C197BFCD600A3E939 /* Problems in Resources */ = {isa = PBXBuildFile; fileRef = 92C62F4B197BFCD500A3E939 /* Problems */; };
+		92CD47091AAF10D8001616F9 /* ObjectUnlockedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92CD47081AAF10D8001616F9 /* ObjectUnlockedViewController.m */; };
 		92D90E321837807000387FAC /* Sprite.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E311837807000387FAC /* Sprite.m */; };
 		92D90E381837836500387FAC /* ShaderEffect.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E371837836500387FAC /* ShaderEffect.m */; };
 		92D90E3B1838D7AB00387FAC /* Grid.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E3A1838D7AB00387FAC /* Grid.m */; };
@@ -253,6 +254,8 @@
 		92B269AD1886B175007E9866 /* ImageAtlas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAtlas.h; sourceTree = "<group>"; };
 		92B269AE1886B175007E9866 /* ImageAtlas.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAtlas.m; sourceTree = "<group>"; };
 		92C62F4B197BFCD500A3E939 /* Problems */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Problems; path = Circuitry/Problems; sourceTree = "<group>"; };
+		92CD47071AAF10D8001616F9 /* ObjectUnlockedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ObjectUnlockedViewController.h; path = Circuitry/ObjectUnlockedViewController.h; sourceTree = "<group>"; };
+		92CD47081AAF10D8001616F9 /* ObjectUnlockedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ObjectUnlockedViewController.m; path = Circuitry/ObjectUnlockedViewController.m; sourceTree = "<group>"; };
 		92D90E301837807000387FAC /* Sprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sprite.h; sourceTree = "<group>"; };
 		92D90E311837807000387FAC /* Sprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sprite.m; sourceTree = "<group>"; };
 		92D90E361837836500387FAC /* ShaderEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShaderEffect.h; path = ../ShaderEffect.h; sourceTree = "<group>"; };
@@ -518,6 +521,8 @@
 				925BA00C1AAD9153008F0F7E /* IntroTextViewController.m */,
 				92771D381A454CC8000931D9 /* Problem Info */,
 				92771D361A454C8E000931D9 /* Toolbar */,
+				92CD47071AAF10D8001616F9 /* ObjectUnlockedViewController.h */,
+				92CD47081AAF10D8001616F9 /* ObjectUnlockedViewController.m */,
 			);
 			name = "Circuit Edit";
 			sourceTree = "<group>";
@@ -984,6 +989,7 @@
 				9204C388182E2F5C006A008D /* AppDelegate.m in Sources */,
 				92D90E321837807000387FAC /* Sprite.m in Sources */,
 				92FC7F9918A5B39E00EA329A /* CircuitCollectionViewCell.m in Sources */,
+				92CD47091AAF10D8001616F9 /* ObjectUnlockedViewController.m in Sources */,
 				929CB69518A7833C00BEE7D6 /* TransitionFromDocumentListToDocument.m in Sources */,
 				92FC7F9418A50E7300EA329A /* CircuitListImageView.m in Sources */,
 				924BAA711A6B7D0D0027AAC9 /* TestResultViewController.m in Sources */,

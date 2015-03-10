@@ -556,8 +556,7 @@
 }
 
 - (void) reloadProblemListData {
-    NSString *directoryPath = [[NSBundle mainBundle] pathForResource:@"Problems" ofType:nil];
-    self.problemSet = [[ProblemSet alloc] initWithDirectoryPath:directoryPath];
+    self.problemSet = [ProblemSet mainSet];
 }
 
 - (void) reloadCircuitListData {

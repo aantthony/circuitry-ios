@@ -17,8 +17,10 @@
 #import "Viewport.h"
 #import "CircuitDocument.h"
 #import "ProblemSetProblemInfo.h"
+#import "ToolbeltItem.h"
+#import "ObjectUnlockedViewController.h"
 
-@interface CircuitDocumentViewController () <CircuitObjectListTableViewControllerDelegate, ProblemInfoViewControllerDelegate, ViewControllerTutorialProtocol, UITextFieldDelegate>
+@interface CircuitDocumentViewController () <CircuitObjectListTableViewControllerDelegate, ProblemInfoViewControllerDelegate, ViewControllerTutorialProtocol, UITextFieldDelegate, ObjectUnlockedViewControllerDelegate>
 @property (nonatomic, weak) CircuitObjectListTableViewController *objectListViewController;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *objectListLeft;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *problemInfoBottom;
@@ -37,6 +39,7 @@
 @property (nonatomic) CircuitTestResult *testResult;
 @property (nonatomic) CircuitDocument *nextDocument;
 @property (nonatomic) UITapGestureRecognizer *tapToDismissKeyboard;
+@property (nonatomic) NSMutableArray *showingUnlockedToolbeltItems;
 @property (nonatomic) BOOL hasShownIntroText;
 @end
 
@@ -490,6 +493,7 @@ static CGPoint hvrDragHereRight = {88,428};
     }
     return [toolbeltFlag boolValue];
 }
+
 - (IBAction)checkAnswer:(UIBarButtonItem *)sender {
     if (!_document.circuit.tests.count) {
         [[[UIAlertView alloc] initWithTitle:@"No Test" message:@"Unspecified." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
@@ -515,10 +519,20 @@ static CGPoint hvrDragHereRight = {88,428};
             [self finishTutorial];
         }
         
+        BOOL wasAlreadyCompleted = self.document.problemInfo.isCompleted;
+        
         CircuitDocument *doc = [self.delegate circuitDocumentViewController:self nextDocumentAfterDocument:self.document];
         self.nextDocument = doc;
         
         [self setProblemInfoMinimised:NO animated:YES];
+        
+        if (!wasAlreadyCompleted) {
+            NSArray *unlocked = [ToolbeltItem unlockedGatesForProblemSetProblemInfo: self.document.problemInfo.problemIndex];
+            if (unlocked.count) {
+                _showingUnlockedToolbeltItems = [unlocked mutableCopy];
+                [self showNextUnlockedItem];
+            }
+        }
         
         sender.enabled = NO;
         
@@ -531,6 +545,17 @@ static CGPoint hvrDragHereRight = {88,428};
     }
 }
 
+- (void) showNextUnlockedItem {
+    if (_showingUnlockedToolbeltItems.count) {
+        [self performSegueWithIdentifier:@"ShowUnlockedItem" sender:self];
+    }
+}
+
+- (void) unlockedViewController:(UIViewController *)controller didFinish:(id) sender {
+    [controller dismissViewControllerAnimated:YES completion:^{
+        [self showNextUnlockedItem]; 
+    }];
+}
 
 #pragma mark - Toolbelt delegate
 
@@ -568,7 +593,16 @@ static CGPoint hvrDragHereRight = {88,428};
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     UIViewController *d = segue.destinationViewController;
-    if ([d isKindOfClass:[CircuitObjectListTableViewController class]]) {
+    if ([d isKindOfClass:[ObjectUnlockedViewController class]]) {
+        
+        ToolbeltItem *nextObject = [_showingUnlockedToolbeltItems objectAtIndex:0];
+        [_showingUnlockedToolbeltItems removeObjectAtIndex:0];
+        
+        ObjectUnlockedViewController *controller = (ObjectUnlockedViewController *) d;
+        controller.item = nextObject;
+        controller.delegate = self;
+        
+    } else if ([d isKindOfClass:[CircuitObjectListTableViewController class]]) {
         CircuitObjectListTableViewController *controller = (CircuitObjectListTableViewController *) d;
         _objectListViewController = controller;
         controller.delegate = self;

@@ -10,15 +10,17 @@
 #import "ToolbeltItem.h"
 #import "ToolbeltItemTableViewCell.h"
 #import "CircuitDocument.h"
+#import "ProblemSet.h"
+#import "ProblemSetProblemInfo.h"
 
 @interface CircuitObjectListTableViewController () <UISearchBarDelegate>
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (nonatomic) CircuitDocument *document;
 
-@property (nonatomic) NSArray *allItems;
-
+@property (nonatomic) BOOL isProblem;
 @property (nonatomic) NSArray *items;
 @property (nonatomic) NSArray *results;
+@property (nonatomic) ProblemSet *set;
 @end
 
 @implementation CircuitObjectListTableViewController
@@ -34,29 +36,17 @@
 }
 
 - (NSArray *) allItems {
-    if (_allItems) return _allItems;
-    _allItems = @[
-                      [[ToolbeltItem alloc] initWithType:@"button"  image:[UIImage imageNamed:@"switch"]   name:@"Button" subtitle:@"Toggle button"],
-                      //                   [[ToolbeltItem alloc] initWithType:@"pbtn"    image:[UIImage imageNamed:@"pushbutton"] name:@"Button" subtitle:@"Push button"],
-                      [[ToolbeltItem alloc] initWithType:@"light"   image:[UIImage imageNamed:@"led"]      name:@"Light" subtitle:@"Light Emitting Diode"],
-                      [[ToolbeltItem alloc] initWithType:@"or"      image:[UIImage imageNamed:@"or"]       name:@"OR" subtitle:@"2 in, 1 out"],
-                      [[ToolbeltItem alloc] initWithType:@"and"     image:[UIImage imageNamed:@"and"]      name:@"AND" subtitle:@"2 in, 1 out"],
-                      [[ToolbeltItem alloc] initWithType:@"not"     image:[UIImage imageNamed:@"not"]      name:@"NOT" subtitle:@"1 in, 1 out"],
-                      [[ToolbeltItem alloc] initWithType:@"xor"     image:[UIImage imageNamed:@"xor"]      name:@"XOR" subtitle:@"2 in, 1 out"],
-                      [[ToolbeltItem alloc] initWithType:@"xnor"    image:[UIImage imageNamed:@"xnor"]     name:@"XNOR" subtitle:@"2 in, 1 out"],
-                      [[ToolbeltItem alloc] initWithType:@"nand"    image:[UIImage imageNamed:@"nand"]     name:@"NAND" subtitle:@"2 in, 1 out"],
-                      [[ToolbeltItem alloc] initWithType:@"nor"     image:[UIImage imageNamed:@"nor"]      name:@"NOR" subtitle:@"2 in, 1 out"],
-                      [[ToolbeltItem alloc] initWithType:@"ha"      image:[UIImage imageNamed:@"ha"]     name:@"Half adder" subtitle:@"2 in, 2 out"],
-                      [[ToolbeltItem alloc] initWithType:@"fa"      image:[UIImage imageNamed:@"fa"]     name:@"Full adder" subtitle:@"3 in, 2 out"],
-                      [[ToolbeltItem alloc] initWithType:@"add4"    image:[UIImage imageNamed:@"add4"]     name:@"4-bit adder" subtitle:@"8 in, 4 out"],
-                      [[ToolbeltItem alloc] initWithType:@"mult4"   image:[UIImage imageNamed:@"mult4"]    name:@"4-bit multiplier" subtitle:@"8 in, 4 out"],
-                      [[ToolbeltItem alloc] initWithType:@"add8"    image:[UIImage imageNamed:@"add8"]     name:@"8-bit adder" subtitle:@"16 in, 8 out"],
-                      [[ToolbeltItem alloc] initWithType:@"mult8"   image:[UIImage imageNamed:@"mult8"]    name:@"8-bit multiplier" subtitle:@"16 in, 8 out"],
-                      [[ToolbeltItem alloc] initWithType:@"bin7seg" image:[UIImage imageNamed:@"bin7seg"]  name:@"7seg Decoder" subtitle:@"4 bit input, 7 display"],
-                      [[ToolbeltItem alloc] initWithType:@"7seg"    image:[UIImage imageNamed:@"7seg"]     name:@"7-Segment Display" subtitle:@"Display"],
-                      [[ToolbeltItem alloc] initWithType:@"clock"   image:[UIImage imageNamed:@"clock"]    name:@"Clock" subtitle:@"Square wave"]
-                      ];
-    return _allItems;
+    return [ToolbeltItem all];
+}
+
+- (BOOL) hasCompletedProblemNumber:(NSUInteger) problemNumber {
+    if (problemNumber == 0) return YES;
+    
+    if (problemNumber > _set.problems.count) {
+        return NO;
+    }
+    ProblemSetProblemInfo *info = _set.problems[problemNumber - 1];
+    return info.isCompleted;
 }
 
 - (void) configureItems {
@@ -66,11 +56,26 @@
     } else {
         self.items = self.allItems;
     }
+    
+    [self.items enumerateObjectsUsingBlock:^(ToolbeltItem *item, NSUInteger idx, BOOL *stop) {
+        if (_isProblem) {
+            item.isAvailable = YES;
+        } else {
+            item.isAvailable = [self hasCompletedProblemNumber:item.level];
+            if (!item.isAvailable) {
+                NSLog(@"%@ not available until completed level: %lu", item.type, (unsigned long)item.level);
+            }
+        }
+    }];
+    
     self.results = self.items;
+    [self.tableView reloadData];
 }
 
 - (void) setDocument: (CircuitDocument *) document {
     _document = document;
+    _isProblem = document.isProblem;
+    if (!_isProblem) _set = [ProblemSet mainSet];
     [self configureItems];
 }
 
@@ -98,7 +103,6 @@
         cell = (ToolbeltItemTableViewCell *)[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
     
-    
     if (tableView == self.tableView) {
         [cell configureForToolbeltItem: _items[indexPath.row]];
     } else {
@@ -109,7 +113,7 @@
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
     ToolbeltItem *item;
     
     if (tableView == self.tableView) {
@@ -117,6 +121,13 @@
     } else {
         item = _results[indexPath.row];
     }
+    
+    if (!item.isAvailable) {
+        [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
+        return;
+    }
+    
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     [self.delegate tableViewController:self didStartCreatingObject:item];
 }

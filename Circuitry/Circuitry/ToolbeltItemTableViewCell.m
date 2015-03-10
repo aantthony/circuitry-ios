@@ -11,25 +11,9 @@
 @property (weak, nonatomic) IBOutlet UIImageView *image;
 @property (weak, nonatomic) IBOutlet UILabel *label;
 @property (weak, nonatomic) IBOutlet UILabel *subtitle;
-
 @end
 
-
 @implementation ToolbeltItemTableViewCell
-
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (self) {
-        // Initialization code
-    }
-    return self;
-}
-
-- (void)awakeFromNib
-{
-    // Initialization code
-}
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
@@ -38,6 +22,12 @@
     // Configure the view for the selected state
 }
 - (void) configureForToolbeltItem:(ToolbeltItem *) toolbeltItem {
+    if (!toolbeltItem.isAvailable) {
+        _label.text = @"Locked";
+        _subtitle.text = @"Complete more levels";
+        _image.image = [UIImage imageNamed:@"lock"];
+        return;
+    }
     _label.text = toolbeltItem.name;
     _subtitle.text = toolbeltItem.subtitle;
     _image.image = toolbeltItem.image;

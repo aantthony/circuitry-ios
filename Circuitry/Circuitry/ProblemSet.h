@@ -14,4 +14,5 @@
 - (void) refresh;
 - (ProblemSetProblemInfo *) problemAfterProblem:(ProblemSetProblemInfo *)info;
 - (void) didCompleteProblem:(ProblemSetProblemInfo *)problemInfo;
++ (instancetype) mainSet;
 @end

@@ -16,6 +16,11 @@ static NSString *kDefaultsCurrentLevelIndex = @"CurrentLevelIndex";
 
 @implementation ProblemSet
 
++ (instancetype) mainSet {
+    NSString *directoryPath = [[NSBundle mainBundle] pathForResource:@"Problems" ofType:nil];
+    return [[ProblemSet alloc] initWithDirectoryPath:directoryPath];
+}
+
 + (NSDictionary *) loadIndexAtUrl:(NSURL *) url {
     NSInputStream *stream = [[NSInputStream alloc] initWithURL:url];
     [stream open];
@@ -76,7 +81,10 @@ static NSString *kDefaultsCurrentLevelIndex = @"CurrentLevelIndex";
 
 - (void) didCompleteProblem:(ProblemSetProblemInfo *)problemInfo {
     
-    NSUInteger playerCurrentLevelIndex = problemInfo.problemIndex + 1;
+    NSUInteger playerCurrentLevelIndex = [[NSUserDefaults standardUserDefaults] integerForKey:kDefaultsCurrentLevelIndex];
+    
+    NSUInteger updatedCurrentLevelIndex = problemInfo.problemIndex + 1;
+    if (updatedCurrentLevelIndex <= playerCurrentLevelIndex) return;
 
     [[NSUserDefaults standardUserDefaults] setInteger:playerCurrentLevelIndex forKey:kDefaultsCurrentLevelIndex];
     
