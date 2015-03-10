@@ -567,7 +567,7 @@ static CGPoint hvrDragHereRight = {88,428};
 #pragma mark - Problem Info delegate
 - (void) problemInfoViewController:(ProblemInfoViewController *)problemInfoViewController didPressContinueButton:(id)sender {
     
-    UIView *imgView = [[UIView alloc] init];
+    UIView *imgView = [[UIView alloc] initWithFrame:self.view.bounds];
     imgView.backgroundColor = UIColor.whiteColor;
     [self.view addSubview:imgView];
     
