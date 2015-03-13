@@ -15,4 +15,6 @@
 - (ProblemSetProblemInfo *) problemAfterProblem:(ProblemSetProblemInfo *)info;
 - (void) didCompleteProblem:(ProblemSetProblemInfo *)problemInfo;
 + (instancetype) mainSet;
+- (void) unlockAll;
+- (void) reset;
 @end

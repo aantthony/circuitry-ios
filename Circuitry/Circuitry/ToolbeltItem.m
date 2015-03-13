@@ -37,17 +37,17 @@
              [[ToolbeltItem alloc] initWithType:@"xnor"    level:10  image:[UIImage imageNamed:@"xnor"]     name:@"XNOR" fullName:@"XNOR Gate" subtitle:@"2 in, 1 out"],
              [[ToolbeltItem alloc] initWithType:@"nand"    level:4  image:[UIImage imageNamed:@"nand"]     name:@"NAND" fullName:@"NAND Gate" subtitle:@"2 in, 1 out"],
              [[ToolbeltItem alloc] initWithType:@"nor"     level:10 image:[UIImage imageNamed:@"nor"]      name:@"NOR" fullName:@"NOR Gate" subtitle:@"2 in, 1 out"],
-             [[ToolbeltItem alloc] initWithType:@"ha"      level:14 image:[UIImage imageNamed:@"ha"]       name:@"Half adder" fullName:@"Half Adder" subtitle:@"2 in, 2 out"],
-      [[ToolbeltItem alloc] initWithType:@"fa"      level:14 image:[UIImage imageNamed:@"fa"]       name:@"Full adder" fullName:@"Full Adder" subtitle:@"3 in, 2 out"],
-      [[ToolbeltItem alloc] initWithType:@"add4"    level:16 image:[UIImage imageNamed:@"add4"]     name:@"4-bit adder" fullName:@"4-bit adder" subtitle:@"8 in, 4 out"],
-      [[ToolbeltItem alloc] initWithType:@"mult4"   level:16 image:[UIImage imageNamed:@"mult4"]    name:@"4-bit multiplier" fullName:@"4-bit multiplier" subtitle:@"8 in, 4 out"],
-      [[ToolbeltItem alloc] initWithType:@"add8"    level:16 image:[UIImage imageNamed:@"add8"]     name:@"8-bit adder" fullName:@"8-bit adder" subtitle:@"16 in, 8 out"],
-      [[ToolbeltItem alloc] initWithType:@"mult8"   level:17 image:[UIImage imageNamed:@"mult8"]    name:@"8-bit multiplier" fullName:@"8-bit multiplier" subtitle:@"16 in, 8 out"],
-      [[ToolbeltItem alloc] initWithType:@"bin7seg" level:17 image:[UIImage imageNamed:@"bin7seg"]  name:@"7seg Decoder" fullName:@"BCD to 7-segment display decoder" subtitle:@"4 bit input, 7 display"],
-      [[ToolbeltItem alloc] initWithType:@"7seg"    level:13 image:[UIImage imageNamed:@"7seg"]     name:@"7-Segment Display" fullName:@"7-Segment Display" subtitle:@"Display"],
+             [[ToolbeltItem alloc] initWithType:@"ha"      level:12 image:[UIImage imageNamed:@"ha"]       name:@"Half adder" fullName:@"Half Adder" subtitle:@"2 in, 2 out"],
+      [[ToolbeltItem alloc] initWithType:@"fa"      level:12 image:[UIImage imageNamed:@"fa"]       name:@"Full adder" fullName:@"Full Adder" subtitle:@"3 in, 2 out"],
+      [[ToolbeltItem alloc] initWithType:@"add4"    level:12 image:[UIImage imageNamed:@"add4"]     name:@"4-bit adder" fullName:@"4-bit adder" subtitle:@"8 in, 4 out"],
+      [[ToolbeltItem alloc] initWithType:@"mult4"   level:12 image:[UIImage imageNamed:@"mult4"]    name:@"4-bit multiplier" fullName:@"4-bit multiplier" subtitle:@"8 in, 4 out"],
+      [[ToolbeltItem alloc] initWithType:@"add8"    level:12 image:[UIImage imageNamed:@"add8"]     name:@"8-bit adder" fullName:@"8-bit adder" subtitle:@"16 in, 8 out"],
+      [[ToolbeltItem alloc] initWithType:@"mult8"   level:12 image:[UIImage imageNamed:@"mult8"]    name:@"8-bit multiplier" fullName:@"8-bit multiplier" subtitle:@"16 in, 8 out"],
+      [[ToolbeltItem alloc] initWithType:@"bin7seg" level:12 image:[UIImage imageNamed:@"bin7seg"]  name:@"7seg Decoder" fullName:@"BCD to 7-segment display decoder" subtitle:@"4 bit input, 7 display"],
+      [[ToolbeltItem alloc] initWithType:@"7seg"    level:12 image:[UIImage imageNamed:@"7seg"]     name:@"7-Segment Display" fullName:@"7-Segment Display" subtitle:@"Display"],
       [[ToolbeltItem alloc] initWithType:@"clock"   level:4  image:[UIImage imageNamed:@"clock"]    name:@"Clock" fullName:@"Clock" subtitle:@"Square wave"]
     ];
-    return _all;   
+    return _all;
 }
 
 + (NSArray *) unlockedGatesForProblemSetProblemInfo:(NSUInteger) problemIndex {

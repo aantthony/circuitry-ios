@@ -21,6 +21,16 @@ static NSString *kDefaultsCurrentLevelIndex = @"CurrentLevelIndex";
     return [[ProblemSet alloc] initWithDirectoryPath:directoryPath];
 }
 
+- (void) unlockAll {
+    [[NSUserDefaults standardUserDefaults] setInteger:999 forKey:kDefaultsCurrentLevelIndex];
+    [self refresh];
+}
+
+- (void) reset {
+    [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:kDefaultsCurrentLevelIndex];
+    [self refresh];
+}
+
 + (NSDictionary *) loadIndexAtUrl:(NSURL *) url {
     NSInputStream *stream = [[NSInputStream alloc] initWithURL:url];
     [stream open];

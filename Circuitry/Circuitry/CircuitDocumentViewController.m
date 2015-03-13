@@ -19,6 +19,7 @@
 #import "ProblemSetProblemInfo.h"
 #import "ToolbeltItem.h"
 #import "ObjectUnlockedViewController.h"
+#import "ProblemSet.h"
 
 @interface CircuitDocumentViewController () <CircuitObjectListTableViewControllerDelegate, ProblemInfoViewControllerDelegate, ViewControllerTutorialProtocol, UITextFieldDelegate, ObjectUnlockedViewControllerDelegate>
 @property (nonatomic, weak) CircuitObjectListTableViewController *objectListViewController;
@@ -126,6 +127,13 @@
 - (BOOL) textFieldShouldReturn:(UITextField *)textField {
     if (textField.text.length) {
         _document.circuit.title = textField.text;
+        if ([[textField.text lowercaseString] isEqualToString:@"unlock1234"]) {
+            [[ProblemSet mainSet] unlockAll];
+            [[[UIAlertView alloc] initWithTitle:@"Unlock" message:@"All problems are now unlocked." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
+        } else if ([[textField.text lowercaseString] isEqualToString:@"reset1234"]) {
+            [[ProblemSet mainSet] reset];
+            [[[UIAlertView alloc] initWithTitle:@"Unlock" message:@"All problems are now reset." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
+        }
     }
     [_document updateChangeCount:UIDocumentChangeDone];
     [self configureTitleView];
