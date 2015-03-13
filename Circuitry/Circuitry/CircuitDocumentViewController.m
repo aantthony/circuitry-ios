@@ -42,6 +42,7 @@
 @property (nonatomic) UITapGestureRecognizer *tapToDismissKeyboard;
 @property (nonatomic) NSMutableArray *showingUnlockedToolbeltItems;
 @property (nonatomic) BOOL hasShownIntroText;
+@property (nonatomic) BOOL viewHasAppeared;
 @end
 
 @implementation CircuitDocumentViewController
@@ -414,6 +415,14 @@ static CGPoint hvrDragHereRight = {88,428};
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self configureView];
+    _viewHasAppeared = YES;
+    BOOL toolbelt = [self shouldShowToolbeltForDocument:_document];
+    if (toolbelt) {
+        [UIView animateWithDuration:0.3 animations:^{
+            [self setObjectListVisible:toolbelt animate:YES];
+        }];
+    }
+    
     if (self.isTutorial) {
         if (!_hasShownIntroText) {
             [self performSegueWithIdentifier:@"ShowIntroText" sender:self];
@@ -428,7 +437,11 @@ static CGPoint hvrDragHereRight = {88,428};
 }
 
 - (void) configureView {
-    self.objectListVisible = [self shouldShowToolbeltForDocument:_document];
+    if (_viewHasAppeared) {
+        self.objectListVisible = [self shouldShowToolbeltForDocument:_document];
+    } else {        
+        self.objectListVisible = NO;
+    }
     BOOL hasTests = _document.circuit.tests.count > 0;
     self.problemInfoVisible = hasTests;
     if (hasTests) {
