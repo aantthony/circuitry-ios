@@ -476,7 +476,7 @@ The linking wires in Circuitry allow these signals to be passed on from the outp
                                             <color key="textColor" red="0.1403878127" green="0.52914172739999998" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="level-2" translatesAutoresizingMaskIntoConstraints="NO" id="2Ig-BZ-iW3" customClass="CircuitListImageView">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2Ig-BZ-iW3" customClass="CircuitListImageView">
                                             <rect key="frame" x="6" y="8" width="188" height="188"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </imageView>
@@ -1043,7 +1043,6 @@ This logic diagram describes the rule:
         <image name="dots" width="22" height="6"/>
         <image name="ipad-white-vertical-level-1.png" width="882" height="1310"/>
         <image name="large-plus" width="54" height="54"/>
-        <image name="level-2" width="188" height="188"/>
         <image name="or" width="90" height="50"/>
         <image name="probleminfoshad" width="1" height="1"/>
         <image name="tutorial-bg-1.jpg" width="768" height="1029"/>
