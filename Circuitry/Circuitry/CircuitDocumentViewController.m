@@ -21,7 +21,7 @@
 #import "ObjectUnlockedViewController.h"
 #import "ProblemSet.h"
 
-@interface CircuitDocumentViewController () <CircuitObjectListTableViewControllerDelegate, ProblemInfoViewControllerDelegate, ViewControllerTutorialProtocol, UITextFieldDelegate, ObjectUnlockedViewControllerDelegate>
+@interface CircuitDocumentViewController () <CircuitObjectListTableViewControllerDelegate, ProblemInfoViewControllerDelegate, ViewControllerTutorialProtocol, UITextFieldDelegate, ObjectUnlockedViewControllerDelegate, TestResultViewControllerDelegate>
 @property (nonatomic, weak) CircuitObjectListTableViewController *objectListViewController;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *objectListLeft;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *problemInfoBottom;
@@ -598,21 +598,34 @@ static CGPoint hvrDragHereRight = {88,428};
         return;
     }
     __block CircuitTestResult *failure = nil;
+    __block CircuitTestResult *firstTest = nil;
     [_document.circuit.tests enumerateObjectsUsingBlock:^(CircuitTest *test, NSUInteger idx, BOOL *stop) {
         CircuitTestResult *testResult = [test runAndSimulate:_document.circuit];
+        firstTest = testResult;
         if (!testResult.passed) {
             failure = testResult;
             *stop = YES;
         }
     }];
     
+    self.testResult = firstTest;
+    
+    [self performSegueWithIdentifier:@"ShowTestResult" sender:self];
+    
     if (failure) {
         [[AnalyticsManager shared] trackCheckProblem:self.document withResult:failure];
-        self.testResult = failure;
-        [self performSegueWithIdentifier:@"ShowTestResult" sender:self];
         
     } else {
         [[AnalyticsManager shared] trackFinishProblem:self.document];
+        
+        sender.enabled = NO;
+        
+    }
+}
+
+- (void) testResultViewController:(TestResultViewController *)viewController didFinish:(id)sender {
+    [viewController dismissViewControllerAnimated:YES completion:nil];
+    if (self.testResult.passed) {
         if (self.isTutorial) {
             [self finishTutorial];
         }
@@ -631,8 +644,6 @@ static CGPoint hvrDragHereRight = {88,428};
                 [self showNextUnlockedItem];
             }
         }
-        
-        sender.enabled = NO;
         
         if (self.nextDocument) {
             [_problemInfoViewController showProgressToNextLevelScreen];
@@ -717,6 +728,7 @@ static CGPoint hvrDragHereRight = {88,428};
         controller.document = self.document;
     } else if ([d isKindOfClass:[TestResultViewController class]]) {
         TestResultViewController *vc = (TestResultViewController *)d;
+        vc.delegate = self;
         vc.testResult = self.testResult;
     }
 }

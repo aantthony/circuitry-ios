@@ -7,6 +7,15 @@
 //
 
 @class CircuitTestResult;
+@protocol TestResultViewControllerDelegate;
 @interface TestResultViewController : UIViewController
 @property (nonatomic) CircuitTestResult *testResult;
+@property (nonatomic, weak) id<TestResultViewControllerDelegate> delegate;
+@end
+
+@protocol TestResultViewControllerDelegate <NSObject>
+
+@required
+- (void) testResultViewController:(TestResultViewController *)viewController didFinish:(id) sender;
+
 @end

@@ -12,6 +12,7 @@
 
 @interface TestResultViewController () <UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UIImageView *bigTick;
 @property (nonatomic) BOOL hasAppeared;
 @end
 
@@ -20,6 +21,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self configure];
+    _bigTick.hidden = YES;
 }
 
 - (void) setTestResult:(CircuitTestResult *)testResult {
@@ -50,10 +52,40 @@ typedef void (^Function)();
         } completion:nil];
     }
     self.hasAppeared = YES;
+    if (self.testResult.passed) {
+        
+        self.bigTick.hidden = NO;
+        self.bigTick.alpha = 0.0;
+        self.bigTick.transform = CGAffineTransformMakeScale(5.0, 5.0);
+        
+        [UIView animateWithDuration:0.35 delay:delayStart + 0.2 options:UIViewAnimationOptionCurveEaseOut animations:^{
+            _bigTick.alpha = 1.0;
+            self.bigTick.transform = CGAffineTransformIdentity;
+        } completion:^(BOOL finished) {
+            
+            [UIView animateWithDuration:0.2 animations:^{
+                self.bigTick.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(0.4), CGAffineTransformMakeScale(1.2, 1.2));
+            } completion:^(BOOL finished) {
+                [UIView animateWithDuration:0.2 animations:^{
+                    self.bigTick.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(-0.4), CGAffineTransformMakeScale(1.2, 1.2));
+                } completion:^(BOOL finished) {
+                    [UIView animateWithDuration:0.2 animations:^{
+                        self.bigTick.transform = CGAffineTransformIdentity;
+                    } completion:^(BOOL finished) {
+                        [UIView animateWithDuration:0.8 delay:1.5 options:UIViewAnimationOptionCurveEaseOut animations:^{
+                            _bigTick.alpha = 0.0;
+                        } completion:nil];
+                    }];
+                }];
+            }];
+
+            
+        }];
+        
+    }
 }
 
 - (void) configure {
-    
 }
 
 #pragma mark - UITableViewDataSource
@@ -80,8 +112,9 @@ typedef void (^Function)();
     }
     return cell;
 }
-- (IBAction)dismiss:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
+-
+(IBAction)dismiss:(id)sender {
+    [self.delegate testResultViewController:self didFinish:sender];
 }
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {

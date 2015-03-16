@@ -155,12 +155,24 @@
                                 <rect key="frame" x="0.0" y="546" width="540" height="1"/>
                                 <color key="backgroundColor" white="0.79017310049019618" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="BigTick" translatesAutoresizingMaskIntoConstraints="NO" id="af4-b6-spB">
+                                <rect key="frame" x="192" y="207" width="156" height="156"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="156" id="HeM-sl-9Uj"/>
+                                    <constraint firstAttribute="height" constant="156" id="t73-IY-FpE"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="centerX" secondItem="af4-b6-spB" secondAttribute="centerX" id="5pP-n7-xtb"/>
+                            <constraint firstItem="af4-b6-spB" firstAttribute="top" secondItem="RSx-fP-3W0" secondAttribute="bottom" constant="207" id="b7t-dM-We7"/>
+                        </constraints>
                     </view>
                     <nil key="simulatedTopBarMetrics"/>
                     <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
+                        <outlet property="bigTick" destination="af4-b6-spB" id="PlA-b4-M8J"/>
                         <outlet property="tableView" destination="VjK-Vs-avk" id="wry-sq-GKA"/>
                     </connections>
                 </viewController>
@@ -1022,6 +1034,7 @@ This logic diagram describes the rule:
         </scene>
     </scenes>
     <resources>
+        <image name="BigTick" width="156" height="156"/>
         <image name="DownArrow" width="30" height="16"/>
         <image name="ProblemTick" width="40" height="40"/>
         <image name="TestResultMatch" width="29" height="23"/>
