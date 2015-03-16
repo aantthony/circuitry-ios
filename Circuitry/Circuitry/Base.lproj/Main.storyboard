@@ -414,7 +414,7 @@ The linking wires in Circuitry allow these signals to be passed on from the outp
                     <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="5b6-lE-EBu">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="0.96324805964052296" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="0.0" id="HCZ-Hp-ZHD">
                             <size key="itemSize" width="200" height="250"/>
@@ -434,6 +434,7 @@ The linking wires in Circuitry allow these signals to be passed on from the outp
                                             <rect key="frame" x="-23" y="209" width="247" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </label>
                                         <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KU1-Qp-ixG" customClass="CircuitListImageView">
                                             <rect key="frame" x="6" y="8" width="188" height="188"/>
@@ -461,6 +462,7 @@ The linking wires in Circuitry allow these signals to be passed on from the outp
                                             <rect key="frame" x="-23" y="209" width="247" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.1403878127" green="0.52914172739999998" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </label>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="level-2" translatesAutoresizingMaskIntoConstraints="NO" id="2Ig-BZ-iW3" customClass="CircuitListImageView">
                                             <rect key="frame" x="6" y="8" width="188" height="188"/>
@@ -795,6 +797,11 @@ The linking wires in Circuitry allow these signals to be passed on from the outp
                     <navigationItem key="navigationItem" id="RfQ-99-Eyh"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="igf-U8-vFS">
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="barTintColor" red="0.070588235294117646" green="0.14901960784313725" blue="0.22352941176470589" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="0.7114608864379085" alpha="1" colorSpace="calibratedWhite"/>
+                        </textAttributes>
                     </navigationBar>
                     <connections>
                         <segue destination="bMV-Gg-1ab" kind="relationship" relationship="rootViewController" id="krF-hO-kAj"/>
@@ -1031,6 +1038,6 @@ This logic diagram describes the rule:
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="l2a-A5-LGd"/>
+        <segue reference="gnN-9s-ocl"/>
     </inferredMetricsTieBreakers>
 </document>

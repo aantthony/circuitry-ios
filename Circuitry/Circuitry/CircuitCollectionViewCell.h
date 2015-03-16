@@ -13,4 +13,5 @@
 @property (nonatomic) IBOutlet CircuitListImageView *imageView;
 @property (nonatomic) IBOutlet UIView *tickView;
 @property (nonatomic, getter=isRounded) BOOL rounded;
+@property (nonatomic, getter=isEnabled) BOOL enabled;
 @end

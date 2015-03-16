@@ -63,7 +63,7 @@
         } else {
             item.isAvailable = [self hasCompletedProblemNumber:item.level];
             if (!item.isAvailable) {
-                NSLog(@"%@ not available until completed level: %lu", item.type, (unsigned long)item.level);
+//                NSLog(@"%@ not available until completed level: %lu", item.type, (unsigned long)item.level);
             }
         }
     }];

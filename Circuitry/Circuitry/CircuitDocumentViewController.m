@@ -68,7 +68,7 @@
     
     UILabel *label = (UILabel *)_titleView;
     
-    label.textColor = self.view.tintColor;
+    label.textColor = [UIColor colorWithWhite:1.0 alpha:1.0];
     
     label.text = self.document.circuit.title;
     if (!label.text.length) {

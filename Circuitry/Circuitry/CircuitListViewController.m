@@ -65,7 +65,7 @@
 @property (nonatomic) ViewController *documentViewController;
 @property (nonatomic) NSIndexPath *actionSheetIndexPath;
 @property (nonatomic) CGRect selectionRect;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *createButton;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *createButton;
 @property (nonatomic) BOOL openDocumentAnimationShouldFadeIn;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentControl;
 @property (nonatomic) CircuitDocument *presentingDocument;
@@ -209,7 +209,7 @@
 }
 
 - (void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    [collectionView deselectItemAtIndexPath:indexPath animated:YES];
+//    [collectionView deselectItemAtIndexPath:indexPath animated:YES];
     if (!_displayingProblems) {
         if (indexPath.row) {
             DocumentListItem *item = [_circuits objectAtIndex:indexPath.row - 1];
@@ -242,17 +242,25 @@
         _segmentControl.selectedSegmentIndex = 0;
         self.displayingProblems = YES;
         _createButton.enabled = NO;
+        self.navigationItem.leftBarButtonItem = nil;
         self.title = @"Problems";
         self.backgroundImageView.image = [UIImage imageNamed:@"bg-blur.jpg"];
         [self.collectionView reloadData];
+        self.collectionView.backgroundColor = [UIColor blackColor];
     } else {
         _segmentControl.selectedSegmentIndex = 1;
         self.displayingProblems = NO;
         _createButton.enabled = YES;
+        self.navigationItem.leftBarButtonItem = _createButton;
         self.title = @"Saved Circuits";
         self.backgroundImageView.image = [UIImage imageNamed:@"tutorial-bg-3.jpg"];
         [self.collectionView reloadData];
+        self.collectionView.backgroundColor = [UIColor colorWithRed:109/255.0 green:141/255.0 blue:186/255.0 alpha:1.0];
     }
+    
+//    self.backgroundImageView.image = nil;
+    self.backgroundImageView.backgroundColor = self.collectionView.backgroundColor;
+    self.backgroundImageView.backgroundColor = [UIColor blackColor];
 }
 
 - (IBAction)didChangeCircuitsProblemsSegment:(UISegmentedControl *)sender {
@@ -433,10 +441,12 @@
             cell.textLabel.text = item.title;
             cell.imageView.image = [UIImage imageNamed:item.imageName];
             cell.textLabel.textColor = [UIColor whiteColor];
+            cell.enabled = YES;
         } else {
             cell.imageView.image = [UIImage imageNamed:@"level-locked"];
             cell.textLabel.text = @"Locked";
             cell.textLabel.textColor = [UIColor colorWithWhite:1.0 alpha:0.8];
+            cell.enabled = NO;
         }
         cell.tickView.hidden = !item.isCompleted;
         
@@ -475,9 +485,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     _displayingProblems = YES;
+    self.navigationItem.leftBarButtonItem = nil;
     self.transitioningDelegate = self;
     self.collectionView.backgroundView = self.backgroundImageView;
-    self.collectionView.backgroundColor = [UIColor blackColor];
     
     _canHandleRoundedViews = YES;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{

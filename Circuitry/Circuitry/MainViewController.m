@@ -15,8 +15,8 @@
 @implementation MainViewController
 
 - (UIStatusBarStyle) preferredStatusBarStyle {
-    return UIStatusBarStyleDefault;
-//    return UIStatusBarStyleLightContent;
+//    return UIStatusBarStyleDefault;
+    return UIStatusBarStyleLightContent;
 }
 
 static NSString *kDefaultsOpenedBefore = @"openedBefore";
