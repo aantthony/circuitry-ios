@@ -245,17 +245,17 @@
         _createButton.enabled = NO;
         self.navigationItem.leftBarButtonItem = nil;
         self.title = @"Problems";
-        self.backgroundImageView.image = [UIImage imageNamed:@"bg-blur.jpg"];
+        self.backgroundImageView.image = [UIImage imageNamed:@"tutorial-bg-3.jpg"];
         [self.collectionView reloadData];
-        self.collectionView.backgroundColor = [UIColor blackColor];
+        self.collectionView.backgroundColor = [UIColor colorWithRed:109/255.0 green:141/255.0 blue:186/255.0 alpha:1.0];
     } else {
         _segmentControl.selectedSegmentIndex = 1;
         _createButton.enabled = YES;
         self.navigationItem.leftBarButtonItem = _createButton;
         self.title = @"Saved Circuits";
-        self.backgroundImageView.image = [UIImage imageNamed:@"tutorial-bg-3.jpg"];
+        self.backgroundImageView.image = [UIImage imageNamed:@"bgblur"];
+        self.collectionView.backgroundColor = [UIColor blackColor];
         [self.collectionView reloadData];
-        self.collectionView.backgroundColor = [UIColor colorWithRed:109/255.0 green:141/255.0 blue:186/255.0 alpha:1.0];
     }
     
 //    self.backgroundImageView.image = nil;
@@ -474,7 +474,7 @@
 
 - (UIImageView *) backgroundImageView {
     if (!_backgroundImageView) {
-        UIImage *img = [UIImage imageNamed:@"bg-blur.jpg"];
+        UIImage *img = [UIImage imageNamed:@"tutorial-bg-3.jpg"];
         _backgroundImageView = [[UIImageView alloc] initWithImage:img];
         _backgroundImageView.alpha = 0.7;
         _backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;

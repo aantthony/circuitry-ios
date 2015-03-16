@@ -72,7 +72,6 @@
 		9288BBB9196AD6470090455A /* ToolbeltItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 9288BBB8196AD6470090455A /* ToolbeltItem.m */; };
 		928FDF761A46644A0042319C /* SevenSegmentDisplay.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9200469E189D037F007124DA /* SevenSegmentDisplay.fsh */; };
 		929CB69518A7833C00BEE7D6 /* TransitionFromDocumentListToDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 929CB69418A7833C00BEE7D6 /* TransitionFromDocumentListToDocument.m */; };
-		92A0F7D41A7D069B00B984EC /* bg-blur@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 92A0F7D31A7D069B00B984EC /* bg-blur@2x.jpg */; };
 		92A28A5E187433E800F0D934 /* Circuit.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A28A5D187433E800F0D934 /* Circuit.m */; };
 		92A4F86D187289F300EEB367 /* Viewport.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A4F86C187289F300EEB367 /* Viewport.m */; };
 		92A4F87018728A1F00EEB367 /* Drawable.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A4F86F18728A1F00EEB367 /* Drawable.m */; };
@@ -237,7 +236,6 @@
 		9288BBB8196AD6470090455A /* ToolbeltItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolbeltItem.m; sourceTree = "<group>"; };
 		929CB69318A7833C00BEE7D6 /* TransitionFromDocumentListToDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitionFromDocumentListToDocument.h; sourceTree = "<group>"; };
 		929CB69418A7833C00BEE7D6 /* TransitionFromDocumentListToDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitionFromDocumentListToDocument.m; sourceTree = "<group>"; };
-		92A0F7D31A7D069B00B984EC /* bg-blur@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "bg-blur@2x.jpg"; sourceTree = "<group>"; };
 		92A28A5C187433E800F0D934 /* Circuit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Circuit.h; sourceTree = "<group>"; };
 		92A28A5D187433E800F0D934 /* Circuit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Circuit.m; sourceTree = "<group>"; };
 		92A4F86B187289F300EEB367 /* Viewport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Viewport.h; sourceTree = "<group>"; };
@@ -781,7 +779,6 @@
 		92FA32BC19B2C00C0046A7FE /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				92A0F7D31A7D069B00B984EC /* bg-blur@2x.jpg */,
 				92FA32C119B2C21B0046A7FE /* tutorial-logo@2x.png */,
 				9232AD7A1A1CB9EC0030ADB2 /* ipad-white-vertical-level-1.png */,
 				92FA32BD19B2C0140046A7FE /* tutorial-bg-1@2x.jpg */,
@@ -888,7 +885,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				920046A3189D0A60007124DA /* SevenSegmentDisplay.vsh in Resources */,
-				92A0F7D41A7D069B00B984EC /* bg-blur@2x.jpg in Resources */,
 				9232AD861A1CBE120030ADB2 /* Terms.rtf in Resources */,
 				9232B6761878436E00E45C7E /* BatchedSprite.vsh in Resources */,
 				92020C0B189A578200B6D8F5 /* circuit.image-atlas in Resources */,
