@@ -280,14 +280,14 @@ static CGPoint hvrDragHereRight = {88,428};
     }
     
     CGRect rect = CGRectMake(
-                                             320,
+                                             270,
                                              80,
                                              _hintViewCheckCorrect.frame.size.width,
                                              _hintViewCheckCorrect.frame.size.height
                                              );
     
     if (self.landscape) {
-        rect.origin.x = 570;
+        rect.origin.x = 540;
     }
     _hintViewCheckCorrect.frame = rect;
     return _hintViewCheckCorrect;
