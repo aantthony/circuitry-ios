@@ -524,7 +524,7 @@
         delegate.reverse = YES;
         delegate.originatingRect = _selectionRect;
         if (_openDocumentAnimationShouldFadeIn) {
-            ViewController * controller = (ViewController *) fromVC;
+//            ViewController * controller = (ViewController *) fromVC;
 //            NSURL *url = controller.document.fileURL;
 //            NSString *urlPath = url.path;
             
