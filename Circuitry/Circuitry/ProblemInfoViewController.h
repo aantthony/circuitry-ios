@@ -14,5 +14,5 @@
 @required
 - (void) problemInfoViewController:(ProblemInfoViewController *)problemInfoViewController didPressContinueButton:(id) sender;
 - (void) problemInfoViewController:(ProblemInfoViewController *)problemInfoViewController requestToggleVisibility:(id)sender;
-
+- (void) problemInfoViewController:(ProblemInfoViewController *)problemInfoViewController willToggleVisibility:(id)sender;
 @end

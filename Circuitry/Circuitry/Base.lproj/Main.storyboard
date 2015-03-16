@@ -925,14 +925,18 @@ This logic diagram describes the rule:
                                     <constraint firstItem="Mfd-cb-9WV" firstAttribute="top" secondItem="Vuh-ES-eXS" secondAttribute="top" constant="20" id="trN-lQ-V2E"/>
                                 </constraints>
                                 <connections>
-                                    <outletCollection property="gestureRecognizers" destination="F9m-vV-ShL" appends="YES" id="pqa-le-dU1"/>
+                                    <outletCollection property="gestureRecognizers" destination="wRg-zo-iay" appends="YES" id="MEp-4o-5Af"/>
                                 </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="31s-zx-ivU">
                                 <rect key="frame" x="0.0" y="0.0" width="768" height="258"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gcl-aN-Xel">
-                                        <rect key="frame" x="198" y="115" width="378" height="36"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gcl-aN-Xel">
+                                        <rect key="frame" x="195" y="115" width="378" height="36"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="378" id="aKC-eG-1y7"/>
+                                            <constraint firstAttribute="height" constant="36" id="tHx-3Z-2fW"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="23"/>
                                         <state key="normal" title="Continue to next problem">
                                             <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -959,6 +963,8 @@ This logic diagram describes the rule:
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="Ywh-1w-sac" secondAttribute="bottom" constant="50" id="9Rc-eb-hdT"/>
                                     <constraint firstItem="Ywh-1w-sac" firstAttribute="leading" secondItem="31s-zx-ivU" secondAttribute="leading" id="Kpf-cN-atW"/>
+                                    <constraint firstItem="gcl-aN-Xel" firstAttribute="top" secondItem="UDI-Xp-EuQ" secondAttribute="bottom" constant="16" id="Wiw-bW-bR1"/>
+                                    <constraint firstAttribute="centerX" secondItem="gcl-aN-Xel" secondAttribute="centerX" id="f88-cz-53b"/>
                                     <constraint firstItem="UDI-Xp-EuQ" firstAttribute="top" secondItem="31s-zx-ivU" secondAttribute="top" constant="72" id="k4X-rA-bt5"/>
                                     <constraint firstAttribute="centerX" secondItem="UDI-Xp-EuQ" secondAttribute="centerX" id="qbu-NC-h7B"/>
                                     <constraint firstAttribute="trailing" secondItem="Ywh-1w-sac" secondAttribute="trailing" id="xPb-Mu-Bdf"/>
@@ -988,11 +994,11 @@ This logic diagram describes the rule:
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xfo-PK-73x" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="F9m-vV-ShL">
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.001" id="wRg-zo-iay">
                     <connections>
-                        <action selector="didTapProblemDescriptionToHide:" destination="jZw-XZ-G2q" id="2hc-PH-OME"/>
+                        <action selector="didTapProblemDescriptionToHide:" destination="jZw-XZ-G2q" id="ZaH-bE-9S7"/>
                     </connections>
-                </tapGestureRecognizer>
+                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1647" y="1266"/>
         </scene>

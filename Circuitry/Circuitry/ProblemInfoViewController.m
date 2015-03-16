@@ -48,8 +48,12 @@
         
     }];
 }
-- (IBAction)didTapProblemDescriptionToHide:(id)sender {
-    [self.delegate problemInfoViewController:self requestToggleVisibility:sender];
+- (IBAction)didTapProblemDescriptionToHide:(UILongPressGestureRecognizer *)sender {
+    if (sender.state == UIGestureRecognizerStateEnded) {
+        [self.delegate problemInfoViewController:self requestToggleVisibility:sender];
+    } else if (sender.state == UIGestureRecognizerStateBegan) {
+        [self.delegate problemInfoViewController:self willToggleVisibility:sender];
+    }
 }
 
 - (void) setIsMinimised:(BOOL)isMinimised {

@@ -32,6 +32,8 @@
 @property (nonatomic) BOOL problemInfoVisible;
 @property (nonatomic) BOOL problemInfoMinimised;
 @property (nonatomic) UIImageView *hintViewTapAndHoldLeft;
+@property (nonatomic) UIImageView *hintViewToggleLeft1;
+@property (nonatomic) UIImageView *hintViewToggleLeft2;
 @property (nonatomic) UIImageView *hintViewDragHereRight;
 @property (nonatomic) UIImageView *hintViewCheckCorrect;
 @property (nonatomic) NSInteger tutorialState;
@@ -203,6 +205,53 @@ static CGPoint hvrDragHereRight = {88,428};
     return _hintViewTapAndHoldLeft;
 }
 
+- (UIImageView *) hintViewToggleLeft1 {
+    if (!_hintViewToggleLeft1) {
+        _hintViewToggleLeft1 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"TapToToggle"]];
+        [self.view addSubview:_hintViewToggleLeft1];
+    }
+    
+    
+    if (self.landscape) {
+        hvrTapAndHoldLeft.y = 411;
+    } else {
+        hvrTapAndHoldLeft.y = 611;
+    }
+    
+    _hintViewToggleLeft1.frame = CGRectMake(
+                                               hvrTapAndHoldLeft.x,
+                                               hvrTapAndHoldLeft.y,
+                                               _hintViewTapAndHoldLeft.frame.size.width,
+                                               _hintViewTapAndHoldLeft.frame.size.height
+                                               );
+    
+    return _hintViewToggleLeft1;
+ }
+
+- (UIImageView *) hintViewToggleLeft2 {
+    if (!_hintViewToggleLeft2) {
+        _hintViewToggleLeft2 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"TapToToggle"]];
+        [self.view addSubview:_hintViewToggleLeft2];
+    }
+    
+    CGFloat offsetY = self.landscape ? 200 : 400;
+    
+    if (self.landscape) {
+        hvrTapAndHoldLeft.y = 411;
+    } else {
+        hvrTapAndHoldLeft.y = 611;
+    }
+    
+    _hintViewToggleLeft2.frame = CGRectMake(
+                                            hvrTapAndHoldLeft.x,
+                                            hvrTapAndHoldLeft.y - offsetY,
+                                            _hintViewTapAndHoldLeft.frame.size.width,
+                                            _hintViewTapAndHoldLeft.frame.size.height
+                                            );
+    
+    return _hintViewToggleLeft2;
+}
+
 - (UIImageView *) hintViewDragHereRight {
     if (!_hintViewDragHereRight) {
         _hintViewDragHereRight = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"DragIntoHere"]];
@@ -320,6 +369,8 @@ static CGPoint hvrDragHereRight = {88,428};
             _hintViewTapAndHoldLeft.alpha = 0;
             _hintViewDragHereRight.alpha = 0;
             _hintViewCheckCorrect.alpha = 0;
+            _hintViewToggleLeft1.alpha = 0;
+            _hintViewToggleLeft2.alpha = 0;
         }];
     } else if (tutorialState == 1) {
         UIView *tapHold = self.hintViewTapAndHoldLeft;
@@ -363,7 +414,7 @@ static CGPoint hvrDragHereRight = {88,428};
         }];
     } else if (tutorialState == 5) {
         UIView *dragHere = self.hintViewDragHereRight;
-        CGFloat offsetY = self.landscape ? 20 : 40;
+        CGFloat offsetY = self.landscape ? 30 : 40;
         CGRect targetFrame = CGRectMake(hvrDragHereRight.x, hvrDragHereRight.y - offsetY, dragHere.frame.size.width, dragHere.frame.size.height);
         targetFrame.origin.x -= 20;
         dragHere.frame = targetFrame;
@@ -373,18 +424,28 @@ static CGPoint hvrDragHereRight = {88,428};
             dragHere.alpha = 1;
             _hintViewTapAndHoldLeft.alpha = 0;
             _hintViewCheckCorrect.alpha = 0;
+            
+            _hintViewToggleLeft1.alpha = 0;
+            _hintViewToggleLeft2.alpha = 0;
         } completion:^(BOOL finished) {
             
         }];
     } else if (tutorialState == 6) {
         UIView *arrow = self.hintViewCheckCorrect;
         arrow.alpha = 0;
+        UIView *hintToggle1 = self.hintViewToggleLeft1;
+        UIView *hintToggle2 = self.hintViewToggleLeft2;
+        hintToggle1.alpha = 0;
+        hintToggle2.alpha = 0;
         [UIView animateWithDuration:0.3 animations:^{
             _hintViewTapAndHoldLeft.alpha = 0;
             _hintViewDragHereRight.alpha = 0;
         }];
         [UIView animateWithDuration:1.0 animations:^{
             arrow.alpha = 1;
+            
+            hintToggle1.alpha = 1;
+            hintToggle2.alpha = 1;
         }];
     }
     
@@ -505,6 +566,21 @@ static CGPoint hvrDragHereRight = {88,428};
     
     BOOL shouldMinimise = !_problemInfoMinimised;
     [self setProblemInfoMinimised:shouldMinimise animated:YES];
+}
+
+
+- (void) problemInfoViewController:(ProblemInfoViewController *)problemInfoViewController willToggleVisibility:(id)sender {
+    [self.view layoutIfNeeded];
+    BOOL current = _problemInfoMinimised;
+    [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        if (current) {
+            _problemInfoBottom.constant = (current ? -200 : 0) - 12;
+        } else {
+            _problemInfoBottom.constant = (current ? -200 : 0) - 10;
+        }
+        [self.view layoutIfNeeded];
+        
+    } completion:nil];
 }
 
 - (BOOL) shouldShowToolbeltForDocument: (CircuitDocument *) doc {
