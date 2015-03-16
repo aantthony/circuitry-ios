@@ -62,7 +62,7 @@
         [label addGestureRecognizer:tap];
         label.textAlignment = NSTextAlignmentCenter;
         label.userInteractionEnabled = YES;
-        label.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:17];
+        label.font = [UIFont systemFontOfSize:17.0 weight:400.0];
         _titleView = label;
     }
     
@@ -111,7 +111,7 @@
     }
     field.clearButtonMode = UITextFieldViewModeWhileEditing;
     field.delegate = self;
-    field.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:17];
+    field.font = [UIFont systemFontOfSize:17.0 weight:400.0];
     field.returnKeyType = UIReturnKeyDone;
     self.navigationItem.titleView = field;
     [self.view addGestureRecognizer:self.tapToDismissKeyboard];
