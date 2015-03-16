@@ -336,7 +336,7 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     }];
     
     if (clocks) {
-        [self update];
+        [self unpause];
     }
 }
 

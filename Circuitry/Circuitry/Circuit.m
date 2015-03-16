@@ -228,6 +228,7 @@ static NSDictionary *processesById;
     int count = _internal->clocks_count;
     for(int i = 0 ; i < count; i++) {
         if (_internal->clocks[i] == NULL) continue;
+        if (_internal->clocks[i]->type == NULL) continue;
         block(_internal->clocks[i], &stop);
         if (stop) break;
     }
