@@ -29,6 +29,7 @@
 @property (nonatomic) NSURL *url;
 @property (nonatomic) NSString *title;
 @property (nonatomic) NSDate *lastModified;
+@property (nonatomic) NSDate *created;
 @property (nonatomic) UIImage *image;
 
 @end
@@ -46,6 +47,7 @@
                                 error:NULL];
     
     _lastModified = [properties objectForKey:NSFileModificationDate];
+    _created      = [properties objectForKey:NSFileCreationDate];
 
     return self;
 }
@@ -240,7 +242,6 @@
     _displayingProblems = displayingProblems;
     if (_displayingProblems) {
         _segmentControl.selectedSegmentIndex = 0;
-        self.displayingProblems = YES;
         _createButton.enabled = NO;
         self.navigationItem.leftBarButtonItem = nil;
         self.title = @"Problems";
@@ -249,7 +250,6 @@
         self.collectionView.backgroundColor = [UIColor blackColor];
     } else {
         _segmentControl.selectedSegmentIndex = 1;
-        self.displayingProblems = NO;
         _createButton.enabled = YES;
         self.navigationItem.leftBarButtonItem = _createButton;
         self.title = @"Saved Circuits";
@@ -428,7 +428,7 @@
             cell.textLabel.text = @"Untitled";
         }
         cell.rounded = NO;
-        cell.imageView.image = item.image;
+        cell.imageView.image = item.image ?: [UIImage imageNamed:@"blank"];
         cell.textLabel.textColor = [UIColor whiteColor];
         cell.tickView.hidden = YES;
         return cell;
@@ -583,7 +583,7 @@
         [items addObject:item];
     }
     _circuits = [[items sortedArrayUsingComparator:^NSComparisonResult(DocumentListItem *obj1, DocumentListItem *obj2) {
-        return [obj2.lastModified compare: obj1.lastModified];
+        return [obj2.created compare: obj1.created];
     }] mutableCopy];
 }
 - (void)didReceiveMemoryWarning {

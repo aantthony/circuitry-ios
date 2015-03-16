@@ -101,9 +101,10 @@
     if (self.document.isProblem) return;
     UITextField *field = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 300, 30)];
     field.borderStyle = UITextBorderStyleRoundedRect;
-    field.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.1];
+    field.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.5];
     field.textAlignment = NSTextAlignmentCenter;
     field.text = self.document.circuit.title;
+    field.textColor = [UIColor whiteColor];
     NSRange r = [field.text rangeOfString:@"Blank "];
     if (r.location != NSNotFound) {
         field.text = @"";
