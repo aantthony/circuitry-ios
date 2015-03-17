@@ -38,8 +38,7 @@
     },
     {
       "path": "011",
-      "title": "NAND Gate using four NOR gates",
-      "hidden": true
+      "title": "NAND using NOR gates"
     },
     {
       "path": "012",

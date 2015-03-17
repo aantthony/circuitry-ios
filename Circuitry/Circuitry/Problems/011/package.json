@@ -1,11 +1,11 @@
 {
   "_id" : "54d721f5004aab735e0041b0",
-  "description" : "A NOR gate outputs true only when neither of its inputs are true. Using NOR gates, make a NAND gate. Since NAND gates can be used to make any gate, a solution to this problem implies that NOR gates can be used to construct any gate too.",
+  "description" : "A NOR gate outputs true only when neither of its inputs are true. Using NOR gates, make a NAND gate. Since NAND gates can be used to make any gate, a solution to this problem implies that NOR gates can also be used to construct any gate.",
   "license" : "Copyright",
   "view" : {
     "center" : [
-      0,
-      100
+      -250,
+      -100
     ]
   },
   "name" : "",
@@ -92,7 +92,7 @@
       ],
       "pos" : [
         800,
-        800,
+        900,
         0
       ],
       "out" : 1
@@ -109,7 +109,7 @@
       ],
       "pos" : [
         1150,
-        800,
+        900,
         0
       ],
       "out" : 1
@@ -126,7 +126,7 @@
       ],
       "pos" : [
         1500,
-        800,
+        900,
         0
       ],
       "out" : 1
