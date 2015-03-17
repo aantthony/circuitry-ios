@@ -174,7 +174,7 @@
     {
       "_id" : "54d725e3c81dba47610041b2",
       "in" : 0,
-      "type" : "out",
+      "type" : "light",
       "name" : "S",
       "outputs" : [
 
