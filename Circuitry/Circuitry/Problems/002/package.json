@@ -1,5 +1,5 @@
 {
-  "description": "In the previous problem, we wanted the output to be 1 (true) when the first and second input were true.\n\nUsing two AND gates, can you construct a circuit which gives 1 when the first, and second, and third inputs are all 1?",
+  "description": "In the previous problem, we wanted the output to be true when the first and second input were true.\n\nUsing two AND gates, can you construct a circuit which outputs true when the first, and second, and third inputs are all true?",
   "title": "Another AND Gate",
   "view": {
     "center": [65, 180, 0],

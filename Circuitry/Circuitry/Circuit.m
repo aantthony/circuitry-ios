@@ -37,6 +37,7 @@ static NSDictionary *processesById;
                       @"button": valueForGate(&CircuitProcessButton),
                       @"pbtn": valueForGate(&CircuitProcessPushButton),
                       @"light": valueForGate(&CircuitProcessLight),
+                      @"lightg": valueForGate(&CircuitProcessLightGreen),
                       @"or": valueForGate(&CircuitProcessOr),
                       @"not": valueForGate(&CircuitProcessNot),
                       @"nor": valueForGate(&CircuitProcessNor),

@@ -58,6 +58,7 @@ CircuitProcess CircuitProcessOut;
 CircuitProcess CircuitProcessButton;
 CircuitProcess CircuitProcessPushButton;
 CircuitProcess CircuitProcessLight;
+CircuitProcess CircuitProcessLightGreen;
 CircuitProcess CircuitProcessOr;
 CircuitProcess CircuitProcessNot; 
 CircuitProcess CircuitProcessNor;  

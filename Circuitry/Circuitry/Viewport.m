@@ -46,6 +46,7 @@ static SpriteTexturePos gateBackgroundMiddle;
 static SpriteTexturePos gateBackgroundBottom;
 
 static SpriteTexturePos ledOn;
+static SpriteTexturePos ledOnGreen;
 static SpriteTexturePos ledOff;
 
 static SpriteTexturePos symbolOR;
@@ -149,6 +150,7 @@ static GLfloat radius;
     switchPressed = [atlas positionForSprite:@"switch-press"];
     
     ledOn = [atlas positionForSprite:@"led-on"];
+    ledOnGreen = [atlas positionForSprite:@"led-on-green"];
     ledOff = [atlas positionForSprite:@"led-off"];
     
     // Letters
@@ -487,7 +489,12 @@ BOOL expandDrawGate(CircuitObject *object) {
             symbol->x = pos.x + 70.0;
             symbol->y = pos.y - 85.0;
             symbol->tex = object->in ? ledOn : ledOff;
-        } else {            
+        } else if (object->type == &CircuitProcessLightGreen) {
+            BatchedSpriteInstance *symbol = &_instances[i++];
+            symbol->x = pos.x + 70.0;
+            symbol->y = pos.y - 85.0;
+            symbol->tex = object->in ? ledOnGreen : ledOff;
+        } else {
             BatchedSpriteInstance *symbol = &_instances[i++];
             symbol->x = pos.x + 9.0;
             symbol->y = pos.y + 0.0;

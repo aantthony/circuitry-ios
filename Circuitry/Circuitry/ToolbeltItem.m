@@ -30,6 +30,7 @@
              [[ToolbeltItem alloc] initWithType:@"button"  level:0  image:[UIImage imageNamed:@"switch"]   name:@"Button" fullName:@"Switch Button" subtitle:@"Toggle button"],
       // [[ToolbeltItem alloc] initWithType:@"pbtn"    image:[UIImage imageNamed:@"pushbutton"] name:@"Button" subtitle:@"Push button"],
              [[ToolbeltItem alloc] initWithType:@"light"   level:0  image:[UIImage imageNamed:@"led"]      name:@"Light" fullName:@"Light" subtitle:@"Light Emitting Diode"],
+             [[ToolbeltItem alloc] initWithType:@"lightg"  level:0  image:[UIImage imageNamed:@"led"]      name:@"Light (Green)" fullName:@"Green Light" subtitle:@"Light Emitting Diode"],
              [[ToolbeltItem alloc] initWithType:@"or"      level:3  image:[UIImage imageNamed:@"or"]       name:@"OR" fullName: @"OR Gate" subtitle:@"2 in, 1 out"],
              [[ToolbeltItem alloc] initWithType:@"and"     level:2  image:[UIImage imageNamed:@"and"]      name:@"AND" fullName:@"AND Gate" subtitle:@"2 in, 1 out"],
              [[ToolbeltItem alloc] initWithType:@"not"     level:8  image:[UIImage imageNamed:@"not"]      name:@"NOT" fullName: @"NOT Gate" subtitle:@"1 in, 1 out"],

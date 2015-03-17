@@ -66,6 +66,7 @@ CircuitProcess CircuitProcessOut     = {"out",      1,  0, NULL };
 CircuitProcess CircuitProcessButton  = {"button",   0,  1, NULL };
 CircuitProcess CircuitProcessPushButton = {"pbtn",  0,  1, NULL };
 CircuitProcess CircuitProcessLight   = {"light",    1,  0, NULL };
+CircuitProcess CircuitProcessLightGreen = {"lightg",1,  0, NULL };
 CircuitProcess CircuitProcessOr      = {"or",       2,  1, OR };
 CircuitProcess CircuitProcessNot     = {"not",      1,  1, NOT };
 CircuitProcess CircuitProcessNor     = {"nor",      2,  1, NOR };
