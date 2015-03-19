@@ -83,6 +83,7 @@
 		92AFE901197B90AC003680B0 /* CircuitTestResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 92AFE900197B90AC003680B0 /* CircuitTestResult.m */; };
 		92B269AF1886B175007E9866 /* ImageAtlas.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B269AE1886B175007E9866 /* ImageAtlas.m */; };
 		92C62F4C197BFCD600A3E939 /* Problems in Resources */ = {isa = PBXBuildFile; fileRef = 92C62F4B197BFCD500A3E939 /* Problems */; };
+		92C74CE01ABAE45A0010CF96 /* QTouchposeApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 92C74CDF1ABAE45A0010CF96 /* QTouchposeApplication.m */; };
 		92CD47091AAF10D8001616F9 /* ObjectUnlockedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92CD47081AAF10D8001616F9 /* ObjectUnlockedViewController.m */; };
 		92D90E321837807000387FAC /* Sprite.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E311837807000387FAC /* Sprite.m */; };
 		92D90E381837836500387FAC /* ShaderEffect.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D90E371837836500387FAC /* ShaderEffect.m */; };
@@ -252,6 +253,8 @@
 		92B269AD1886B175007E9866 /* ImageAtlas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAtlas.h; sourceTree = "<group>"; };
 		92B269AE1886B175007E9866 /* ImageAtlas.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAtlas.m; sourceTree = "<group>"; };
 		92C62F4B197BFCD500A3E939 /* Problems */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Problems; path = Circuitry/Problems; sourceTree = "<group>"; };
+		92C74CDE1ABAE45A0010CF96 /* QTouchposeApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QTouchposeApplication.h; path = Circuitry/Development/QTouchposeApplication.h; sourceTree = "<group>"; };
+		92C74CDF1ABAE45A0010CF96 /* QTouchposeApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QTouchposeApplication.m; path = Circuitry/Development/QTouchposeApplication.m; sourceTree = "<group>"; };
 		92CD47071AAF10D8001616F9 /* ObjectUnlockedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ObjectUnlockedViewController.h; path = Circuitry/ObjectUnlockedViewController.h; sourceTree = "<group>"; };
 		92CD47081AAF10D8001616F9 /* ObjectUnlockedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ObjectUnlockedViewController.m; path = Circuitry/ObjectUnlockedViewController.m; sourceTree = "<group>"; };
 		92D90E301837807000387FAC /* Sprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sprite.h; sourceTree = "<group>"; };
@@ -340,6 +343,7 @@
 		9204C367182E2F5C006A008D = {
 			isa = PBXGroup;
 			children = (
+				92C74CDD1ABAE4370010CF96 /* Development Tools */,
 				92C62F4B197BFCD500A3E939 /* Problems */,
 				92FC7FA018A601A200EA329A /* UIKitCategoryAdditions */,
 				92A28A59187428A600F0D934 /* Circuits */,
@@ -776,6 +780,15 @@
 			name = Circuits;
 			sourceTree = "<group>";
 		};
+		92C74CDD1ABAE4370010CF96 /* Development Tools */ = {
+			isa = PBXGroup;
+			children = (
+				92C74CDE1ABAE45A0010CF96 /* QTouchposeApplication.h */,
+				92C74CDF1ABAE45A0010CF96 /* QTouchposeApplication.m */,
+			);
+			name = "Development Tools";
+			sourceTree = "<group>";
+		};
 		92FA32BC19B2C00C0046A7FE /* Images */ = {
 			isa = PBXGroup;
 			children = (
@@ -1003,6 +1016,7 @@
 				9218F7381876978A00742F99 /* LinkBezier.m in Sources */,
 				92A861B2189E402900F64673 /* MongoID.m in Sources */,
 				9253C409188545EC00D2509C /* CreateGatePanGestureRecognizer.m in Sources */,
+				92C74CE01ABAE45A0010CF96 /* QTouchposeApplication.m in Sources */,
 				92771CF61A44FBF3000931D9 /* Analytics.m in Sources */,
 				92191A101A29E26C009594B1 /* ProblemSetProblemInfo.m in Sources */,
 				926099E0196917CF0048F2BD /* CircuitDocumentViewController.m in Sources */,

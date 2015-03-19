@@ -1,7 +1,7 @@
 #import "AppDelegate.h"
 #import "Analytics.h"
 #import "StyleManager.h"
-
+#import "QTouchposeApplication.h"
 @interface AppDelegate()
 @end
 @implementation AppDelegate
@@ -10,6 +10,10 @@
     
     [Analytics.shared    application:application didFinishLaunchingWithOptions:launchOptions];
     [StyleManager.shared application:application didFinishLaunchingWithOptions:launchOptions];
+    
+    QTouchposeApplication *app = (QTouchposeApplication *)[UIApplication sharedApplication];
+    app.alwaysShowTouches = YES;
+    app.touchColor = [UIColor whiteColor];
     
     return YES;
 }
