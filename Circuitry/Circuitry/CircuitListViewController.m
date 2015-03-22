@@ -282,6 +282,7 @@
     if (sender.state == UIGestureRecognizerStateBegan) {
         if (!_displayingProblems) {
             _actionSheetIndexPath = [self.collectionView indexPathForItemAtPoint: [sender locationInView:self.collectionView]];
+            if (_actionSheetIndexPath == nil) return;
             CircuitCollectionViewCell *cell = (CircuitCollectionViewCell *) [self.collectionView cellForItemAtIndexPath:_actionSheetIndexPath];
             UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:cell.textLabel.text delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete" otherButtonTitles:@"Share", nil];
             CGRect rect = [self.view convertRect:cell.imageView.frame fromView:cell];
