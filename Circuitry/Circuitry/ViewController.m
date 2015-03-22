@@ -789,7 +789,6 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 
 - (IBAction)handleDragGateGesture:(UIPanGestureRecognizer *)sender {
     if (!_beginLongPressGestureObject) {
-        NSLog(@"wtf %@", sender);
         return;
     }
     

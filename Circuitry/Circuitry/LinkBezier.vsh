@@ -58,10 +58,12 @@ void main()
     lowp float displacement = 2.0 * rem - 1.0;
     v = rem;
     float t = (position - rem) / NVERTSM2;
-    vec2 z = bezier(A, vec2(A.x + dx, A.y), vec2(A.x + dx, B.y), B, t);
+    vec2 pt1 = vec2(A.x + dx, A.y);
+    vec2 pt2 = vec2(A.x + dx, B.y);
+    vec2 z = bezier(A, pt1, pt2, B, t);
     float radius = 8.0;
 //    if (active) radius += 2.0 * sin(30.0 * time - 0.05 * length(z - A));
-    vec2 dz = radius * displacement * normalize(z - bezier(A, vec2(A.x + dx, A.y), vec2(A.x + dx, B.y), B, t - 1.0 / NVERTSM2));
+    vec2 dz = radius * displacement * normalize(z - bezier(A, pt1, pt2, B, t - 1.0 / NVERTSM2));
     
     gl_Position = modelViewProjectionMatrix * vec4(z + vec2(dz.y, -dz.x), 0.0, 1.0);
 }

@@ -58,43 +58,35 @@
     },
     {
       "path": "016",
-      "title": "Add 2 bit numbers",
-      "hidden": true
+      "title": "Add 2 bit numbers"
     },
     {
       "path": "017",
-      "title": "Add two 2-bit numbers using FAs",
-      "hidden": true
+      "title": "Add two 2-bit numbers using FAs"
     },
     {
       "path": "018",
-      "title": "Add two 4-bit numbers using FAs",
-      "hidden": true
+      "title": "Add two 4-bit numbers using FAs"
     },
     {
       "path": "019",
-      "title": "Adding signed numbers",
-      "hidden": true
+      "title": "Adding signed numbers"
     },
     {
       "path": "020",
-      "title": "Double Binary",
-      "hidden": true
+      "title": "Double Binary"
     },
     {
       "path": "021",
-      "title": "Subtraction",
-      "hidden": true
+      "title": "Subtraction"
     },
     {
       "path": "022",
-      "title": "Flip Flop",
-      "hidden": true
+      "title": "Flip Flop"
     },
     {
       "path": "023",
-      "title": "Binary Counter",
-      "hidden": true
+      "title": "Binary Counter"
     }
   ]
 }
