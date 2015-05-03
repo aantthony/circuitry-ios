@@ -1,8 +1,10 @@
-circuitry
+Circuitry
 =========
 
-Ensure node is installed (should have `/usr/local/bin/node`, `/usr/local/bin/npm`).
+Install [Node.js](https://nodejs.org).
 
 Run `brew install ImageMagick`
-Run `cd Circuitry && pod install`
-Open `Circuitry/Circuitry.xcworkspace`
+
+Run `pod install`
+
+Open `Circuitry.xcworkspace`
