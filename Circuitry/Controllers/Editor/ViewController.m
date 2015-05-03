@@ -3,7 +3,6 @@
 #import "Viewport.h"
 #import "CircuitDocument.h"
 #import "Sprite.h"
-#import "HUD.h"
 #import "DragGateGestureRecognizer.h"
 #import "CreateGatePanGestureRecognizer.h"
 #import "CreateLinkGestureRecognizer.h"
@@ -43,7 +42,6 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     
 }
 @property (nonatomic) NSArray *selectedObjects;
-@property (nonatomic) HUD *hud;
 @property (nonatomic) NSTimer *timer;
 @property (nonatomic) BOOL canPan;
 @property (nonatomic) BOOL canZoom;
@@ -237,8 +235,6 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     [self checkError];
     
     _viewport = [[Viewport alloc] initWithContext:self.context atlas: self.atlas];
-
-    _hud = [[HUD alloc] initWithAtlas:self.atlas];
     
     [self checkError];
     
@@ -457,7 +453,6 @@ static BOOL animateGateToLockedPosition(CircuitObject *object, float x, float y)
 //    NSLog(@"%d, %f", circuitChanges, dt);
     changes += circuitChanges;
     changes += [_viewport update: dt];
-    changes += [_hud update: dt];
 //    NSLog(@"Changed!");
     if (animatingPan || isAnimatingScaleToSnap || changes) {
         self.paused = NO;
@@ -537,7 +532,6 @@ static CGFloat gridSize = 33.0;
     [_bg drawWithSize:GLKVector2Make(rect.size.width, rect.size.height) withTransform:_modelViewProjectionMatrix];
     [self checkError];
     [_viewport drawWithStack:_stack];
-    [_hud drawWithStack:_stack];
     [self checkError];
 }
 
