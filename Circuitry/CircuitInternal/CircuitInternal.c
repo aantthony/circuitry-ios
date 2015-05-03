@@ -157,8 +157,10 @@ static void *reallocObjects(CircuitInternal *c) {
 
 static void reallocBuffer(CircuitInternal * c) {
     c->needsUpdate_size *= 2;
-    c->needsUpdate  = realloc(&c->needsUpdate,  sizeof(void *) * c->needsUpdate_size);
-    c->needsUpdate2 = realloc(&c->needsUpdate2, sizeof(void *) * c->needsUpdate_size);
+    void *a = (void *)realloc(&c->needsUpdate,  sizeof(void *) * c->needsUpdate_size);
+    void *b = realloc(&c->needsUpdate2, sizeof(void *) * c->needsUpdate_size);
+    c->needsUpdate  = a;
+    c->needsUpdate2 = b;
 }
 
 

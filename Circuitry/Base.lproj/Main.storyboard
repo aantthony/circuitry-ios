@@ -388,7 +388,7 @@ The linking wires in Circuitry allow these signals to be passed on from the outp
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" editable="NO" text="This box will be automatically replaced with the contents of Terms.rtf." translatesAutoresizingMaskIntoConstraints="NO" id="YRN-8Z-2sB">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" editable="NO" text="This box will be automatically replaced with the contents of Terms.rtf." translatesAutoresizingMaskIntoConstraints="NO" id="YRN-8Z-2sB">
                                 <rect key="frame" x="4" y="44" width="760" height="980"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -810,10 +810,6 @@ The linking wires in Circuitry allow these signals to be passed on from the outp
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="igf-U8-vFS">
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <color key="barTintColor" red="0.070588235294117646" green="0.14901960784313725" blue="0.22352941176470589" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <textAttributes key="titleTextAttributes">
-                            <color key="textColor" white="0.7114608864379085" alpha="1" colorSpace="calibratedWhite"/>
-                        </textAttributes>
                     </navigationBar>
                     <connections>
                         <segue destination="bMV-Gg-1ab" kind="relationship" relationship="rootViewController" id="krF-hO-kAj"/>
@@ -944,11 +940,7 @@ This logic diagram describes the rule:
                                 <rect key="frame" x="0.0" y="0.0" width="768" height="258"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gcl-aN-Xel">
-                                        <rect key="frame" x="195" y="115" width="378" height="36"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="378" id="aKC-eG-1y7"/>
-                                            <constraint firstAttribute="height" constant="36" id="tHx-3Z-2fW"/>
-                                        </constraints>
+                                        <rect key="frame" x="0.0" y="0.0" width="768" height="258"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="23"/>
                                         <state key="normal" title="Continue to next problem">
                                             <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -973,10 +965,12 @@ This logic diagram describes the rule:
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="gcl-aN-Xel" secondAttribute="trailing" id="4vF-8c-n2e"/>
                                     <constraint firstAttribute="bottom" secondItem="Ywh-1w-sac" secondAttribute="bottom" constant="50" id="9Rc-eb-hdT"/>
+                                    <constraint firstAttribute="bottom" secondItem="gcl-aN-Xel" secondAttribute="bottom" id="Fz8-sP-WqV"/>
                                     <constraint firstItem="Ywh-1w-sac" firstAttribute="leading" secondItem="31s-zx-ivU" secondAttribute="leading" id="Kpf-cN-atW"/>
-                                    <constraint firstItem="gcl-aN-Xel" firstAttribute="top" secondItem="UDI-Xp-EuQ" secondAttribute="bottom" constant="16" id="Wiw-bW-bR1"/>
-                                    <constraint firstAttribute="centerX" secondItem="gcl-aN-Xel" secondAttribute="centerX" id="f88-cz-53b"/>
+                                    <constraint firstItem="gcl-aN-Xel" firstAttribute="top" secondItem="31s-zx-ivU" secondAttribute="top" id="MhR-Cd-uov"/>
+                                    <constraint firstItem="gcl-aN-Xel" firstAttribute="leading" secondItem="31s-zx-ivU" secondAttribute="leading" id="dKJ-sz-cjL"/>
                                     <constraint firstItem="UDI-Xp-EuQ" firstAttribute="top" secondItem="31s-zx-ivU" secondAttribute="top" constant="72" id="k4X-rA-bt5"/>
                                     <constraint firstAttribute="centerX" secondItem="UDI-Xp-EuQ" secondAttribute="centerX" id="qbu-NC-h7B"/>
                                     <constraint firstAttribute="trailing" secondItem="Ywh-1w-sac" secondAttribute="trailing" id="xPb-Mu-Bdf"/>
@@ -1014,11 +1008,12 @@ This logic diagram describes the rule:
             </objects>
             <point key="canvasLocation" x="1647" y="1266"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Navigation View Controller-->
         <scene sceneID="kGb-hu-6hy">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="fgr-9P-fIo" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="fgr-9P-fIo" customClass="NavigationViewController" sceneMemberID="viewController">
                     <toolbarItems/>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="KhL-3u-8ra">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -1056,6 +1051,6 @@ This logic diagram describes the rule:
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="gnN-9s-ocl"/>
+        <segue reference="l2a-A5-LGd"/>
     </inferredMetricsTieBreakers>
 </document>

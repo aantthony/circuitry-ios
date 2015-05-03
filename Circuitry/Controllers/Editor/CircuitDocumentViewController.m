@@ -54,7 +54,7 @@
 }
 
 - (UIImage *) snapshot {
-    return _glkViewController.snapshot;
+    return [_glkViewController snapshot];
 }
 
 - (UIView *) titleView {
@@ -64,7 +64,7 @@
         [label addGestureRecognizer:tap];
         label.textAlignment = NSTextAlignmentCenter;
         label.userInteractionEnabled = YES;
-        label.font = [UIFont systemFontOfSize:17.0 weight:400.0];
+        label.font = [UIFont systemFontOfSize:17.0];
         _titleView = label;
     }
     

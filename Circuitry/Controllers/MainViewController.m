@@ -14,11 +14,6 @@
 
 @implementation MainViewController
 
-- (UIStatusBarStyle) preferredStatusBarStyle {
-//    return UIStatusBarStyleDefault;
-    return UIStatusBarStyleLightContent;
-}
-
 static NSString *kDefaultsOpenedBefore = @"openedBefore";
 
 - (void) viewDidAppear:(BOOL)animated {

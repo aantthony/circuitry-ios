@@ -27,11 +27,9 @@
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
-    return YES;
     UINavigationBar *prototype = [UINavigationBar appearance];
     prototype.tintColor = [UIColor whiteColor];
-    prototype.barTintColor = [StyleManager rgb:0x4A88C4];
+    prototype.barTintColor = [StyleManager rgb:0x122639];
     prototype.titleTextAttributes = @{
         NSForegroundColorAttributeName:[UIColor whiteColor]
     };

@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Circuitry. All rights reserved.
 //
 
-@interface MainViewController : UINavigationController
+#import "NavigationViewController.h"
+
+@interface MainViewController : NavigationViewController
 
 @end

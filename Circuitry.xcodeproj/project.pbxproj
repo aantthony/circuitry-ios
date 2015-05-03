@@ -97,6 +97,7 @@
 		9235853B1AF602DF004DCD0F /* TouchHighlight.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 923585151AF602DF004DCD0F /* TouchHighlight.vsh */; };
 		9235853C1AF602DF004DCD0F /* Viewport.m in Sources */ = {isa = PBXBuildFile; fileRef = 923585181AF602DF004DCD0F /* Viewport.m */; };
 		923585721AF60311004DCD0F /* Problems in Resources */ = {isa = PBXBuildFile; fileRef = 923585711AF60311004DCD0F /* Problems */; };
+		923585751AF65BB2004DCD0F /* NavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 923585741AF65BB2004DCD0F /* NavigationViewController.m */; };
 		92AA6323189E73A000A135F3 /* MongoIDTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 92AA6322189E73A000A135F3 /* MongoIDTest.m */; };
 		92DD078A18AFC10D00FB684A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92DD078918AFC10D00FB684A /* SystemConfiguration.framework */; };
 		92DD078C18AFC11A00FB684A /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92DD078B18AFC11A00FB684A /* AdSupport.framework */; };
@@ -276,6 +277,8 @@
 		923585171AF602DF004DCD0F /* Viewport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Viewport.h; sourceTree = "<group>"; };
 		923585181AF602DF004DCD0F /* Viewport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Viewport.m; sourceTree = "<group>"; };
 		923585711AF60311004DCD0F /* Problems */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Problems; sourceTree = "<group>"; };
+		923585731AF65BB2004DCD0F /* NavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationViewController.h; sourceTree = "<group>"; };
+		923585741AF65BB2004DCD0F /* NavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationViewController.m; sourceTree = "<group>"; };
 		927C76CA1A5BEF0B004F84ED /* Circuitry.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Circuitry.entitlements; sourceTree = "<group>"; };
 		9281540E1A5BED1E00C0CDF7 /* Pods.distribution.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Pods.distribution.xcconfig; path = "Pods/Target Support Files/Pods/Pods.distribution.xcconfig"; sourceTree = "<group>"; };
 		92AA6322189E73A000A135F3 /* MongoIDTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoIDTest.m; sourceTree = "<group>"; };
@@ -532,6 +535,8 @@
 			children = (
 				9235848E1AF602B1004DCD0F /* BoringInfoViewController.h */,
 				9235848F1AF602B1004DCD0F /* BoringInfoViewController.m */,
+				923585731AF65BB2004DCD0F /* NavigationViewController.h */,
+				923585741AF65BB2004DCD0F /* NavigationViewController.m */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -938,6 +943,7 @@
 				9204C384182E2F5C006A008D /* main.m in Sources */,
 				923584A81AF602B1004DCD0F /* TutorialPage2ViewController.m in Sources */,
 				9235846A1AF60276004DCD0F /* CircuitInternal.c in Sources */,
+				923585751AF65BB2004DCD0F /* NavigationViewController.m in Sources */,
 				923584A21AF602B1004DCD0F /* CircuitCollectionViewCell.m in Sources */,
 				9235851F1AF602DF004DCD0F /* CircuitTestResult.m in Sources */,
 				9235849B1AF602B1004DCD0F /* ObjectUnlockedViewController.m in Sources */,

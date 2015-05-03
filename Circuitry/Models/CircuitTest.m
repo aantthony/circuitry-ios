@@ -31,9 +31,10 @@
         CircuitObject *circuitObject = [obj pointerValue];
         if (circuitObject == NULL) {
             NSLog(@"Input Nodes: %@", _inputNodes);
-//            NSLog(@"idx: %d", idx);
+            [ids addObject:[NSNull null]];
+        } else {
+            [ids addObject: [MongoID stringWithId:circuitObject->id]];
         }
-        [ids addObject: [MongoID stringWithId:circuitObject->id]];
     }];
     return ids;
 }

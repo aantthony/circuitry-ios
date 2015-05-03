@@ -238,7 +238,6 @@
 }
 
 - (void) setDisplayingProblems:(BOOL)displayingProblems {
-    if (_displayingProblems == displayingProblems) return;
     _displayingProblems = displayingProblems;
     if (_displayingProblems) {
         _segmentControl.selectedSegmentIndex = 0;
@@ -284,7 +283,7 @@
             _actionSheetIndexPath = [self.collectionView indexPathForItemAtPoint: [sender locationInView:self.collectionView]];
             if (_actionSheetIndexPath == nil) return;
             CircuitCollectionViewCell *cell = (CircuitCollectionViewCell *) [self.collectionView cellForItemAtIndexPath:_actionSheetIndexPath];
-            UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:cell.textLabel.text delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete" otherButtonTitles:@"Share", nil];
+            UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:cell.textLabel.text delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete" otherButtonTitles: nil];
             CGRect rect = [self.view convertRect:cell.imageView.frame fromView:cell];
             [sheet showFromRect:rect inView:self.view animated:YES];
         }
@@ -294,9 +293,24 @@
 #pragma mark -
 #pragma mark UIActionSheetDelegate Methods
 
+- (void) actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    if (actionSheet.tag == 40) {
+        if (buttonIndex == 0) {
+            [self performSegueWithIdentifier:@"ShowTutorialAgain" sender:actionSheet];
+        } else if (buttonIndex == 1) {
+            [self showSendFeedback];
+        } else if (buttonIndex == 2) {
+            [self performSegueWithIdentifier:@"ShowBoringInfo" sender:actionSheet];
+        }
+        return;
+    }
+}
 
 // Called when a button is clicked. The view will be automatically dismissed after this call returns
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (actionSheet.tag == 40) {
+        return;
+    }
     if (buttonIndex == 0) {
         // delete
         UIAlertView *alert = [UIAlertView alertViewWithTitle:@"Delete Circuit" message:@"Are you sure you want to delete this circuit?" cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Delete"] onDismiss:^(int buttonIndex) {
@@ -366,48 +380,10 @@
 }
 
 - (IBAction)optionsPanel:(UIBarButtonItem *)sender {
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-    
-    __weak CircuitListViewController *weakSelf = self;
-    UIAlertAction *aboutAction = [UIAlertAction
-                                  actionWithTitle:@"About Circuitry"
-                                  style:UIAlertActionStyleDefault
-                                  handler:^(UIAlertAction *action)
-                                  {
-                                      if (!weakSelf) return;
-                                      [weakSelf performSegueWithIdentifier:@"ShowTutorialAgain" sender:weakSelf];
-                                  }];
-    
-    [alertController addAction:aboutAction];
-    
-    
-    UIAlertAction *feedbackAction = [UIAlertAction
-                                       actionWithTitle:@"Send Feedback"
-                                       style:UIAlertActionStyleDefault
-                                       handler:^(UIAlertAction *action)
-                                       {
-                                           if (!weakSelf) return;
-                                           
-                                           [weakSelf showSendFeedback];
-                                           
-                                       }];
-    
-    [alertController addAction:feedbackAction];
-    
-    UIAlertAction *boringInfoAction = [UIAlertAction
-                                  actionWithTitle:@"Legal & Attributions"
-                                  style:UIAlertActionStyleDefault
-                                  handler:^(UIAlertAction *action)
-                                  {
-                                      if (!weakSelf) return;
-                                      [weakSelf performSegueWithIdentifier:@"ShowBoringInfo" sender:weakSelf];
-                                  }];
-    
-    [alertController addAction:boringInfoAction];
-    
-    [alertController.popoverPresentationController setPermittedArrowDirections:UIPopoverArrowDirectionUp];
-    UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:alertController];
-    [popoverController presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+        
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"About Circuitry", @"Send Feedback", @"Legal & Attributions", nil];
+    actionSheet.tag = 40;
+    [actionSheet showFromBarButtonItem:sender animated:YES];
     
 }
 
@@ -485,10 +461,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    _displayingProblems = YES;
-    self.navigationItem.leftBarButtonItem = nil;
     self.transitioningDelegate = self;
     self.collectionView.backgroundView = self.backgroundImageView;
+    
+    self.displayingProblems = YES;
     
     _canHandleRoundedViews = YES;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
