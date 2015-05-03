@@ -883,7 +883,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     GLKVector3 curPos = [_viewport unproject: PX(self.view.contentScaleFactor, [sender locationOfTouch:0 inView:self.view])];
 
     CircuitObject *target;
-    if ((target = [_viewport findCircuitObjectAtPosition:curPos])) {
+    if ((target = [_viewport findCircuitObjectNearPosition:curPos])) {
         
         GLKVector3 offset = GLKVector3Subtract(curPos, *(GLKVector3 *)&target->pos);
         int targetIndex = -1;
