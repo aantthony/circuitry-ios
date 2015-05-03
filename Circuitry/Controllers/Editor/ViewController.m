@@ -613,7 +613,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         
         CircuitObject *o;
         // find the object under the touch:
-        if ((o = [_viewport findCircuitObjectAtPosition:position])) {
+        if ((o = [_viewport findCircuitObjectNearPosition:position])) {
             // calculate the offset (which will be used to determine which output to edit)
             GLKVector3 offset = GLKVector3Subtract(position, *(GLKVector3 *)&o->pos);
             if (offset.x < 150.0) {

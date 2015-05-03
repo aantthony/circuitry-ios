@@ -347,6 +347,28 @@ CGSize sizeOfObject(CircuitObject *object) {
     
     return o;
 }
+- (CircuitObject*) findCircuitObjectNearPosition: (GLKVector3) pos {
+    CircuitObject *a = [self findCircuitObjectAtPosition:pos];
+    if (a) return a;
+    __block CircuitObject *o = NULL;
+    float v = 100;
+    Circuit *_circuit = self.document.circuit;
+    [_circuit enumerateObjectsInReverseUsingBlock:^(CircuitObject *object, BOOL *stop) {
+        
+        GLKVector3 oPos = *(GLKVector3 *)&object->pos;
+        
+        CGSize size = sizeOfObject(object);
+        if (pos.x + v > oPos.x && pos.y + v > oPos.y) {
+            if (pos.x - v < oPos.x + size.width && pos.y - v < oPos.y + size.height) { 
+                o = object;
+                *stop = YES;
+            }
+        }
+    }];
+    
+    return o;
+}
+
 - (CircuitObject*) findCircuitObjectAtScreenPosition: (CGPoint) screenPos {
     return [self findCircuitObjectAtPosition:[self unproject:screenPos]];
 }
