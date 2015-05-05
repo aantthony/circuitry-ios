@@ -113,7 +113,7 @@
     }
     field.clearButtonMode = UITextFieldViewModeWhileEditing;
     field.delegate = self;
-    field.font = [UIFont systemFontOfSize:17.0 weight:400.0];
+    field.font = [UIFont systemFontOfSize:17.0];
     field.returnKeyType = UIReturnKeyDone;
     self.navigationItem.titleView = field;
     [self.view addGestureRecognizer:self.tapToDismissKeyboard];
@@ -472,6 +472,7 @@ static CGPoint hvrDragHereRight = {88,428};
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+    [self didWin];
 }
 
 - (void) viewDidAppear:(BOOL)animated {
@@ -623,34 +624,37 @@ static CGPoint hvrDragHereRight = {88,428};
     }
 }
 
+- (void) didWin {
+    if (self.isTutorial) {
+        [self finishTutorial];
+    }
+    BOOL wasAlreadyCompleted = self.document.problemInfo.isCompleted;
+    
+    CircuitDocument *doc = [self.delegate circuitDocumentViewController:self nextDocumentAfterDocument:self.document];
+    self.nextDocument = doc;
+    
+    [self setProblemInfoMinimised:NO animated:YES];
+    
+    if (!wasAlreadyCompleted) {
+        NSArray *unlocked = [ToolbeltItem unlockedGatesForProblemSetProblemInfo: self.document.problemInfo.problemIndex];
+        if (unlocked.count) {
+            _showingUnlockedToolbeltItems = [unlocked mutableCopy];
+            [self showNextUnlockedItem];
+        }
+    }
+    
+    if (self.nextDocument) {
+        [_problemInfoViewController showProgressToNextLevelScreen];
+    } else {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    // Success!
+}
+
 - (void) testResultViewController:(TestResultViewController *)viewController didFinish:(id)sender {
     [viewController dismissViewControllerAnimated:YES completion:nil];
     if (self.testResult.passed) {
-        if (self.isTutorial) {
-            [self finishTutorial];
-        }
-        
-        BOOL wasAlreadyCompleted = self.document.problemInfo.isCompleted;
-        
-        CircuitDocument *doc = [self.delegate circuitDocumentViewController:self nextDocumentAfterDocument:self.document];
-        self.nextDocument = doc;
-        
-        [self setProblemInfoMinimised:NO animated:YES];
-        
-        if (!wasAlreadyCompleted) {
-            NSArray *unlocked = [ToolbeltItem unlockedGatesForProblemSetProblemInfo: self.document.problemInfo.problemIndex];
-            if (unlocked.count) {
-                _showingUnlockedToolbeltItems = [unlocked mutableCopy];
-                [self showNextUnlockedItem];
-            }
-        }
-        
-        if (self.nextDocument) {
-            [_problemInfoViewController showProgressToNextLevelScreen];
-        } else {
-            [self.navigationController popViewControllerAnimated:YES];
-        }
-        // Success!
+        [self didWin];
     }
 }
 
@@ -686,6 +690,7 @@ static CGPoint hvrDragHereRight = {88,428};
     NSParameterAssert(self.nextDocument.circuit);
     if (!self.nextDocument.circuit) {
         return;
+        
     }
     self.document = self.nextDocument;
     

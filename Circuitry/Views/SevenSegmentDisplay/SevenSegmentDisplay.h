@@ -13,4 +13,6 @@
 - (SevenSegmentDisplay *) initWithTexture: (GLKTextureInfo *) texture component:(SpriteTexturePos) source;
 
 - (void) drawAt: (GLKVector3) position withInput:(int) input withTransform:(GLKMatrix4) viewProjectionMatrix;
+- (void) drawCompactAt: (GLKVector3) position withBinaryInput:(int) input withTransform:(GLKMatrix4) viewProjectionMatrix;
+
 @end

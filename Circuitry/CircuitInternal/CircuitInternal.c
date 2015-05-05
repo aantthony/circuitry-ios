@@ -83,6 +83,7 @@ CircuitProcess CircuitProcessAdd4    = {"add4",     8,  5, ADD4 };
 CircuitProcess CircuitProcessMult4   = {"mult4",    8,  4, MULT4 };
 CircuitProcess CircuitProcessBin7Seg = {"bin7seg",  4,  7, BIN7SEG };
 CircuitProcess CircuitProcess7Seg    = {"7seg",     7,  0, NULL };
+CircuitProcess CircuitProcess7SegBin = {"7segbin",4,  0, NULL };
 CircuitProcess CircuitProcessClock   = {"clock",    0,  1, NULL };
 
 CircuitObject *CircuitObjectFindById(CircuitInternal *c, ObjectID id) {

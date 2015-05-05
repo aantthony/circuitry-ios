@@ -75,6 +75,7 @@ CircuitProcess CircuitProcessAdd4;
 CircuitProcess CircuitProcessMult4;
 CircuitProcess CircuitProcessBin7Seg;
 CircuitProcess CircuitProcess7Seg;
+CircuitProcess CircuitProcess7SegBin;
 CircuitProcess CircuitProcessClock;
 
 

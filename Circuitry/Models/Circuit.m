@@ -15,7 +15,6 @@ static NSValue *valueForGate(CircuitProcess *process) {
     return [NSValue valueWithPointer:process];
 }
 
-static NSDictionary *processesById;
 
 - (id) init {
     if ((self = [super init])){
@@ -30,38 +29,45 @@ static NSDictionary *processesById;
     CircuitDestroy(internal);
 }
 
-+ (void) initialize {
-    processesById = @{
-                      @"in": valueForGate(&CircuitProcessIn),
-                      @"out": valueForGate(&CircuitProcessOut),
-                      @"button": valueForGate(&CircuitProcessButton),
-                      @"pbtn": valueForGate(&CircuitProcessPushButton),
-                      @"light": valueForGate(&CircuitProcessLight),
-                      @"lightg": valueForGate(&CircuitProcessLightGreen),
-                      @"or": valueForGate(&CircuitProcessOr),
-                      @"not": valueForGate(&CircuitProcessNot),
-                      @"nor": valueForGate(&CircuitProcessNor),
-                      @"xor": valueForGate(&CircuitProcessXor),
-                      @"xnor": valueForGate(&CircuitProcessXnor),
-                      @"and": valueForGate(&CircuitProcessAnd),
-                      @"nand": valueForGate(&CircuitProcessNand),
-                      @"not": valueForGate(&CircuitProcessNot),
-                      @"ha": valueForGate(&CircuitProcessHA),
-                      @"fa": valueForGate(&CircuitProcessFA),
-                      @"bindec": valueForGate(&CircuitProcessBinDec),
-                      @"add4": valueForGate(&CircuitProcessAdd4),
-                      @"mult4": valueForGate(&CircuitProcessMult4),
-                      @"add8": valueForGate(&CircuitProcessAdd8),
-                      @"mult8": valueForGate(&CircuitProcessMult8),
-                      @"bin7seg": valueForGate(&CircuitProcessBin7Seg),
-                      @"7seg": valueForGate(&CircuitProcess7Seg),
-                      @"clock": valueForGate(&CircuitProcessClock)
-                      };
++ (NSDictionary *) processesById {
+    static NSDictionary *processesById = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        processesById = @{
+                          @"in": valueForGate(&CircuitProcessIn),
+                          @"out": valueForGate(&CircuitProcessOut),
+                          @"button": valueForGate(&CircuitProcessButton),
+                          @"pbtn": valueForGate(&CircuitProcessPushButton),
+                          @"light": valueForGate(&CircuitProcessLight),
+                          @"lightg": valueForGate(&CircuitProcessLightGreen),
+                          @"or": valueForGate(&CircuitProcessOr),
+                          @"not": valueForGate(&CircuitProcessNot),
+                          @"nor": valueForGate(&CircuitProcessNor),
+                          @"xor": valueForGate(&CircuitProcessXor),
+                          @"xnor": valueForGate(&CircuitProcessXnor),
+                          @"and": valueForGate(&CircuitProcessAnd),
+                          @"nand": valueForGate(&CircuitProcessNand),
+                          @"not": valueForGate(&CircuitProcessNot),
+                          @"ha": valueForGate(&CircuitProcessHA),
+                          @"fa": valueForGate(&CircuitProcessFA),
+                          @"bindec": valueForGate(&CircuitProcessBinDec),
+                          @"add4": valueForGate(&CircuitProcessAdd4),
+                          @"mult4": valueForGate(&CircuitProcessMult4),
+                          @"add8": valueForGate(&CircuitProcessAdd8),
+                          @"mult8": valueForGate(&CircuitProcessMult8),
+                          @"bin7seg": valueForGate(&CircuitProcessBin7Seg),
+                          @"7seg": valueForGate(&CircuitProcess7Seg),
+                          @"7segbin": valueForGate(&CircuitProcess7SegBin),
+                          @"clock": valueForGate(&CircuitProcessClock)
+                          };
+    });
+    return processesById;
+    
 }
 
 - (CircuitProcess *) getProcessById:(NSString *)processId {
     CircuitProcess *p;
-    id data = [processesById objectForKey:processId];
+    NSValue *data = Circuit.processesById[processId];
     NSParameterAssert(data);
     p = [data pointerValue];
     return p;

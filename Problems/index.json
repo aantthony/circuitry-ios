@@ -58,34 +58,36 @@
     },
     {
       "path": "016",
-      "title": "Add 2 bit numbers"
+      "title": "Add 2-bit numbers"
     },
     {
       "path": "017",
-      "title": "Add two 2-bit numbers using FAs"
+      "title": "Add 4-bit numbers"
     },
     {
       "path": "018",
-      "title": "Add two 4-bit numbers using FAs"
+      "title": "Multiply 2-bit numbers"
     },
     {
       "path": "019",
+      "title": "Multiply 4-bit numbers"
+    },
+    {
+      "hidden": true,
+      "path": "018",
       "title": "Adding signed numbers"
     },
     {
-      "path": "020",
-      "title": "Double Binary"
-    },
-    {
-      "path": "021",
+      "hidden": true,
+      "path": "019",
       "title": "Subtraction"
     },
     {
-      "path": "022",
+      "path": "020",
       "title": "Flip Flop"
     },
     {
-      "path": "023",
+      "path": "021",
       "title": "Binary Counter"
     }
   ]

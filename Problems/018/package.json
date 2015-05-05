@@ -1,0 +1,178 @@
+{
+  "_id" : "54d7228f004aab735e0041b9",
+  "description" : "There are two number inputs which are connected to number displays. Make the right number display equal to the product of the two numbers.",
+  "license" : "Copyright",
+  "view" : {
+    "center" : [
+      0,
+      0
+    ]
+  },
+  "name" : "",
+  "author" : "",
+  "meta" : {
+    "toolbelt" : ["button", "light", "and", "or", "xor", "nand", "nor", "not"]
+  },
+  "tests": [
+    {
+      "inputs": ["5548a0da4fa5dd1f220041ac", "5548a0db4fa5dd1f220041ad", "5548a0e14fa5dd1f220041ae", "5548a0e34fa5dd1f220041af"],
+      "outputs": ["5548a54e4fa5dda7260041a9"],
+      "spec": [
+
+        [[0,0,0,0],[0]],
+        [[0,0,0,1],[0]],
+        [[0,0,1,0],[0]],
+        [[0,0,1,1],[0]],
+
+        [[0,1,0,0],[0]],
+        [[0,1,0,1],[1]],
+        [[0,1,1,0],[2]],
+        [[0,1,1,1],[3]],
+
+
+        [[1,0,0,0],[0]],
+        [[1,0,0,1],[2]],
+        [[1,0,1,0],[4]],
+        [[1,0,1,1],[6]],
+
+        [[1,1,0,0],[0]],
+        [[1,1,0,1],[3]],
+        [[1,1,1,0],[6]],
+        [[1,1,1,1],[9]]
+
+      ]
+    }
+  ],
+  "version" : "1.0.0",
+  "engines" : {
+    "circuitry" : ">=0.0"
+  },
+  "title" : "Multiply 2-bit numbers",
+  "items": [
+    {
+      "_id" : "5548a0db4fa5dd1f220041ad",
+      "in" : 0,
+      "type" : "in",
+      "name" : "A",
+      "outputs" : [
+        [
+          [
+            "5548a2f64fa5dd92240041a8",
+            1
+          ]
+        ]
+      ],
+      "pos" : [
+        462,
+        561,
+        0
+      ],
+      "out" : 1
+    },
+    {
+      "_id" : "5548a0da4fa5dd1f220041ac",
+      "in" : 0,
+      "type" : "in",
+      "name" : "B",
+      "outputs" : [
+        [
+          [
+            "5548a2f64fa5dd92240041a8",
+            0
+          ]
+        ]
+      ],
+      "pos" : [
+        462,
+        726,
+        0
+      ],
+      "out" : 1
+    },
+    {
+      "_id" : "5548a0e34fa5dd1f220041af",
+      "in" : 0,
+      "type" : "in",
+      "name" : "C",
+      "outputs" : [
+        [
+          [
+            "5548a51e4fa5dda7260041a8",
+            1
+          ]
+        ]
+      ],
+      "pos" : [
+        462,
+        990,
+        0
+      ],
+      "out" : 1
+    },
+    {
+      "_id" : "5548a0e14fa5dd1f220041ae",
+      "in" : 0,
+      "type" : "in",
+      "name" : "D",
+      "outputs" : [
+        [
+          [
+            "5548a51e4fa5dda7260041a8",
+            0
+          ]
+        ]
+      ],
+      "pos" : [
+        462,
+        1155,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "5548a2f64fa5dd92240041a8",
+      "in" : 3,
+      "type" : "7segbin",
+      "name" : "",
+      "outputs" : [
+
+      ],
+      "pos" : [
+        462,
+        264,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "5548a51e4fa5dda7260041a8",
+      "in" : 1,
+      "type" : "7segbin",
+      "name" : "",
+      "outputs" : [
+
+      ],
+      "pos" : [
+        462,
+        1320,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "5548a54e4fa5dda7260041a9",
+      "in" : 0,
+      "type" : "7segbin",
+      "name" : "",
+      "outputs" : [
+
+      ],
+      "pos" : [
+        1019,
+        759,
+        0
+      ],
+      "out" : 0
+    }
+  ]
+}

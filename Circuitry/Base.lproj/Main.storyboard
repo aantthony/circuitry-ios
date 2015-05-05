@@ -250,7 +250,7 @@ The linking wires in Circuitry allow these signals to be passed on from the outp
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="OR Gate" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sbz-Vc-OTH">
-                                <rect key="frame" x="140" y="174" width="261" height="50"/>
+                                <rect key="frame" x="0.0" y="174" width="540" height="50"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="32"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
@@ -281,6 +281,10 @@ The linking wires in Circuitry allow these signals to be passed on from the outp
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="Kp1-Xv-GdI" appends="YES" id="ZNj-l3-QrM"/>
+                        </connections>
                     </view>
                     <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
@@ -289,6 +293,11 @@ The linking wires in Circuitry allow these signals to be passed on from the outp
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IEb-FT-Egf" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="down" id="Kp1-Xv-GdI">
+                    <connections>
+                        <action selector="didTapButton:" destination="f6h-qT-a2T" id="gGK-aQ-Gpr"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="3559" y="-617"/>
         </scene>

@@ -75,6 +75,7 @@ static SpriteTexturePos letterDOT;
 static SpriteTexturePos letter1;
 static SpriteTexturePos letter2;
 static SpriteTexturePos letter3;
+static SpriteTexturePos letter4;
 
 static SpriteTexturePos* letterTable[256];
 
@@ -167,6 +168,7 @@ static GLfloat radius;
     letter1 = [atlas positionForSprite:@"1@2x"];
     letter2 = [atlas positionForSprite:@"2@2x"];
     letter3 = [atlas positionForSprite:@"3@2x"];
+    letter4 = [atlas positionForSprite:@"4@2x"];
     letterDOT = [atlas positionForSprite:@"Dot@2x"];
     
     for(int i = 0; i <= 0xff; i++) {
@@ -186,6 +188,7 @@ static GLfloat radius;
     letterTable['1'] = &letter1;
     letterTable['2'] = &letter2;
     letterTable['3'] = &letter3;
+    letterTable['4'] = &letter4;
     letterTable['.'] = &letterDOT;
         
     for(int i = 0; i < _capacity; i++) {
@@ -351,7 +354,7 @@ CGSize sizeOfObject(CircuitObject *object) {
     CircuitObject *a = [self findCircuitObjectAtPosition:pos];
     if (a) return a;
     __block CircuitObject *o = NULL;
-    float v = 100;
+    float v = 60;
     Circuit *_circuit = self.document.circuit;
     [_circuit enumerateObjectsInReverseUsingBlock:^(CircuitObject *object, BOOL *stop) {
         
@@ -631,6 +634,9 @@ BOOL expandDrawGate(CircuitObject *object) {
         if (object->type == &CircuitProcess7Seg) {
             GLKVector3 pos = *(GLKVector3*) &object->pos;
             [sevenSegment drawAt:GLKVector3Make(pos.x + 40.0, pos.y + 40.0, 0.0) withInput:object->in withTransform:_viewProjectionMatrix];
+        } else if (object->type == &CircuitProcess7SegBin) {
+            GLKVector3 pos = *(GLKVector3*) &object->pos;
+            [sevenSegment drawCompactAt:GLKVector3Make(pos.x + 100.0, pos.y + 40.0, 0.0) withBinaryInput:object->in withTransform:_viewProjectionMatrix];
         }
     }];
     
