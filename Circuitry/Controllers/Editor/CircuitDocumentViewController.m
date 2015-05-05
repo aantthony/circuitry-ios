@@ -472,7 +472,7 @@ static CGPoint hvrDragHereRight = {88,428};
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    [self didWin];
+//    [self didWin];
 }
 
 - (void) viewDidAppear:(BOOL)animated {
