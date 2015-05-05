@@ -11,7 +11,7 @@
   "name" : "",
   "author" : "",
   "meta" : {
-    "toolbelt" : ["button", "light", "fa"]
+    "toolbelt" : ["button", "light", "and", "or", "xor", "nand", "nor", "not"]
   },
   "tests": [
     {

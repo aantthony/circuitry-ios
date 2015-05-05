@@ -70,6 +70,7 @@
     },
     {
       "path": "019",
+      "hidden": true,
       "title": "Multiply 4-bit numbers"
     },
     {
