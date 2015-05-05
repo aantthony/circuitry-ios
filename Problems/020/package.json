@@ -1,0 +1,125 @@
+{
+  "_id" : "54d7228f004aab735e0041b9",
+  "description" : "A Flip-Flop circuit, or a 'Latch' is a circuit that has two stable states and can be used to store information.\n\nA flip-flop stores a single bit (binary digit) of data.\n\nA common type of Flip-flop is the SR ('set-reset') Flip-flop, which has two inputs S (Set) and R (Reset). The Set turns on the output (which stays on even after the S input goes back to zero), and the Reset turns off the output. Figure out how to make one!\n(hint: Google)",
+  "license" : "Copyright",
+  "view" : {
+    "center" : [
+      -200,
+      0
+    ]
+  },
+  "name" : "",
+  "author" : "",
+  "meta" : {
+    "toolbelt" : false
+  },
+  "tests": [
+    {
+      "inputs": ["5548bbac4fa5ddaa390041ac", "5548bbad4fa5ddaa390041ad"],
+      "outputs": ["5548bd404fa5ddaa390041b0"],
+      "spec": [
+
+        [[1,0],[0]],
+        [[0,0],[0]],
+        [[0,1],[1]],
+        [[0,0],[1]],
+        [[0,1],[1]],
+        [[0,0],[1]],
+        [[1,0],[0]],
+        [[0,0],[0]],
+        [[1,0],[0]],
+        [[0,0],[0]]
+      ]
+    }
+  ],
+  "version" : "1.0.0",
+  "engines" : {
+    "circuitry" : ">=0.0"
+  },
+  "title" : "Flip Flop",
+  "items": [
+    {
+      "_id" : "5548bbac4fa5ddaa390041ac",
+      "in" : 0,
+      "type" : "button",
+      "name" : "R",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        627,
+        528,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "5548bbad4fa5ddaa390041ad",
+      "in" : 0,
+      "type" : "button",
+      "name" : "S",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        627,
+        858,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "5548bc884fa5ddaa390041ae",
+      "in" : 0,
+      "type" : "nor",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        990,
+        528,
+        0
+      ],
+      "out" : 1
+    },
+    {
+      "_id" : "5548bc894fa5ddaa390041af",
+      "in" : 0,
+      "type" : "nor",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        990,
+        858,
+        0
+      ],
+      "out" : 1
+    },
+    {
+      "_id" : "5548bd404fa5ddaa390041b0",
+      "in" : 0,
+      "type" : "light",
+      "name" : "Q",
+      "outputs" : [
+
+      ],
+      "pos" : [
+        1386,
+        528,
+        0
+      ],
+      "out" : 0
+    }
+  ]
+}

@@ -1,0 +1,148 @@
+{
+  "_id" : "54d7228f004aab735e0041b9",
+  "description" : "Another type of Flip-flop is the Gated SR latch, which is a 'clocked' Flip-flop. This kind of Flip-flop behaves like an SR latch except that it only changes while the Enable (E) input is on.\n\nThis is useful because it allows writing data to the binary bit to syncronized with other circuit elements.",
+  "license" : "Copyright",
+  "view" : {
+    "center" : [
+      -200,
+      0
+    ]
+  },
+  "name" : "",
+  "author" : "",
+  "meta" : {
+    "toolbelt" : ["and", "nor", "nand", "nor", "xor", "not", "button"]
+  },
+  "tests": [
+    {
+      "inputs": ["5548bbac4fa5ddaa390041ac", "5548bbad4fa5ddaa390041ad", "5548bbac4fa5ddaa390041ad"],
+      "outputs": ["5548bd404fa5ddaa390041b0"],
+      "spec": [
+
+        [[1,0,1],[0]],
+        [[0,0,0],[0]],
+        [[1,0,0],[0]],
+        [[0,0,0],[0]],
+        [[0,1,0],[0]],
+        [[1,0,0],[0]],
+        [[0,0,0],[0]],
+        [[0,1,1],[1]],
+        [[0,0,0],[1]],
+        [[0,1,0],[1]],
+        [[0,0,0],[1]],
+        [[1,0,0],[1]],
+        [[0,0,0],[1]],
+        [[0,0,1],[1]],
+        [[1,0,1],[0]],
+        [[0,0,1],[0]]
+      ]
+    }
+  ],
+  "version" : "1.0.0",
+  "engines" : {
+    "circuitry" : ">=0.0"
+  },
+  "title" : "Clocked Flip Flop",
+  "items": [
+    {
+      "_id" : "5548bbac4fa5ddaa390041ac",
+      "in" : 0,
+      "type" : "button",
+      "name" : "R",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        627,
+        528,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "5548bbac4fa5ddaa390041ad",
+      "in" : 0,
+      "type" : "button",
+      "name" : "E",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        627,
+        693,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "5548bbad4fa5ddaa390041ad",
+      "in" : 0,
+      "type" : "button",
+      "name" : "S",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        627,
+        858,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "5548bc884fa5ddaa390041ae",
+      "in" : 0,
+      "type" : "nor",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        990,
+        528,
+        0
+      ],
+      "out" : 1
+    },
+    {
+      "_id" : "5548bc894fa5ddaa390041af",
+      "in" : 0,
+      "type" : "nor",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        990,
+        858,
+        0
+      ],
+      "out" : 1
+    },
+    {
+      "_id" : "5548bd404fa5ddaa390041b0",
+      "in" : 0,
+      "type" : "light",
+      "name" : "Q",
+      "outputs" : [
+
+      ],
+      "pos" : [
+        1386,
+        528,
+        0
+      ],
+      "out" : 0
+    }
+  ]
+}

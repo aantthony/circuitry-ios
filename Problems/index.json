@@ -89,6 +89,14 @@
     },
     {
       "path": "021",
+      "title": "Clocked Flip Flop"
+    },
+    {
+      "path": "022",
+      "title": "JK Flip Flop"
+    },
+    {
+      "path": "023",
       "title": "Binary Counter"
     }
   ]
