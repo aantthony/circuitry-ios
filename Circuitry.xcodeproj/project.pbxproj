@@ -767,6 +767,7 @@
 				9204C36D182E2F5C006A008D /* Frameworks */,
 				9204C36E182E2F5C006A008D /* Resources */,
 				6A68470BA0224B4483CAB8C2 /* Copy Pods Resources */,
+				92DEDF7A1AF900A5005CB5E7 /* ShellScript */,
 			);
 			buildRules = (
 				92BE2A3D187C0EDE001DCC59 /* PBXBuildRule */,
@@ -900,6 +901,19 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		92DEDF7A1AF900A5005CB5E7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "GITREVSHA=$(git --git-dir=\"${PROJECT_DIR}/.git\" --work-tree=\"${PROJECT_DIR}\" rev-parse --short HEAD)\nBUILD=$(git --git-dir=\"${PROJECT_DIR}/.git\" --work-tree=\"${PROJECT_DIR}\" rev-list HEAD --count)\n\nDSYM_PLIST=\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist\"\nPLIST=${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\n\ndefaults write \"$PLIST\" \"GitHash\" \"${GITREVSHA}\"\ndefaults write \"$PLIST\" \"CFBundleVersion\" \"${BUILD}\"\ndefaults write \"$DSYM_PLIST\" \"CFBundleVersion\" \"${BUILD}\"\n\n";
 		};
 		BC3AC6D7B3254235807EDC14 /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
