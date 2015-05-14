@@ -986,7 +986,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 
 - (IBAction) handleTapGesture:(UITapGestureRecognizer *)sender {
     BOOL hit = NO;
-    // TODO: try not handling the tap gesture when there is nothing to tap.
+
     for(int i = 0; i < sender.numberOfTouches; i++) {
         CGPoint screenPos = [sender locationOfTouch:i inView:self.view];
         
@@ -995,7 +995,11 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         
         CircuitObject *object = [_viewport findCircuitObjectAtPosition:position];
         
-        if (!object) break;
+        if (!object) {
+            [self.tutorialDelegate viewControllerTutorial:self didTapBackground:sender];
+            break;
+        }
+        
         BOOL isButton = object->type == [_document.circuit getProcessById:@"button"];
         BOOL isInput = object->type == [_document.circuit getProcessById:@"in"];
         if (isButton || isInput) {

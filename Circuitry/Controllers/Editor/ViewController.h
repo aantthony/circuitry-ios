@@ -37,5 +37,6 @@
 @protocol ViewControllerTutorialProtocol <NSObject>
 
 - (void) viewControllerTutorial:(ViewController *)viewController didChange:(id)sender;
+- (void) viewControllerTutorial:(ViewController *)viewController didTapBackground:(id)sender;
 
 @end

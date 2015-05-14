@@ -355,6 +355,11 @@ static CGPoint hvrDragHereRight = {88,428};
     if (!self.isTutorial) return;
     [self updateTutorialState];
 }
+- (void) viewControllerTutorial:(ViewController *)viewController didTapBackground:(id)sender {
+    if ([self shouldShowToolbeltForDocument:_document]) {
+        [self setObjectListVisible:!self.objectListVisible animate:YES];
+    }
+}
 
 - (void) finishTutorial {
     self.isTutorial = NO;
