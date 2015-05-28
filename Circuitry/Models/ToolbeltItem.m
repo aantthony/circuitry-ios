@@ -50,7 +50,7 @@
              
       [[ToolbeltItem alloc] initWithType:@"sr"   level:18  image:[UIImage imageNamed:@"sr"]    name:@"SR Latch" fullName:@"SR NOR Latch" subtitle:@"Set, reset, Q"],
              
-             [[ToolbeltItem alloc] initWithType:@"ser"   level:19  image:[UIImage imageNamed:@"sr"]    name:@"Gated SR Latch" fullName:@"Gated SR NOR Latch" subtitle:@"Set, reset, Q"],
+             [[ToolbeltItem alloc] initWithType:@"ser"   level:19  image:[UIImage imageNamed:@"ser"]    name:@"Gated SR Latch" fullName:@"Gated SR NOR Latch" subtitle:@"Set, reset, Q"],
              
              [[ToolbeltItem alloc] initWithType:@"jk"   level:20  image:[UIImage imageNamed:@"jk"]    name:@"JK flip-flop" fullName:@"JK flip-flop" subtitle:@"clocked"],
 
