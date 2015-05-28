@@ -47,6 +47,8 @@
       [[ToolbeltItem alloc] initWithType:@"bin7seg" level:18 image:[UIImage imageNamed:@"bin7seg"]  name:@"7seg Decoder" fullName:@"BCD to 7-segment display decoder" subtitle:@"4 bit input, 7 display"],
       [[ToolbeltItem alloc] initWithType:@"7seg"    level:18 image:[UIImage imageNamed:@"7seg"]     name:@"7-Segment Display" fullName:@"7-Segment Display" subtitle:@"Display"],
       [[ToolbeltItem alloc] initWithType:@"7segbin" level:13 image:[UIImage imageNamed:@"7seg"] name:@"Number Display" fullName:@"Number Display with binary input" subtitle:@"Display"],
+             
+             [[ToolbeltItem alloc] initWithType:@"jk"   level:20  image:[UIImage imageNamed:@"jk"]    name:@"JK flip-flop" fullName:@"JK flip-flop" subtitle:@"clocked"],
       [[ToolbeltItem alloc] initWithType:@"clock"   level:7  image:[UIImage imageNamed:@"clock"]    name:@"Clock" fullName:@"Clock" subtitle:@"Square wave"]
     ];
     return _all;

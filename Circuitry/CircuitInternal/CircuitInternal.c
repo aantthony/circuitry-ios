@@ -25,21 +25,39 @@ static void *scalloc(size_t c, size_t b) {
 
 // Logic Gate definitions:
 
-static int XOR  (int x, void *d) { return x == 1 || x == 2;}
-static int XNOR (int x, void *d) { return x == 0 || x == 3;}
-static int AND  (int x, void *d) { return x == 3;}
-static int NAND (int x, void *d) { return x != 3;}
-static int NOT  (int x, void *d) { return !x; }
-static int NOR  (int x, void *d) { return !x; }
-static int OR   (int x, void *d) { return !!x; }
-static int HA   (int x, void *d) { int a = x & 1; int b = x >> 1; return a+b; }
-static int FA   (int x, void *d) { int a = x & 1; int b = (x >> 1) & 1; int c = x >> 2; return a+b+c; }
-static int ADD8 (int x, void *d) { return (x&255) + (x >> 8); }
-static int MULT8 (int x, void *d) { return (x&255) * (x >> 8); }
-static int ADD4 (int x, void *d) { return (x&15) + (x >> 4); }
-static int MULT4 (int x, void *d) { return (x&15) * (x >> 4); }
-static int BINDEC (int x, void *d) { return 1 << x; }
-static int BIN7SEG(int x, void *d) {
+static int XOR  (int x, int *d) { return x == 1 || x == 2;}
+static int XNOR (int x, int *d) { return x == 0 || x == 3;}
+static int AND  (int x, int *d) { return x == 3;}
+static int NAND (int x, int *d) { return x != 3;}
+static int NOT  (int x, int *d) { return !x; }
+static int NOR  (int x, int *d) { return !x; }
+static int OR   (int x, int *d) { return !!x; }
+static int HA   (int x, int *d) { int a = x & 1; int b = x >> 1; return a+b; }
+static int FA   (int x, int *d) { int a = x & 1; int b = (x >> 1) & 1; int c = x >> 2; return a+b+c; }
+static int ADD8 (int x, int *d) { return (x&255) + (x >> 8); }
+static int MULT8 (int x, int *d) { return (x&255) * (x >> 8); }
+static int ADD4 (int x, int *d) { return (x&15) + (x >> 4); }
+static int MULT4 (int x, int *d) { return (x&15) * (x >> 4); }
+static int BINDEC (int x, int *d) { return 1 << x; }
+static int JK (int x, int *d) {
+    int j = x & 1;
+    int clk = x & 2;
+    int k = x & 4;
+    if (clk && !(*d&2)) {
+        int lq = *d;
+        int nq = 0;
+        if (j && k) {
+            nq = lq ? 0 : 1;
+        } else if (j) {
+            nq = 1;
+        }
+        *d = nq | 2;
+    } else if (!clk) {
+        *d = *d & 1;
+    }
+    return (*d & 1) ? 1 : 2;
+}
+static int BIN7SEG(int x, int *d) {
     switch(x) {
         case 0:  return 0b0111111;
         case 1:  return 0b0000110;
@@ -85,6 +103,7 @@ CircuitProcess CircuitProcessBin7Seg = {"bin7seg",  4,  7, BIN7SEG };
 CircuitProcess CircuitProcess7Seg    = {"7seg",     7,  0, NULL };
 CircuitProcess CircuitProcess7SegBin = {"7segbin",4,  0, NULL };
 CircuitProcess CircuitProcessClock   = {"clock",    0,  1, NULL };
+CircuitProcess CircuitProcessJK      = {"jk",       3,  2, JK };
 
 CircuitObject *CircuitObjectFindById(CircuitInternal *c, ObjectID id) {
     for(int i = c->objects_count - 1; i >= 0; i--) {
@@ -196,6 +215,7 @@ CircuitObject * CircuitObjectCreate(CircuitInternal *c, CircuitProcess *type) {
     o->type = type;
     o->pos.x = o->pos.y = o->pos.z = 0.0;
     o->name[0] = '\0';
+    o->data = 0;
     o->outputs = scalloc(o->type->numOutputs + o->type->numInputs, sizeof(CircuitLink *));
     o->inputs = o->outputs + o->type->numOutputs;
     
@@ -409,7 +429,7 @@ int CircuitSimulate(CircuitInternal *c, int ticks) {
                 //                updating[i] = NULL;
                 continue;
             }
-            int newOut = o->type->calculate(o->in, o->data);
+            int newOut = o->type->calculate(o->in, &o->data);
             // printf("     %s: gate with input: 0x%x  =  0x%x\n", o->type->id, o->in, o->out);
             if (oldOut != newOut) {
                 o->out = newOut;

@@ -77,6 +77,7 @@ CircuitProcess CircuitProcessBin7Seg;
 CircuitProcess CircuitProcess7Seg;
 CircuitProcess CircuitProcess7SegBin;
 CircuitProcess CircuitProcessClock;
+CircuitProcess CircuitProcessJK;
 
 
 // Structure:
@@ -112,7 +113,7 @@ struct CircuitProcess {
     const char *id;
     int numInputs;
     int numOutputs;
-    int (*calculate)(int, void*);
+    int (*calculate)(int, int*);
 };
 
 
@@ -131,7 +132,7 @@ struct CircuitObject {
     int in;
     int out;
     CircuitProcess *type;
-    void *data;
+    int data;
     
     union { struct {float x, y, z;}; struct {float v[3];}; } pos;
     
