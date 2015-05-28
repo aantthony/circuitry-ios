@@ -57,6 +57,43 @@ static int JK (int x, int *d) {
     }
     return (*d & 1) ? 1 : 2;
 }
+static int D (int x, int *d) {
+    int j = x & 1;
+    if (!j) {
+        j |= 4;
+    }
+    if (x & 2) {
+        j |= 2;
+    }
+    return JK(j, d);
+}
+static int T (int x, int *d) {
+    if (x == 0) {
+        return JK(0, d);
+    } else if (x == 1) {
+        return JK(0, d);
+    } else if (x == 2) {
+        return JK(2, d);
+    }
+    return JK(1 | 2 | 4, d);
+}
+static int SR (int x, int *d) {
+    if (x == 0) return *d;
+    if (x == 1) {
+        // set:
+        *d = 1;
+        return 1;
+    } else if (x == 2) {
+        // reset:
+        *d = 2;
+        return 2;
+    }
+    
+    // not allowed:
+    *d = 0;
+    return 0;
+}
+
 static int BIN7SEG(int x, int *d) {
     switch(x) {
         case 0:  return 0b0111111;
@@ -104,6 +141,9 @@ CircuitProcess CircuitProcess7Seg    = {"7seg",     7,  0, NULL };
 CircuitProcess CircuitProcess7SegBin = {"7segbin",4,  0, NULL };
 CircuitProcess CircuitProcessClock   = {"clock",    0,  1, NULL };
 CircuitProcess CircuitProcessJK      = {"jk",       3,  2, JK };
+CircuitProcess CircuitProcessSR      = {"sr",      2,  2, SR };
+CircuitProcess CircuitProcessT       = {"t",       2,  2, T };
+CircuitProcess CircuitProcessD       = {"d",       2,  2, D };
 
 CircuitObject *CircuitObjectFindById(CircuitInternal *c, ObjectID id) {
     for(int i = c->objects_count - 1; i >= 0; i--) {

@@ -59,7 +59,10 @@ static NSValue *valueForGate(CircuitProcess *process) {
                           @"7seg": valueForGate(&CircuitProcess7Seg),
                           @"7segbin": valueForGate(&CircuitProcess7SegBin),
                           @"clock": valueForGate(&CircuitProcessClock),
-                          @"jk": valueForGate(&CircuitProcessJK)
+                          @"jk": valueForGate(&CircuitProcessJK),
+                          @"sr": valueForGate(&CircuitProcessSR),
+                          @"t": valueForGate(&CircuitProcessT),
+                          @"d": valueForGate(&CircuitProcessD)
                           };
     });
     return processesById;
