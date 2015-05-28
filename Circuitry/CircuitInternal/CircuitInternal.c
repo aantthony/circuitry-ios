@@ -44,14 +44,15 @@ static int JK (int x, int *d) {
     int clk = x & 2;
     int k = x & 4;
     if (clk && !(*d&2)) {
-        int lq = *d;
-        int nq = 0;
+        int q = *d;
         if (j && k) {
-            nq = lq ? 0 : 1;
+            q = q ? 0 : 1;
         } else if (j) {
-            nq = 1;
+            q = 1;
+        } else if (k) {
+            q = 0;
         }
-        *d = nq | 2;
+        *d = q | 2;
     } else if (!clk) {
         *d = *d & 1;
     }
