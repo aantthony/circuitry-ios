@@ -78,6 +78,7 @@ CircuitProcess CircuitProcess7Seg;
 CircuitProcess CircuitProcess7SegBin;
 CircuitProcess CircuitProcessClock;
 CircuitProcess CircuitProcessJK;
+CircuitProcess CircuitProcessSER;
 CircuitProcess CircuitProcessSR;
 CircuitProcess CircuitProcessT;
 CircuitProcess CircuitProcessD;

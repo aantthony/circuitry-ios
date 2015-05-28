@@ -94,6 +94,19 @@ static int SR (int x, int *d) {
     *d = 0;
     return 0;
 }
+static int SER (int x, int *d) {
+    if (!(x & 1)) {
+        return SR(0, d);
+    }
+    int j = 0;
+    if (x & 1) {
+        j |= 1;
+    }
+    if (x & 3) {
+        j |= 2;
+    }
+    return SR(j, d);
+}
 
 static int BIN7SEG(int x, int *d) {
     switch(x) {
@@ -143,6 +156,7 @@ CircuitProcess CircuitProcess7SegBin = {"7segbin",4,  0, NULL };
 CircuitProcess CircuitProcessClock   = {"clock",    0,  1, NULL };
 CircuitProcess CircuitProcessJK      = {"jk",       3,  2, JK };
 CircuitProcess CircuitProcessSR      = {"sr",      2,  2, SR };
+CircuitProcess CircuitProcessSER     = {"ser",      3,  2, SER };
 CircuitProcess CircuitProcessT       = {"t",       2,  2, T };
 CircuitProcess CircuitProcessD       = {"d",       2,  2, D };
 

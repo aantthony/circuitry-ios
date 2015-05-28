@@ -60,6 +60,7 @@ static NSValue *valueForGate(CircuitProcess *process) {
                           @"7segbin": valueForGate(&CircuitProcess7SegBin),
                           @"clock": valueForGate(&CircuitProcessClock),
                           @"jk": valueForGate(&CircuitProcessJK),
+                          @"ser": valueForGate(&CircuitProcessSER),
                           @"sr": valueForGate(&CircuitProcessSR),
                           @"t": valueForGate(&CircuitProcessT),
                           @"d": valueForGate(&CircuitProcessD)

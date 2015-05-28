@@ -48,10 +48,14 @@
       [[ToolbeltItem alloc] initWithType:@"7seg"    level:18 image:[UIImage imageNamed:@"7seg"]     name:@"7-Segment Display" fullName:@"7-Segment Display" subtitle:@"Display"],
       [[ToolbeltItem alloc] initWithType:@"7segbin" level:13 image:[UIImage imageNamed:@"7seg"] name:@"Number Display" fullName:@"Number Display with binary input" subtitle:@"Display"],
              
+      [[ToolbeltItem alloc] initWithType:@"sr"   level:18  image:[UIImage imageNamed:@"sr"]    name:@"SR Latch" fullName:@"SR NOR Latch" subtitle:@"Set, reset, Q"],
+             
+             [[ToolbeltItem alloc] initWithType:@"ser"   level:19  image:[UIImage imageNamed:@"sr"]    name:@"Gated SR Latch" fullName:@"Gated SR NOR Latch" subtitle:@"Set, reset, Q"],
+             
              [[ToolbeltItem alloc] initWithType:@"jk"   level:20  image:[UIImage imageNamed:@"jk"]    name:@"JK flip-flop" fullName:@"JK flip-flop" subtitle:@"clocked"],
-             [[ToolbeltItem alloc] initWithType:@"sr"   level:20  image:[UIImage imageNamed:@"sr"]    name:@"SR Latch" fullName:@"SR NOR Latch" subtitle:@"Set, reset, Q"],
-             [[ToolbeltItem alloc] initWithType:@"t"   level:20  image:[UIImage imageNamed:@"t"]    name:@"T flip-flop" fullName:@"T flip-flop" subtitle:@"Toggle"],
-             [[ToolbeltItem alloc] initWithType:@"d"   level:20  image:[UIImage imageNamed:@"d"]    name:@"D flip-flop" fullName:@"D flip-flop" subtitle:@"Delay"],
+
+             [[ToolbeltItem alloc] initWithType:@"t"   level:21  image:[UIImage imageNamed:@"t"]    name:@"T flip-flop" fullName:@"T flip-flop" subtitle:@"Toggle"],
+             [[ToolbeltItem alloc] initWithType:@"d"   level:22  image:[UIImage imageNamed:@"d"]    name:@"D flip-flop" fullName:@"D flip-flop" subtitle:@"Delay"],
       [[ToolbeltItem alloc] initWithType:@"clock"   level:7  image:[UIImage imageNamed:@"clock"]    name:@"Clock" fullName:@"Clock" subtitle:@"Square wave"]
     ];
     return _all;
