@@ -82,6 +82,9 @@ CircuitProcess CircuitProcessSER;
 CircuitProcess CircuitProcessSR;
 CircuitProcess CircuitProcessT;
 CircuitProcess CircuitProcessD;
+CircuitProcess CircuitProcessD4;
+CircuitProcess CircuitProcessD8;
+CircuitProcess CircuitProcessD16;
 
 
 // Structure:

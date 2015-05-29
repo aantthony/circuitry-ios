@@ -59,6 +59,7 @@ static SpriteTexturePos symbolSR;
 static SpriteTexturePos symbolSER;
 static SpriteTexturePos symbolT;
 static SpriteTexturePos symbolD;
+static SpriteTexturePos symbolCLKIN; // Clock input at bit zero
 static SpriteTexturePos symbolNAND;
 static SpriteTexturePos symbolNOT;
 static SpriteTexturePos symbolHA;
@@ -147,6 +148,7 @@ static GLfloat radius;
     symbolSER = [atlas positionForSprite:@"symbol-ser@2x"];
     symbolT = [atlas positionForSprite:@"symbol-t@2x"];
     symbolD = [atlas positionForSprite:@"symbol-d@2x"];
+    symbolCLKIN = [atlas positionForSprite:@"symbol-clkin@2x"];
     symbolNAND = [atlas positionForSprite:@"symbol-nand@2x"];
     symbolNOT = [atlas positionForSprite:@"symbol-not@2x"];
     symbolFA = [atlas positionForSprite:@"symbol-fa@2x"];
@@ -478,6 +480,9 @@ GLKVector3 offsetForInlet(CircuitProcess *process, int index) {
     else if (process == &CircuitProcessAdd8) return symbolPlus;
     else if (process == &CircuitProcessMult4) return symbolMult;
     else if (process == &CircuitProcessMult8) return symbolMult;
+    else if (process == &CircuitProcessD4) return symbolCLKIN;
+    else if (process == &CircuitProcessD8) return symbolCLKIN;
+    else if (process == &CircuitProcessD16) return symbolCLKIN;
     else {
         SpriteTexturePos pos;
         pos.u = pos.v = pos.theight = pos.twidth = pos.width = pos.height = 0.0;

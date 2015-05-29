@@ -68,6 +68,18 @@ static int D (int x, int *d) {
     }
     return JK(j, d);
 }
+static int D16 (int x, int *d) {
+    int clk = x & 1;
+    if (!clk) {
+        // clear bit 0
+        *d = *d & ~1;
+    } else if (clk && !(*d&1)) {
+        int X = x & ~1;
+        *d = (X << 1) | 1;
+        return X;
+    }
+    return (*d & ~1) >> 1;
+}
 static int T (int x, int *d) {
     if (x == 0) {
         return JK(0, d);
@@ -95,14 +107,14 @@ static int SR (int x, int *d) {
     return 0;
 }
 static int SER (int x, int *d) {
-    if (!(x & 1)) {
-        return SR(0, d);
-    }
+    int e = x & 2;
+    int s = (x & 1) && e;
+    int r = (x & 4) && e;
     int j = 0;
-    if (x & 1) {
+    if (s) {
         j |= 1;
     }
-    if (x & 3) {
+    if (r) {
         j |= 2;
     }
     return SR(j, d);
@@ -159,6 +171,9 @@ CircuitProcess CircuitProcessSR      = {"sr",      2,  2, SR };
 CircuitProcess CircuitProcessSER     = {"ser",      3,  2, SER };
 CircuitProcess CircuitProcessT       = {"t",       2,  2, T };
 CircuitProcess CircuitProcessD       = {"d",       2,  2, D };
+CircuitProcess CircuitProcessD4      = {"d4",      5,  8, D16 };
+CircuitProcess CircuitProcessD8      = {"d8",      9,  8, D16 };
+CircuitProcess CircuitProcessD16     = {"d16",    17, 16, D16 };
 
 CircuitObject *CircuitObjectFindById(CircuitInternal *c, ObjectID id) {
     for(int i = c->objects_count - 1; i >= 0; i--) {

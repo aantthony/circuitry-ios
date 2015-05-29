@@ -63,7 +63,10 @@ static NSValue *valueForGate(CircuitProcess *process) {
                           @"ser": valueForGate(&CircuitProcessSER),
                           @"sr": valueForGate(&CircuitProcessSR),
                           @"t": valueForGate(&CircuitProcessT),
-                          @"d": valueForGate(&CircuitProcessD)
+                          @"d": valueForGate(&CircuitProcessD),
+                          @"d4": valueForGate(&CircuitProcessD4),
+                          @"d8": valueForGate(&CircuitProcessD8),
+                          @"d16": valueForGate(&CircuitProcessD16)
                           };
     });
     return processesById;
