@@ -74,11 +74,9 @@ static int D16 (int x, int *d) {
         // clear bit 0
         *d = *d & ~1;
     } else if (clk && !(*d&1)) {
-        int X = x & ~1;
-        *d = (X << 1) | 1;
-        return X;
+        *d = x;
     }
-    return (*d & ~1) >> 1;
+    return (*d) >> 1;
 }
 static int T (int x, int *d) {
     if (x == 0) {
