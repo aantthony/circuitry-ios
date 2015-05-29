@@ -56,9 +56,9 @@
 
              [[ToolbeltItem alloc] initWithType:@"t"   level:21  image:[UIImage imageNamed:@"t"]    name:@"T flip-flop" fullName:@"T flip-flop" subtitle:@"Toggle"],
              [[ToolbeltItem alloc] initWithType:@"d"   level:21  image:[UIImage imageNamed:@"d"]    name:@"D flip-flop" fullName:@"D flip-flop" subtitle:@"Delay"],
-             [[ToolbeltItem alloc] initWithType:@"d4"   level:21  image:[UIImage imageNamed:@"d4"]    name:@"4x D flip-flop" fullName:@"4-bit D flip-flop" subtitle:@"Delay"],
-             [[ToolbeltItem alloc] initWithType:@"d8"   level:21  image:[UIImage imageNamed:@"d8"]    name:@"8x D flip-flop" fullName:@"8-bit D flip-flop" subtitle:@"Delay"],
-             [[ToolbeltItem alloc] initWithType:@"d16"   level:21  image:[UIImage imageNamed:@"d16"]    name:@"16x D flip-flop" fullName:@"16-bit D flip-flop" subtitle:@"Delay"],
+             [[ToolbeltItem alloc] initWithType:@"d4"   level:21  image:[UIImage imageNamed:@"d4"]    name:@"4-bit Register" fullName:@"4-bit D Register" subtitle:@"4x D flip-flop"],
+             [[ToolbeltItem alloc] initWithType:@"d8"   level:21  image:[UIImage imageNamed:@"d8"]    name:@"8-bit Register" fullName:@"8-bit D Register" subtitle:@"8x D flip-flop"],
+             [[ToolbeltItem alloc] initWithType:@"d16"   level:21  image:[UIImage imageNamed:@"d16"]    name:@"16-bit Register" fullName:@"16-bit D Register" subtitle:@"16x D flip-flop"],
       [[ToolbeltItem alloc] initWithType:@"clock"   level:7  image:[UIImage imageNamed:@"clock"]    name:@"Clock" fullName:@"Clock" subtitle:@"Square wave"]
     ];
     return _all;
