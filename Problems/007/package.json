@@ -1,0 +1,149 @@
+{
+  "_id" : "54d71d82004aabf85b0041a9",
+  "description" : "Extending the previous problem, make the output true when an odd number of inputs are true.",
+  "view" : {
+    "center" : [
+      -200,
+      -200
+    ]
+  },
+  "meta" : {
+    "toolbelt" : false
+  },
+  "tests": [
+    {
+      "inputs": ["54d71d86004aabf85b0041aa", "54d71d86004aabf85b0041ab", "54d71d86004aabf85b0041ac"],
+      "outputs": ["54d71d9a004aabf85b0041af"],
+      "spec": [
+        [[0,0,0],[0]],
+        [[0,0,1],[1]],
+        [[0,1,0],[1]],
+        [[0,1,1],[0]],
+        [[1,0,0],[1]],
+        [[1,0,1],[0]],
+        [[1,1,0],[0]],
+        [[1,1,1],[1]]
+      ]
+    }
+  ],
+  "title" : "Two XOR Gates",
+  "items": [
+    {
+      "_id" : "54d71d86004aabf85b0041aa",
+      "in" : 0,
+      "type" : "in",
+      "name" : "A",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        600,
+        750,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d71d86004aabf85b0041ab",
+      "in" : 0,
+      "type" : "in",
+      "name" : "B",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        600,
+        1150,
+        0
+      ],
+      "out" : 1
+    },
+    {
+      "_id" : "54d71d86004aabf85b0041ac",
+      "in" : 0,
+      "type" : "in",
+      "name" : "C",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        600,
+        950,
+        0
+      ],
+      "out" : 1
+    },
+    {
+      "_id" : "54d71d8f004aabf85b0041ad",
+      "in" : 0,
+      "type" : "xor",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        1000,
+        950,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d71d93004aabf85b0041ae",
+      "in" : 0,
+      "type" : "xor",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        1000,
+        1150,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d71d9a004aabf85b0041af",
+      "in" : 0,
+      "type" : "lightg",
+      "name" : "",
+      "outputs" : [
+
+      ],
+      "pos" : [
+        1400,
+        950,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d71dac004aabf85b0041b0",
+      "in" : 0,
+      "type" : "not",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        1000,
+        750,
+        0
+      ],
+      "out" : 1
+    }
+  ]
+}
