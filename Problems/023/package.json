@@ -1,0 +1,83 @@
+{
+  "_id" : "54d72378004aab735e0041bf",
+  "description" : "Make a circuit which counts from zero to 9, and increments every time C changes from 0 to 1.",
+  "license" : "Copyright",
+  "view" : {
+    "center" : [
+      -250,
+      0
+    ]
+  },
+  "name" : "",
+  "author" : "",
+  "meta" : {
+    "toolbelt" : ["button", "light", "and", "or", "not", "nand", "nor", "jk", "sr", "ser", "t"]
+  },
+  "tests": [
+    {
+      "inputs": ["54d72384004aab735e0041c0"],
+      "outputs": ["54d72395004aab735e0041c3"],
+      "spec": [
+        [[0],[0]],
+        [[0],[0]],
+        [[1],[1]],
+        [[1],[1]],
+        [[0],[1]],
+        [[1],[2]],
+        [[0],[2]],
+        [[1],[3]],
+        [[0],[3]],
+        [[1],[4]],
+        [[0],[4]],
+        [[1],[5]],
+        [[0],[5]],
+        [[1],[6]],
+        [[0],[6]],
+        [[1],[7]],
+        [[0],[7]],
+        [[1],[8]],
+        [[0],[8]],
+        [[1],[9]]
+      ]
+    }
+  ],
+  "version" : "1.0.0",
+  "engines" : {
+    "circuitry" : ">=0.0"
+  },
+  "title" : "Binary Counter",
+  "items": [
+    {
+      "_id" : "54d72384004aab735e0041c0",
+      "in" : 0,
+      "type" : "in",
+      "name" : "C",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        950,
+        550,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d72395004aab735e0041c3",
+      "in" : 0,
+      "type" : "7segbin",
+      "name" : "",
+      "outputs" : [
+
+      ],
+      "pos" : [
+        1450,
+        620,
+        0
+      ],
+      "out" : 0
+    }
+  ]
+}
