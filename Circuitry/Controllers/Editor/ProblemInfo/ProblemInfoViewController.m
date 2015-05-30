@@ -32,11 +32,6 @@
     self.document = _document;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 - (void) setDocument: (CircuitDocument *) document {
     _document = document;
     _titleLabel.text = [NSString stringWithFormat:@"Problem #%lu - %@", (unsigned long)(_document.problemInfo.problemIndex + 1), _document.circuit.title];

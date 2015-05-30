@@ -475,11 +475,6 @@ static CGPoint hvrDragHereRight = {88,428};
     
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    [self didWin];
-}
-
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self configureView];
@@ -642,7 +637,7 @@ static CGPoint hvrDragHereRight = {88,428};
     
     BOOL winItem = NO;
     
-    if (!wasAlreadyCompleted || 1) {
+    if (!wasAlreadyCompleted) {
         NSArray *unlocked = [ToolbeltItem unlockedGatesForProblemSetProblemInfo: self.document.problemInfo.problemIndex];
         if (unlocked.count) {
             _showingUnlockedToolbeltItems = [unlocked mutableCopy];
