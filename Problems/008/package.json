@@ -29,7 +29,7 @@
   "engines" : {
     "circuitry" : ">=0.0"
   },
-  "title" : "OR Using three NANDs",
+  "title" : "OR Using Three NANDs",
   "items": [
     {
       "_id" : "54d72010004aab005e0041aa",

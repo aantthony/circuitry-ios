@@ -29,7 +29,7 @@
   "engines" : {
     "circuitry" : ">=0.0"
   },
-  "title" : "And Using two NANDs",
+  "title" : "AND Using NAND gates",
   "items": [
     {
       "_id" : "54d72010004aab005e0041aa",

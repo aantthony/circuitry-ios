@@ -10,11 +10,11 @@
     },
     {
       "path": "003",
-      "title": "3-way OR gate"
+      "title": "3-way OR Gate"
     },
     {
       "path": "004",
-      "title": "Implement a NAND gate"
+      "title": "Implement a NAND Gate"
     },
     {
       "path": "005",
@@ -26,19 +26,19 @@
     },
     {
       "path": "007",
-      "title": "NOT using a NAND"
+      "title": "NOT Using a NAND"
     },
     {
       "path": "008",
-      "title": "OR using three NANDs"
+      "title": "OR Using Three NANDs"
     },
     {
       "path": "009",
-      "title": "AND using NAND gates"
+      "title": "AND Using NAND gates"
     },
     {
       "path": "011",
-      "title": "NAND using NOR gates"
+      "title": "NAND Using NOR gates"
     },
     {
       "path": "012",

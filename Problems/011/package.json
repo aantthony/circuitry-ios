@@ -29,7 +29,7 @@
   "engines" : {
     "circuitry" : ">=0.0"
   },
-  "title" : "NAND gate using four NOR gates",
+  "title" : "NAND Using NOR gates",
   "items": [
     {
       "_id" : "54d72201004aab735e0041b1",

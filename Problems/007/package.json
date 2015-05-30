@@ -24,7 +24,7 @@
   "engines" : {
     "circuitry" : ">=0.0"
   },
-  "title" : "Not Using a NAND",
+  "title" : "NOT Using a NAND",
   "items": [
     {
       "_id" : "54d71f4b004aab645d0041aa",
