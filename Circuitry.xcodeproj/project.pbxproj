@@ -96,7 +96,6 @@
 		9235853A1AF602DF004DCD0F /* TouchHighlight.m in Sources */ = {isa = PBXBuildFile; fileRef = 923585141AF602DF004DCD0F /* TouchHighlight.m */; };
 		9235853B1AF602DF004DCD0F /* TouchHighlight.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 923585151AF602DF004DCD0F /* TouchHighlight.vsh */; };
 		9235853C1AF602DF004DCD0F /* Viewport.m in Sources */ = {isa = PBXBuildFile; fileRef = 923585181AF602DF004DCD0F /* Viewport.m */; };
-		923585721AF60311004DCD0F /* Problems in Resources */ = {isa = PBXBuildFile; fileRef = 923585711AF60311004DCD0F /* Problems */; };
 		923585751AF65BB2004DCD0F /* NavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 923585741AF65BB2004DCD0F /* NavigationViewController.m */; };
 		92AA6323189E73A000A135F3 /* MongoIDTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 92AA6322189E73A000A135F3 /* MongoIDTest.m */; };
 		92DD078A18AFC10D00FB684A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92DD078918AFC10D00FB684A /* SystemConfiguration.framework */; };
@@ -117,7 +116,7 @@
 				"$(DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)-atlas.png",
 				"$(DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)-atlas.json",
 			);
-			script = "cd \"$SRCROOT/tools\"\necho $PWD\nexport PATH=\"/usr/local/bin:$PATH\"\nnpm install --production\nnode ./spritesheet.js \"$INPUT_FILE_PATH\" \"temp.png\" > \"$DERIVED_FILE_DIR/$INPUT_FILE_BASE-atlas.json\"\necho Compressing png...\n$DEVELOPER_TOOLS_DIR/../usr/bin/xcrun -sdk iphoneos pngcrush -iphone temp.png \"$DERIVED_FILE_DIR/$INPUT_FILE_BASE-atlas.png\"\n# $DEVELOPER_TOOLS_DIR/../usr/bin/xcrun -sdk iphoneos pngcrush -revert-iphone-optimizations \"$DERIVED_FILE_DIR/$INPUT_FILE_BASE-atlas.png\" \"$DERIVED_FILE_DIR/$INPUT_FILE_BASE-atlas.png\"\necho delete temp files\ncp temp.png ~/temp.png\nrm temp.png\n";
+			script = "cd \"$SRCROOT/tools\"\nexport PATH=\"/usr/local/bin:$PATH\"\nnpm install --production\nnode ./spritesheet.js \"$INPUT_FILE_PATH\" \"temp.png\" > \"$DERIVED_FILE_DIR/$INPUT_FILE_BASE-atlas.json\"\necho Compressing png...\n$DEVELOPER_TOOLS_DIR/../usr/bin/xcrun -sdk iphoneos pngcrush -iphone temp.png \"$DERIVED_FILE_DIR/$INPUT_FILE_BASE-atlas.png\"\n# $DEVELOPER_TOOLS_DIR/../usr/bin/xcrun -sdk iphoneos pngcrush -revert-iphone-optimizations \"$DERIVED_FILE_DIR/$INPUT_FILE_BASE-atlas.png\" \"$DERIVED_FILE_DIR/$INPUT_FILE_BASE-atlas.png\"\nrm temp.png\n";
 		};
 /* End PBXBuildRule section */
 
@@ -767,7 +766,8 @@
 				9204C36D182E2F5C006A008D /* Frameworks */,
 				9204C36E182E2F5C006A008D /* Resources */,
 				6A68470BA0224B4483CAB8C2 /* Copy Pods Resources */,
-				92DEDF7A1AF900A5005CB5E7 /* ShellScript */,
+				92DEDF7A1AF900A5005CB5E7 /* Set CFBundleVersion */,
+				92F365831B198F80007953CE /* Copy Problem data for offline use */,
 			);
 			buildRules = (
 				92BE2A3D187C0EDE001DCC59 /* PBXBuildRule */,
@@ -849,7 +849,6 @@
 				923585301AF602DF004DCD0F /* Grid.fsh in Resources */,
 				923584CD1AF602C3004DCD0F /* or-gate@2x.png in Resources */,
 				9235852B1AF602DF004DCD0F /* Shader.vsh in Resources */,
-				923585721AF60311004DCD0F /* Problems in Resources */,
 				923584D11AF602C3004DCD0F /* tutorial-logo@2x.png in Resources */,
 				9235852E1AF602DF004DCD0F /* Sprite.vsh in Resources */,
 				923585351AF602DF004DCD0F /* LinkBezier.vsh in Resources */,
@@ -902,18 +901,33 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		92DEDF7A1AF900A5005CB5E7 /* ShellScript */ = {
+		92DEDF7A1AF900A5005CB5E7 /* Set CFBundleVersion */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Set CFBundleVersion";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "GITREVSHA=$(git --git-dir=\"${PROJECT_DIR}/.git\" --work-tree=\"${PROJECT_DIR}\" rev-parse --short HEAD)\nBUILD=$(git --git-dir=\"${PROJECT_DIR}/.git\" --work-tree=\"${PROJECT_DIR}\" rev-list HEAD --count)\n\nDSYM_PLIST=\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist\"\nPLIST=${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\n\ndefaults write \"$PLIST\" \"GitHash\" \"${GITREVSHA}\"\ndefaults write \"$PLIST\" \"CFBundleVersion\" \"${BUILD}\"\ndefaults write \"$DSYM_PLIST\" \"CFBundleVersion\" \"${BUILD}\"\n\n";
+			shellScript = "GITREVSHA=$(git --git-dir=\"${PROJECT_DIR}/.git\" --work-tree=\"${PROJECT_DIR}\" rev-parse --short HEAD)\nBUILD=$(git --git-dir=\"${PROJECT_DIR}/.git\" --work-tree=\"${PROJECT_DIR}\" rev-list HEAD --count)\n\nDSYM_PLIST=\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist\"\nPLIST=${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\n\ndefaults write \"$PLIST\" \"GitHash\" \"${GITREVSHA}\"\ndefaults write \"$PLIST\" \"CFBundleVersion\" \"${BUILD}\"\ndefaults write \"$DSYM_PLIST\" \"CFBundleVersion\" \"${BUILD}\"\n";
+		};
+		92F365831B198F80007953CE /* Copy Problem data for offline use */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Problem data for offline use";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\nexport PATH=\"/usr/local/bin:$PATH\"\nnode ${PROJECT_DIR}/tools/problems > ${BUILT_PRODUCTS_DIR}/problems.json\n";
 		};
 		BC3AC6D7B3254235807EDC14 /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

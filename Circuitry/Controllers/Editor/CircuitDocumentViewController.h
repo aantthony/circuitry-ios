@@ -5,6 +5,7 @@
 //  Created by Anthony Foster on 6/07/2014.
 //  Copyright (c) 2014 Circuitry. All rights reserved.
 //
+@class Circuit;
 @class CircuitDocument;
 @protocol CircuitDocumentViewControllerDelegate;
 @interface CircuitDocumentViewController : UIViewController
@@ -14,6 +15,7 @@
 @property (weak, nonatomic) IBOutlet UIView *objectListView;
 @property (weak, nonatomic) IBOutlet UIView *problemInfoView;
 
+@property (nonatomic) Circuit *circuit;
 @property (nonatomic) CircuitDocument *document;
 
 - (UIImage *) snapshot;

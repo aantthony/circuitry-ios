@@ -1,10 +1,10 @@
-@class CircuitDocument;
+@class Circuit;
 @protocol ProblemInfoViewControllerDelegate;
 
 @interface ProblemInfoViewController : UIViewController
 @property (nonatomic, weak) id <ProblemInfoViewControllerDelegate> delegate;
 @property (nonatomic) BOOL isMinimised;
-- (void) setDocument: (CircuitDocument *) document;
+@property (nonatomic, readonly) Circuit *circuit;
 - (void) showProgressToNextLevelScreen;
 - (void) showProblemDescription;
 @end

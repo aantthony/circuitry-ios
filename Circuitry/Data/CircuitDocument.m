@@ -11,13 +11,13 @@
 #import "CircuitTest.h"
 #import <AVFoundation/AVFoundation.h>
 
-@interface CircuitDocument() <NSURLSessionTaskDelegate>
+@interface CircuitUIDocument() <NSURLSessionTaskDelegate>
 @property (nonatomic) NSData *originalScreenshotData;
 @end
 
 static NSString *screenshotPngPath = @"screenshot.png";
 
-@implementation CircuitDocument
+@implementation CircuitUIDocument
 - (void) setProblemInfo:(ProblemSetProblemInfo *)problemInfo {
     _isProblem = problemInfo != nil;
     _problemInfo = problemInfo;

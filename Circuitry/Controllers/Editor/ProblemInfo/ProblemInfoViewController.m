@@ -37,7 +37,8 @@
 
 - (void) setDocument: (CircuitDocument *) document {
     _document = document;
-    _titleLabel.text = [NSString stringWithFormat:@"Problem #%lu - %@", (unsigned long)(_document.problemInfo.problemIndex + 1), _document.circuit.title];
+    NSUInteger problemIndex = _document.problemInfo.problemNumber;
+    _titleLabel.text = [NSString stringWithFormat:@"Problem #%lu - %@", (unsigned long)problemIndex, _document.circuit.title];
     _bodyLabel.text = _document.circuit.userDescription;
 }
 - (void) showProgressToNextLevelScreen {

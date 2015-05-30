@@ -1,5 +1,4 @@
 @class ImageAtlas;
-@class CircuitDocument;
 @class ToolbeltItem;
 @class Viewport;
 @protocol ViewControllerTutorialProtocol;
@@ -10,7 +9,7 @@
 + (ImageAtlas *) atlas;
 
 @property (nonatomic) Viewport *viewport;
-@property (nonatomic) CircuitDocument *document;
+@property (nonatomic) Circuit *circuit;
 @property (nonatomic, weak) id <ViewControllerTutorialProtocol> tutorialDelegate;
 
 // Gesture events:

@@ -9,7 +9,6 @@
 #import "ProblemSetProblemInfo.h"
 
 @interface ProblemSet : NSObject
-- (ProblemSet *) initWithDirectoryPath:(NSString *) path;
 - (NSArray *) problems;
 - (void) refresh;
 - (ProblemSetProblemInfo *) problemAfterProblem:(ProblemSetProblemInfo *)info;
@@ -17,4 +16,6 @@
 + (instancetype) mainSet;
 - (void) unlockAll;
 - (void) reset;
+- (BOOL) hasUserCompletedProblemWithName:(NSString *) problemName;
+- (BOOL) isItemAvailable:(NSString *) itemName;
 @end

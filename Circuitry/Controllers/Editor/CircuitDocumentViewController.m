@@ -72,7 +72,7 @@
     
     label.textColor = [UIColor colorWithWhite:1.0 alpha:1.0];
     
-    label.text = self.document.circuit.title;
+    label.text = self.circuit.title;
     if (!label.text.length) {
         label.text = @"Untitled";
     }
@@ -130,7 +130,7 @@
 
 - (BOOL) textFieldShouldReturn:(UITextField *)textField {
     if (textField.text.length) {
-        _document.circuit.title = textField.text;
+        _circuit.title = textField.text;
         if ([[textField.text lowercaseString] isEqualToString:@"unlock1234"]) {
             [[ProblemSet mainSet] unlockAll];
             [[[UIAlertView alloc] initWithTitle:@"Unlock" message:@"All problems are now unlocked." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
@@ -139,7 +139,7 @@
             [[[UIAlertView alloc] initWithTitle:@"Unlock" message:@"All problems are now reset." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
         }
     }
-    [_document updateChangeCount:UIDocumentChangeDone];
+    [_circuit.document updateChangeCount:UIDocumentChangeDone];
     [self configureTitleView];
     
     [self.view removeGestureRecognizer:_tapToDismissKeyboard];
@@ -149,15 +149,16 @@
     return YES;
 }
 
-- (void) setDocument:(CircuitDocument *) document {
-    NSParameterAssert(document.circuit);
+- (void) setCircuit:(Circuit *)circuit {
+    NSParameterAssert(circuit);
     
-    _objectListViewController.document = document;
-    _glkViewController.document = document;
-    _problemInfoViewController.document = document;
+    _objectListViewController.circuit = circuit;
+    _glkViewController.circuit = circuit;
+    _problemInfoViewController.circuit = circuit;
     
-    _document = document;
-    self.title = document.circuit.title;
+    _circuit = circuit;
+    
+    self.title = _circuit.title;
     
     self.isTutorial = document.isProblem && document.problemInfo.problemIndex == 0;
     

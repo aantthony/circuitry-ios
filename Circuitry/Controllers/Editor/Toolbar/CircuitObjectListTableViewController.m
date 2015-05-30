@@ -15,12 +15,8 @@
 
 @interface CircuitObjectListTableViewController () <UISearchBarDelegate>
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
-@property (nonatomic) CircuitDocument *document;
-
-@property (nonatomic) BOOL isProblem;
 @property (nonatomic) NSArray *items;
 @property (nonatomic) NSArray *results;
-@property (nonatomic) ProblemSet *set;
 @end
 
 @implementation CircuitObjectListTableViewController
@@ -39,32 +35,19 @@
     return [ToolbeltItem all];
 }
 
-- (BOOL) hasCompletedProblemNumber:(NSUInteger) problemNumber {
-    if (problemNumber == 0) return YES;
-    
-    if (problemNumber > _set.problems.count) {
-        return NO;
-    }
-    ProblemSetProblemInfo *info = _set.problems[problemNumber - 1];
-    return info.isCompleted;
-}
-
 - (void) configureItems {
-    NSArray *allowedTypes = self.document.circuit.meta[@"toolbelt"];
+    NSArray *allowedTypes = self.circuit.meta[@"toolbelt"];
     if (allowedTypes && [allowedTypes isKindOfClass:[NSArray class]]) {
         self.items = [self.allItems filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"type IN %@", allowedTypes]];
     } else {
         self.items = self.allItems;
     }
-    
+    ProblemSet *mainSet = [ProblemSet mainSet];
     [self.items enumerateObjectsUsingBlock:^(ToolbeltItem *item, NSUInteger idx, BOOL *stop) {
-        if (_isProblem) {
+        if (self.circuit.problemInfo) {
             item.isAvailable = YES;
         } else {
-            item.isAvailable = [self hasCompletedProblemNumber:item.level];
-            if (!item.isAvailable) {
-//                NSLog(@"%@ not available until completed level: %lu", item.type, (unsigned long)item.level);
-            }
+            item.isAvailable = [mainSet isItemAvailable: item.name];
         }
     }];
     
@@ -72,10 +55,8 @@
     [self.tableView reloadData];
 }
 
-- (void) setDocument: (CircuitDocument *) document {
-    _document = document;
-    _isProblem = document.isProblem;
-    if (!_isProblem) _set = [ProblemSet mainSet];
+- (void) setCircuit: (Circuit *) circuit {
+    _circuit = circuit;
     [self configureItems];
 }
 

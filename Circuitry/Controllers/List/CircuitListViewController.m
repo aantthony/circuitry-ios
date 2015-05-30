@@ -70,7 +70,7 @@
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *createButton;
 @property (nonatomic) BOOL openDocumentAnimationShouldFadeIn;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentControl;
-@property (nonatomic) CircuitDocument *presentingDocument;
+@property (nonatomic) Circuit *presentingCircuit;
 @property (nonatomic) BOOL displayingProblems;
 @property (nonatomic) UIImageView *backgroundImageView;
 @property (nonatomic) BOOL canHandleRoundedViews;
@@ -122,25 +122,26 @@
     doc.circuit.title = [NSString stringWithFormat:@"Blank %li", (long)lastBlankNameIndex];
     [defaults setInteger:lastBlankNameIndex forKey:kLastBlankName];
     
-    self.presentingDocument = doc;
+    self.presentingCircuit = circuit;
     [doc saveToURL:doc.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
         [self performSegueWithIdentifier:@"presentDocument" sender:self];
     }];
 }
 
 - (void) openProblem: (ProblemSetProblemInfo *) problemInfo {
-    self.presentingDocument = [[CircuitDocument alloc] initWithFileURL:problemInfo.documentURL];
-    self.presentingDocument.problemInfo = problemInfo;
-    [self.presentingDocument openWithCompletionHandler:^(BOOL success){
+    self.presentingCircuit = [[CircuitDocument alloc] initWithFileURL:nil];
+    self.presentingCircuit.problemInfo = problemInfo;
+    [self.presentinpresentingCircuitgDocument openWithCompletionHandler:^(BOOL success){
         [self performSegueWithIdentifier:@"presentDocument" sender:self];
     }];
 }
 
 - (CircuitDocument *) circuitDocumentViewController:(CircuitDocumentViewController *)viewController nextDocumentAfterDocument:(CircuitDocument *)document {
     ProblemSetProblemInfo *info = document.problemInfo;
-    [document.problemInfo.set didCompleteProblem:info];
+    ProblemSet *mainSet = [ProblemSet mainSet];
+    [mainSet didCompleteProblem:info];
     [self.collectionView reloadData];
-    ProblemSetProblemInfo *nextInfo = [info.set problemAfterProblem:info];
+    ProblemSetProblemInfo *nextInfo = [mainSet problemAfterProblem:info];
     if (!nextInfo) return nil;
     CircuitDocument *next = [[CircuitDocument alloc] initWithFileURL:nextInfo.documentURL];
     next.problemInfo = nextInfo;

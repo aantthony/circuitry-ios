@@ -6,13 +6,13 @@
 //  Copyright (c) 2014 Circuitry. All rights reserved.
 //
 
-@class CircuitDocument;
 @class ToolbeltItem;
+@class Circuit;
 
 @protocol CircuitObjectListTableViewControllerDelegate;
 
 @interface CircuitObjectListTableViewController : UITableViewController
-- (void) setDocument: (CircuitDocument *) document;
+@property (nonatomic) Circuit *circuit;
 @property (nonatomic, weak) id<CircuitObjectListTableViewControllerDelegate> delegate;
 @end
 

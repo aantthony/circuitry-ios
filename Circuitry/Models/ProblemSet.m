@@ -12,55 +12,38 @@
 @property (nonatomic) NSArray *problems;
 @end
 
-static NSString *kDefaultsCurrentLevelIndex = @"CurrentLevelIndex";
+static NSString *kDefaultsCompletedProblemNames = @"CompletedProblemIds";
 
 @implementation ProblemSet
 
 + (instancetype) mainSet {
-    NSString *directoryPath = [[NSBundle mainBundle] pathForResource:@"Problems" ofType:nil];
-    return [[ProblemSet alloc] initWithDirectoryPath:directoryPath];
+    NSData *data = [NSData dataWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"problems" withExtension:@"json"]];
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    return [[ProblemSet alloc] initWithDictionary:dict];
 }
 
 - (void) unlockAll {
-    [[NSUserDefaults standardUserDefaults] setInteger:999 forKey:kDefaultsCurrentLevelIndex];
     [self refresh];
 }
 
 - (void) reset {
-    [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:kDefaultsCurrentLevelIndex];
+    [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:kDefaultsCompletedProblemNames];
     [self refresh];
 }
 
-+ (NSDictionary *) loadIndexAtUrl:(NSURL *) url {
-    NSInputStream *stream = [[NSInputStream alloc] initWithURL:url];
-    [stream open];
-    NSDictionary *data = [NSJSONSerialization JSONObjectWithStream:stream options:0 error:NULL];
-    return data;
-}
-
-- (ProblemSet *) initWithDirectoryPath:(NSString *) directoryPath {
+- (ProblemSet *) initWithDictionary:(NSDictionary *) dictionary {
     
     self = [super init];
-    NSURL *baseUrl = [NSURL fileURLWithPath:directoryPath isDirectory:YES];
-    NSDictionary *index = [ProblemSet loadIndexAtUrl:[baseUrl URLByAppendingPathComponent:@"index.json"]];
     
-    NSMutableArray *items = [NSMutableArray array];
+    NSArray *problemsData = (NSArray *)dictionary;
+    
+    NSMutableArray *items = [NSMutableArray arrayWithCapacity:problemsData.count];
     NSUInteger i = 0;
     
-    for (NSDictionary *p in index[@"problems"]) {
-        NSUInteger index = i;
-        NSURL *url = [baseUrl URLByAppendingPathComponent:p[@"path"] isDirectory:YES];
-        
-        NSString *imageName = p[@"image"];
-        if (!imageName) {
-            imageName = [NSString stringWithFormat:@"level-%@", p[@"path"]];
-        }
-        
-        ProblemSetProblemInfo *info = [[ProblemSetProblemInfo alloc] initWithProblemIndex:index title:p[@"title"] completed:NO accessible:NO visible:YES imageName:imageName documentUrl:url set:self];
-        if (p[@"hidden"]) continue;
-        
+    
+    for (NSDictionary *p in problemsData) {        
+        ProblemSetProblemInfo *info = [[ProblemSetProblemInfo alloc] initWithProblemNumber:i dictionary:p];
         [items addObject:info];
-        
         i++;
     }
     _problems = items;
@@ -68,41 +51,64 @@ static NSString *kDefaultsCurrentLevelIndex = @"CurrentLevelIndex";
     return self;
 }
 
-- (NSArray *) problems {
-    return _problems;
-}
-
 - (void) refresh {
-    
-    NSUInteger playerCurrentLevelIndex = [[NSUserDefaults standardUserDefaults] integerForKey:kDefaultsCurrentLevelIndex];
-    
-    [_problems enumerateObjectsUsingBlock:^(ProblemSetProblemInfo *obj, NSUInteger i, BOOL *stop) {
-        BOOL completed = obj.problemIndex < playerCurrentLevelIndex;
-        BOOL accessible = obj.problemIndex <= playerCurrentLevelIndex;
-
-        obj.isCompleted = completed;
-        obj.isAccessible = accessible;
-    }];
+    NSMutableArray *completedNames = self.completedNames;
+    BOOL lastCompleted = YES;
+    for(ProblemSetProblemInfo *problem in _problems) {
+        problem.completed = [completedNames containsObject:problem.name];
+        problem.accessible = problem.completed || lastCompleted;
+        problem.visible = YES;
+        
+        lastCompleted = problem.completed;
+    }
 }
 
 - (void) didCompleteProblem:(ProblemSetProblemInfo *)problemInfo {
     
-    NSUInteger playerCurrentLevelIndex = [[NSUserDefaults standardUserDefaults] integerForKey:kDefaultsCurrentLevelIndex];
+    NSMutableArray *completedNames = self.completedNames;
     
-    NSUInteger updatedCurrentLevelIndex = problemInfo.problemIndex + 1;
-    if (updatedCurrentLevelIndex <= playerCurrentLevelIndex) {
-        return;
+    if(![completedNames containsObject:problemInfo.name]) {
+        [completedNames addObject:problemInfo.name];
     }
-
-    [[NSUserDefaults standardUserDefaults] setInteger:updatedCurrentLevelIndex forKey:kDefaultsCurrentLevelIndex];
+    
+    self.completedNames = completedNames;
     
     [self refresh];
 }
 
+- (BOOL) hasUserCompletedProblemWithName:(NSString *) problemName {
+    return [self.completedNames containsObject:problemName];
+}
+
 - (ProblemSetProblemInfo *) problemAfterProblem:(ProblemSetProblemInfo *)info {
-    NSUInteger nextIndex = info.problemIndex + 1;
-    if (nextIndex >= _problems.count) return nil;
+    NSUInteger index = [_problems indexOfObject:info];
+    if (index == NSNotFound) return nil;
+    NSUInteger nextIndex = index + 1;
+    if (nextIndex >= _problems.count) {
+        return nil;
+    }
     return [_problems objectAtIndex:nextIndex];
 }
+
+- (BOOL) isItemAvailable:(NSString *)itemName {
+    return YES;
+}
+
+
+#pragma mark - Storage
+
+- (NSMutableArray *)completedNames {
+    NSArray *existing = [[NSUserDefaults standardUserDefaults] arrayForKey:kDefaultsCompletedProblemNames];
+    if (!existing) {
+        return [[NSMutableArray alloc] initWithCapacity:1];
+    }
+    return [existing mutableCopy];
+}
+
+- (void) setCompletedNames:(NSArray *)completedNames {
+    [[NSUserDefaults standardUserDefaults] setObject:completedNames forKey:kDefaultsCompletedProblemNames];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 
 @end

@@ -2,6 +2,7 @@
 
 #import "CircuitInternal.h"
 @class CircuitTest;
+@class ProblemSetProblemInfo;
 
 @interface Circuit : NSObject
 
@@ -15,6 +16,8 @@
 @property(nonatomic) NSString *license;
 @property(nonatomic) NSMutableDictionary *dependencies;
 @property(nonatomic) NSMutableDictionary *meta;
+
+@property (nonatomic) ProblemSetProblemInfo *problemInfo;
 
 @property(nonatomic, readonly) NSMutableDictionary * viewDetails;
 @property(nonatomic) float viewCenterX;
