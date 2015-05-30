@@ -54,7 +54,7 @@
              
              [[ToolbeltItem alloc] initWithType:@"jk"   level:20  image:[UIImage imageNamed:@"jk"]    name:@"JK flip-flop" fullName:@"JK flip-flop" subtitle:@"clocked"],
 
-             [[ToolbeltItem alloc] initWithType:@"t"   level:21  image:[UIImage imageNamed:@"t"]    name:@"T flip-flop" fullName:@"T flip-flop" subtitle:@"Toggle"],
+             [[ToolbeltItem alloc] initWithType:@"t"   level:20  image:[UIImage imageNamed:@"t"]    name:@"T flip-flop" fullName:@"T flip-flop" subtitle:@"Toggle"],
              [[ToolbeltItem alloc] initWithType:@"d"   level:21  image:[UIImage imageNamed:@"d"]    name:@"D flip-flop" fullName:@"D flip-flop" subtitle:@"Delay"],
              [[ToolbeltItem alloc] initWithType:@"d4"   level:21  image:[UIImage imageNamed:@"d4"]    name:@"4-bit Register" fullName:@"4-bit D Register" subtitle:@"4x D flip-flop"],
              [[ToolbeltItem alloc] initWithType:@"d8"   level:21  image:[UIImage imageNamed:@"d8"]    name:@"8-bit Register" fullName:@"8-bit D Register" subtitle:@"8x D flip-flop"],

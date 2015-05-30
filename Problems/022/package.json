@@ -1,0 +1,69 @@
+{
+  "_id" : "54d71f45004aab645d0041a9",
+  "description" : "While the SR Latch can store one bit of data, but there is no easy way to toggle the state.\n\nThe JK flip-flop solves this. It is similar, but instead of having an E input, it uses a clock signal, and updates only when the clock transitions from 0 to 1.\n\nIf J=1 and K=0, then it will set the output to 1 on the first bit.\nIf J=0 and K=1, then it will unset the output.\nAnd if J=1 and K=1 then it will toggle the output.\nBuild a system which toggles Q every time C changes to 1.",
+  "view" : {
+    "center" : [
+      -50,
+      -200
+    ]
+  },
+  "meta" : {
+    "toolbelt" : ["button", "jk", "not", "and", "or", "nand", "nor", "led"]
+  },
+  "tests": [
+    {
+      "inputs": ["54d71f4b004aab645d0041aa"],
+      "outputs": ["54d71f69004aab645d0041ad"],
+      "spec": [
+        [[0],[0]],
+        [[0],[0]],
+        [[1],[1]],
+        [[1],[1]],
+        [[1],[1]],
+        [[0],[1]],
+        [[0],[1]],
+        [[1],[0]],
+        [[0],[0]]
+      ]
+    }
+  ],
+  "version" : "1.0.0",
+  "engines" : {
+    "circuitry" : ">=0.0"
+  },
+  "title" : "Not Using a NAND",
+  "items": [
+    {
+      "_id" : "54d71f4b004aab645d0041aa",
+      "in" : 0,
+      "type" : "in",
+      "name" : "C",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        700,
+        1000,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d71f69004aab645d0041ad",
+      "in" : 0,
+      "type" : "lightg",
+      "name" : "Q",
+      "outputs" : [
+
+      ],
+      "pos" : [
+        1150,
+        1000,
+        0
+      ],
+      "out" : 0
+    }
+  ]
+}
