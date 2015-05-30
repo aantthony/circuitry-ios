@@ -1002,8 +1002,10 @@ This logic diagram describes the rule:
                     <toolbarItems/>
                     <connections>
                         <outlet property="bodyLabel" destination="Qmv-Nm-o5F" id="BdU-qf-hth"/>
+                        <outlet property="buttonContinue" destination="gcl-aN-Xel" id="1ce-CO-ywn"/>
                         <outlet property="congratsView" destination="31s-zx-ivU" id="kne-ab-oA8"/>
                         <outlet property="downArrow" destination="F85-EQ-wkX" id="TD8-AA-xDq"/>
+                        <outlet property="lblCongrats" destination="UDI-Xp-EuQ" id="mia-Qh-iHq"/>
                         <outlet property="titleLabel" destination="MHQ-DL-SWj" id="aNC-dl-cMC"/>
                         <outlet property="upArrow" destination="Mfd-cb-9WV" id="day-UM-9Sz"/>
                     </connections>

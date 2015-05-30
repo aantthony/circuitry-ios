@@ -16,7 +16,9 @@
 @property (weak, nonatomic) IBOutlet UIImageView *upArrow;
 @property (weak, nonatomic) IBOutlet UIImageView *downArrow;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *lblCongrats;
 @property (weak, nonatomic) IBOutlet UILabel *bodyLabel;
+@property (weak, nonatomic) IBOutlet UIButton *buttonContinue;
 @property (weak, nonatomic) CircuitDocument *document;
 @end
 
@@ -46,6 +48,14 @@
         _congratsView.alpha = 1.0;
     } completion:^(BOOL finished) {
         
+    }];
+}
+- (void) showWonGameScreen {
+    _congratsView.hidden = NO;
+    [self.buttonContinue setTitle:@"Go back to menu" forState:UIControlStateNormal];
+    self.lblCongrats.text = @"Congratulations, you solved all the levels!";
+    [UIView animateWithDuration:0.3 animations:^{
+        _congratsView.alpha = 1;
     }];
 }
 - (IBAction)didTapProblemDescriptionToHide:(UILongPressGestureRecognizer *)sender {

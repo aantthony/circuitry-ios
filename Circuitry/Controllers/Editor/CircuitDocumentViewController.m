@@ -477,7 +477,7 @@ static CGPoint hvrDragHereRight = {88,428};
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-//    [self didWin];
+    [self didWin];
 }
 
 - (void) viewDidAppear:(BOOL)animated {
@@ -640,10 +640,13 @@ static CGPoint hvrDragHereRight = {88,428};
     
     [self setProblemInfoMinimised:NO animated:YES];
     
-    if (!wasAlreadyCompleted) {
+    BOOL winItem = NO;
+    
+    if (!wasAlreadyCompleted || 1) {
         NSArray *unlocked = [ToolbeltItem unlockedGatesForProblemSetProblemInfo: self.document.problemInfo.problemIndex];
         if (unlocked.count) {
             _showingUnlockedToolbeltItems = [unlocked mutableCopy];
+            winItem = YES;
             [self showNextUnlockedItem];
         }
     }
@@ -651,7 +654,7 @@ static CGPoint hvrDragHereRight = {88,428};
     if (self.nextDocument) {
         [_problemInfoViewController showProgressToNextLevelScreen];
     } else {
-        [self.navigationController popViewControllerAnimated:YES];
+        [_problemInfoViewController showWonGameScreen];
     }
     // Success!
 }
@@ -685,14 +688,17 @@ static CGPoint hvrDragHereRight = {88,428};
 #pragma mark - Problem Info delegate
 - (void) problemInfoViewController:(ProblemInfoViewController *)problemInfoViewController didPressContinueButton:(id)sender {
     
+    if (!self.nextDocument.circuit) {
+        [self.navigationController popViewControllerAnimated:YES];
+        return;
+    }
+    
     UIView *imgView = [[UIView alloc] initWithFrame:self.view.bounds];
     imgView.backgroundColor = UIColor.whiteColor;
     [self.view addSubview:imgView];
     
     [_problemInfoViewController showProblemDescription];
     
-    // TODO: Ensure this
-    NSParameterAssert(self.nextDocument.circuit);
     if (!self.nextDocument.circuit) {
         return;
         

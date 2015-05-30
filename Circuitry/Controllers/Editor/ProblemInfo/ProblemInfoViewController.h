@@ -6,6 +6,7 @@
 @property (nonatomic) BOOL isMinimised;
 - (void) setDocument: (CircuitDocument *) document;
 - (void) showProgressToNextLevelScreen;
+- (void) showWonGameScreen;
 - (void) showProblemDescription;
 @end
 
