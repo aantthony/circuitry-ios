@@ -1,6 +1,6 @@
 {
   "_id" : "54d725b8c81dba47610041a9",
-  "description" : "",
+  "description" : "A Full Adder has three inputs and two outputs.\n\nIt is very much like the Half Adder, except that it also takes a carry input.\n\nThe Fuller Adder inputs are two binary digits (A and B) and then the carry input (C). It has two outputs, the Sum, and the carry output (C).",
   "license" : "Copyright",
   "view" : {
     "center" : [

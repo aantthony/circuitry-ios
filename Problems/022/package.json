@@ -1,6 +1,6 @@
 {
   "_id" : "54d71f45004aab645d0041a9",
-  "description" : "While the SR Latch can store one bit of data, but there is no easy way to toggle the state.\n\nThe JK flip-flop solves this. It is similar, but instead of having an E input, it uses a clock signal, and updates only when the clock transitions from 0 to 1.\n\nIf J=1 and K=0, then it will set the output to 1 on the first bit.\nIf J=0 and K=1, then it will unset the output.\nAnd if J=1 and K=1 then it will toggle the output.\nBuild a system which toggles Q every time C changes to 1.",
+  "description" : "Although the SR Latch can store one bit of data, there is no easy way to toggle its state.\n\nThe JK flip-flop solves this. It is similar, but instead of having an E input, it uses a clock signal, and updates only when the clock transitions from 0 to 1.\n\nIf J=1 and K=0, then it will set the output to 1 on the first bit.\nIf J=0 and K=1, then it will unset the output.\nAnd if J=1 and K=1 then it will toggle the output.\nBuild a system which toggles Q every time C changes to 1.",
   "view" : {
     "center" : [
       -50,
