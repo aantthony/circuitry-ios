@@ -3,7 +3,8 @@
   "title": "Another AND Gate",
   "view": {
     "center": [65, 180, 0],
-    "canZoom": false
+    "canZoom": false,
+    "canPan": false
   },
   "tests": [
     {

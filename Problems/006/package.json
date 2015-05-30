@@ -1,10 +1,10 @@
 {
-  "_id" : "54d71d82004aabf85b0041a9",
-  "description" : "Extending the previous problem, make the output true when an odd number of inputs are true.",
+  "_id" : "54d71a47004aabc4580041aa",
+  "description" : "Using NOT, AND, and OR gates, make the output true only when exactly only one of the inputs A and B is true.\n\nXOR is short for 'Exclsuive Or'. The difference between OR and XOR, is that XOR is not true when both inputs are true.",
   "view" : {
     "center" : [
-      -200,
-      -200
+      -300,
+      -250
     ]
   },
   "meta" : {
@@ -12,24 +12,20 @@
   },
   "tests": [
     {
-      "inputs": ["54d71d86004aabf85b0041aa", "54d71d86004aabf85b0041ab", "54d71d86004aabf85b0041ac"],
-      "outputs": ["54d71d9a004aabf85b0041af"],
+      "inputs": ["54d71a4d004aabc4580041ab", "54d71a50004aabc4580041ac"],
+      "outputs": ["54d71a79004aabc4580041ae"],
       "spec": [
-        [[0,0,0],[0]],
-        [[0,0,1],[1]],
-        [[0,1,0],[1]],
-        [[0,1,1],[0]],
-        [[1,0,0],[1]],
-        [[1,0,1],[0]],
-        [[1,1,0],[0]],
-        [[1,1,1],[1]]
+        [[0,0],[0]],
+        [[0,1],[1]],
+        [[1,0],[1]],
+        [[1,1],[0]]
       ]
     }
   ],
-  "title" : "Two XOR Gates",
-  "items": [
+  "title" : "Exclusive OR",
+  "items":[
     {
-      "_id" : "54d71d86004aabf85b0041aa",
+      "_id" : "54d71a4d004aabc4580041ab",
       "in" : 0,
       "type" : "in",
       "name" : "A",
@@ -39,14 +35,14 @@
         ]
       ],
       "pos" : [
-        600,
         750,
+        1000,
         0
       ],
       "out" : 0
     },
     {
-      "_id" : "54d71d86004aabf85b0041ab",
+      "_id" : "54d71a50004aabc4580041ac",
       "in" : 0,
       "type" : "in",
       "name" : "B",
@@ -56,33 +52,16 @@
         ]
       ],
       "pos" : [
-        600,
-        1150,
+        750,
+        1350,
         0
       ],
-      "out" : 1
+      "out" : 0
     },
     {
-      "_id" : "54d71d86004aabf85b0041ac",
+      "_id" : "54d71a54004aabc4580041ad",
       "in" : 0,
-      "type" : "in",
-      "name" : "C",
-      "outputs" : [
-        [
-
-        ]
-      ],
-      "pos" : [
-        600,
-        950,
-        0
-      ],
-      "out" : 1
-    },
-    {
-      "_id" : "54d71d8f004aabf85b0041ad",
-      "in" : 0,
-      "type" : "xor",
+      "type" : "or",
       "name" : "",
       "outputs" : [
         [
@@ -90,31 +69,14 @@
         ]
       ],
       "pos" : [
-        1000,
-        950,
+        1250,
+        900,
         0
       ],
       "out" : 0
     },
     {
-      "_id" : "54d71d93004aabf85b0041ae",
-      "in" : 0,
-      "type" : "xor",
-      "name" : "",
-      "outputs" : [
-        [
-
-        ]
-      ],
-      "pos" : [
-        1000,
-        1150,
-        0
-      ],
-      "out" : 0
-    },
-    {
-      "_id" : "54d71d9a004aabf85b0041af",
+      "_id" : "54d71a79004aabc4580041ae",
       "in" : 0,
       "type" : "lightg",
       "name" : "",
@@ -122,14 +84,31 @@
 
       ],
       "pos" : [
-        1400,
-        950,
+        1750,
+        1200,
         0
       ],
       "out" : 0
     },
     {
-      "_id" : "54d71dac004aabf85b0041b0",
+      "_id" : "54d71aa6004aabc4580041af",
+      "in" : 0,
+      "type" : "and",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        1600,
+        900,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d71aac004aabc4580041b0",
       "in" : 0,
       "type" : "not",
       "name" : "",
@@ -139,8 +118,42 @@
         ]
       ],
       "pos" : [
-        1000,
-        750,
+        1250,
+        700,
+        0
+      ],
+      "out" : 1
+    },
+    {
+      "_id" : "54d71ae1004aabc4580041b1",
+      "in" : 0,
+      "type" : "and",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        1600,
+        700,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d71b1d004aabc4580041b2",
+      "in" : 0,
+      "type" : "not",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        900,
+        700,
         0
       ],
       "out" : 1
