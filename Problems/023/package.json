@@ -52,6 +52,7 @@
       "in" : 0,
       "type" : "in",
       "name" : "C",
+      "locked": true,
       "outputs" : [
         [
 
@@ -69,6 +70,7 @@
       "in" : 0,
       "type" : "7segbin",
       "name" : "",
+      "locked": true,
       "outputs" : [
 
       ],

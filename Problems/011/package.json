@@ -35,6 +35,7 @@
       "_id" : "54d72201004aab735e0041b1",
       "in" : 0,
       "type" : "in",
+      "locked": true,
       "name" : "A",
       "outputs" : [
         [
@@ -53,6 +54,7 @@
       "in" : 0,
       "type" : "in",
       "name" : "B",
+      "locked": true,
       "outputs" : [
         [
 
@@ -69,6 +71,7 @@
       "_id" : "54d72203004aab735e0041b2",
       "in" : 0,
       "type" : "lightg",
+      "locked": true,
       "name" : "",
       "outputs" : [
 
@@ -83,6 +86,7 @@
     {
       "_id" : "54d72208004aab735e0041b3",
       "in" : 0,
+      "locked": true,
       "type" : "nor",
       "name" : "",
       "outputs" : [
@@ -101,6 +105,7 @@
       "_id" : "54d72208004aab735e0041b4",
       "in" : 0,
       "type" : "nor",
+      "locked": true,
       "name" : "",
       "outputs" : [
         [
@@ -119,6 +124,7 @@
       "in" : 0,
       "type" : "nor",
       "name" : "",
+      "locked": true,
       "outputs" : [
         [
 
@@ -135,6 +141,7 @@
       "_id" : "54d72209004aab735e0041b6",
       "in" : 0,
       "type" : "nor",
+      "locked": true,
       "name" : "",
       "outputs" : [
         [

@@ -53,6 +53,7 @@
       "_id" : "5548a0db4fa5dd1f220041ad",
       "in" : 0,
       "type" : "in",
+      "locked": true,
       "name" : "A",
       "outputs" : [
         [
@@ -73,6 +74,7 @@
       "_id" : "5548a0da4fa5dd1f220041ac",
       "in" : 0,
       "type" : "in",
+      "locked": true,
       "name" : "B",
       "outputs" : [
         [
@@ -93,6 +95,7 @@
       "_id" : "5548a0e34fa5dd1f220041af",
       "in" : 0,
       "type" : "in",
+      "locked": true,
       "name" : "C",
       "outputs" : [
         [
@@ -112,6 +115,7 @@
     {
       "_id" : "5548a0e14fa5dd1f220041ae",
       "in" : 0,
+      "locked": true,
       "type" : "in",
       "name" : "D",
       "outputs" : [
@@ -133,6 +137,7 @@
       "_id" : "5548a2f64fa5dd92240041a8",
       "in" : 3,
       "type" : "7segbin",
+      "locked": true,
       "name" : "",
       "outputs" : [
 
@@ -149,6 +154,7 @@
       "in" : 1,
       "type" : "7segbin",
       "name" : "",
+      "locked": true,
       "outputs" : [
 
       ],
@@ -164,6 +170,7 @@
       "in" : 0,
       "type" : "7segbin",
       "name" : "",
+      "locked": true,
       "outputs" : [
 
       ],

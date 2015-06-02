@@ -18,15 +18,15 @@
     },
     {
       "path": "005",
-      "title": "Exclusive OR"
+      "title": "NOT Using a NAND"
     },
     {
       "path": "006",
-      "title": "Two XOR Gates"
+      "title": "Exclusive OR"
     },
     {
       "path": "007",
-      "title": "NOT Using a NAND"
+      "title": "Two XOR Gates"
     },
     {
       "path": "008",

@@ -28,6 +28,7 @@
     {
       "_id" : "54d6f673004aab62540041aa",
       "in" : 0,
+      "locked": true,
       "type" : "in",
       "name" : "A",
       "outputs" : [
@@ -46,6 +47,7 @@
       "_id" : "54d6f674004aab62540041ab",
       "in" : 0,
       "type" : "in",
+      "locked": true,
       "name" : "B",
       "outputs" : [
         [
@@ -64,6 +66,7 @@
       "in" : 0,
       "type" : "and",
       "name" : "",
+      "locked": true,
       "outputs" : [
         [
 
@@ -79,6 +82,7 @@
     {
       "_id" : "54d6f680004aab62540041ad",
       "in" : 0,
+      "locked": true,
       "type" : "not",
       "name" : "",
       "outputs" : [
@@ -96,6 +100,7 @@
     {
       "_id" : "54d6f692004aab62540041ae",
       "in" : 0,
+      "locked": true,
       "type" : "lightg",
       "name" : "",
       "outputs" : [

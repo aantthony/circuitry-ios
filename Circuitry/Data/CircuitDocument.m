@@ -108,15 +108,21 @@ static NSString *screenshotPngPath = @"screenshot.png";
         if (object->name) {
             name = [NSString stringWithUTF8String:object->name];
         }
-        [items addObject:@{
-                           @"type": [NSString stringWithUTF8String:object->type->id],
-                           @"_id": [MongoID stringWithId:object->id],
-                           @"pos": @[@(object->pos.x), @(object->pos.y), @(object->pos.z)],
-                           @"name": name ? name : @"",
-                           @"in": @(object->in),
-                           @"out": @(object->out),
-                           @"outputs": outputs
-                           }];
+        NSMutableDictionary *d = [[NSMutableDictionary alloc] init];
+        d[@"type"] = [NSString stringWithUTF8String:object->type->id];
+        d[@"_id"]  = [MongoID stringWithId:object->id];
+        d[@"pos"]  = @[@(object->pos.x), @(object->pos.y), @(object->pos.z)];
+        d[@"name"] = name ?: @"";
+        d[@"in"]   = @(object->in);
+        d[@"out"]  = @(object->out);
+        d[@"outputs"] = outputs;
+        
+        if (object->flags & CircuitObjectFlagLocked) {
+            d[@"locked"] = @1;
+        }
+        
+        
+        [items addObject:d];
     }];
     return items;
 }

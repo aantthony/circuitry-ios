@@ -6,6 +6,7 @@
 @property (nonatomic) BOOL isMinimised;
 @property (nonatomic, readonly) Circuit *circuit;
 - (void) showProgressToNextLevelScreen;
+- (void) showWonGameScreen;
 - (void) showProblemDescription;
 @end
 

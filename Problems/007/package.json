@@ -1,9 +1,9 @@
 {
-  "_id" : "54d71f45004aab645d0041a9",
-  "description" : "NAND gates alone can be used to make any other logic gate. Make a NOT gate using a NAND Gate, so that the output is the negation of the input A.",
+  "_id" : "54d71d82004aabf85b0041a9",
+  "description" : "Extending the previous problem, make the output true when an odd number of inputs are true.",
   "view" : {
     "center" : [
-      -50,
+      -200,
       -200
     ]
   },
@@ -12,24 +12,27 @@
   },
   "tests": [
     {
-      "inputs": ["54d71f4b004aab645d0041aa"],
-      "outputs": ["54d71f69004aab645d0041ad"],
+      "inputs": ["54d71d86004aabf85b0041aa", "54d71d86004aabf85b0041ab", "54d71d86004aabf85b0041ac"],
+      "outputs": ["54d71d9a004aabf85b0041af"],
       "spec": [
-        [[0],[1]],
-        [[1],[0]]
+        [[0,0,0],[0]],
+        [[0,0,1],[1]],
+        [[0,1,0],[1]],
+        [[0,1,1],[0]],
+        [[1,0,0],[1]],
+        [[1,0,1],[0]],
+        [[1,1,0],[0]],
+        [[1,1,1],[1]]
       ]
     }
   ],
-  "version" : "1.0.0",
-  "engines" : {
-    "circuitry" : ">=0.0"
-  },
-  "title" : "NOT Using a NAND",
+  "title" : "Two XOR Gates",
   "items": [
     {
-      "_id" : "54d71f4b004aab645d0041aa",
+      "_id" : "54d71d86004aabf85b0041aa",
       "in" : 0,
       "type" : "in",
+      "locked": true,
       "name" : "A",
       "outputs" : [
         [
@@ -37,16 +40,53 @@
         ]
       ],
       "pos" : [
-        200,
-        1000,
+        600,
+        750,
         0
       ],
       "out" : 0
     },
     {
-      "_id" : "54d71f5c004aab645d0041ac",
+      "_id" : "54d71d86004aabf85b0041ab",
       "in" : 0,
-      "type" : "nand",
+      "type" : "in",
+      "locked": true,
+      "name" : "B",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        600,
+        1150,
+        0
+      ],
+      "out" : 1
+    },
+    {
+      "_id" : "54d71d86004aabf85b0041ac",
+      "in" : 0,
+      "locked": true,
+      "type" : "in",
+      "name" : "C",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        600,
+        950,
+        0
+      ],
+      "out" : 1
+    },
+    {
+      "_id" : "54d71d8f004aabf85b0041ad",
+      "in" : 0,
+      "type" : "xor",
+      "locked": true,
       "name" : "",
       "outputs" : [
         [
@@ -54,26 +94,63 @@
         ]
       ],
       "pos" : [
-        650,
         1000,
+        950,
         0
       ],
-      "out" : 1
+      "out" : 0
     },
     {
-      "_id" : "54d71f69004aab645d0041ad",
+      "_id" : "54d71d93004aabf85b0041ae",
+      "in" : 0,
+      "locked": true,
+      "type" : "xor",
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        1000,
+        1150,
+        0
+      ],
+      "out" : 0
+    },
+    {
+      "_id" : "54d71d9a004aabf85b0041af",
       "in" : 0,
       "type" : "lightg",
+      "locked": true,
       "name" : "",
       "outputs" : [
 
       ],
       "pos" : [
-        1150,
-        1000,
+        1400,
+        950,
         0
       ],
       "out" : 0
+    },
+    {
+      "_id" : "54d71dac004aabf85b0041b0",
+      "in" : 0,
+      "type" : "not",
+      "locked": true,
+      "name" : "",
+      "outputs" : [
+        [
+
+        ]
+      ],
+      "pos" : [
+        1000,
+        750,
+        0
+      ],
+      "out" : 1
     }
   ]
 }

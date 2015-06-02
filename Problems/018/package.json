@@ -15,7 +15,7 @@
   },
   "tests": [
     {
-      "inputs": ["5548a0da4fa5dd1f220041ac", "5548a0db4fa5dd1f220041ad", "5548a0e14fa5dd1f220041ae", "5548a0e34fa5dd1f220041af"],
+      "inputs": ["5548a0db4fa5dd1f220041ad", "5548a0da4fa5dd1f220041ac", "5548a0e34fa5dd1f220041af", "5548a0e14fa5dd1f220041ae"],
       "outputs": ["5548a54e4fa5dda7260041a9"],
       "spec": [
 
@@ -54,6 +54,7 @@
       "in" : 0,
       "type" : "in",
       "name" : "A",
+      "locked": true,
       "outputs" : [
         [
           [
@@ -74,6 +75,7 @@
       "in" : 0,
       "type" : "in",
       "name" : "B",
+      "locked": true,
       "outputs" : [
         [
           [
@@ -94,6 +96,7 @@
       "in" : 0,
       "type" : "in",
       "name" : "C",
+      "locked": true,
       "outputs" : [
         [
           [
@@ -114,6 +117,7 @@
       "in" : 0,
       "type" : "in",
       "name" : "D",
+      "locked": true,
       "outputs" : [
         [
           [
@@ -134,6 +138,7 @@
       "in" : 3,
       "type" : "7segbin",
       "name" : "",
+      "locked": true,
       "outputs" : [
 
       ],
@@ -149,6 +154,7 @@
       "in" : 1,
       "type" : "7segbin",
       "name" : "",
+      "locked": true,
       "outputs" : [
 
       ],
@@ -164,6 +170,7 @@
       "in" : 0,
       "type" : "7segbin",
       "name" : "",
+      "locked": true,
       "outputs" : [
 
       ],

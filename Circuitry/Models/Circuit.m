@@ -129,11 +129,14 @@ static NSValue *valueForGate(CircuitProcess *process) {
         _id = [MongoID id];
     }
 
-    [items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        NSString *type = [obj valueForKey:@"type"];
+    [items enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
+        NSString *type = obj[@"type"];
         CircuitProcess *process = [self getProcessById: type];
         CircuitObject *o = CircuitObjectCreate(_internal, process);
-        o->id = [MongoID idWithString:[obj valueForKey:@"_id"]];
+        if (obj[@"locked"]) {
+            o->flags |= CircuitObjectFlagLocked;
+        }
+        o->id = [MongoID idWithString:obj[@"_id"]];
     }];
     
     [items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {

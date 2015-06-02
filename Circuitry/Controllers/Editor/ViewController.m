@@ -715,20 +715,34 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         
     }
     
-    
 }
 
 #pragma mark -
 #pragma mark UIActionSheetDelegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 0) {
+        __block NSString *failureMessage = nil;
+        
         [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
+            
+            for(id obj in _selectedObjects) {
+                CircuitObject *object = [obj pointerValue];
+                if (object->flags & CircuitObjectFlagLocked) {
+                    failureMessage = @"This object cannot be removed.";
+                    return;
+                }
+            }
+            
             for(id obj in _selectedObjects) {
                 CircuitObject *object = [obj pointerValue];
                 CircuitObjectRemove(internal, object);
                 [self unpause];
             }
         }];
+        if (failureMessage) {
+            [[[UIAlertView alloc] initWithTitle:nil message:failureMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
+            return;
+        }
         [self updateChangeCount:UIDocumentChangeDone];
     }
 }

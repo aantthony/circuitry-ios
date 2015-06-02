@@ -1,5 +1,5 @@
 {
-  "description": "For the first problem, simply connect the input buttons to the \"and\" gate in the middle.\n\nYou can see how the system reacts to different input states by tapping the input buttons. When you toggle the input, it will change from a false/0/disabled/low signal (equivalent terms) to a true/1/enabled/high signal, therefore changing from grey to green.\n\nThe AND gate works exactly as you'd expect; it's output is true (green) precisely when its first input AND it's second input are true.",
+  "description": "For the first problem, simply connect the input buttons to the \"and\" gate in the middle.\n\nYou can see how the system reacts to different input states by tapping the input buttons. When you toggle the input, it will change from a false/0/disabled/low signal (these all mean the same thing) to a true/1/enabled/high signal, therefore changing from grey to green.\n\nThe AND gate works exactly as you'd expect; its output is true (green) precisely when its first input AND its second input are true.",
   "title": "Connect an AND gate",
   "view": {
     "center": [65, 180, 0],
@@ -28,6 +28,7 @@
       "_id": "53c3cdc945f5603003000000",
       "in": 0,
       "type": "in",
+      "locked": true,
       "name": "",
       "outputs": [ [] ],
       "pos": [ 0, 0, 0 ],
@@ -37,6 +38,7 @@
       "_id": "53c3cdc945f5603003000888",
       "in": 0,
       "type": "in",
+      "locked": true,
       "name": "",
       "outputs": [ [] ],
       "pos": [ 0, 800, 0 ],
@@ -46,6 +48,7 @@
       "_id": "53c3cdc945f5603003000009",
       "in": 0,
       "type": "lightg",
+      "locked": true,
       "name": "",
       "outputs": [ [] ],
       "pos": [ 1000, 400, 0 ],
@@ -54,6 +57,7 @@
     {
       "_id": "53c3cdc945f56030030041aa",
       "in": 0,
+      "locked": true,
       "type": "and",
       "name": "",
       "outputs": [ [["53c3cdc945f5603003000009", 0]] ],

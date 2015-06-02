@@ -54,6 +54,7 @@
       "in" : 0,
       "type" : "button",
       "name" : "C",
+      "locked": true,
       "outputs" : [
         [
           [
@@ -74,6 +75,7 @@
       "in" : 0,
       "type" : "button",
       "name" : "B",
+      "locked": true,
       "outputs" : [
         [
           [
@@ -94,6 +96,7 @@
       "in" : 0,
       "type" : "button",
       "name" : "A",
+      "locked": true,
       "outputs" : [
         [
           [
@@ -114,6 +117,7 @@
       "in" : 3,
       "type" : "7segbin",
       "name" : "",
+      "locked": true,
       "outputs" : [
 
       ],
@@ -129,6 +133,7 @@
       "in" : 1,
       "type" : "7segbin",
       "name" : "",
+      "locked": true,
       "outputs" : [
 
       ],
@@ -144,6 +149,7 @@
       "in" : 0,
       "type" : "7segbin",
       "name" : "",
+      "locked": true,
       "outputs" : [
 
       ],
@@ -159,6 +165,7 @@
       "in" : 0,
       "type" : "button",
       "name" : "4",
+      "locked": true,
       "outputs" : [
         [
           [
@@ -179,6 +186,7 @@
       "in" : 0,
       "type" : "button",
       "name" : "3",
+      "locked": true,
       "outputs" : [
         [
           [
@@ -199,6 +207,7 @@
       "in" : 0,
       "type" : "button",
       "name" : "2",
+      "locked": true,
       "outputs" : [
         [
           [
@@ -219,6 +228,7 @@
       "in" : 0,
       "type" : "button",
       "name" : "1",
+      "locked": true,
       "outputs" : [
         [
           [

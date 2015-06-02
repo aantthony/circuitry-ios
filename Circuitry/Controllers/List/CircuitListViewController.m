@@ -564,10 +564,6 @@
         return [obj2.created compare: obj1.created];
     }] mutableCopy];
 }
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 
 @end

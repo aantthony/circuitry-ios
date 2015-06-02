@@ -1,6 +1,6 @@
 {
   "_id" : "54d72378004aab735e0041bf",
-  "description" : "In this problem, both A and B represent single-bit binary numbers. That is, they are either ones or zeros. Adding these numbers will sum to either a 0, 1, or 2.\nThat is, make the number show a '0' when no inputs are true, a '1' when only one is, and a '2' when both are true.",
+  "description" : "In this problem, both A and B represent single-bit binary numbers. That is, they are either ones or zeros.\n\nAdding these numbers will sum to either a 0, 1, or 2.\n\nMake the number show a '0' when no inputs are true, a '1' when only one is, and a '2' when both are true.",
   "license" : "Copyright",
   "view" : {
     "center" : [
@@ -36,6 +36,7 @@
       "in" : 0,
       "type" : "in",
       "name" : "A",
+      "locked": true,
       "outputs" : [
         [
 
@@ -53,6 +54,7 @@
       "in" : 0,
       "type" : "in",
       "name" : "B",
+      "locked": true,
       "outputs" : [
         [
 
@@ -69,6 +71,7 @@
       "_id" : "54d72395004aab735e0041c3",
       "in" : 0,
       "type" : "7segbin",
+      "locked": true,
       "name" : "",
       "outputs" : [
 
@@ -83,6 +86,7 @@
     {
       "_id" : "54d7243e004aab735e0041c8",
       "in" : 0,
+      "locked": true,
       "type" : "xor",
       "name" : "",
       "outputs" : [
@@ -102,6 +106,7 @@
       "in" : 0,
       "type" : "and",
       "name" : "",
+      "locked": true,
       "outputs" : [
         [
 
