@@ -148,7 +148,7 @@
     return YES;
 }
 
-
+#ifdef DEBUG
 - (BOOL)validateProgram
 {
     GLint logLength, status;
@@ -169,7 +169,7 @@
     
     return YES;
 }
-
+#endif
 
 - (void) prepareToDraw {
     glUseProgram(_program);

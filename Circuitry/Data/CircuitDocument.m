@@ -209,7 +209,6 @@ static NSString *screenshotPngPath = @"screenshot.png";
     [request setURL:requestURL];
     
     NSURLSessionUploadTask *task = [session uploadTaskWithRequest:request fromData:data completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        NSLog(@"done");
 //        completionHandler(error);
     }];
     

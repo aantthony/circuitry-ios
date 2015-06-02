@@ -101,7 +101,7 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     GLint x = 0, y = 0, width = backingWidth, height = backingHeight;
     NSInteger dataLength = width * height * 4;
     GLubyte *data = (GLubyte*)malloc(dataLength * sizeof(GLubyte));
-    NSLog(@"reading pixels");
+
     // Read pixel data from the framebuffer
     glPixelStorei(GL_PACK_ALIGNMENT, 4);
     glReadPixels(x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
@@ -149,14 +149,13 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 }
 
 -(void)appWillResignActive:(NSNotification*)note {
-    NSLog(@"will resign active...");
     if (_document.isProblem) return;
     
     if (_document.hasUnsavedChanges) {
         [_document useScreenshot: self.snapshot];
         
         [_document savePresentedItemChangesWithCompletionHandler:^(NSError *errorOrNil) {
-            NSLog(@"will resign active:: saved");
+
         }];
     }
 }
@@ -450,10 +449,8 @@ static BOOL animateGateToLockedPosition(CircuitObject *object, float x, float y)
     }
     
     int circuitChanges = [_document.circuit simulate:512];
-//    NSLog(@"%d, %f", circuitChanges, dt);
     changes += circuitChanges;
     changes += [_viewport update: dt];
-//    NSLog(@"Changed!");
     if (animatingPan || isAnimatingScaleToSnap || changes) {
         self.paused = NO;
     } else {
@@ -515,13 +512,7 @@ static CGFloat gridSize = 33.0;
 {
     [self checkError];
     glClearColor(0.4, 0.4, 0.4, 1.0f);
-    EAGLContext *ctx = [EAGLContext currentContext];
-    if (ctx != self.context) {
-        NSLog(@"WTFF");
-    }
-    if (!self.context) {
-        NSLog(@"WTF");
-    }
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 //    glDisable(GL_DEPTH_TEST);
     glEnable(GL_DEPTH_TEST);
@@ -573,9 +564,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 #pragma mark -  Gesture methods
 
 
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
-{
-//    NSLog(@"gestureRecognizerShouldBegin: %@", gestureRecognizer);
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
     [self unpause];
     [self stopPanAnimation];
 	if ( [gestureRecognizer isKindOfClass:[UIPinchGestureRecognizer class]] ) {
@@ -696,7 +685,6 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     if ([gestureRecognizer isKindOfClass:[LongPressObjectGesture class]] || [otherGestureRecognizer isKindOfClass:[LongPressObjectGesture class]]) {
         return YES;
     }
-//    NSLog(@"blocked %@ / %@", gestureRecognizer.class, otherGestureRecognizer.class);
     return NO;
 }
 
@@ -976,12 +964,12 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     [_viewport translate: GLKVector3Make(_viewport.scaleWithFloat * (bPos.x - aPos.x), _viewport.scaleWithFloat * (bPos.y - aPos.y), 0.0)];
     [self unpause];
     
-//#define LOG_TEST 0
-#ifdef LOG_TEST
-    GLKVector3 cPos = [_viewport unproject: PX(self.view.contentScaleFactor, [recognizer locationInView:self.view])];
-    // the difference should be (0,0,0)
-    NSLog(@"((%.2f, %.2f : %.2f) , (%.2f, %.2f : %.2f))", aPos.x, cPos.x, aPos.x - cPos.x , aPos.y, cPos.y, aPos.y - cPos.y);
-#endif
+////#define LOG_TEST 0
+//#ifdef LOG_TEST
+//    GLKVector3 cPos = [_viewport unproject: PX(self.view.contentScaleFactor, [recognizer locationInView:self.view])];
+//    // the difference should be (0,0,0)
+//    NSLog(@"((%.2f, %.2f : %.2f) , (%.2f, %.2f : %.2f))", aPos.x, cPos.x, aPos.x - cPos.x , aPos.y, cPos.y, aPos.y - cPos.y);
+//#endif
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
