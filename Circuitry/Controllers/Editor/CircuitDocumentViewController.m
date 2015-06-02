@@ -64,7 +64,7 @@
         [label addGestureRecognizer:tap];
         label.textAlignment = NSTextAlignmentCenter;
         label.userInteractionEnabled = YES;
-        label.font = [UIFont systemFontOfSize:17.0];
+        label.font = [UIFont boldSystemFontOfSize:17];
         _titleView = label;
     }
     

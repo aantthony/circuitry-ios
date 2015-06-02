@@ -741,7 +741,7 @@ The linking wires in Circuitry allow these signals to be passed on from the outp
                                     <constraint firstAttribute="centerY" secondItem="LqF-H5-SNk" secondAttribute="centerY" id="n1x-bG-cBf"/>
                                 </constraints>
                             </view>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ipad-white-vertical-level-1.png" translatesAutoresizingMaskIntoConstraints="NO" id="mzK-eN-2zw">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ipad-white-vertical-level-2.png" translatesAutoresizingMaskIntoConstraints="NO" id="mzK-eN-2zw">
                                 <rect key="frame" x="158" y="45" width="453" height="538"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="453" id="GOJ-U5-Jr3"/>
@@ -776,7 +776,7 @@ The linking wires in Circuitry allow these signals to be passed on from the outp
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ipad-white-vertical-level-1.png" translatesAutoresizingMaskIntoConstraints="NO" id="eoz-vI-Ld4">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="adderexample.png" translatesAutoresizingMaskIntoConstraints="NO" id="eoz-vI-Ld4">
                                 <rect key="frame" x="71" y="45" width="882" height="432"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="453" id="nSc-C8-Ucb"/>
@@ -1055,9 +1055,10 @@ This logic diagram describes the rule:
         <image name="ProblemTick" width="40" height="40"/>
         <image name="TestResultMatch" width="29" height="23"/>
         <image name="UpArrow" width="32" height="19"/>
+        <image name="adderexample.png" width="882" height="1310"/>
         <image name="continue-arrow" width="53" height="18"/>
         <image name="dots" width="22" height="6"/>
-        <image name="ipad-white-vertical-level-1.png" width="882" height="1310"/>
+        <image name="ipad-white-vertical-level-2.png" width="882" height="1310"/>
         <image name="large-plus" width="54" height="54"/>
         <image name="or" width="90" height="50"/>
         <image name="probleminfoshad" width="1" height="1"/>

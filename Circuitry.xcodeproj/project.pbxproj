@@ -54,7 +54,6 @@
 		923584C91AF602C3004DCD0F /* LongPressObjectGesture.m in Sources */ = {isa = PBXBuildFile; fileRef = 923584B91AF602C3004DCD0F /* LongPressObjectGesture.m */; };
 		923584CA1AF602C3004DCD0F /* and-gate@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 923584BB1AF602C3004DCD0F /* and-gate@2x.png */; };
 		923584CB1AF602C3004DCD0F /* background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 923584BC1AF602C3004DCD0F /* background.jpg */; };
-		923584CC1AF602C3004DCD0F /* ipad-white-vertical-level-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 923584BD1AF602C3004DCD0F /* ipad-white-vertical-level-1.png */; };
 		923584CD1AF602C3004DCD0F /* or-gate@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 923584BE1AF602C3004DCD0F /* or-gate@2x.png */; };
 		923584CE1AF602C3004DCD0F /* tutorial-bg-1@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 923584BF1AF602C3004DCD0F /* tutorial-bg-1@2x.jpg */; };
 		923584CF1AF602C3004DCD0F /* tutorial-bg-2@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 923584C01AF602C3004DCD0F /* tutorial-bg-2@2x.jpg */; };
@@ -98,6 +97,8 @@
 		9235853C1AF602DF004DCD0F /* Viewport.m in Sources */ = {isa = PBXBuildFile; fileRef = 923585181AF602DF004DCD0F /* Viewport.m */; };
 		923585721AF60311004DCD0F /* Problems in Resources */ = {isa = PBXBuildFile; fileRef = 923585711AF60311004DCD0F /* Problems */; };
 		923585751AF65BB2004DCD0F /* NavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 923585741AF65BB2004DCD0F /* NavigationViewController.m */; };
+		9263433E1B1DDBFF00F74E25 /* adderexample.png in Resources */ = {isa = PBXBuildFile; fileRef = 9263433D1B1DDBFF00F74E25 /* adderexample.png */; };
+		926343401B1DDC9500F74E25 /* ipad-white-vertical-level-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 9263433F1B1DDC9500F74E25 /* ipad-white-vertical-level-2.png */; };
 		92AA6323189E73A000A135F3 /* MongoIDTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 92AA6322189E73A000A135F3 /* MongoIDTest.m */; };
 		92DD078A18AFC10D00FB684A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92DD078918AFC10D00FB684A /* SystemConfiguration.framework */; };
 		92DD078C18AFC11A00FB684A /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92DD078B18AFC11A00FB684A /* AdSupport.framework */; };
@@ -212,7 +213,6 @@
 		923584B91AF602C3004DCD0F /* LongPressObjectGesture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LongPressObjectGesture.m; sourceTree = "<group>"; };
 		923584BB1AF602C3004DCD0F /* and-gate@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "and-gate@2x.png"; sourceTree = "<group>"; };
 		923584BC1AF602C3004DCD0F /* background.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = background.jpg; sourceTree = "<group>"; };
-		923584BD1AF602C3004DCD0F /* ipad-white-vertical-level-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ipad-white-vertical-level-1.png"; sourceTree = "<group>"; };
 		923584BE1AF602C3004DCD0F /* or-gate@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "or-gate@2x.png"; sourceTree = "<group>"; };
 		923584BF1AF602C3004DCD0F /* tutorial-bg-1@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial-bg-1@2x.jpg"; sourceTree = "<group>"; };
 		923584C01AF602C3004DCD0F /* tutorial-bg-2@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial-bg-2@2x.jpg"; sourceTree = "<group>"; };
@@ -279,6 +279,8 @@
 		923585711AF60311004DCD0F /* Problems */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Problems; sourceTree = "<group>"; };
 		923585731AF65BB2004DCD0F /* NavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationViewController.h; sourceTree = "<group>"; };
 		923585741AF65BB2004DCD0F /* NavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationViewController.m; sourceTree = "<group>"; };
+		9263433D1B1DDBFF00F74E25 /* adderexample.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = adderexample.png; sourceTree = "<group>"; };
+		9263433F1B1DDC9500F74E25 /* ipad-white-vertical-level-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ipad-white-vertical-level-2.png"; sourceTree = "<group>"; };
 		927C76CA1A5BEF0B004F84ED /* Circuitry.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Circuitry.entitlements; sourceTree = "<group>"; };
 		9281540E1A5BED1E00C0CDF7 /* Pods.distribution.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Pods.distribution.xcconfig; path = "Pods/Target Support Files/Pods/Pods.distribution.xcconfig"; sourceTree = "<group>"; };
 		92AA6322189E73A000A135F3 /* MongoIDTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoIDTest.m; sourceTree = "<group>"; };
@@ -588,11 +590,12 @@
 			children = (
 				923584BB1AF602C3004DCD0F /* and-gate@2x.png */,
 				923584BC1AF602C3004DCD0F /* background.jpg */,
-				923584BD1AF602C3004DCD0F /* ipad-white-vertical-level-1.png */,
 				923584BE1AF602C3004DCD0F /* or-gate@2x.png */,
 				923584BF1AF602C3004DCD0F /* tutorial-bg-1@2x.jpg */,
+				9263433F1B1DDC9500F74E25 /* ipad-white-vertical-level-2.png */,
 				923584C01AF602C3004DCD0F /* tutorial-bg-2@2x.jpg */,
 				923584C11AF602C3004DCD0F /* tutorial-bg-3@2x.jpg */,
+				9263433D1B1DDBFF00F74E25 /* adderexample.png */,
 				923584C21AF602C3004DCD0F /* tutorial-logo@2x.png */,
 			);
 			path = Images;
@@ -843,6 +846,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				926343401B1DDC9500F74E25 /* ipad-white-vertical-level-2.png in Resources */,
 				9232AD861A1CBE120030ADB2 /* Terms.rtf in Resources */,
 				923584CB1AF602C3004DCD0F /* background.jpg in Resources */,
 				923585261AF602DF004DCD0F /* BatchedSprite.vsh in Resources */,
@@ -856,8 +860,8 @@
 				92020C0B189A578200B6D8F5 /* circuit.image-atlas in Resources */,
 				923584D01AF602C3004DCD0F /* tutorial-bg-3@2x.jpg in Resources */,
 				923584CF1AF602C3004DCD0F /* tutorial-bg-2@2x.jpg in Resources */,
+				9263433E1B1DDBFF00F74E25 /* adderexample.png in Resources */,
 				923584C31AF602C3004DCD0F /* blank.json in Resources */,
-				923584CC1AF602C3004DCD0F /* ipad-white-vertical-level-1.png in Resources */,
 				923585321AF602DF004DCD0F /* Grid.vsh in Resources */,
 				923584CE1AF602C3004DCD0F /* tutorial-bg-1@2x.jpg in Resources */,
 				923056A118759577005AE348 /* Configurations.plist in Resources */,
