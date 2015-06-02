@@ -29,6 +29,7 @@
       "in" : 0,
       "type" : "in",
       "name" : "A",
+      "locked": true,
       "outputs" : [
         [
 
@@ -45,6 +46,7 @@
       "_id" : "54d71a50004aabc4580041ac",
       "in" : 0,
       "type" : "in",
+      "locked": true,
       "name" : "B",
       "outputs" : [
         [
@@ -62,6 +64,7 @@
       "_id" : "54d71a54004aabc4580041ad",
       "in" : 0,
       "type" : "or",
+      "locked": true,
       "name" : "",
       "outputs" : [
         [
@@ -79,6 +82,7 @@
       "_id" : "54d71a79004aabc4580041ae",
       "in" : 0,
       "type" : "lightg",
+      "locked": true,
       "name" : "",
       "outputs" : [
 
@@ -94,6 +98,7 @@
       "_id" : "54d71aa6004aabc4580041af",
       "in" : 0,
       "type" : "and",
+      "locked": true,
       "name" : "",
       "outputs" : [
         [
@@ -111,6 +116,7 @@
       "_id" : "54d71aac004aabc4580041b0",
       "in" : 0,
       "type" : "not",
+      "locked": true,
       "name" : "",
       "outputs" : [
         [
@@ -128,6 +134,7 @@
       "_id" : "54d71ae1004aabc4580041b1",
       "in" : 0,
       "type" : "and",
+      "locked": true,
       "name" : "",
       "outputs" : [
         [
@@ -144,6 +151,7 @@
     {
       "_id" : "54d71b1d004aabc4580041b2",
       "in" : 0,
+      "locked": true,
       "type" : "not",
       "name" : "",
       "outputs" : [

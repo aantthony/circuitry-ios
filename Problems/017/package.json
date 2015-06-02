@@ -32,6 +32,7 @@
     {
       "_id" : "5548a0da4fa5dd1f220041ac",
       "in" : 0,
+      "locked": true,
       "type" : "button",
       "name" : "D",
       "outputs" : [
@@ -54,6 +55,7 @@
       "in" : 0,
       "type" : "button",
       "name" : "C",
+      "locked": true,
       "outputs" : [
         [
           [
@@ -73,6 +75,7 @@
       "_id" : "5548a0e14fa5dd1f220041ae",
       "in" : 0,
       "type" : "button",
+      "locked": true,
       "name" : "B",
       "outputs" : [
         [
@@ -93,6 +96,7 @@
       "_id" : "5548a0e34fa5dd1f220041af",
       "in" : 0,
       "type" : "button",
+      "locked": true,
       "name" : "A",
       "outputs" : [
         [
@@ -114,6 +118,7 @@
       "in" : 3,
       "type" : "7segbin",
       "name" : "",
+      "locked": true,
       "outputs" : [
 
       ],
@@ -129,6 +134,7 @@
       "in" : 1,
       "type" : "7segbin",
       "name" : "",
+      "locked": true,
       "outputs" : [
 
       ],
@@ -144,6 +150,7 @@
       "in" : 0,
       "type" : "7segbin",
       "name" : "",
+      "locked": true,
       "outputs" : [
 
       ],
@@ -159,6 +166,7 @@
       "in" : 0,
       "type" : "button",
       "name" : "4",
+      "locked": true,
       "outputs" : [
         [
           [
@@ -179,6 +187,7 @@
       "in" : 0,
       "type" : "button",
       "name" : "3",
+      "locked": true,
       "outputs" : [
         [
           [
@@ -199,6 +208,7 @@
       "in" : 0,
       "type" : "button",
       "name" : "2",
+      "locked": true,
       "outputs" : [
         [
           [
@@ -219,6 +229,7 @@
       "in" : 0,
       "type" : "button",
       "name" : "1",
+      "locked": true,
       "outputs" : [
         [
           [

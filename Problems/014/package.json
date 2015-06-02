@@ -36,6 +36,7 @@
       "in" : 0,
       "type" : "in",
       "name" : "A",
+      "locked": true,
       "outputs" : [
         [
 
@@ -53,6 +54,7 @@
       "in" : 0,
       "type" : "in",
       "name" : "B",
+      "locked": true,
       "outputs" : [
         [
 
@@ -69,6 +71,7 @@
       "_id" : "54d72395004aab735e0041c3",
       "in" : 0,
       "type" : "7segbin",
+      "locked": true,
       "name" : "",
       "outputs" : [
 
@@ -83,6 +86,7 @@
     {
       "_id" : "54d7243e004aab735e0041c8",
       "in" : 0,
+      "locked": true,
       "type" : "xor",
       "name" : "",
       "outputs" : [
@@ -102,6 +106,7 @@
       "in" : 0,
       "type" : "and",
       "name" : "",
+      "locked": true,
       "outputs" : [
         [
 

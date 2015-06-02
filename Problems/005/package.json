@@ -29,6 +29,7 @@
     {
       "_id" : "54d71f4b004aab645d0041aa",
       "in" : 0,
+      "locked": true,
       "type" : "in",
       "name" : "A",
       "outputs" : [
@@ -48,6 +49,7 @@
       "in" : 0,
       "type" : "nand",
       "name" : "",
+      "locked": true,
       "outputs" : [
         [
 
@@ -65,6 +67,7 @@
       "in" : 0,
       "type" : "lightg",
       "name" : "",
+      "locked": true,
       "outputs" : [
 
       ],

@@ -40,6 +40,7 @@
       "in" : 0,
       "type" : "in",
       "name" : "A",
+      "locked": true,
       "outputs" : [
         [
 
@@ -56,6 +57,7 @@
       "_id" : "54d72295004aab735e0041ba",
       "in" : 0,
       "type" : "in",
+      "locked": true,
       "name" : "B",
       "outputs" : [
         [
@@ -72,6 +74,7 @@
     {
       "_id" : "54d72297004aab735e0041bb",
       "in" : 0,
+      "locked": true,
       "type" : "in",
       "name" : "C",
       "outputs" : [
@@ -91,6 +94,7 @@
       "in" : 0,
       "type" : "lightg",
       "name" : "",
+      "locked": true,
       "outputs" : [
 
       ],

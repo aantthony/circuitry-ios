@@ -34,6 +34,7 @@
       "_id" : "54d6f45f004aab9c520041a8",
       "in" : 0,
       "type" : "in",
+      "locked": true,
       "name" : "A",
       "outputs" : [
         [
@@ -50,6 +51,7 @@
     {
       "_id" : "54d6f460004aab9c520041a9",
       "in" : 0,
+      "locked": true,
       "type" : "in",
       "name" : "B",
       "outputs" : [
@@ -67,6 +69,7 @@
     {
       "_id" : "54d6f460004aab9c520041aa",
       "in" : 0,
+      "locked": true,
       "type" : "in",
       "name" : "C",
       "outputs" : [
@@ -85,6 +88,7 @@
       "_id" : "54d6f465004aab9c520041ab",
       "in" : 0,
       "type" : "or",
+      "locked": true,
       "name" : "",
       "outputs" : [
         [
@@ -102,6 +106,7 @@
       "_id" : "54d6f465004aab9c520041ac",
       "in" : 0,
       "type" : "or",
+      "locked": true,
       "name" : "",
       "outputs" : [
         [
@@ -118,6 +123,7 @@
     {
       "_id" : "54d6f4b7c81dbacc520041a8",
       "in" : 0,
+      "locked": true,
       "type" : "lightg",
       "name" : "",
       "outputs" : [

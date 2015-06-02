@@ -49,6 +49,7 @@
       "in" : 0,
       "type" : "button",
       "name" : "R",
+      "locked": true,
       "outputs" : [
         [
 
@@ -66,6 +67,7 @@
       "in" : 0,
       "type" : "button",
       "name" : "E",
+      "locked": true,
       "outputs" : [
         [
 
@@ -83,6 +85,7 @@
       "in" : 0,
       "type" : "button",
       "name" : "S",
+      "locked": true,
       "outputs" : [
         [
 
@@ -100,6 +103,7 @@
       "in" : 0,
       "type" : "nor",
       "name" : "",
+      "locked": true,
       "outputs" : [
         [
 
@@ -117,6 +121,7 @@
       "in" : 0,
       "type" : "nor",
       "name" : "",
+      "locked": true,
       "outputs" : [
         [
 
@@ -134,6 +139,7 @@
       "in" : 0,
       "type" : "light",
       "name" : "Q",
+      "locked": true,
       "outputs" : [
 
       ],

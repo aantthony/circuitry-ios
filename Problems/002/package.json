@@ -30,6 +30,7 @@
     {
       "_id": "53c3cdc945f5603003000000",
       "in": 0,
+      "locked": true,
       "type": "in",
       "name": "A",
       "outputs": [ [] ],
@@ -40,6 +41,7 @@
       "_id": "53c3cdc945f5603003000333",
       "in": 0,
       "type": "in",
+      "locked": true,
       "name": "B",
       "outputs": [ [] ],
       "pos": [ 0, 400, 0 ],
@@ -50,6 +52,7 @@
     "in": 0,
     "type": "in",
     "name": "C",
+    "locked": true,
     "outputs": [ [] ],
     "pos": [ 0, 800, 0 ],
     "out": 0
@@ -58,6 +61,7 @@
       "_id": "53c3cdc945f5603003000009",
       "in": 0,
       "type": "lightg",
+      "locked": true,
       "name": "",
       "outputs": [ [] ],
       "pos": [ 1000, 400, 0 ],
@@ -67,6 +71,7 @@
       "_id": "53c3cdc945f56030030041aa",
       "in": 0,
       "type": "and",
+      "locked": true,
       "name": "",
       "outputs": [ [["53c3cdc945f5603003000009", 0]] ],
       "pos": [ 500, 300, 0 ],
@@ -75,6 +80,7 @@
     {
       "_id": "53c3cdc945f56030030041ab",
       "in": 0,
+      "locked": true,
       "type": "and",
       "name": "",
       "outputs": [ [] ],

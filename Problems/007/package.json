@@ -32,6 +32,7 @@
       "_id" : "54d71d86004aabf85b0041aa",
       "in" : 0,
       "type" : "in",
+      "locked": true,
       "name" : "A",
       "outputs" : [
         [
@@ -49,6 +50,7 @@
       "_id" : "54d71d86004aabf85b0041ab",
       "in" : 0,
       "type" : "in",
+      "locked": true,
       "name" : "B",
       "outputs" : [
         [
@@ -65,6 +67,7 @@
     {
       "_id" : "54d71d86004aabf85b0041ac",
       "in" : 0,
+      "locked": true,
       "type" : "in",
       "name" : "C",
       "outputs" : [
@@ -83,6 +86,7 @@
       "_id" : "54d71d8f004aabf85b0041ad",
       "in" : 0,
       "type" : "xor",
+      "locked": true,
       "name" : "",
       "outputs" : [
         [
@@ -99,6 +103,7 @@
     {
       "_id" : "54d71d93004aabf85b0041ae",
       "in" : 0,
+      "locked": true,
       "type" : "xor",
       "name" : "",
       "outputs" : [
@@ -117,6 +122,7 @@
       "_id" : "54d71d9a004aabf85b0041af",
       "in" : 0,
       "type" : "lightg",
+      "locked": true,
       "name" : "",
       "outputs" : [
 
@@ -132,6 +138,7 @@
       "_id" : "54d71dac004aabf85b0041b0",
       "in" : 0,
       "type" : "not",
+      "locked": true,
       "name" : "",
       "outputs" : [
         [
