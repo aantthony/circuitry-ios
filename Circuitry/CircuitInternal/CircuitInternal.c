@@ -25,21 +25,21 @@ static void *scalloc(size_t c, size_t b) {
 
 // Logic Gate definitions:
 
-static int XOR  (int x, int *d) { return x == 1 || x == 2;}
-static int XNOR (int x, int *d) { return x == 0 || x == 3;}
-static int AND  (int x, int *d) { return x == 3;}
-static int NAND (int x, int *d) { return x != 3;}
-static int NOT  (int x, int *d) { return !x; }
-static int NOR  (int x, int *d) { return !x; }
-static int OR   (int x, int *d) { return !!x; }
-static int HA   (int x, int *d) { int a = x & 1; int b = x >> 1; return a+b; }
-static int FA   (int x, int *d) { int a = x & 1; int b = (x >> 1) & 1; int c = x >> 2; return a+b+c; }
-static int ADD8 (int x, int *d) { return (x&255) + (x >> 8); }
-static int MULT8 (int x, int *d) { return (x&255) * (x >> 8); }
-static int ADD4 (int x, int *d) { return (x&15) + (x >> 4); }
-static int MULT4 (int x, int *d) { return (x&15) * (x >> 4); }
-static int BINDEC (int x, int *d) { return 1 << x; }
-static int JK (int x, int *d) {
+static int XOR  (int x, unsigned int *d) { return x == 1 || x == 2;}
+static int XNOR (int x, unsigned int *d) { return x == 0 || x == 3;}
+static int AND  (int x, unsigned int *d) { return x == 3;}
+static int NAND (int x, unsigned int *d) { return x != 3;}
+static int NOT  (int x, unsigned int *d) { return !x; }
+static int NOR  (int x, unsigned int *d) { return !x; }
+static int OR   (int x, unsigned int *d) { return !!x; }
+static int HA   (int x, unsigned int *d) { int a = x & 1; int b = x >> 1; return a+b; }
+static int FA   (int x, unsigned int *d) { int a = x & 1; int b = (x >> 1) & 1; int c = x >> 2; return a+b+c; }
+static int ADD8 (int x, unsigned int *d) { return (x&255) + (x >> 8); }
+static int MULT8 (int x, unsigned int *d) { return (x&255) * (x >> 8); }
+static int ADD4 (int x, unsigned int *d) { return (x&15) + (x >> 4); }
+static int MULT4 (int x, unsigned int *d) { return (x&15) * (x >> 4); }
+static int BINDEC (int x, unsigned int *d) { return 1 << x; }
+static int JK (int x, unsigned int *d) {
     int j = x & 1;
     int clk = x & 2;
     int k = x & 4;
@@ -58,7 +58,7 @@ static int JK (int x, int *d) {
     }
     return (*d & 1) ? 1 : 2;
 }
-static int D (int x, int *d) {
+static int D (int x, unsigned int *d) {
     int j = x & 1;
     if (!j) {
         j |= 4;
@@ -68,7 +68,7 @@ static int D (int x, int *d) {
     }
     return JK(j, d);
 }
-static int D16 (int x, int *d) {
+static int D16 (int x, unsigned int *d) {
     int clk = x & 1;
     if (!clk) {
         // clear bit 0
@@ -78,7 +78,7 @@ static int D16 (int x, int *d) {
     }
     return (*d) >> 1;
 }
-static int T (int x, int *d) {
+static int T (int x, unsigned int *d) {
     if (x == 0) {
         return JK(0, d);
     } else if (x == 1) {
@@ -88,7 +88,7 @@ static int T (int x, int *d) {
     }
     return JK(1 | 2 | 4, d);
 }
-static int SR (int x, int *d) {
+static int SR (int x, unsigned int *d) {
     if (x == 0) return *d;
     if (x == 1) {
         // set:
@@ -104,7 +104,7 @@ static int SR (int x, int *d) {
     *d = 0;
     return 0;
 }
-static int SER (int x, int *d) {
+static int SER (int x, unsigned int *d) {
     int e = x & 2;
     int s = (x & 1) && e;
     int r = (x & 4) && e;
@@ -118,7 +118,7 @@ static int SER (int x, int *d) {
     return SR(j, d);
 }
 
-static int BIN7SEG(int x, int *d) {
+static int BIN7SEG(int x, unsigned int *d) {
     switch(x) {
         case 0:  return 0b0111111;
         case 1:  return 0b0000110;

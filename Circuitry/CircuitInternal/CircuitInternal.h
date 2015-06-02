@@ -121,7 +121,7 @@ struct CircuitProcess {
     const char *id;
     int numInputs;
     int numOutputs;
-    int (*calculate)(int, int*);
+    int (*calculate)(int, unsigned int*);
 };
 
 
