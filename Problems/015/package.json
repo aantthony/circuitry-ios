@@ -16,7 +16,7 @@
   "tests": [
     {
       "inputs": ["54d725c2c81dba47610041aa", "54d725c2c81dba47610041ab", "54d725c3c81dba47610041ac"],
-      "outputs": ["54d725e3c81dba47610041b2", "54d725e4c81dba47610041b3"],
+      "outputs": ["54d725e4c81dba47610041b3", "54d725e3c81dba47610041b2"],
       "spec": [
         [[0,0,0],[0,0]],
         [[1,0,0],[0,1]],
@@ -198,7 +198,7 @@
     {
       "_id" : "54d725e4c81dba47610041b3",
       "in" : 0,
-      "type" : "out",
+      "type" : "lightg",
       "name" : "C",
       "locked": true,
       "outputs" : [
