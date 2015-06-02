@@ -1,6 +1,6 @@
 {
   "_id" : "54d7228f004aab735e0041b9",
-  "description" : "Another type of Flip-flop is the Gated SR latch, which is a 'clocked' Flip-flop. This kind of Flip-flop behaves like an SR latch except that it only changes while the Enable (E) input is on.\n\nThis is useful because it allows writing data to the binary bit to syncronized with other circuit elements.",
+  "description" : "Another type of Flip-flop is the Gated SR latch, which is a 'clocked' Flip-flop. This kind of Flip-flop behaves like an SR latch except that it only changes while the Enable (E) input is on.\n\nThis is useful because it allows the writing of data to the binary bit to synchronized with other circuit elements.",
   "license" : "Copyright",
   "view" : {
     "center" : [
