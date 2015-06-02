@@ -15,7 +15,7 @@
   },
   "tests": [
     {
-      "inputs": ["5548a0da4fa5dd1f220041ac", "5548a0db4fa5dd1f220041ad", "5548a0e14fa5dd1f220041ae", "5548a0e34fa5dd1f220041af"],
+      "inputs": ["5548a0db4fa5dd1f220041ad", "5548a0da4fa5dd1f220041ac", "5548a0e34fa5dd1f220041af", "5548a0e14fa5dd1f220041ae"],
       "outputs": ["5548a54e4fa5dda7260041a9"],
       "spec": [
 
