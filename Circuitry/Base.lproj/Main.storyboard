@@ -128,13 +128,23 @@
                                         <tableViewCellContentView key="contentView" autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Ffp-F2-vuw" id="f5g-We-EdU">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView autoresizesSubviews="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="TestResultMatch" translatesAutoresizingMaskIntoConstraints="NO" id="1C1-wR-vVI">
-                                                    <rect key="frame" x="542" y="0.0" width="50" height="50"/>
+                                                <imageView autoresizesSubviews="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="TestResultMatch" translatesAutoresizingMaskIntoConstraints="NO" id="1C1-wR-vVI">
+                                                    <rect key="frame" x="540" y="0.0" width="50" height="50"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="50" id="ONj-5r-Il5"/>
+                                                        <constraint firstAttribute="height" constant="50" id="xig-Pl-BIB"/>
+                                                    </constraints>
                                                 </imageView>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="1C1-wR-vVI" secondAttribute="bottom" id="3Wh-0m-iNE"/>
+                                                <constraint firstItem="1C1-wR-vVI" firstAttribute="top" secondItem="f5g-We-EdU" secondAttribute="top" id="BET-mD-kb7"/>
+                                                <constraint firstAttribute="trailing" secondItem="1C1-wR-vVI" secondAttribute="trailing" constant="-50" id="U2e-4B-pHE"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="resultMarkView" destination="1C1-wR-vVI" id="uGj-nR-tiC"/>
+                                            <outlet property="rightSpacing" destination="U2e-4B-pHE" id="v09-lI-3VC"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

@@ -12,6 +12,7 @@
 
 @interface TestResultItemCell()
 @property (weak, nonatomic) IBOutlet UIImageView *resultMarkView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *rightSpacing;
 @property (nonatomic) NSMutableArray *columnLabels;
 @end
 
@@ -24,10 +25,12 @@
 
 - (void) setShowResult:(BOOL) showResult animated:(BOOL) animated {
     if (!animated) {
-        self.resultMarkView.frame = CGRectMake(showResult ? 466 : 542, 0, 50, 50);
+        self.rightSpacing.constant = showResult ? 24 : - 50;
+        [self layoutIfNeeded];
+        
         self.resultMarkView.alpha = showResult ? 1.0 : 0.5;
         BOOL showRedBackground = !_check.isMatch && showResult;
-        self.backgroundColor = showRedBackground ? self.class.redBackgroundColor : [UIColor whiteColor];
+        self.backgroundColor = showRedBackground ? [TestResultItemCell redBackgroundColor] : [UIColor whiteColor];
         return;
     } else {
         [self setShowResult:showResult animated:NO];
