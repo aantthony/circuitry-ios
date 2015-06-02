@@ -909,52 +909,6 @@ The linking wires in Circuitry allow these signals to be passed on from the outp
                         <rect key="frame" x="0.0" y="0.0" width="768" height="258"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vuh-ES-eXS">
-                                <rect key="frame" x="0.0" y="0.0" width="768" height="258"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Problem #1 - How to link gates" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MHQ-DL-SWj">
-                                        <rect key="frame" x="15" y="13" width="753" height="30"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="22"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="10" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="689" translatesAutoresizingMaskIntoConstraints="NO" id="Qmv-Nm-o5F">
-                                        <rect key="frame" x="15" y="51" width="689" height="199"/>
-                                        <string key="text">Drag a line from the gates on the left into the AND Gate in the middle. Then drag a line from the output of the AND Gate into the rectangle labeled X.
-
-This logic diagram describes the rule:
-</string>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="UpArrow" translatesAutoresizingMaskIntoConstraints="NO" id="Mfd-cb-9WV">
-                                        <rect key="frame" x="730" y="20" width="30" height="16"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="16" id="47U-86-2sa"/>
-                                            <constraint firstAttribute="width" constant="30" id="Oww-Pp-Tti"/>
-                                        </constraints>
-                                    </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="DownArrow" translatesAutoresizingMaskIntoConstraints="NO" id="F85-EQ-wkX">
-                                        <rect key="frame" x="730" y="20" width="30" height="16"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="30" id="N6g-Oi-8ZL"/>
-                                            <constraint firstAttribute="height" constant="16" id="uJR-4A-4Z7"/>
-                                        </constraints>
-                                    </imageView>
-                                </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <gestureRecognizers/>
-                                <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="Mfd-cb-9WV" secondAttribute="trailing" constant="8" id="1qm-Ev-bml"/>
-                                    <constraint firstAttribute="trailing" secondItem="F85-EQ-wkX" secondAttribute="trailing" constant="8" id="gOf-Dn-bPq"/>
-                                    <constraint firstItem="F85-EQ-wkX" firstAttribute="top" secondItem="Vuh-ES-eXS" secondAttribute="top" constant="20" id="rQ3-uG-R36"/>
-                                    <constraint firstItem="Mfd-cb-9WV" firstAttribute="top" secondItem="Vuh-ES-eXS" secondAttribute="top" constant="20" id="trN-lQ-V2E"/>
-                                </constraints>
-                                <connections>
-                                    <outletCollection property="gestureRecognizers" destination="wRg-zo-iay" appends="YES" id="MEp-4o-5Af"/>
-                                </connections>
-                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="31s-zx-ivU">
                                 <rect key="frame" x="0.0" y="0.0" width="768" height="258"/>
                                 <subviews>
@@ -994,6 +948,52 @@ This logic diagram describes the rule:
                                     <constraint firstAttribute="centerX" secondItem="UDI-Xp-EuQ" secondAttribute="centerX" id="qbu-NC-h7B"/>
                                     <constraint firstAttribute="trailing" secondItem="Ywh-1w-sac" secondAttribute="trailing" id="xPb-Mu-Bdf"/>
                                 </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vuh-ES-eXS">
+                                <rect key="frame" x="0.0" y="0.0" width="768" height="258"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Problem #1 - How to link gates" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MHQ-DL-SWj">
+                                        <rect key="frame" x="15" y="13" width="753" height="30"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="22"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="10" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="689" translatesAutoresizingMaskIntoConstraints="NO" id="Qmv-Nm-o5F">
+                                        <rect key="frame" x="15" y="51" width="689" height="199"/>
+                                        <string key="text">Drag a line from the gates on the left into the AND Gate in the middle. Then drag a line from the output of the AND Gate into the rectangle labeled X.
+
+This logic diagram describes the rule:
+</string>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="0.37958282271241828" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="UpArrow" translatesAutoresizingMaskIntoConstraints="NO" id="Mfd-cb-9WV">
+                                        <rect key="frame" x="726" y="20" width="30" height="16"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="16" id="47U-86-2sa"/>
+                                            <constraint firstAttribute="width" constant="30" id="Oww-Pp-Tti"/>
+                                        </constraints>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="DownArrow" translatesAutoresizingMaskIntoConstraints="NO" id="F85-EQ-wkX">
+                                        <rect key="frame" x="726" y="20" width="30" height="16"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="30" id="N6g-Oi-8ZL"/>
+                                            <constraint firstAttribute="height" constant="16" id="uJR-4A-4Z7"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="Mfd-cb-9WV" secondAttribute="trailing" constant="12" id="1qm-Ev-bml"/>
+                                    <constraint firstAttribute="trailing" secondItem="F85-EQ-wkX" secondAttribute="trailing" constant="12" id="gOf-Dn-bPq"/>
+                                    <constraint firstItem="F85-EQ-wkX" firstAttribute="top" secondItem="Vuh-ES-eXS" secondAttribute="top" constant="20" id="rQ3-uG-R36"/>
+                                    <constraint firstItem="Mfd-cb-9WV" firstAttribute="top" secondItem="Vuh-ES-eXS" secondAttribute="top" constant="20" id="trN-lQ-V2E"/>
+                                </constraints>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="wRg-zo-iay" appends="YES" id="MEp-4o-5Af"/>
+                                </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1051,10 +1051,10 @@ This logic diagram describes the rule:
     </scenes>
     <resources>
         <image name="BigTick" width="156" height="156"/>
-        <image name="DownArrow" width="30" height="16"/>
+        <image name="DownArrow" width="32" height="19"/>
         <image name="ProblemTick" width="40" height="40"/>
         <image name="TestResultMatch" width="29" height="23"/>
-        <image name="UpArrow" width="30" height="16"/>
+        <image name="UpArrow" width="32" height="19"/>
         <image name="continue-arrow" width="53" height="18"/>
         <image name="dots" width="22" height="6"/>
         <image name="ipad-white-vertical-level-1.png" width="882" height="1310"/>

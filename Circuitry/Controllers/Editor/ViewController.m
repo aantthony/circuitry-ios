@@ -694,7 +694,11 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         GLKVector3 position = [_viewport unproject:PX(self.view.contentScaleFactor, [sender locationInView:self.view])];
         CircuitObject *object = [_viewport findCircuitObjectAtPosition:position];
         if (!object) return;
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@(object->type->id) delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Remove" otherButtonTitles: nil];
+        
+        ToolbeltItem *item = [ToolbeltItem toolbeltItemWithType:[NSString stringWithUTF8String:object->type->id]];
+        if (!item) return;
+        
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:item.fullName delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Remove" otherButtonTitles: nil];
 
         _selectedObjects = @[[NSValue valueWithPointer:object]];
         CGRect rect = [_viewport rectForObject:object inView:self.view];

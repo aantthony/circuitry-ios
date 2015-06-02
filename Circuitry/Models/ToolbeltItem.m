@@ -23,6 +23,14 @@
     return self;
 }
 
++ (ToolbeltItem *) toolbeltItemWithType:(NSString *) type {
+    NSArray *all = [self all];
+    for(ToolbeltItem *item in all) {
+        if ([item.type isEqualToString:type]) return item;
+    }
+    return nil;
+}
+
 + (NSArray *) all {
     static NSArray *_all = nil;
     if (_all) return _all;

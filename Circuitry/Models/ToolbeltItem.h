@@ -9,6 +9,7 @@
 @interface ToolbeltItem : NSObject
 - (instancetype) initWithType:(NSString *) type level:(NSUInteger)level image:(UIImage *)image name:(NSString *)name fullName:(NSString *)fullName  subtitle:(NSString *) subtitle;
 + (NSArray *) all;
++ (ToolbeltItem *) toolbeltItemWithType:(NSString *) type;
 + (NSArray *) unlockedGatesForProblemSetProblemInfo:(NSUInteger) problemIndex;
 @property (nonatomic, readonly) NSString *type;
 @property (nonatomic, readonly) UIImage *image;
