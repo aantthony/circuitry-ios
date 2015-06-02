@@ -22,6 +22,7 @@ typedef struct CircuitObject CircuitObject;
 typedef struct CircuitLink CircuitLink;
 typedef struct CircuitProcess CircuitProcess;
 
+extern int CircuitObjectFlagLocked;
 
 // Lifecycle:
 CircuitInternal * CircuitCreate();
@@ -53,38 +54,38 @@ void CircuitObjectSetOutputBit(CircuitInternal *c, CircuitObject *o, int outputI
 
 // Base functionality:
 
-CircuitProcess CircuitProcessIn;
-CircuitProcess CircuitProcessOut;
-CircuitProcess CircuitProcessButton;
-CircuitProcess CircuitProcessPushButton;
-CircuitProcess CircuitProcessLight;
-CircuitProcess CircuitProcessLightGreen;
-CircuitProcess CircuitProcessOr;
-CircuitProcess CircuitProcessNot; 
-CircuitProcess CircuitProcessNor;  
-CircuitProcess CircuitProcessXor;   
-CircuitProcess CircuitProcessXnor;    
-CircuitProcess CircuitProcessAnd;   
-CircuitProcess CircuitProcessNand; 
-CircuitProcess CircuitProcessHA;
-CircuitProcess CircuitProcessFA;
-CircuitProcess CircuitProcessBinDec;
-CircuitProcess CircuitProcessAdd8;
-CircuitProcess CircuitProcessMult8;
-CircuitProcess CircuitProcessAdd4;
-CircuitProcess CircuitProcessMult4;
-CircuitProcess CircuitProcessBin7Seg;
-CircuitProcess CircuitProcess7Seg;
-CircuitProcess CircuitProcess7SegBin;
-CircuitProcess CircuitProcessClock;
-CircuitProcess CircuitProcessJK;
-CircuitProcess CircuitProcessSER;
-CircuitProcess CircuitProcessSR;
-CircuitProcess CircuitProcessT;
-CircuitProcess CircuitProcessD;
-CircuitProcess CircuitProcessD4;
-CircuitProcess CircuitProcessD8;
-CircuitProcess CircuitProcessD16;
+extern CircuitProcess CircuitProcessIn;
+extern CircuitProcess CircuitProcessOut;
+extern CircuitProcess CircuitProcessButton;
+extern CircuitProcess CircuitProcessPushButton;
+extern CircuitProcess CircuitProcessLight;
+extern CircuitProcess CircuitProcessLightGreen;
+extern CircuitProcess CircuitProcessOr;
+extern CircuitProcess CircuitProcessNot; 
+extern CircuitProcess CircuitProcessNor;  
+extern CircuitProcess CircuitProcessXor;   
+extern CircuitProcess CircuitProcessXnor;    
+extern CircuitProcess CircuitProcessAnd;   
+extern CircuitProcess CircuitProcessNand; 
+extern CircuitProcess CircuitProcessHA;
+extern CircuitProcess CircuitProcessFA;
+extern CircuitProcess CircuitProcessBinDec;
+extern CircuitProcess CircuitProcessAdd8;
+extern CircuitProcess CircuitProcessMult8;
+extern CircuitProcess CircuitProcessAdd4;
+extern CircuitProcess CircuitProcessMult4;
+extern CircuitProcess CircuitProcessBin7Seg;
+extern CircuitProcess CircuitProcess7Seg;
+extern CircuitProcess CircuitProcess7SegBin;
+extern CircuitProcess CircuitProcessClock;
+extern CircuitProcess CircuitProcessJK;
+extern CircuitProcess CircuitProcessSER;
+extern CircuitProcess CircuitProcessSR;
+extern CircuitProcess CircuitProcessT;
+extern CircuitProcess CircuitProcessD;
+extern CircuitProcess CircuitProcessD4;
+extern CircuitProcess CircuitProcessD8;
+extern CircuitProcess CircuitProcessD16;
 
 
 // Structure:
@@ -139,7 +140,8 @@ struct CircuitObject {
     int in;
     int out;
     CircuitProcess *type;
-    int data;
+    unsigned int flags;
+    unsigned int data;
     
     union { struct {float x, y, z;}; struct {float v[3];}; } pos;
     

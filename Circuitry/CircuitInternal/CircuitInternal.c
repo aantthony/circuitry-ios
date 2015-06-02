@@ -173,6 +173,8 @@ CircuitProcess CircuitProcessD4      = {"d4",      5,  8, D16 };
 CircuitProcess CircuitProcessD8      = {"d8",      9,  8, D16 };
 CircuitProcess CircuitProcessD16     = {"d16",    17, 16, D16 };
 
+int CircuitObjectFlagLocked = 1 << 0;
+
 CircuitObject *CircuitObjectFindById(CircuitInternal *c, ObjectID id) {
     for(int i = c->objects_count - 1; i >= 0; i--) {
         CircuitObject *o = &c->objects[i];
@@ -284,6 +286,7 @@ CircuitObject * CircuitObjectCreate(CircuitInternal *c, CircuitProcess *type) {
     o->pos.x = o->pos.y = o->pos.z = 0.0;
     o->name[0] = '\0';
     o->data = 0;
+    o->flags = 0;
     o->outputs = scalloc(o->type->numOutputs + o->type->numInputs, sizeof(CircuitLink *));
     o->inputs = o->outputs + o->type->numOutputs;
     
