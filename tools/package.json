@@ -1,6 +1,7 @@
 {
   "name": "tools",
   "version": "0.0.0",
+  "private": true,
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -9,6 +10,6 @@
   "author": "",
   "license": "BSD-2-Clause",
   "dependencies": {
-    "node-spritesheet": "git://github.com/aantthony/node-spritesheet.git"
+    "spritesheet-js": "^1.2.6"
   }
 }

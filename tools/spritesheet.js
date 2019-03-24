@@ -1,47 +1,32 @@
 var fs = require('fs');
-var Builder = require( 'node-spritesheet' ).Builder;
-
 var path = process.argv[2];
-
-//path = '/Users/anthony/Projects/circuitry/Circuitry/Circuitry/circuit.image-atlas';
 
 var outputImage = process.argv[3] || 'output.png';
 
 if (outputImage[0] != '/') outputImage = process.cwd() + '/' + outputImage;
 
-var files = fs.readdirSync(path).filter(function (name) {
-  return /\.png$/.test(name);
-}).map(function (name) {
-  return path + '/' + name;
-});
+var spritesheet = require('spritesheet-js');
 
-var log = console.log;
-console.log = console.error;
+const outputPath = __dirname + '/tmp';
 
-var builder = new Builder({
-  outputDirectory: '/',
-  outputImage: outputImage,
-  outputCss: 'sprite.css',
-  selector: '.sprite',
-  images: files
-});
+spritesheet(path + '/*.png', {format: 'json', powerOfTwo: true, padding: 1, path: outputPath}, function (err) {
+  if (err) throw err;
 
-builder.writeStyleSheet = function (callback) {
-  callback();
-};
+  const res = JSON.parse(
+    fs.readFileSync(outputPath + '/spritesheet.json', 'utf8')
+  );
 
-builder.build( function() {
-  if (builder.configs.length != 1) throw new Error('Wrong count');
-  var images = builder.configs[0].images;
+  fs.renameSync(outputPath + '/spritesheet.png', outputImage);
 
   var map = {};
 
-  var out = images.map(function (image) {
-    map[image.name] = {
-      x: image.x,
-      y: image.y,
-      width: image.width,
-      height: image.height
+  Object.keys(res.frames).map(function (fileName) {
+    const image = res.frames[fileName];
+    map[fileName] = {
+      x: image.frame.x,
+      y: image.frame.y,
+      width: image.frame.w,
+      height: image.frame.h
     };
   });
   process.stdout.write(JSON.stringify(map, null, 4));
