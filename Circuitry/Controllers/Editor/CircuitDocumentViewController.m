@@ -7,6 +7,7 @@
 //
 
 #import "CircuitDocumentViewController.h"
+#import <StoreKit/StoreKit.h>
 
 #import "CircuitObjectListTableViewController.h"
 #import "ViewController.h"
@@ -624,6 +625,18 @@ static CGPoint hvrDragHereRight = {88,428};
     }
 }
 
+- (void) promptAppStoreReview {
+    NSString *key = @"RequestedStoreReview";
+    
+    NSOperatingSystemVersion minVersion = (NSOperatingSystemVersion){10, 3, 0};
+    if ([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion: minVersion]) {
+        if (![[NSUserDefaults standardUserDefaults] boolForKey: key]) {
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:key];
+            [SKStoreReviewController requestReview];
+        }
+    }
+}
+
 - (void) didWin {
     if (self.isTutorial) {
         [self finishTutorial];
@@ -664,6 +677,10 @@ static CGPoint hvrDragHereRight = {88,428};
 - (void) showNextUnlockedItem {
     if (_showingUnlockedToolbeltItems.count) {
         [self performSegueWithIdentifier:@"ShowUnlockedItem" sender:self];
+    } else {
+        if (self.document.problemInfo.problemIndex > 4) {
+            [self promptAppStoreReview];
+        }
     }
 }
 
