@@ -1,14 +1,16 @@
 PODS:
-  - Mixpanel (2.7.3):
-    - Mixpanel/MPCategoryHelpers (= 2.7.3)
-  - Mixpanel/MPCategoryHelpers (2.7.3)
+  - Mixpanel (3.4.2)
 
 DEPENDENCIES:
   - Mixpanel
 
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Mixpanel
+
 SPEC CHECKSUMS:
-  Mixpanel: 1d387d76800e07e953958c62c97fea27f13632dd
+  Mixpanel: 61ff69604a5c029664456008b01cd2661ddfcf2e
 
-PODFILE CHECKSUM: ce8ca355bfb6f77653977b0374741fd1e020645f
+PODFILE CHECKSUM: 762139cd1d787218591ef9c713d593f9251a5b54
 
-COCOAPODS: 1.2.0
+COCOAPODS: 1.5.2

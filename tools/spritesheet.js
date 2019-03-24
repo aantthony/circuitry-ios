@@ -22,7 +22,7 @@ spritesheet(path + '/*.png', {format: 'json', powerOfTwo: true, padding: 1, path
 
   Object.keys(res.frames).map(function (fileName) {
     const image = res.frames[fileName];
-    map[fileName] = {
+    map[fileName.replace(/\.png$/, '')] = {
       x: image.frame.x,
       y: image.frame.y,
       width: image.frame.w,

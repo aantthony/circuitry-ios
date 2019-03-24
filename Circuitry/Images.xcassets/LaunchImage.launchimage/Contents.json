@@ -3,9 +3,9 @@
     {
       "orientation" : "portrait",
       "idiom" : "ipad",
+      "filename" : "Artboard.png",
       "extent" : "full-screen",
       "minimum-system-version" : "7.0",
-      "filename" : "iOS Simulator Screen Shot 28 May 2015 8.02.36 pm.png",
       "scale" : "1x"
     },
     {
@@ -18,9 +18,9 @@
     {
       "orientation" : "portrait",
       "idiom" : "ipad",
+      "filename" : "Artboard@2x.png",
       "extent" : "full-screen",
       "minimum-system-version" : "7.0",
-      "filename" : "iOS Simulator Screen Shot 28 May 2015 8.01.50 pm.png",
       "scale" : "2x"
     },
     {
