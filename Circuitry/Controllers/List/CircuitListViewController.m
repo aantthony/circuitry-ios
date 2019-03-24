@@ -200,12 +200,12 @@
         NSArray *selectedItemsIndexPaths = @[indexPath];
         
         DocumentListItem *item = [[DocumentListItem alloc] initWithURL:url];
-        [_circuits insertObject:item atIndex:index];
+        [self.circuits insertObject:item atIndex:index];
         [self.collectionView insertItemsAtIndexPaths:selectedItemsIndexPaths];
 
     } completion:^(BOOL finished) {
         CircuitCollectionViewCell *cell = (CircuitCollectionViewCell *) [self.collectionView cellForItemAtIndexPath:indexPath];
-        _selectionRect = [self.view convertRect:cell.imageView.frame fromView:cell];
+        self.selectionRect = [self.view convertRect:cell.imageView.frame fromView:cell];
         [self createAndOpenNewDocumentWithURL:url];
     }];
 }
@@ -272,9 +272,6 @@
 
 - (void) preload {
     return;
-    ViewController *viewcontroller = [[ViewController alloc] init];
-    [self.view addSubview:viewcontroller.view];
-    [viewcontroller.view removeFromSuperview];
 }
 
 - (IBAction) didLongPress:(UILongPressGestureRecognizer *)sender {
@@ -317,7 +314,7 @@
             if (buttonIndex == 0) {
                 [self.collectionView performBatchUpdates:^{
                     
-                    NSArray *selectedItemsIndexPaths = @[_actionSheetIndexPath];
+                    NSArray *selectedItemsIndexPaths = @[self.actionSheetIndexPath];
 
                     [self deleteItemsFromDataSourceAtIndexPaths:selectedItemsIndexPaths];
                     
@@ -547,7 +544,7 @@
 }
 
 - (void) reloadCircuitListData {
-    AppDelegate *delegate = [UIApplication sharedApplication].delegate;
+    __weak AppDelegate *delegate = (AppDelegate*) [UIApplication sharedApplication].delegate;
     NSURL *documentsDirectory = delegate.documentsDirectory;
     NSArray *localDocuments = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:documentsDirectory includingPropertiesForKeys:@[] options:NSDirectoryEnumerationSkipsHiddenFiles error:nil];
     

@@ -58,7 +58,7 @@
     }
     
     [self.items enumerateObjectsUsingBlock:^(ToolbeltItem *item, NSUInteger idx, BOOL *stop) {
-        if (_isProblem) {
+        if (self.isProblem) {
             item.isAvailable = YES;
         } else {
             item.isAvailable = [self hasCompletedProblemNumber:item.level];

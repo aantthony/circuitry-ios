@@ -21,8 +21,8 @@
     [super viewDidAppear:animated];
     
     [UIView animateWithDuration:0.5 animations:^{
-        _itemImage.alpha = 1.0;
-        _itemTitle.alpha = 1.0;
+        self.itemImage.alpha = 1.0;
+        self.itemTitle.alpha = 1.0;
     }];
 }
 

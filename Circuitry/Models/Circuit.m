@@ -132,7 +132,7 @@ static NSValue *valueForGate(CircuitProcess *process) {
     [items enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
         NSString *type = obj[@"type"];
         CircuitProcess *process = [self getProcessById: type];
-        CircuitObject *o = CircuitObjectCreate(_internal, process);
+        CircuitObject *o = CircuitObjectCreate(self.internal, process);
         if (obj[@"locked"]) {
             o->flags |= CircuitObjectFlagLocked;
         }
@@ -141,7 +141,7 @@ static NSValue *valueForGate(CircuitProcess *process) {
     
     [items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         ObjectID objId = [MongoID idWithString:[obj valueForKey:@"_id"]];
-        CircuitObject *o = CircuitObjectFindById(_internal, objId);
+        CircuitObject *o = CircuitObjectFindById(self.internal, objId);
         
         const char * utf8String = [obj[@"name"] UTF8String];
         for(int i = 0; i < 4; i++) {
@@ -161,8 +161,8 @@ static NSValue *valueForGate(CircuitProcess *process) {
                 // It connects into the nth input on that gate.
                 ObjectID targetId = [MongoID idWithString:[obj objectAtIndex:0]];
                 int targetIndex = [[obj objectAtIndex:1] intValue];
-                CircuitObject *target = CircuitObjectFindById(_internal, targetId);
-                CircuitLinkCreate(_internal, o, (int)sourceIndex, target, targetIndex);
+                CircuitObject *target = CircuitObjectFindById(self.internal, targetId);
+                CircuitLinkCreate(self.internal, o, (int)sourceIndex, target, targetIndex);
             }];
         }];
         

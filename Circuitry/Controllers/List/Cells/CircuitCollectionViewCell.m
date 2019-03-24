@@ -30,6 +30,7 @@
     h.hidden = YES;
     [self.imageView.superview addSubview:h];
     self.highlightView = h;
+    [super awakeFromNib];
 }
 
 - (void) setRounded:(BOOL)rounded {

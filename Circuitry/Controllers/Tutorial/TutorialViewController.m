@@ -88,15 +88,15 @@ static int pageCount = 3;
     _pageControl.enabled = !buttonEnabled;
     
     [UIView animateWithDuration:0.3 animations:^{
-        _button.alpha = buttonEnabled ? 1.0 : 0.0;
-        _pageControl.alpha = buttonEnabled ? 0.0 : 1.0;
+        self.button.alpha = buttonEnabled ? 1.0 : 0.0;
+        self.pageControl.alpha = buttonEnabled ? 0.0 : 1.0;
     }];
     _buttonEnabled = buttonEnabled;
 }
 - (IBAction)changePageControl:(id)sender {
     [UIView animateWithDuration:0.4 animations:^{
-        CGFloat x = _pageControl.currentPage * self.view.bounds.size.width;
-        _scrollView.contentOffset = CGPointMake(x, 0);
+        CGFloat x = self.pageControl.currentPage * self.view.bounds.size.width;
+        self.scrollView.contentOffset = CGPointMake(x, 0);
     }];
 }
 

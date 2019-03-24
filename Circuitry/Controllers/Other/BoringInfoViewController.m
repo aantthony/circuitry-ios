@@ -19,7 +19,8 @@
     
     NSData *data = [NSData dataWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"Terms" withExtension:@"rtf"]];
     
-    _textView.attributedText = [[NSAttributedString alloc] initWithData:data options:nil documentAttributes:nil error:nil];
+    NSDictionary<NSAttributedStringDocumentReadingOptionKey,id> *options = [[NSDictionary alloc] init];
+    _textView.attributedText = [[NSAttributedString alloc] initWithData:data options:options documentAttributes:nil error:nil];
 }
 
 - (IBAction)done:(id)sender {

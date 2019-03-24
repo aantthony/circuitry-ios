@@ -372,11 +372,11 @@ static CGPoint hvrDragHereRight = {88,428};
     _tutorialState = tutorialState;
     if (tutorialState == 0) {
         [UIView animateWithDuration:0.5 animations:^{
-            _hintViewTapAndHoldLeft.alpha = 0;
-            _hintViewDragHereRight.alpha = 0;
-            _hintViewCheckCorrect.alpha = 0;
-            _hintViewToggleLeft1.alpha = 0;
-            _hintViewToggleLeft2.alpha = 0;
+            self.hintViewTapAndHoldLeft.alpha = 0;
+            self.hintViewDragHereRight.alpha = 0;
+            self.hintViewCheckCorrect.alpha = 0;
+            self.hintViewToggleLeft1.alpha = 0;
+            self.hintViewToggleLeft2.alpha = 0;
         }];
     } else if (tutorialState == 1) {
         UIView *tapHold = self.hintViewTapAndHoldLeft;
@@ -388,8 +388,8 @@ static CGPoint hvrDragHereRight = {88,428};
         [UIView animateWithDuration:0.5 animations:^{
             tapHold.alpha = 1;
             tapHold.frame = targetFrame;
-            _hintViewDragHereRight.alpha = 0;
-            _hintViewCheckCorrect.alpha = 0;
+            self.hintViewDragHereRight.alpha = 0;
+            self.hintViewCheckCorrect.alpha = 0;
         }];
     } else if (tutorialState == 2) {
         UIView *dragHere = self.hintViewDragHereRight;
@@ -400,8 +400,8 @@ static CGPoint hvrDragHereRight = {88,428};
         dragHere.alpha = 0;
         [UIView animateWithDuration:0.3 animations:^{
             dragHere.alpha = 1;
-            _hintViewTapAndHoldLeft.alpha = 0;
-            _hintViewCheckCorrect.alpha = 0;
+            self.hintViewTapAndHoldLeft.alpha = 0;
+            self.hintViewCheckCorrect.alpha = 0;
         } completion:^(BOOL finished) {
             
         }];
@@ -416,7 +416,7 @@ static CGPoint hvrDragHereRight = {88,428};
         [UIView animateWithDuration:0.5 animations:^{
             tapHold.alpha = 1;
             tapHold.frame = targetFrame;
-            _hintViewDragHereRight.alpha = 0;
+            self.hintViewDragHereRight.alpha = 0;
         }];
     } else if (tutorialState == 5) {
         UIView *dragHere = self.hintViewDragHereRight;
@@ -428,11 +428,11 @@ static CGPoint hvrDragHereRight = {88,428};
         dragHere.alpha = 0;
         [UIView animateWithDuration:0.3 animations:^{
             dragHere.alpha = 1;
-            _hintViewTapAndHoldLeft.alpha = 0;
-            _hintViewCheckCorrect.alpha = 0;
+            self.hintViewTapAndHoldLeft.alpha = 0;
+            self.hintViewCheckCorrect.alpha = 0;
             
-            _hintViewToggleLeft1.alpha = 0;
-            _hintViewToggleLeft2.alpha = 0;
+            self.hintViewToggleLeft1.alpha = 0;
+            self.hintViewToggleLeft2.alpha = 0;
         } completion:^(BOOL finished) {
             
         }];
@@ -444,8 +444,8 @@ static CGPoint hvrDragHereRight = {88,428};
         hintToggle1.alpha = 0;
         hintToggle2.alpha = 0;
         [UIView animateWithDuration:0.3 animations:^{
-            _hintViewTapAndHoldLeft.alpha = 0;
-            _hintViewDragHereRight.alpha = 0;
+            self.hintViewTapAndHoldLeft.alpha = 0;
+            self.hintViewDragHereRight.alpha = 0;
         }];
         [UIView animateWithDuration:1.0 animations:^{
             arrow.alpha = 1;
@@ -462,14 +462,14 @@ static CGPoint hvrDragHereRight = {88,428};
     NSInteger tutorialState = _tutorialState;
     if (tutorialState == 0) return;
     [UIView animateWithDuration:0.01 animations:^{
-        _hintViewTapAndHoldLeft.alpha = 0;
-        _hintViewDragHereRight.alpha = 0;
-        _hintViewCheckCorrect.alpha = 0;
+        self.hintViewTapAndHoldLeft.alpha = 0;
+        self.hintViewDragHereRight.alpha = 0;
+        self.hintViewCheckCorrect.alpha = 0;
     }];
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
     } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            _tutorialState = 0;
+            self->_tutorialState = 0;
             self.tutorialState = tutorialState;
         });
     }];
@@ -531,10 +531,10 @@ static CGPoint hvrDragHereRight = {88,428};
     _objectListView.hidden = NO;
     [self.view layoutIfNeeded];
     [UIView animateWithDuration:0.2 animations:^{
-        _objectListLeft.constant = _objectListVisible ? 0 : -_objectListView.frame.size.width;
+        self.objectListLeft.constant = self.objectListVisible ? 0 : -self.objectListView.frame.size.width;
         [self.view layoutIfNeeded];
     } completion:^(BOOL finished) {
-        _objectListView.hidden = !_objectListVisible;
+        self.objectListView.hidden = !self.objectListVisible;
     }];
 }
 
@@ -560,7 +560,7 @@ static CGPoint hvrDragHereRight = {88,428};
     _problemInfoMinimised = problemInfoMinimised;
     [self.view layoutIfNeeded];
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        self.problemInfoMinimised = _problemInfoMinimised;
+        self.problemInfoMinimised = self.problemInfoMinimised;
     } completion:nil];
 }
 
@@ -576,9 +576,9 @@ static CGPoint hvrDragHereRight = {88,428};
     BOOL current = _problemInfoMinimised;
     [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         if (current) {
-            _problemInfoBottom.constant = (current ? -200 : 0) - 12;
+            self.problemInfoBottom.constant = (current ? -200 : 0) - 12;
         } else {
-            _problemInfoBottom.constant = (current ? -200 : 0) - 10;
+            self.problemInfoBottom.constant = (current ? -200 : 0) - 10;
         }
         [self.view layoutIfNeeded];
         
@@ -602,7 +602,7 @@ static CGPoint hvrDragHereRight = {88,428};
     __block CircuitTestResult *failure = nil;
     __block CircuitTestResult *firstTest = nil;
     [_document.circuit.tests enumerateObjectsUsingBlock:^(CircuitTest *test, NSUInteger idx, BOOL *stop) {
-        CircuitTestResult *testResult = [test runAndSimulate:_document.circuit];
+        CircuitTestResult *testResult = [test runAndSimulate:self.document.circuit];
         firstTest = testResult;
         if (!testResult.passed) {
             failure = testResult;

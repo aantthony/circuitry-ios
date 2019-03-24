@@ -105,7 +105,7 @@ static NSString *screenshotPngPath = @"screenshot.png";
         }
         
         NSString *name = nil;
-        if (object->name) {
+        if (object->name != NULL) {
             name = [NSString stringWithUTF8String:object->name];
         }
         NSMutableDictionary *d = [[NSMutableDictionary alloc] init];
@@ -178,7 +178,8 @@ static NSString *screenshotPngPath = @"screenshot.png";
     jsonOptions = NSJSONWritingPrettyPrinted;
 #endif
 
-    NSFileWrapper *wrapper = [[NSFileWrapper alloc] initDirectoryWithFileWrappers:nil];
+    NSDictionary<NSString *, NSFileWrapper *> *fileWrappers = [[NSDictionary alloc] init];
+    NSFileWrapper *wrapper = [[NSFileWrapper alloc] initDirectoryWithFileWrappers:fileWrappers];
     NSData *metaJson = [NSJSONSerialization dataWithJSONObject:[self exportPackageDictionaryWithoutItems] options:jsonOptions error:NULL];
     NSData *itemsJSON = [NSJSONSerialization dataWithJSONObject:[self exportItems] options:jsonOptions error:NULL];
 
@@ -190,30 +191,6 @@ static NSString *screenshotPngPath = @"screenshot.png";
         [wrapper addRegularFileWithContents:_originalScreenshotData preferredFilename:screenshotPngPath];
     }
     return wrapper;
-}
-
-- (void) publish {
-    NSData *data = [self contentsForType:@"public.json" error:NULL];
-    NSString *path = [NSString stringWithFormat:@"circuit/%@", [MongoID stringWithId:_circuit.id]];
-    NSURL *requestURL = [[NSURL URLWithString:nil] URLByAppendingPathComponent:path];
-    
-    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:queue];
-    
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setTimeoutInterval:5.0];
-    [request setHTTPMethod:@"PUT"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[data length]] forHTTPHeaderField:@"Content-Length"];
-    [request setURL:requestURL];
-    
-    NSURLSessionUploadTask *task = [session uploadTaskWithRequest:request fromData:data completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-//        completionHandler(error);
-    }];
-    
-    [task resume];
-
 }
 
 @end

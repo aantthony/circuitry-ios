@@ -30,8 +30,7 @@
 }
 
 
-typedef void (^Function)();
-
+//typedef void (^Function)();
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
@@ -59,7 +58,7 @@ typedef void (^Function)();
         self.bigTick.transform = CGAffineTransformMakeScale(5.0, 5.0);
         
         [UIView animateWithDuration:0.35 delay:delayStart + 0.2 options:UIViewAnimationOptionCurveEaseOut animations:^{
-            _bigTick.alpha = 1.0;
+            self.bigTick.alpha = 1.0;
             self.bigTick.transform = CGAffineTransformIdentity;
         } completion:^(BOOL finished) {
             
@@ -73,7 +72,7 @@ typedef void (^Function)();
                         self.bigTick.transform = CGAffineTransformIdentity;
                     } completion:^(BOOL finished) {
                         [UIView animateWithDuration:0.8 delay:1.5 options:UIViewAnimationOptionCurveEaseOut animations:^{
-                            _bigTick.alpha = 0.0;
+                            self.bigTick.alpha = 0.0;
                         } completion:nil];
                     }];
                 }];

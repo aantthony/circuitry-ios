@@ -323,8 +323,8 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     d++;
     if (d > 100) d = 0;
     __block int clocks = 0;
-    [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
-        [_document.circuit enumerateClocksUsingBlock:^(CircuitObject *object, BOOL *stop) {
+    [self.document.circuit performWriteBlock:^(CircuitInternal *internal) {
+        [self.document.circuit enumerateClocksUsingBlock:^(CircuitObject *object, BOOL *stop) {
             clocks++;
             CircuitObjectSetOutput(internal, object, !object->out);
         }];
@@ -484,8 +484,8 @@ static BOOL animateGateToLockedPosition(CircuitObject *object, float x, float y)
 static CGFloat gridSize = 33.0;
 
 - (void) snapObjectsToGrid {
-    [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
-        [_document.circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
+    [self.document.circuit performWriteBlock:^(CircuitInternal *internal) {
+        [self.document.circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
             CGFloat x = object->pos.x;
             CGFloat y = object->pos.y;
             x = roundf(x / gridSize) * gridSize;
@@ -554,7 +554,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         o->pos.x = position.x;
         o->pos.y = position.y;
         
-        _beginLongPressGestureObject = o;
+        self.beginLongPressGestureObject = o;
     }];
     
     [self unpause];
@@ -717,7 +717,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         
         [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
             
-            for(id obj in _selectedObjects) {
+            for(id obj in self.selectedObjects) {
                 CircuitObject *object = [obj pointerValue];
                 if (object->flags & CircuitObjectFlagLocked) {
                     failureMessage = @"This object cannot be removed.";
@@ -725,7 +725,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
                 }
             }
             
-            for(id obj in _selectedObjects) {
+            for(id obj in self.selectedObjects) {
                 CircuitObject *object = [obj pointerValue];
                 CircuitObjectRemove(internal, object);
                 [self unpause];
@@ -889,6 +889,9 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     GLKVector3 curPos = [_viewport unproject: PX(self.view.contentScaleFactor, [sender locationOfTouch:0 inView:self.view])];
 
     CircuitObject *target;
+    
+    Viewport *viewport = _viewport;
+    
     if ((target = [_viewport findCircuitObjectNearPosition:curPos])) {
         
         GLKVector3 offset = GLKVector3Subtract(curPos, *(GLKVector3 *)&target->pos);
@@ -915,16 +918,16 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
                 if (_viewport.currentEditingLink) {
                     // if we are dragging a link out from another inlet, then delete that old link (we will create a new link to target instead of modifying the old one to make circuit simulation refreshes simpler)
                     [_circuit performWriteBlock:^(CircuitInternal *internal) {
-                        CircuitLinkRemove(internal, _viewport.currentEditingLink);
+                        CircuitLinkRemove(internal, viewport.currentEditingLink);
                         // It is going to change anyway, but to be consistent, this is now considered deleted.
-                        _viewport.currentEditingLink = NULL;
+                        viewport.currentEditingLink = NULL;
                     }];
                 }
                 // Create a new link and tell the viewport renderer that it is the one being edited:
                 _viewport.currentEditingLinkTargetIndex = targetIndex;
                 [_circuit performWriteBlock:^(CircuitInternal *internal) {
-                    CircuitLink *newLink = CircuitLinkCreate(internal, _viewport.currentEditingLinkSource, _viewport.currentEditingLinkSourceIndex, target, targetIndex);
-                    _viewport.currentEditingLink = newLink;
+                    CircuitLink *newLink = CircuitLinkCreate(internal, _viewport.currentEditingLinkSource, viewport.currentEditingLinkSourceIndex, target, targetIndex);
+                    viewport.currentEditingLink = newLink;
                 }];
                 [_viewport didAttachLink:_viewport.currentEditingLink];
             }
@@ -935,8 +938,8 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         // Couldn't find a gate under the touch, remove the link being dragged if one exists
         if (_viewport.currentEditingLink) {
             [_circuit performWriteBlock:^(CircuitInternal *internal) {
-                CircuitLinkRemove(internal, _viewport.currentEditingLink); 
-                _viewport.currentEditingLink = NULL;
+                CircuitLinkRemove(internal, viewport.currentEditingLink);
+                viewport.currentEditingLink = NULL;
             }];
             [_viewport didDetachEditingLink];
             _viewport.currentEditingLinkTarget = NULL;
@@ -1023,7 +1026,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
                     CircuitObjectSetOutput(internal, object, 1);
                 }];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
+                    [self.document.circuit performWriteBlock:^(CircuitInternal *internal) {
                         CircuitObjectSetOutput(internal, object, 0);
                     }];
                     [self updateChangeCount:UIDocumentChangeDone];

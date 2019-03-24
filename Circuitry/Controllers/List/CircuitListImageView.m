@@ -19,13 +19,4 @@
     return self;
 }
 
-- (void)awakeFromNib {
-    return;
-    self.layer.shadowColor = [UIColor blackColor].CGColor;
-    self.layer.shadowOffset = CGSizeMake(0, 2);
-    self.layer.shadowOpacity = 0.38;
-    self.layer.shadowRadius = 3.0;
-    self.clipsToBounds = NO;
-}
-
 @end

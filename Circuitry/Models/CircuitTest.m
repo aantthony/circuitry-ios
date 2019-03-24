@@ -30,7 +30,7 @@
     [_inputNodes enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         CircuitObject *circuitObject = [obj pointerValue];
         if (circuitObject == NULL) {
-            NSLog(@"Input Nodes: %@", _inputNodes);
+            NSLog(@"Input Nodes: %@", self.inputNodes);
             [ids addObject:[NSNull null]];
         } else {
             [ids addObject: [MongoID stringWithId:circuitObject->id]];
@@ -112,7 +112,7 @@
         
         // Apply input state:
         [inputStates enumerateObjectsUsingBlock:^(id obj, NSUInteger i, BOOL *stop) {
-            CircuitObject * inputNode = [_inputNodes[i] pointerValue];
+            CircuitObject * inputNode = [self.inputNodes[i] pointerValue];
             inputNode->out = [obj intValue];
             
             [circuit performWriteBlock:^(CircuitInternal *internal) {
@@ -125,7 +125,7 @@
         __block BOOL isMatchForInput = YES;
         // Validate output state:
         [outputStates enumerateObjectsUsingBlock:^(id obj, NSUInteger i, BOOL *stop) {
-            CircuitObject * outputNode = [_outputNodes[i] pointerValue];
+            CircuitObject * outputNode = [self.outputNodes[i] pointerValue];
             int expected = [obj intValue];
             if (outputNode->in != expected) {
                 pass = NO;
@@ -154,7 +154,7 @@
     [circuit performWriteBlock:^(CircuitInternal *internal) {
         
         [initalStates enumerateObjectsUsingBlock:^(id obj, NSUInteger i, BOOL *stop) {
-            CircuitObject * inputNode = [_inputNodes[i] pointerValue];
+            CircuitObject * inputNode = [self.inputNodes[i] pointerValue];
             CircuitObjectSetOutput(internal, inputNode, [obj intValue]);
         }];
     }];

@@ -37,7 +37,7 @@ CGPoint CGRectGetMid(CGRect rect) {
         float scale =  _originatingRect.size.width / toViewController.view.frame.size.width;
         [UIView animateWithDuration:[self transitionDuration:ctx] animations:^{
             fromViewController.view.transform = CGAffineTransformMakeScale(scale, scale);
-            fromViewController.view.center = CGRectGetMid(_originatingRect);
+            fromViewController.view.center = CGRectGetMid(self.originatingRect);
             fromViewController.view.alpha = 0.0;
         } completion:^(BOOL finished) {
             [ctx completeTransition:YES];

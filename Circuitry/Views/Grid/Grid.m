@@ -32,7 +32,7 @@ static int nLines;
 }
 
 - (id) init {
-    
+    self = [super init];
     float gridWidth = 1.0;
     float gridHeight = 1.0;
     

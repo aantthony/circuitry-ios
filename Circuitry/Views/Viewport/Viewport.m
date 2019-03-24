@@ -502,12 +502,14 @@ BOOL expandDrawGate(CircuitObject *object) {
     
     __block int i = 0;
     Circuit *_circuit = self.document.circuit;
+    BatchedSpriteInstance *instances = _instances;
+    
     [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
         GLKVector3 pos = *(GLKVector3*) &object->pos;
-        BatchedSpriteInstance *instance = &_instances[i++];
+        BatchedSpriteInstance *instance = &instances[i++];
         
         if (expandDrawGate(object)) {
-            BatchedSpriteInstance *top = &_instances[i++];
+            BatchedSpriteInstance *top = &instances[i++];
             top->x = pos.x;
             top->y = pos.y;
             top->tex = gateBackgroundTop;
@@ -520,7 +522,7 @@ BOOL expandDrawGate(CircuitObject *object) {
             middle->tex = gateBackgroundMiddle;
             middle->tex.height = vSpacing * 2 * MAX(object->type->numInputs, object->type->numOutputs) + 1.0;
             
-            BatchedSpriteInstance *bottom = &_instances[i++];
+            BatchedSpriteInstance *bottom = &instances[i++];
             bottom->x = pos.x;
             bottom->y = middle->y + middle->tex.height - 1.0;
             bottom->tex = gateBackgroundBottom;
@@ -536,17 +538,17 @@ BOOL expandDrawGate(CircuitObject *object) {
             instance->x -= 50.0;
             instance->y -= 50.0;
         } else if (object->type == &CircuitProcessLight) {
-            BatchedSpriteInstance *symbol = &_instances[i++];
+            BatchedSpriteInstance *symbol = &instances[i++];
             symbol->x = pos.x + 70.0;
             symbol->y = pos.y - 85.0;
             symbol->tex = object->in ? ledOn : ledOff;
         } else if (object->type == &CircuitProcessLightGreen) {
-            BatchedSpriteInstance *symbol = &_instances[i++];
+            BatchedSpriteInstance *symbol = &instances[i++];
             symbol->x = pos.x + 70.0;
             symbol->y = pos.y - 85.0;
             symbol->tex = object->in ? ledOnGreen : ledOff;
         } else {
-            BatchedSpriteInstance *symbol = &_instances[i++];
+            BatchedSpriteInstance *symbol = &instances[i++];
             symbol->x = pos.x + 9.0;
             symbol->y = pos.y + 0.0;
             symbol->tex = [self textureForProcess:object->type];
@@ -559,7 +561,7 @@ BOOL expandDrawGate(CircuitObject *object) {
             SpriteTexturePos *s = letterTable[c];
 
             if (s) {
-                BatchedSpriteInstance *letter = &_instances[i++];
+                BatchedSpriteInstance *letter = &instances[i++];
                 letter->x = pos.x + 105.0;
                 letter->y = pos.y + 43.0;
                 letter->tex = *s;
@@ -568,7 +570,7 @@ BOOL expandDrawGate(CircuitObject *object) {
         }
         
         for(int o = 0; o < object->type->numOutputs; o++) {
-            BatchedSpriteInstance *outlet = &_instances[i++];
+            BatchedSpriteInstance *outlet = &instances[i++];
             GLKVector3 dotPos = offsetForOutlet(object->type, o);
             outlet->x = pos.x + dotPos.x;
             outlet->y = pos.y + dotPos.y;
@@ -578,7 +580,7 @@ BOOL expandDrawGate(CircuitObject *object) {
         }
         
         for(int o = 0; o < object->type->numInputs; o++) {
-            BatchedSpriteInstance *outlet = &_instances[i++];
+            BatchedSpriteInstance *outlet = &instances[i++];
             
             GLKVector3 dotPos = offsetForInlet(object->type, o);
             outlet->x = pos.x + dotPos.x;
@@ -619,6 +621,7 @@ BOOL expandDrawGate(CircuitObject *object) {
     
     [ShaderEffect checkError];
     Circuit *_circuit = self.document.circuit;
+    GLKMatrix4 viewProjectionMatrix = _viewProjectionMatrix;
     [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
         for(int sourceIndex = 0; sourceIndex < object->type->numOutputs; sourceIndex++) {
             CircuitLink *link = object->outputs[sourceIndex];
@@ -630,7 +633,7 @@ BOOL expandDrawGate(CircuitObject *object) {
                     dotPos = offsetForInlet(link->target->type, link->targetIndex);
                     GLKVector2 B = GLKVector2Make(link->target->pos.x + dotPos.x + radius, link->target->pos.y + dotPos.y + radius);
                     bool isActive = object->out & 1 << sourceIndex;
-                    [bezier drawFrom:A to:B withColor1:isActive ? active1 : inactive1 color2:isActive ? active2 : inactive2  active:isActive withTransform:_viewProjectionMatrix];
+                    [bezier drawFrom:A to:B withColor1:isActive ? active1 : inactive1 color2:isActive ? active2 : inactive2  active:isActive withTransform:viewProjectionMatrix];
 
                 }
                 link = link->nextSibling;
@@ -655,14 +658,16 @@ BOOL expandDrawGate(CircuitObject *object) {
     
     [_gateSprites drawIndices:0 count:_count WithTransform:_viewProjectionMatrix];
     
+    SevenSegmentDisplay *ss = sevenSegment;
+    
     [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
         
         if (object->type == &CircuitProcess7Seg) {
             GLKVector3 pos = *(GLKVector3*) &object->pos;
-            [sevenSegment drawAt:GLKVector3Make(pos.x + 40.0, pos.y + 40.0, 0.0) withInput:object->in withTransform:_viewProjectionMatrix];
+            [ss drawAt:GLKVector3Make(pos.x + 40.0, pos.y + 40.0, 0.0) withInput:object->in withTransform:viewProjectionMatrix];
         } else if (object->type == &CircuitProcess7SegBin) {
             GLKVector3 pos = *(GLKVector3*) &object->pos;
-            [sevenSegment drawCompactAt:GLKVector3Make(pos.x + 100.0, pos.y + 40.0, 0.0) withBinaryInput:object->in withTransform:_viewProjectionMatrix];
+            [ss drawCompactAt:GLKVector3Make(pos.x + 100.0, pos.y + 40.0, 0.0) withBinaryInput:object->in withTransform:viewProjectionMatrix];
         }
     }];
     
