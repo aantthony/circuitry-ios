@@ -111,17 +111,19 @@ func renderAtlas(side: Int, placements: [Placement], outputURL: URL) throws {
 
     context.clear(CGRect(x: 0, y: 0, width: side, height: side))
     context.interpolationQuality = .none
-    context.translateBy(x: 0, y: CGFloat(side))
-    context.scaleBy(x: 1, y: -1)
 
     for placement in placements {
+        let height = placement.sprite.height
+        // The JSON uses top-left sprite coordinates, while CoreGraphics draws into a
+        // bottom-left bitmap context. Move each rect instead of flipping the context,
+        // otherwise the sprites are mirrored vertically inside their atlas slots.
         context.draw(
             placement.sprite.image,
             in: CGRect(
                 x: placement.x,
-                y: placement.y,
+                y: side - placement.y - height,
                 width: placement.sprite.width,
-                height: placement.sprite.height
+                height: height
             )
         )
     }
