@@ -12,7 +12,6 @@
 #import "CircuitObjectListTableViewController.h"
 #import "ViewController.h"
 #import "ProblemInfoViewController.h"
-#import "AnalyticsManager.h"
 #import "TestResultViewController.h"
 #import "CircuitTest.h"
 #import "Viewport.h"
@@ -164,7 +163,6 @@
     
     [self configureTitleView];
     
-    [[AnalyticsManager shared] trackStartProblem:document];
     if (self.view) {
         [self configureView];
     }
@@ -614,14 +612,8 @@ static CGPoint hvrDragHereRight = {88,428};
     
     [self performSegueWithIdentifier:@"ShowTestResult" sender:self];
     
-    if (failure) {
-        [[AnalyticsManager shared] trackCheckProblem:self.document withResult:failure];
-        
-    } else {
-        [[AnalyticsManager shared] trackFinishProblem:self.document];
-        
+    if (!failure) {
         sender.enabled = NO;
-        
     }
 }
 

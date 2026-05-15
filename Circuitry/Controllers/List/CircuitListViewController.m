@@ -14,7 +14,6 @@
 #import "CircuitCollectionViewCell.h"
 
 #import "UIAlertView+MKBlockAdditions.h"
-#import "AnalyticsManager.h"
 
 //#import "OpenDocumentFromDocumentsListSegue.h"
 
@@ -179,8 +178,6 @@
         CircuitDocumentViewController *controller = [segue destinationViewController];
         controller.delegate = self;
         controller.document = _presentingDocument;
-        
-        [[AnalyticsManager shared] trackOpenDocument:_presentingDocument];
     }
 }
 
