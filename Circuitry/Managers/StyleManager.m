@@ -28,11 +28,29 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     UINavigationBar *prototype = [UINavigationBar appearance];
-    prototype.tintColor = [UIColor whiteColor];
-    prototype.barTintColor = [StyleManager rgb:0x122639];
-    prototype.titleTextAttributes = @{
+    UIColor *barColor = [StyleManager rgb:0x122639];
+    UIColor *textColor = [UIColor whiteColor];
+    NSDictionary *titleAttributes = @{
         NSForegroundColorAttributeName:[UIColor whiteColor]
     };
+
+    prototype.tintColor = textColor;
+    prototype.barTintColor = barColor;
+    prototype.translucent = NO;
+    prototype.titleTextAttributes = titleAttributes;
+
+    if (@available(iOS 13.0, *)) {
+        UINavigationBarAppearance *appearance = [UINavigationBarAppearance new];
+        [appearance configureWithOpaqueBackground];
+        appearance.backgroundColor = barColor;
+        appearance.titleTextAttributes = titleAttributes;
+        appearance.largeTitleTextAttributes = titleAttributes;
+
+        prototype.standardAppearance = appearance;
+        prototype.compactAppearance = appearance;
+        prototype.scrollEdgeAppearance = appearance;
+    }
+
     return YES;
 }
 @end
