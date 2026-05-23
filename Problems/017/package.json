@@ -1,6 +1,6 @@
 {
   "_id" : "54d7228f004aab735e0041b9",
-  "description" : "There are two number inputs which are connected to number displays. Make the right number display equal to the sum of the two numbers.\n\nThe numbers are dispayed in hexadecimal format. If the sum is more than one hexadecimal digit, it should overflow back around zero.",
+  "description" : "Two number inputs are already connected to number displays.\n\nBuild a circuit that makes the right-hand display show the sum of the two input numbers.\n\nThe displays use hexadecimal. If the sum is larger than one hexadecimal digit, it should wrap around to 0.",
   "license" : "Copyright",
   "view" : {
     "center" : [
@@ -27,7 +27,7 @@
   "engines" : {
     "circuitry" : ">=0.0"
   },
-  "title" : "Add 4-bit numbers",
+  "title" : "Add Four-Bit Numbers",
   "items": [
     {
       "_id" : "5548a0da4fa5dd1f220041ac",

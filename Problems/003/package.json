@@ -1,6 +1,6 @@
 {
   "_id" : "54d6f3f7c81dba6a520041a9",
-  "description" : "Using two OR gates, connect them so that the output is true when at least one of the inputs A, or B, or C is true.",
+  "description" : "Use two OR gates to make the output true when at least one input, A, B, or C, is true.",
   "view" : {
     "center" : [
       -200,
@@ -28,7 +28,7 @@
       ]
     }
   ],
-  "title" : "3-way OR Gate",
+  "title" : "Build a Three-Input OR",
   "items": [
     {
       "_id" : "54d6f45f004aab9c520041a8",

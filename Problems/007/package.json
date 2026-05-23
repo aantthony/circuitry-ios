@@ -1,6 +1,6 @@
 {
   "_id" : "54d71d82004aabf85b0041a9",
-  "description" : "Extending the previous problem, make the output true when an odd number of inputs are true.",
+  "description" : "Extend the previous idea to three inputs.\n\nUse two XOR gates to make the output true when an odd number of inputs are true.",
   "view" : {
     "center" : [
       -200,
@@ -26,7 +26,7 @@
       ]
     }
   ],
-  "title" : "Two XOR Gates",
+  "title" : "Combine Two XOR Gates",
   "items": [
     {
       "_id" : "54d71d86004aabf85b0041aa",

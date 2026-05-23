@@ -1,6 +1,6 @@
 {
   "_id" : "54d71f45004aab645d0041a9",
-  "description" : "NAND gates alone can be used to make any other logic gate. Make a NOT gate using a NAND Gate, so that the output is the negation of the input A.",
+  "description" : "NAND gates can be combined to make any other logic gate.\n\nUse a NAND gate to make a NOT gate: the output should always be the opposite of input A.",
   "view" : {
     "center" : [
       -50,
@@ -24,7 +24,7 @@
   "engines" : {
     "circuitry" : ">=0.0"
   },
-  "title" : "NOT Using a NAND",
+  "title" : "Build NOT from NAND",
   "items": [
     {
       "_id" : "54d71f4b004aab645d0041aa",

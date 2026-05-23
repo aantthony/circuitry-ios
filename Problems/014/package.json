@@ -1,6 +1,6 @@
 {
   "_id" : "54d72378004aab735e0041bf",
-  "description" : "In this problem, both A and B represent single-bit binary numbers. That is, they are either ones or zeros.\n\nAdding these numbers will sum to either a 0, 1, or 2.\n\nMake the number show a '0' when no inputs are true, a '1' when only one is, and a '2' when both are true.",
+  "description" : "Inputs A and B are single-bit binary numbers, so each input is either 0 or 1.\n\nAdd the two inputs and show the result on the number display. The display should show 0 when both inputs are false, 1 when exactly one input is true, and 2 when both inputs are true.",
   "license" : "Copyright",
   "view" : {
     "center" : [
@@ -29,7 +29,7 @@
   "engines" : {
     "circuitry" : ">=0.0"
   },
-  "title" : "Add two binary digits",
+  "title" : "Add Two Binary Digits",
   "items": [
     {
       "_id" : "54d72384004aab735e0041c0",

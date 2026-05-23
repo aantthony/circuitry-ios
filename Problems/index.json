@@ -2,102 +2,102 @@
   "problems": [
     {
       "path": "001",
-      "title": "Connect an AND gate"
+      "title": "Connect an AND Gate"
     },
     {
       "path": "002",
-      "title": "Another AND Gate"
+      "title": "Build a Three-Input AND"
     },
     {
       "path": "003",
-      "title": "3-way OR Gate"
+      "title": "Build a Three-Input OR"
     },
     {
       "path": "004",
-      "title": "Implement a NAND Gate"
+      "title": "Build a NAND Gate"
     },
     {
       "path": "005",
-      "title": "NOT Using a NAND"
+      "title": "Build NOT from NAND"
     },
     {
       "path": "006",
-      "title": "Exclusive OR"
+      "title": "Build an XOR Gate"
     },
     {
       "path": "007",
-      "title": "Two XOR Gates"
+      "title": "Combine Two XOR Gates"
     },
     {
       "path": "008",
-      "title": "OR Using Three NANDs"
+      "title": "Build OR from NAND"
     },
     {
       "path": "009",
-      "title": "AND Using NAND gates"
+      "title": "Build AND from NAND"
     },
     {
       "path": "011",
-      "title": "NAND Using NOR gates"
+      "title": "Build NAND from NOR"
     },
     {
       "path": "012",
-      "title": "One of Three"
+      "title": "Exactly One of Three"
     },
     {
       "path": "013",
-      "title": "Two of Three"
+      "title": "Exactly Two of Three"
     },
     {
       "path": "014",
-      "title": "Add two binary digits"
+      "title": "Add Two Binary Digits"
     },
     {
       "path": "015",
-      "title": "Full Adder"
+      "title": "Build a Full Adder"
     },
     {
       "path": "016",
-      "title": "Add 2-bit numbers"
+      "title": "Add Two-Bit Numbers"
     },
     {
       "path": "017",
-      "title": "Add 4-bit numbers"
+      "title": "Add Four-Bit Numbers"
     },
     {
       "path": "018",
-      "title": "Multiply 2-bit numbers"
+      "title": "Multiply Two-Bit Numbers"
     },
     {
       "path": "019",
       "hidden": true,
-      "title": "Multiply 4-bit numbers"
+      "title": "Multiply Four-Bit Numbers"
     },
     {
       "hidden": true,
       "path": "018",
-      "title": "Adding signed numbers"
+      "title": "Add Signed Numbers"
     },
     {
       "hidden": true,
       "path": "019",
-      "title": "Subtraction"
+      "title": "Subtract Binary Numbers"
     },
     {
       "path": "020",
-      "title": "Flip Flop"
+      "title": "Build an SR Latch"
     },
     {
       "path": "021",
-      "title": "Clocked Flip Flop"
+      "title": "Build a Gated SR Latch"
     },
     {
       "path": "022",
-      "title": "JK Flip Flop"
+      "title": "Build a JK Flip-Flop"
     },
     {
       "path": "023",
-      "title": "Binary Counter"
+      "title": "Build a Binary Counter"
     }
   ]
 }
