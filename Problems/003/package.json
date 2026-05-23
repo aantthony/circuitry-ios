@@ -1,6 +1,11 @@
 {
   "_id" : "54d6f3f7c81dba6a520041a9",
   "description" : "Use two OR gates to make the output true when at least one input, A, B, or C, is true.",
+  "hints" : [
+    "A three-input OR can be made by combining two inputs first, then combining that result with the third input.",
+    "Use one OR gate for any two inputs, such as A and B.",
+    "Feed that OR result into the second OR gate along with C."
+  ],
   "view" : {
     "center" : [
       -200,

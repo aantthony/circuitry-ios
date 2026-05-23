@@ -122,6 +122,7 @@ static NSValue *valueForGate(CircuitProcess *process) {
     }
     
     self.userDescription = package[@"description"];
+    self.hints = package[@"hints"];
     
     if ([package valueForKey:@"_id"]) {
         _id = [MongoID idWithString:[package valueForKey:@"_id"]];

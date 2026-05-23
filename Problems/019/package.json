@@ -1,6 +1,11 @@
 {
   "_id" : "54d7228f004aab735e0041b9",
   "description" : "Two number inputs are already connected to number displays.\n\nBuild a circuit that makes the right-hand display show the product of the two input numbers.",
+  "hints" : [
+    "Four-bit multiplication is the same partial-product idea at a larger scale.",
+    "Use AND gates to create one shifted partial product for each multiplier bit.",
+    "Add the shifted partial products together; the output may need up to eight bits."
+  ],
   "license" : "Copyright",
   "view" : {
     "center" : [

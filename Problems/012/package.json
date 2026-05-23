@@ -1,6 +1,11 @@
 {
   "_id" : "54d7228f004aab735e0041b8",
   "description" : "Make the output true only when exactly one input is true.\n\nSeveral types of logic gates are available for this problem.",
+  "hints" : [
+    "The output should be true for A only, B only, or C only.",
+    "For each input, make a branch that requires that input to be true and the other two to be false.",
+    "OR the three branches together."
+  ],
   "license" : "Copyright",
   "view" : {
     "center" : [

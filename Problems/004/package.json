@@ -1,6 +1,11 @@
 {
   "_id" : "54d6f66a004aab62540041a9",
   "description" : "Make the output match A NAND B. The output should be false only when both inputs are true.\n\nNAND means \"not AND\".\n\nTap \"Check Answer\" to compare your circuit against the required truth table.",
+  "hints" : [
+    "NAND is the opposite of AND.",
+    "First make A AND B.",
+    "Invert the AND result with a NOT gate."
+  ],
   "view" : {
     "center" : [
       -200,

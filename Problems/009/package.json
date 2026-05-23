@@ -1,6 +1,11 @@
 {
   "_id" : "54d72007004aab005e0041a9",
   "description" : "Make an AND gate using only NAND gates.\n\nHint: the NOT gate you built from NAND in the previous level solves part of this problem.",
+  "hints" : [
+    "NAND gives the inverse of AND.",
+    "First compute A NAND B.",
+    "Invert the NAND result using another NAND wired as a NOT gate."
+  ],
   "license" : "Copyright",
   "view" : {
     "center" : [

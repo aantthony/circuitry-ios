@@ -1,6 +1,11 @@
 {
   "_id" : "54d725b8c81dba47610041a9",
   "description" : "A full adder adds three single-bit inputs and produces two outputs.\n\nIt works like a half adder, but it also accepts a carry-in bit.\n\nUse A and B as the two digits, C as the carry input, and produce both the sum output and the carry output.",
+  "hints" : [
+    "A full adder can be built from two half adders.",
+    "First add A and B. Then add that sum to the carry input C.",
+    "The final carry is true if either half-adder carry is true."
+  ],
   "license" : "Copyright",
   "view" : {
     "center" : [

@@ -1,6 +1,11 @@
 {
   "_id" : "54d72007004aab005e0041a9",
   "description" : "Make an OR gate using only NAND gates.\n\nTap \"Check Answer\" to compare your circuit against the required truth table.",
+  "hints" : [
+    "De Morgan's law says A OR B is the same as NOT A NAND NOT B.",
+    "Use NAND gates as NOT gates by wiring the same signal into both inputs.",
+    "Invert A, invert B, then NAND those two inverted signals together."
+  ],
   "license" : "Copyright",
   "view" : {
     "center" : [

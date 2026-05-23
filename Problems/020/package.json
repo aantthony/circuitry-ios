@@ -1,6 +1,11 @@
 {
   "_id" : "54d7228f004aab735e0041b9",
   "description" : "A latch is a circuit with two stable states, so it can store information.\n\nAn SR latch stores one bit. It has an S input to set the output and an R input to reset it. After S turns the output on, the output should stay on until R turns it off.\n\nBuild an SR latch that controls Q.",
+  "hints" : [
+    "An SR latch is made from two cross-coupled gates.",
+    "The output of each NOR gate feeds one input of the other NOR gate.",
+    "S should set Q, and R should reset Q."
+  ],
   "license" : "Copyright",
   "view" : {
     "center" : [

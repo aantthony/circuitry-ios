@@ -1,6 +1,11 @@
 {
   "_id" : "54d72378004aab735e0041bf",
   "description" : "Build a circuit that counts from 0 to 9.\n\nThe count should increase by 1 every time C changes from 0 to 1.",
+  "hints" : [
+    "A binary counter can be made from a chain of toggles.",
+    "The lowest bit toggles on every rising edge of C.",
+    "Each higher bit toggles when the previous bit rolls over."
+  ],
   "license" : "Copyright",
   "view" : {
     "center" : [

@@ -1,6 +1,11 @@
 {
   "_id" : "54d7228f004aab735e0041b9",
   "description" : "Two number inputs are already connected to number displays.\n\nBuild a circuit that makes the right-hand display show the sum of the two input numbers.\n\nThe displays use hexadecimal. If the sum is larger than one hexadecimal digit, it should wrap around to 0.",
+  "hints" : [
+    "This is the same idea as the two-bit adder, repeated across four bit positions.",
+    "Carry flows from the lowest bit toward the highest bit.",
+    "Ignore the final carry out so the result wraps to one hexadecimal digit."
+  ],
   "license" : "Copyright",
   "view" : {
     "center" : [

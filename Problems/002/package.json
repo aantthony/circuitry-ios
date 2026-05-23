@@ -1,5 +1,10 @@
 {
   "description": "The previous problem used an AND gate to make the output true when both inputs were true.\n\nNow use two AND gates to make the output true only when A, B, and C are all true.",
+  "hints" : [
+    "A three-input AND can be made by checking two inputs first, then checking that result with the third input.",
+    "Use one AND gate for A and B. Its output represents A AND B.",
+    "Feed A AND B into the second AND gate along with C."
+  ],
   "title": "Build a Three-Input AND",
   "view": {
     "center": [65, 180, 0],

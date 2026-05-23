@@ -1,6 +1,11 @@
 {
   "_id" : "54d7228f004aab735e0041b9",
   "description" : "A gated SR latch behaves like an SR latch, but it changes state only while the enable input E is on.\n\nThis lets other circuit elements control when data is written to the stored bit.\n\nBuild a gated SR latch with S, R, and E inputs.",
+  "hints" : [
+    "A gated SR latch is an SR latch with input gates in front of it.",
+    "Use E to decide whether S and R are allowed through.",
+    "When E is off, the latch should keep its previous state."
+  ],
   "license" : "Copyright",
   "view" : {
     "center" : [

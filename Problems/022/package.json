@@ -1,6 +1,11 @@
 {
   "_id" : "54d71f45004aab645d0041a9",
   "description" : "An SR latch can store one bit, but it does not provide a simple way to toggle that bit.\n\nA JK flip-flop solves this by updating only when the clock signal changes from 0 to 1.\n\nWhen J is 1 and K is 0, the output is set to 1. When J is 0 and K is 1, the output is reset to 0. When J and K are both 1, the output toggles.\n\nBuild a circuit that toggles Q every time C changes from 0 to 1.",
+  "hints" : [
+    "A toggle changes state only on the rising edge of C.",
+    "A JK flip-flop can toggle when J and K are both true.",
+    "Tie J and K high, then use C as the clock input."
+  ],
   "view" : {
     "center" : [
       -50,

@@ -1,6 +1,11 @@
 {
   "_id" : "54d7228f004aab735e0041b8",
   "description" : "Make the output true only when exactly two inputs are true.",
+  "hints" : [
+    "The output should be true for AB, AC, or BC.",
+    "Make one branch for each pair of true inputs.",
+    "OR the three pair branches together."
+  ],
   "license" : "Copyright",
   "view" : {
     "center" : [

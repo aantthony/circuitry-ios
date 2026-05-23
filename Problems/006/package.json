@@ -1,6 +1,11 @@
 {
   "_id" : "54d71a47004aabc4580041aa",
   "description" : "Use NOT, AND, and OR gates to make the output true only when exactly one of inputs A and B is true.\n\nXOR means \"exclusive OR\". Unlike a regular OR gate, XOR is false when both inputs are true.",
+  "hints" : [
+    "XOR is true when A or B is true, but not when both are true.",
+    "Think of XOR as (A OR B) AND NOT (A AND B).",
+    "Build A OR B, build A AND B, invert the AND result, then AND those two signals together."
+  ],
   "view" : {
     "center" : [
       -300,

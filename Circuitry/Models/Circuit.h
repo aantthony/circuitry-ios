@@ -10,6 +10,7 @@
 @property(nonatomic) NSString *version;
 @property(nonatomic) NSString *userDescription;
 @property(nonatomic) NSString *title;
+@property(nonatomic) NSArray *hints;
 @property(nonatomic) NSString *author;
 @property(nonatomic) NSMutableArray *engines;
 @property(nonatomic) NSString *license;

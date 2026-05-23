@@ -1,6 +1,11 @@
 {
   "_id" : "54d71f45004aab645d0041a9",
   "description" : "NAND gates can be combined to make any other logic gate.\n\nUse a NAND gate to make a NOT gate: the output should always be the opposite of input A.",
+  "hints" : [
+    "A NAND gate outputs false only when both of its inputs are true.",
+    "To invert A with NAND, make both NAND inputs receive A.",
+    "Connect A to both inputs of the NAND gate, then send the NAND output to Q."
+  ],
   "view" : {
     "center" : [
       -50,

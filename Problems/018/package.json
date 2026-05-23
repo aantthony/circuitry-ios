@@ -1,6 +1,11 @@
 {
   "_id" : "54d7228f004aab735e0041b9",
   "description" : "Two number inputs are already connected to number displays.\n\nBuild a circuit that makes the right-hand display show the product of the two input numbers.",
+  "hints" : [
+    "Multiplication can be built from shifted partial products.",
+    "Each partial product bit is an AND of one bit from each input.",
+    "Add the partial products to produce the displayed result."
+  ],
   "license" : "Copyright",
   "view" : {
     "center" : [

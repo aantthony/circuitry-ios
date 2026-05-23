@@ -1,5 +1,10 @@
 {
   "description": "Start by connecting both input buttons to the AND gate in the middle, then connect the gate to the output light.\n\nTap the input buttons to see how signals change. Off, false, 0, disabled, and low all mean the same thing here; on, true, 1, enabled, and high also mean the same thing. Low signals are grey, and high signals are green.\n\nAn AND gate outputs true only when both of its inputs are true.",
+  "hints" : [
+    "Each input button needs a wire into one input of the AND gate.",
+    "The AND gate should be between the two input buttons and the output light.",
+    "Connect both buttons to the AND gate, then connect the AND gate output to the light."
+  ],
   "title": "Connect an AND Gate",
   "view": {
     "center": [65, 180, 0],
