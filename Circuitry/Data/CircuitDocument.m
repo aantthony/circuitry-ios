@@ -131,12 +131,16 @@ static NSString *screenshotPngPath = @"screenshot.png";
 - (NSDictionary *) exportPackageDictionaryWithoutItems {
     NSMutableArray *testsArray = [NSMutableArray arrayWithCapacity:_circuit.tests.count];
     [_circuit.tests enumerateObjectsUsingBlock:^(CircuitTest *test, NSUInteger idx, BOOL *stop) {
-        [testsArray addObject:@{
-                                @"name": test.name,
-                                @"inputs": test.inputIds,
-                                @"outputs": test.outputIds,
-                                @"spec": test.spec
-                                }];
+        NSMutableDictionary *testDictionary = [@{
+                                                 @"name": test.name,
+                                                 @"inputs": test.inputIds,
+                                                 @"outputs": test.outputIds,
+                                                 @"spec": test.spec
+                                                 } mutableCopy];
+        if (test.acceptedSpecs.count) {
+            testDictionary[@"acceptedSpecs"] = test.acceptedSpecs;
+        }
+        [testsArray addObject:testDictionary];
     }];
     
     return @{

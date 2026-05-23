@@ -12,15 +12,17 @@
 @interface CircuitTest()
 @property (nonatomic) NSArray *inputNodes;
 @property (nonatomic) NSArray *outputNodes;
+@property (nonatomic) NSArray *acceptedSpecs;
 @end
 @implementation CircuitTest
 
-- (id) initWithName: (NSString *)name inputs:(NSArray *) inputs outputs: (NSArray *)outputs spec: (NSArray *) spec {
+- (id) initWithName: (NSString *)name inputs:(NSArray *) inputs outputs: (NSArray *)outputs spec: (NSArray *) spec acceptedSpecs:(NSArray *)acceptedSpecs {
     self = [super init];
     _name = name;
     _inputNodes = inputs;
     _outputNodes = outputs;
     _spec = spec;
+    _acceptedSpecs = acceptedSpecs;
     return self;
 }
 
@@ -90,66 +92,69 @@
     return [self namesForNodes:self.outputNodes];
 }
 
+- (NSArray *) allAcceptedSpecs {
+    if (!self.acceptedSpecs.count) {
+        return @[self.spec];
+    }
+    return [@[self.spec] arrayByAddingObjectsFromArray:self.acceptedSpecs];
+}
+
+- (NSArray *) outputStates {
+    NSMutableArray *outputStates = [NSMutableArray arrayWithCapacity:self.outputNodes.count];
+    [self.outputNodes enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        CircuitObject * outputNode = [obj pointerValue];
+        [outputStates addObject:@(outputNode->in)];
+    }];
+    return outputStates;
+}
+
+- (BOOL) actualOutputStates:(NSArray *)actualOutputStates matchSpec:(NSArray *)spec {
+    if (actualOutputStates.count != spec.count) {
+        return NO;
+    }
+    for(NSUInteger idx = 0; idx < spec.count; idx++) {
+        NSArray *inputOutputPair = spec[idx];
+        NSArray *inputStates = inputOutputPair[0];
+        NSArray *originalInputStates = self.spec[idx][0];
+        if (![inputStates isEqualToArray:originalInputStates]) {
+            return NO;
+        }
+        NSArray *outputStates = inputOutputPair[1];
+        if (![actualOutputStates[idx] isEqualToArray:outputStates]) {
+            return NO;
+        }
+    }
+    return YES;
+}
+
 - (CircuitTestResult *) runAndSimulate:(Circuit *)circuit {
-    __block BOOL pass = YES;
-    
-    
-    
     // determine initial input state:
     NSMutableArray *initalStates = [NSMutableArray arrayWithCapacity:_inputNodes.count];
     [_inputNodes enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         CircuitObject * inputNode = [obj pointerValue];
         [initalStates addObject:@(inputNode->out)];
     }];
-    
-    __block NSString *failure = @"";
-    
-    NSMutableArray *checks = [NSMutableArray arrayWithCapacity:_spec.count];
+
+    NSMutableArray *actualOutputStates = [NSMutableArray arrayWithCapacity:_spec.count];
     
     [_spec enumerateObjectsUsingBlock:^(NSArray *inputOutputPair, NSUInteger idx, BOOL *stop) {
         NSArray *inputStates = inputOutputPair[0];
-        NSArray *outputStates = inputOutputPair[1];
         
         // Apply input state:
         [inputStates enumerateObjectsUsingBlock:^(id obj, NSUInteger i, BOOL *stop) {
             CircuitObject * inputNode = [self.inputNodes[i] pointerValue];
             inputNode->out = [obj intValue];
-            
+
             [circuit performWriteBlock:^(CircuitInternal *internal) {
                 CircuitObjectSetOutput(internal, inputNode, [obj intValue]);
             }];
         }];
 
         [circuit simulate:512];
-        
-        __block BOOL isMatchForInput = YES;
-        // Validate output state:
-        [outputStates enumerateObjectsUsingBlock:^(id obj, NSUInteger i, BOOL *stop) {
-            CircuitObject * outputNode = [self.outputNodes[i] pointerValue];
-            int expected = [obj intValue];
-            if (outputNode->in != expected) {
-                pass = NO;
-                isMatchForInput = NO;
-                NSString *inputStateSpecification = [inputStates componentsJoinedByString:@", "];
-                NSString *outputStateSpecification = [outputStates componentsJoinedByString:@", "];
-                
-                if (failure) {
-                    failure = [failure stringByAppendingString:@"\n"];
-                }
-                failure = [failure stringByAppendingFormat:@"f(%@) == (%@) failed: expected %s to equal %d, but got %d instead.", inputStateSpecification, outputStateSpecification, outputNode->name, expected, outputNode->in];
-                
-                //*stop = YES;
-            }
-        }];
-        
-        CircuitTestResultCheck *check = [[CircuitTestResultCheck alloc] initWithInputs:inputStates expectedOutputs:outputStates match:isMatchForInput];
-        
-        [checks addObject:check];
-        
-        //if (!pass) *stop = YES;
+        [actualOutputStates addObject:[self outputStates]];
 
     }];
-    
+
     // Re-apply inital input state:
     [circuit performWriteBlock:^(CircuitInternal *internal) {
         
@@ -159,7 +164,43 @@
         }];
     }];
 
+    NSArray *matchedSpec = nil;
+    for(NSArray *acceptedSpec in [self allAcceptedSpecs]) {
+        if ([self actualOutputStates:actualOutputStates matchSpec:acceptedSpec]) {
+            matchedSpec = acceptedSpec;
+            break;
+        }
+    }
+
+    BOOL pass = matchedSpec != nil;
+    NSArray *resultSpec = matchedSpec ?: self.spec;
+    NSMutableArray *checks = [NSMutableArray arrayWithCapacity:resultSpec.count];
+    NSMutableArray *failureMessages = [NSMutableArray array];
+
+    [resultSpec enumerateObjectsUsingBlock:^(NSArray *inputOutputPair, NSUInteger idx, BOOL *stop) {
+        NSArray *inputStates = inputOutputPair[0];
+        NSArray *outputStates = inputOutputPair[1];
+        NSArray *actualOutputs = actualOutputStates[idx];
+        __block BOOL isMatchForInput = YES;
+
+        [outputStates enumerateObjectsUsingBlock:^(id obj, NSUInteger i, BOOL *stop) {
+            int expected = [obj intValue];
+            int actual = [actualOutputs[i] intValue];
+            if (actual != expected) {
+                isMatchForInput = NO;
+                CircuitObject * outputNode = [self.outputNodes[i] pointerValue];
+                NSString *inputStateSpecification = [inputStates componentsJoinedByString:@", "];
+                NSString *outputStateSpecification = [outputStates componentsJoinedByString:@", "];
+                [failureMessages addObject:[NSString stringWithFormat:@"f(%@) == (%@) failed: expected %s to equal %d, but got %d instead.", inputStateSpecification, outputStateSpecification, outputNode->name, expected, actual]];
+            }
+        }];
+        
+        CircuitTestResultCheck *check = [[CircuitTestResultCheck alloc] initWithInputs:inputStates expectedOutputs:outputStates match:isMatchForInput];
+        
+        [checks addObject:check];
+    }];
     
+    NSString *failure = [failureMessages componentsJoinedByString:@"\n"];
     NSString *rDescription = pass ? @"Passed." : failure;
     
     CircuitTestResult *result = [[CircuitTestResult alloc] initWithResultDescription:rDescription passed:pass checks:checks inputNames:self.inputNames outputNames:self.outputNames];

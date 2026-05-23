@@ -203,7 +203,7 @@ static NSValue *valueForGate(CircuitProcess *process) {
                 [outputNodes addObject:[NSValue valueWithPointer:object]];
             }];
             
-            [circuitTests addObject:[[CircuitTest alloc] initWithName:testObj[@"name"] inputs:inputNodes outputs:outputNodes spec:testObj[@"spec"]]];
+            [circuitTests addObject:[[CircuitTest alloc] initWithName:testObj[@"name"] inputs:inputNodes outputs:outputNodes spec:testObj[@"spec"] acceptedSpecs:testObj[@"acceptedSpecs"]]];
         }];
         
         if (fail) return nil;
