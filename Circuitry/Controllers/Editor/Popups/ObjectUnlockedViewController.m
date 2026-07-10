@@ -17,6 +17,14 @@
     
 }
 
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+
+    CGPoint center = self.itemImage.center;
+    center.x = CGRectGetMidX(self.view.bounds);
+    self.itemImage.center = center;
+}
+
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     

@@ -76,7 +76,9 @@ static NSValue *valueForGate(CircuitProcess *process) {
 - (CircuitProcess *) getProcessById:(NSString *)processId {
     CircuitProcess *p;
     NSValue *data = Circuit.processesById[processId];
-    NSParameterAssert(data);
+    if (!data) {
+        return NULL;
+    }
     p = [data pointerValue];
     return p;
 }
@@ -130,19 +132,31 @@ static NSValue *valueForGate(CircuitProcess *process) {
         _id = [MongoID id];
     }
 
+    __block BOOL fail = NO;
     [items enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
         NSString *type = obj[@"type"];
         CircuitProcess *process = [self getProcessById: type];
+        if (!process) {
+            *stop = YES;
+            fail = YES;
+            return;
+        }
         CircuitObject *o = CircuitObjectCreate(self.internal, process);
         if (obj[@"locked"]) {
             o->flags |= CircuitObjectFlagLocked;
         }
         o->id = [MongoID idWithString:obj[@"_id"]];
     }];
+    if (fail) return nil;
     
     [items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         ObjectID objId = [MongoID idWithString:[obj valueForKey:@"_id"]];
         CircuitObject *o = CircuitObjectFindById(self.internal, objId);
+        if (!o) {
+            *stop = YES;
+            fail = YES;
+            return;
+        }
         
         const char * utf8String = [obj[@"name"] UTF8String];
         for(int i = 0; i < 4; i++) {
@@ -163,6 +177,11 @@ static NSValue *valueForGate(CircuitProcess *process) {
                 ObjectID targetId = [MongoID idWithString:[obj objectAtIndex:0]];
                 int targetIndex = [[obj objectAtIndex:1] intValue];
                 CircuitObject *target = CircuitObjectFindById(self.internal, targetId);
+                if (!target) {
+                    *stop = YES;
+                    fail = YES;
+                    return;
+                }
                 CircuitLinkCreate(self.internal, o, (int)sourceIndex, target, targetIndex);
             }];
         }];
@@ -173,12 +192,13 @@ static NSValue *valueForGate(CircuitProcess *process) {
             o->pos.v[i] = [[pos objectAtIndex:i] floatValue];
         }
     }];
+    if (fail) return nil;
     
     if (package[@"tests"]) {
         Circuit * _self = self;
         NSArray *tests = package[@"tests"];
         NSMutableArray *circuitTests = [NSMutableArray arrayWithCapacity:tests.count];
-        __block BOOL fail = NO;
+        fail = NO;
         [tests enumerateObjectsUsingBlock:^(NSDictionary *testObj, NSUInteger idx, BOOL *stop) {
         
             NSArray * inputIds = testObj[@"inputs"];
@@ -191,18 +211,29 @@ static NSValue *valueForGate(CircuitProcess *process) {
                 if (!object) {
                     *stop = YES;
                     fail = YES;
+                    return;
                 }
                 [inputNodes addObject:[NSValue valueWithPointer:object]];
             }];
             if (fail) {
                 *stop = YES;
+                return;
             }
             
             NSMutableArray *outputNodes = [NSMutableArray arrayWithCapacity:outputIds.count];
             [outputIds enumerateObjectsUsingBlock:^(NSString *objectId, NSUInteger idx, BOOL *stop) {
                 CircuitObject *object = [_self findObjectById:objectId];
+                if (!object) {
+                    *stop = YES;
+                    fail = YES;
+                    return;
+                }
                 [outputNodes addObject:[NSValue valueWithPointer:object]];
             }];
+            if (fail) {
+                *stop = YES;
+                return;
+            }
             
             [circuitTests addObject:[[CircuitTest alloc] initWithName:testObj[@"name"] inputs:inputNodes outputs:outputNodes spec:testObj[@"spec"] acceptedSpecs:testObj[@"acceptedSpecs"]]];
         }];

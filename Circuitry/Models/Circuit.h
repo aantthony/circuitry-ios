@@ -25,6 +25,7 @@
 
 - (NSArray *) tests;
 
++ (NSDictionary *) processesById;
 - (CircuitProcess *) getProcessById:(NSString *)_id;
 
 - (int) simulate: (int) ticks;
