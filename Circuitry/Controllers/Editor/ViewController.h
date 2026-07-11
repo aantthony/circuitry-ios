@@ -3,10 +3,9 @@
 @class ToolbeltItem;
 @class Viewport;
 @protocol ViewControllerTutorialProtocol;
-#import <GLKit/GLKViewController.h>
-@interface ViewController : GLKViewController <UIGestureRecognizerDelegate>
+#import <UIKit/UIKit.h>
+@interface ViewController : UIViewController <UIGestureRecognizerDelegate>
 
-+ (EAGLContext *) context;
 + (ImageAtlas *) atlas;
 
 @property (nonatomic) Viewport *viewport;
@@ -22,7 +21,6 @@
 - (IBAction) handleTapGesture:(UITapGestureRecognizer *)sender;
 - (IBAction) handleLongPressObject:(UILongPressGestureRecognizer *)sender;
 
-// GLKViewController Protocol:
 - (void) update;
 
 - (void) startCreatingObjectFromItem: (ToolbeltItem *) item;

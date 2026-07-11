@@ -1,28 +1,9 @@
 #import "Viewport.h"
 
-#import "Grid.h"
-#import "LinkBezier.h"
-#import "SevenSegmentDisplay.h"
-#import "TouchHighlight.h"
-#import "Sprite.h"
-#import "BatchedSprite.h"
 #import "CircuitDocument.h"
 
-@interface Viewport() {
-    GLKMatrix4 _viewMatrix;
-    GLKMatrix4 _viewProjectionMatrix;
-    GLKMatrix4 _projectionMatrix;
-    LinkBezier *bezier;
-    BatchedSprite *_gateSprites;
-    
-    BatchedSpriteInstance *_instances;
-    int _capacity;
-    int _count;
-    
-    SevenSegmentDisplay *sevenSegment;
-}
-@property (nonatomic) Grid *grid;
-@property (nonatomic) TouchHighlight *highlighter;
+@interface Viewport()
+@property (nonatomic) ImageAtlas *atlas;
 @property (nonatomic) float highlightProgress;
 @property (nonatomic) float highlightOutProgress;
 @property (nonatomic) GLKVector2 highlightLinkLocation;
@@ -59,7 +40,7 @@ static SpriteTexturePos symbolSR;
 static SpriteTexturePos symbolSER;
 static SpriteTexturePos symbolT;
 static SpriteTexturePos symbolD;
-static SpriteTexturePos symbolCLKIN; // Clock input at bit zero
+static SpriteTexturePos symbolCLKIN;
 static SpriteTexturePos symbolNAND;
 static SpriteTexturePos symbolNOT;
 static SpriteTexturePos symbolHA;
@@ -86,57 +67,34 @@ static SpriteTexturePos letter3;
 static SpriteTexturePos letter4;
 
 static SpriteTexturePos* letterTable[256];
+static CGFloat radius;
+static const CGFloat vSpacing = 33.0;
 
-static GLfloat radius;
+- (id)initWithAtlas:(ImageAtlas *)atlas {
+    self = [super init];
+    if (!self) return nil;
 
-- (void) dealloc {
-    free(_instances);
-    _instances = NULL;
-}
-
-- (id) initWithContext: (EAGLContext*) context atlas:(ImageAtlas *)atlas {
-    self = [self init];
-    
+    _atlas = atlas;
     _highlightProgress = 10000.0;
     _highlightOutProgress = 10000.0;
-    
-    float initialScale = 0.5;
+
+    CGFloat initialScale = 0.5;
     _translate = GLKVector3Make(0.0, 0.0, 0.0);
-    _scale     = GLKVector3Make(initialScale, initialScale, initialScale);
-    
-    _grid = [[Grid alloc] init];
-    
-    [_grid setScale:_scale translate:_translate];
-    
-    [self recalculateMatrices];
-    
-    
-    [ShaderEffect checkError];
-    [Sprite setContext: context];
-    [ShaderEffect checkError];
-    [BatchedSprite setContext: context];
-    [ShaderEffect checkError];
-    
-    _capacity = 10000;
-    
-    _gateSprites = [[BatchedSprite alloc] initWithTexture:atlas.texture capacity:_capacity];
-    
-    _instances = malloc(sizeof(BatchedSpriteInstance) * _capacity);
-    
-    gateBackgroundHeight1 = [atlas positionForSprite: @"single@2x"];
-    gateBackgroundHeight2 = [atlas positionForSprite: @"double@2x"];
-    gateOutletInactive = [atlas positionForSprite: @"inactive@2x"];
-    gateOutletActive = [atlas positionForSprite:  @"active@2x"];
-    gateOutletActiveConnected = [atlas positionForSprite: @"activeconnected@2x"];
-    gateOutletInactiveConnected = [atlas positionForSprite:  @"inactiveconnected@2x"];
+    _scale = GLKVector3Make(initialScale, initialScale, initialScale);
+
+    gateBackgroundHeight1 = [atlas positionForSprite:@"single@2x"];
+    gateBackgroundHeight2 = [atlas positionForSprite:@"double@2x"];
+    gateOutletInactive = [atlas positionForSprite:@"inactive@2x"];
+    gateOutletActive = [atlas positionForSprite:@"active@2x"];
+    gateOutletActiveConnected = [atlas positionForSprite:@"activeconnected@2x"];
+    gateOutletInactiveConnected = [atlas positionForSprite:@"inactiveconnected@2x"];
     gateBackgroundTop = [atlas positionForSprite:@"gate-top"];
     gateBackgroundMiddle = [atlas positionForSprite:@"gate-middle"];
-    
-    gateBackgroundMiddle.v+=1;
-    gateBackgroundMiddle.theight-=2;
-    
+    gateBackgroundMiddle.v += 1;
+    gateBackgroundMiddle.theight -= 2;
+
     radius = gateOutletActive.width / 2;
-    
+
     gateBackgroundBottom = [atlas positionForSprite:@"gate-bottom"];
     symbolOR = [atlas positionForSprite:@"symbol-or@2x"];
     symbolNOR = [atlas positionForSprite:@"symbol-nor@2x"];
@@ -154,21 +112,18 @@ static GLfloat radius;
     symbolFA = [atlas positionForSprite:@"symbol-fa@2x"];
     symbolPlus = [atlas positionForSprite:@"symbol-plus@2x"];
     symbolMult = [atlas positionForSprite:@"symbol-mult@2x"];
-    
-    // Half adder looks exactly the same as the full adder, except without the bottom left "c".
-    // As such, we can simply re-use the fa texture, but cropped a bit.
+
     symbolHA = [atlas positionForSprite:@"symbol-fa@2x"];
-    symbolHA.theight = symbolHA.height = symbolNOT.height; // 149pt
-    
+    symbolHA.theight = symbolHA.height = symbolNOT.height;
+
     switchOn = [atlas positionForSprite:@"switch-on"];
     switchOff = [atlas positionForSprite:@"switch-off"];
     switchPressed = [atlas positionForSprite:@"switch-press"];
-    
+
     ledOn = [atlas positionForSprite:@"led-on"];
     ledOnGreen = [atlas positionForSprite:@"led-on-green"];
     ledOff = [atlas positionForSprite:@"led-off"];
-    
-    // Letters
+
     letterA = [atlas positionForSprite:@"A@2x"];
     letterB = [atlas positionForSprite:@"B@2x"];
     letterC = [atlas positionForSprite:@"C@2x"];
@@ -186,11 +141,10 @@ static GLfloat radius;
     letter3 = [atlas positionForSprite:@"3@2x"];
     letter4 = [atlas positionForSprite:@"4@2x"];
     letterDOT = [atlas positionForSprite:@"Dot@2x"];
-    
+
     for(int i = 0; i <= 0xff; i++) {
         letterTable[i] = NULL;
     }
-    
     letterTable['A'] = &letterA;
     letterTable['B'] = &letterB;
     letterTable['C'] = &letterC;
@@ -208,32 +162,12 @@ static GLfloat radius;
     letterTable['3'] = &letter3;
     letterTable['4'] = &letter4;
     letterTable['.'] = &letterDOT;
-        
-    for(int i = 0; i < _capacity; i++) {
-        _instances[i].tex = gateBackgroundHeight2;
-    }
-    
-    [ShaderEffect checkError];
-    [_gateSprites buffer:_instances FromIndex:0 count:_capacity];
-    
-    [ShaderEffect checkError];
-    bezier = [[LinkBezier alloc] init];
-    [ShaderEffect checkError];
-    sevenSegment = [[SevenSegmentDisplay alloc] initWithTexture: atlas.texture component:[atlas positionForSprite:@"7seg"]];
-    [ShaderEffect checkError];
-    
-    _highlighter = [[TouchHighlight alloc] init];
-    
+
     return self;
 }
-- (int) update: (NSTimeInterval) dt{
-    BOOL changing = NO;
-    if (_highlightProgress <= 1) {
-        changing = YES;
-    } else if (_highlightOutProgress <= 1) {
-        changing = YES;
-    }
-    
+
+- (int)update:(NSTimeInterval)dt {
+    BOOL changing = _highlightProgress <= 1 || _highlightOutProgress <= 1;
     if (changing) {
         _highlightProgress += 1.5 * dt;
         _highlightOutProgress += 2.0 * dt;
@@ -242,201 +176,7 @@ static GLfloat radius;
     return 0;
 }
 
-- (void) didAttachLink:(CircuitLink *)link {
-    _highlightProgress = 0.0;
-    GLKVector3 dotPos = offsetForInlet(link->target->type, link->targetIndex);
-    GLKVector2 B = GLKVector2Make(link->target->pos.x + dotPos.x + radius, link->target->pos.y + dotPos.y + radius);
-    _highlightLinkLocation = B;
-}
-- (void) didDetachEditingLink {
-    _highlightProgress = 10.0;
-}
-- (void) didBeginCreatingLink:(CircuitObject *)object outletIndex:(int)outletIndex {
-    _highlightOutProgress = 0.0;
-    GLKVector3 dotPos = offsetForOutlet(object->type, outletIndex);
-    GLKVector2 B = GLKVector2Make(object->pos.x + dotPos.x + radius, object->pos.y + dotPos.y + radius);
-    _highlightOutLinkLocation = B;
-}
-
-- (void) setDocument:(CircuitDocument *)document {
-    _document = document;
-    self.translate = GLKVector3Make(document.circuit.viewCenterX, document.circuit.viewCenterY, 0.0);
-}
-
-- (void) setProjectionMatrix: (GLKMatrix4) projectionMatrix {
-    _projectionMatrix = projectionMatrix;
-    [self recalculateMatrices];
-    
-}
-- (void) recalculateMatrices {
-    _viewMatrix = GLKMatrix4Multiply(
-                                     GLKMatrix4MakeTranslation(_translate.x, _translate.y, _translate.z),
-                                     GLKMatrix4MakeScale(_scale.x, _scale.y, _scale.z));
-    
-    _viewProjectionMatrix = GLKMatrix4Multiply(_projectionMatrix, _viewMatrix);
-}
-
-- (GLKVector3) unproject: (CGPoint) screenPos {
-    return [self unproject:screenPos z: 0.0]; // NEAR
-//    return [self unProject:screenPos z: 1.0]; // FAR
-}
-
-- (GLKVector3) project: (GLKVector3) pos {
-    GLint viewport[4];
-    glGetIntegerv(GL_VIEWPORT, viewport);
-    
-    return GLKMathProject(pos, _viewMatrix, _projectionMatrix, viewport);
-}
-
-- (GLKVector3) unproject: (CGPoint) screenPos z: (float) z {
-    
-    GLint viewport[4];
-    glGetIntegerv(GL_VIEWPORT, viewport);
-    
-    GLKVector3 positionInWindowNear = GLKVector3Make(screenPos.x, viewport[3] - screenPos.y, z);
-    
-    return GLKMathUnproject(positionInWindowNear, _viewMatrix, _projectionMatrix, viewport, NULL);
-}
-
-- (int) findInletIndexAtOffset:(GLKVector3) offset attachedToObject:(CircuitObject *)object {
-    
-    if (object->type->numInputs == 0) return -1;
-    
-    int closest = -1;
-    float dist = FLT_MAX;
-    for(int i = 0; i < object->type->numInputs; i++) { 
-        float d = GLKVector3Distance(offsetForInlet(object->type, i), offset);
-        if (d < dist) {
-            dist = d;
-            closest = i;
-        }
-    }
-    return closest;
-}
-
-
-- (int) findOutletIndexAtOffset:(GLKVector3) offset attachedToObject:(CircuitObject *)object {
-    
-    if (object->type->numOutputs == 0) return -1;
-    
-    int closest = -1;
-    float dist = FLT_MAX;
-    for(int i = 0; i < object->type->numOutputs; i++) { 
-        float d = GLKVector3Distance(offsetForOutlet(object->type, i), offset);
-        if (d < dist) {
-            dist = d;
-            closest = i;
-        }
-    }
-    return closest;
-}
-
-
-
-- (CircuitLink *) findCircuitLinkAtOffset: (GLKVector3) offset attachedToObject:(CircuitObject *)object {
-    int index = [self findInletIndexAtOffset:offset attachedToObject:object];
-    if (index == -1) return NULL;
-    
-    return object->inputs[index];
-}
-
-CGSize sizeOfObject(CircuitObject *object) {
-    
-    if (expandDrawGate(object)) {
-        int middleHeight = vSpacing * 2 * MAX(object->type->numInputs, object->type->numOutputs);
-        return CGSizeMake(gateBackgroundHeight2.width, gateBackgroundTop.height + middleHeight + gateBackgroundBottom.height);
-    }
-    return CGSizeMake(gateBackgroundHeight2.width, gateBackgroundHeight2.height);
-}
-
-- (CircuitObject*) findCircuitObjectAtPosition: (GLKVector3) pos {
-    
-    __block CircuitObject *o = NULL;
-    Circuit *_circuit = self.document.circuit;
-    [_circuit enumerateObjectsInReverseUsingBlock:^(CircuitObject *object, BOOL *stop) {
-
-        GLKVector3 oPos = *(GLKVector3 *)&object->pos;
-        
-        CGSize size = sizeOfObject(object);
-        if (pos.x > oPos.x && pos.y > oPos.y) {
-            if (pos.x < oPos.x + size.width && pos.y < oPos.y + size.height) { 
-                o = object;
-                *stop = YES;
-            }
-        }
-    }];
-    
-    return o;
-}
-- (CircuitObject*) findCircuitObjectNearPosition: (GLKVector3) pos {
-    CircuitObject *a = [self findCircuitObjectAtPosition:pos];
-    if (a) return a;
-    __block CircuitObject *o = NULL;
-    float v = 60;
-    Circuit *_circuit = self.document.circuit;
-    [_circuit enumerateObjectsInReverseUsingBlock:^(CircuitObject *object, BOOL *stop) {
-        
-        GLKVector3 oPos = *(GLKVector3 *)&object->pos;
-        
-        CGSize size = sizeOfObject(object);
-        if (pos.x + v > oPos.x && pos.y + v > oPos.y) {
-            if (pos.x - v < oPos.x + size.width && pos.y - v < oPos.y + size.height) { 
-                o = object;
-                *stop = YES;
-            }
-        }
-    }];
-    
-    return o;
-}
-
-- (CircuitObject*) findCircuitObjectAtScreenPosition: (CGPoint) screenPos {
-    return [self findCircuitObjectAtPosition:[self unproject:screenPos]];
-}
-
-- (CGRect) rectForObject:(CircuitObject *) object inView:(UIView *)view {
-    float scaleFactor = view.contentScaleFactor;
-    
-    CGSize size = sizeOfObject(object);
-    
-    GLKVector3 topLeft = GLKVector3Make(object->pos.x, object->pos.y, object->pos.z);
-    GLKVector3 bottomRight = GLKVector3Make(object->pos.x + size.width, object->pos.y + size.height, object->pos.z);
-    
-    GLKVector3 pTopLeft = [self project:topLeft];
-    GLKVector3 pBottomRight = [self project:bottomRight];
-
-    return CGRectMake(pTopLeft.x / scaleFactor, view.bounds.size.height - pTopLeft.y /scaleFactor, (pBottomRight.x - pTopLeft.x) / scaleFactor, (pTopLeft.y - pBottomRight.y)/scaleFactor);
-}
-
-
-- (void) setTranslate:(GLKVector3)translate {
-    _translate = translate;
-    [_grid setScale:_scale translate:_translate];
-    [self recalculateMatrices];
-}
-- (void) setScale:(GLKVector3)scale {
-    _scale = scale;
-    [_grid setScale:_scale translate:_translate];
-    [self recalculateMatrices];
-}
-
-- (void) translate: (GLKVector3) translate {
-    _translate.x += translate.x;
-    _translate.y += translate.y;
-    self.translate = _translate;
-}
-- (void) setScaleWithFloat: (float) scale {
-    _scale.x = _scale.y = scale;
-    self.scale = _scale;
-}
-
-- (float) scaleWithFloat {
-    return _scale.x;
-}
-
-const float vSpacing = 33.0;
-
-GLKVector3 offsetForOutlet(CircuitProcess *process, int index) {
+static GLKVector3 offsetForOutlet(CircuitProcess *process, int index) {
     GLKVector3 res;
     res.z = 0.0;
     res.x = gateBackgroundHeight2.width - 45.0;
@@ -448,8 +188,7 @@ GLKVector3 offsetForOutlet(CircuitProcess *process, int index) {
     return res;
 }
 
-GLKVector3 offsetForInlet(CircuitProcess *process, int index) {
-    
+static GLKVector3 offsetForInlet(CircuitProcess *process, int index) {
     GLKVector3 res;
     res.x = 15.0;
     res.z = 0.0;
@@ -461,7 +200,148 @@ GLKVector3 offsetForInlet(CircuitProcess *process, int index) {
     return res;
 }
 
-- (SpriteTexturePos) textureForProcess:(CircuitProcess *)process {
+- (void)didAttachLink:(CircuitLink *)link {
+    _highlightProgress = 0.0;
+    GLKVector3 dotPos = offsetForInlet(link->target->type, link->targetIndex);
+    _highlightLinkLocation = GLKVector2Make(link->target->pos.x + dotPos.x + radius, link->target->pos.y + dotPos.y + radius);
+}
+
+- (void)didDetachEditingLink {
+    _highlightProgress = 10.0;
+}
+
+- (void)didBeginCreatingLink:(CircuitObject *)object outletIndex:(int)outletIndex {
+    _highlightOutProgress = 0.0;
+    GLKVector3 dotPos = offsetForOutlet(object->type, outletIndex);
+    _highlightOutLinkLocation = GLKVector2Make(object->pos.x + dotPos.x + radius, object->pos.y + dotPos.y + radius);
+}
+
+- (void)setDocument:(CircuitDocument *)document {
+    _document = document;
+    self.translate = GLKVector3Make(document.circuit.viewCenterX, document.circuit.viewCenterY, 0.0);
+}
+
+- (void)setProjectionMatrix:(GLKMatrix4)projectionMatrix {
+}
+
+- (GLKVector3)project:(GLKVector3)pos {
+    return GLKVector3Make(pos.x * _scale.x + _translate.x, pos.y * _scale.y + _translate.y, pos.z);
+}
+
+- (GLKVector3)unproject:(CGPoint)screenPos {
+    return GLKVector3Make((screenPos.x - _translate.x) / _scale.x, (screenPos.y - _translate.y) / _scale.y, 0.0);
+}
+
+- (int)findInletIndexAtOffset:(GLKVector3)offset attachedToObject:(CircuitObject *)object {
+    if (object->type->numInputs == 0) return -1;
+
+    int closest = -1;
+    float dist = FLT_MAX;
+    for(int i = 0; i < object->type->numInputs; i++) {
+        float d = GLKVector3Distance(offsetForInlet(object->type, i), offset);
+        if (d < dist) {
+            dist = d;
+            closest = i;
+        }
+    }
+    return closest;
+}
+
+- (int)findOutletIndexAtOffset:(GLKVector3)offset attachedToObject:(CircuitObject *)object {
+    if (object->type->numOutputs == 0) return -1;
+
+    int closest = -1;
+    float dist = FLT_MAX;
+    for(int i = 0; i < object->type->numOutputs; i++) {
+        float d = GLKVector3Distance(offsetForOutlet(object->type, i), offset);
+        if (d < dist) {
+            dist = d;
+            closest = i;
+        }
+    }
+    return closest;
+}
+
+- (CircuitLink *)findCircuitLinkAtOffset:(GLKVector3)offset attachedToObject:(CircuitObject *)object {
+    int index = [self findInletIndexAtOffset:offset attachedToObject:object];
+    if (index == -1) return NULL;
+    return object->inputs[index];
+}
+
+static BOOL expandDrawGate(CircuitObject *object) {
+    return object->type->numOutputs > 2 || object->type->numInputs > 2;
+}
+
+static CGSize sizeOfObject(CircuitObject *object) {
+    if (expandDrawGate(object)) {
+        int middleHeight = vSpacing * 2 * MAX(object->type->numInputs, object->type->numOutputs);
+        return CGSizeMake(gateBackgroundHeight2.width, gateBackgroundTop.height + middleHeight + gateBackgroundBottom.height);
+    }
+    return CGSizeMake(gateBackgroundHeight2.width, gateBackgroundHeight2.height);
+}
+
+- (CircuitObject*)findCircuitObjectAtPosition:(GLKVector3)pos {
+    __block CircuitObject *o = NULL;
+    Circuit *_circuit = self.document.circuit;
+    [_circuit enumerateObjectsInReverseUsingBlock:^(CircuitObject *object, BOOL *stop) {
+        GLKVector3 oPos = *(GLKVector3 *)&object->pos;
+        CGSize size = sizeOfObject(object);
+        if (pos.x > oPos.x && pos.y > oPos.y && pos.x < oPos.x + size.width && pos.y < oPos.y + size.height) {
+            o = object;
+            *stop = YES;
+        }
+    }];
+    return o;
+}
+
+- (CircuitObject*)findCircuitObjectNearPosition:(GLKVector3)pos {
+    CircuitObject *a = [self findCircuitObjectAtPosition:pos];
+    if (a) return a;
+
+    __block CircuitObject *o = NULL;
+    float v = 60;
+    Circuit *_circuit = self.document.circuit;
+    [_circuit enumerateObjectsInReverseUsingBlock:^(CircuitObject *object, BOOL *stop) {
+        GLKVector3 oPos = *(GLKVector3 *)&object->pos;
+        CGSize size = sizeOfObject(object);
+        if (pos.x + v > oPos.x && pos.y + v > oPos.y && pos.x - v < oPos.x + size.width && pos.y - v < oPos.y + size.height) {
+            o = object;
+            *stop = YES;
+        }
+    }];
+    return o;
+}
+
+- (CGRect)rectForObject:(CircuitObject *)object inView:(UIView *)view {
+    CGSize size = sizeOfObject(object);
+    CGPoint origin = [self screenPointForWorldPoint:CGPointMake(object->pos.x, object->pos.y)];
+    return CGRectMake(origin.x, origin.y, size.width * _scale.x, size.height * _scale.y);
+}
+
+- (void)setTranslate:(GLKVector3)translate {
+    _translate = translate;
+}
+
+- (void)setScale:(GLKVector3)scale {
+    _scale = scale;
+}
+
+- (void)translate:(GLKVector3)translate {
+    _translate.x += translate.x;
+    _translate.y += translate.y;
+    self.translate = _translate;
+}
+
+- (void)setScaleWithFloat:(float)scale {
+    _scale.x = _scale.y = scale;
+    self.scale = _scale;
+}
+
+- (float)scaleWithFloat {
+    return _scale.x;
+}
+
+- (SpriteTexturePos)textureForProcess:(CircuitProcess *)process {
     if (process == &CircuitProcessOr) return symbolOR;
     else if (process == &CircuitProcessNor) return symbolNOR;
     else if (process == &CircuitProcessXor) return symbolXOR;
@@ -483,225 +363,197 @@ GLKVector3 offsetForInlet(CircuitProcess *process, int index) {
     else if (process == &CircuitProcessD4) return symbolCLKIN;
     else if (process == &CircuitProcessD8) return symbolCLKIN;
     else if (process == &CircuitProcessD16) return symbolCLKIN;
-    else {
-        SpriteTexturePos pos;
-        pos.u = pos.v = pos.theight = pos.twidth = pos.width = pos.height = 0.0;
-        return pos;
-    };
 
+    SpriteTexturePos pos;
+    pos.u = pos.v = pos.theight = pos.twidth = pos.width = pos.height = 0.0;
+    return pos;
 }
 
-BOOL expandDrawGate(CircuitObject *object) {
-    if (object->type->numOutputs > 2 || object->type->numInputs > 2) {
-        return YES;
+- (CGPoint)screenPointForWorldPoint:(CGPoint)point {
+    return CGPointMake(point.x * _scale.x + _translate.x, point.y * _scale.y + _translate.y);
+}
+
+- (CGRect)screenRectForWorldRect:(CGRect)rect {
+    CGPoint origin = [self screenPointForWorldPoint:rect.origin];
+    return CGRectMake(origin.x, origin.y, rect.size.width * _scale.x, rect.size.height * _scale.y);
+}
+
+- (void)drawSprite:(SpriteTexturePos)texture atWorldPoint:(CGPoint)point {
+    UIImage *image = [self.atlas imageForSprite:texture];
+    if (!image) return;
+    CGRect rect = [self screenRectForWorldRect:CGRectMake(point.x, point.y, texture.width, texture.height)];
+    [image drawInRect:rect];
+}
+
+- (void)drawGridInRect:(CGRect)rect {
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(context);
+    CGContextSetStrokeColorWithColor(context, [UIColor colorWithWhite:1.0 alpha:0.12].CGColor);
+    CGContextSetLineWidth(context, 1.0);
+
+    CGFloat scale = _scale.x ?: 1.0;
+    CGFloat factor = round(log2f(scale));
+    CGFloat gridWorld = 60.0 / exp2f(factor);
+    CGFloat grid = gridWorld * scale;
+    CGFloat startX = fmod(_translate.x, grid);
+    CGFloat startY = fmod(_translate.y, grid);
+    if (startX > 0.0) startX -= grid;
+    if (startY > 0.0) startY -= grid;
+
+    for (CGFloat x = startX; x < rect.size.width; x += grid) {
+        CGContextMoveToPoint(context, x, 0);
+        CGContextAddLineToPoint(context, x, rect.size.height);
     }
-    return NO;
+    for (CGFloat y = startY; y < rect.size.height; y += grid) {
+        CGContextMoveToPoint(context, 0, y);
+        CGContextAddLineToPoint(context, rect.size.width, y);
+    }
+    CGContextStrokePath(context);
+    CGContextRestoreGState(context);
 }
 
-- (void) bufferSprites {
-    
-    __block int i = 0;
-    Circuit *_circuit = self.document.circuit;
-    BatchedSpriteInstance *instances = _instances;
-    
-    [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
-        GLKVector3 pos = *(GLKVector3*) &object->pos;
-        BatchedSpriteInstance *instance = &instances[i++];
-        
-        if (expandDrawGate(object)) {
-            BatchedSpriteInstance *top = &instances[i++];
-            top->x = pos.x;
-            top->y = pos.y;
-            top->tex = gateBackgroundTop;
-            
-            BatchedSpriteInstance *middle = instance;
-            
-            instance = top;
-            middle->x = pos.x;
-            middle->y = pos.y + gateBackgroundTop.height - 1.0;
-            middle->tex = gateBackgroundMiddle;
-            middle->tex.height = vSpacing * 2 * MAX(object->type->numInputs, object->type->numOutputs) + 1.0;
-            
-            BatchedSpriteInstance *bottom = &instances[i++];
-            bottom->x = pos.x;
-            bottom->y = middle->y + middle->tex.height - 1.0;
-            bottom->tex = gateBackgroundBottom;
-        } else {
-            instance->x = pos.x;
-            instance->y = pos.y;
-            instance->tex = gateBackgroundHeight2;    
-        }
-        
-        
-        if (object->type == &CircuitProcessIn || object->type == &CircuitProcessButton || object->type == &CircuitProcessPushButton) {
-            instance->tex = object->out ? switchOn : switchOff;
-            instance->x -= 50.0;
-            instance->y -= 50.0;
-        } else if (object->type == &CircuitProcessLight) {
-            BatchedSpriteInstance *symbol = &instances[i++];
-            symbol->x = pos.x + 70.0;
-            symbol->y = pos.y - 85.0;
-            symbol->tex = object->in ? ledOn : ledOff;
-        } else if (object->type == &CircuitProcessLightGreen) {
-            BatchedSpriteInstance *symbol = &instances[i++];
-            symbol->x = pos.x + 70.0;
-            symbol->y = pos.y - 85.0;
-            symbol->tex = object->in ? ledOnGreen : ledOff;
-        } else {
-            BatchedSpriteInstance *symbol = &instances[i++];
-            symbol->x = pos.x + 9.0;
-            symbol->y = pos.y + 0.0;
-            symbol->tex = [self textureForProcess:object->type];
-        }
-        
-        if (object->name[0] && !object->name[1]) {
-            
-            char c = object->name[0];
-            
-            SpriteTexturePos *s = letterTable[c];
+- (void)drawLinkFrom:(GLKVector2)A to:(GLKVector2)B active:(BOOL)isActive {
+    CGPoint a = [self screenPointForWorldPoint:CGPointMake(A.x, A.y)];
+    CGPoint b = [self screenPointForWorldPoint:CGPointMake(B.x, B.y)];
+    CGFloat dx = (b.x - a.x) / 2.0;
+    UIBezierPath *path = [UIBezierPath bezierPath];
+    [path moveToPoint:a];
+    [path addCurveToPoint:b controlPoint1:CGPointMake(a.x + dx, a.y) controlPoint2:CGPointMake(b.x - dx, b.y)];
+    path.lineCapStyle = kCGLineCapRound;
+    path.lineJoinStyle = kCGLineJoinRound;
 
-            if (s) {
-                BatchedSpriteInstance *letter = &instances[i++];
-                letter->x = pos.x + 105.0;
-                letter->y = pos.y + 43.0;
-                letter->tex = *s;
-            }
-            
-        }
-        
-        for(int o = 0; o < object->type->numOutputs; o++) {
-            BatchedSpriteInstance *outlet = &instances[i++];
-            GLKVector3 dotPos = offsetForOutlet(object->type, o);
-            outlet->x = pos.x + dotPos.x;
-            outlet->y = pos.y + dotPos.y;
-            BOOL isConnected = object->outputs[o] != NULL;
-            if (object == self->_currentEditingLinkSource && o == self->_currentEditingLinkSourceIndex) isConnected = YES;
-            outlet->tex = (object->out & 1 << o) ? (isConnected ? gateOutletActiveConnected : gateOutletActive) : (isConnected ? gateOutletInactiveConnected : gateOutletInactive);
-        }
-        
-        for(int o = 0; o < object->type->numInputs; o++) {
-            BatchedSpriteInstance *outlet = &instances[i++];
-            
-            GLKVector3 dotPos = offsetForInlet(object->type, o);
-            outlet->x = pos.x + dotPos.x;
-            outlet->y = pos.y + dotPos.y;
-            BOOL isConnected = object->inputs[o] != NULL;
-            if (object == self->_currentEditingLinkTarget && o == self->_currentEditingLinkTargetIndex) isConnected = YES;
-            outlet->tex = (object->in & 1 << o) ? (isConnected ? gateOutletActiveConnected : gateOutletActive) : (isConnected ? gateOutletInactiveConnected : gateOutletInactive);
-        }
-    }];
-    
-    _count = i;
-    
-    [_gateSprites buffer:_instances FromIndex:0 count:_count];
+    CGFloat width = MAX(7.0, 16.0 * _scale.x);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(context);
+    CGContextSetShadowWithColor(context, CGSizeMake(1.0, 1.0), 0.0, [UIColor colorWithWhite:0.0 alpha:0.9].CGColor);
+
+    path.lineWidth = width;
+    UIColor *edgeColor = isActive ? [UIColor colorWithRed:0.0 green:0.22 blue:0.03 alpha:1.0] : [UIColor colorWithWhite:0.08 alpha:1.0];
+    [edgeColor setStroke];
+    [path stroke];
+    CGContextRestoreGState(context);
+
+    path.lineWidth = width - 2.0;
+    UIColor *bodyColor = isActive ? [UIColor colorWithRed:0.0 green:0.72 blue:0.09 alpha:1.0] : [UIColor colorWithWhite:0.68 alpha:1.0];
+    [bodyColor setStroke];
+    [path stroke];
+
+    path.lineWidth = MAX(2.0, width * 0.38);
+    UIColor *highlightColor = isActive ? [UIColor colorWithRed:0.48 green:1.0 blue:0.53 alpha:1.0] : [UIColor colorWithWhite:0.9 alpha:1.0];
+    [highlightColor setStroke];
+    [path stroke];
 }
-- (void) drawWithStack:(GLKMatrixStackRef) stack {
-    
-    [ShaderEffect checkError];
-    GLKVector3 active1 = GLKVector3Make(0.1960784314, 1.0, 0.3098039216);
-    GLKVector3 active2 = GLKVector3Make(0.0, 0.0, 0.0);
-    
-    GLKVector3 inactive1 = GLKVector3Make(1.0, 1.0, 1.0);
-    GLKVector3 inactive2 = GLKVector3Make(0.2, 0.2, 0.2);
-    
-    _viewMatrix = GLKMatrix4Multiply(
-                                     GLKMatrix4MakeTranslation(_translate.x, _translate.y, _translate.z),
-                                     GLKMatrix4MakeScale(_scale.x, _scale.y, _scale.z));
-    
-    _viewProjectionMatrix = GLKMatrix4Multiply(_projectionMatrix, _viewMatrix);
-    
-    GLKMatrixStackPush(stack);
-    GLKMatrixStackMultiplyMatrix4(stack, _viewMatrix);
-    
-    [ShaderEffect checkError];
-    [_grid drawWithStack:stack];
-    
-    
-    
-    
-    [ShaderEffect checkError];
+
+- (void)drawSevenSegmentAt:(CGPoint)position input:(int)input compact:(BOOL)compact {
+    NSString *text = compact ? [NSString stringWithFormat:@"%X", input & 0xf] : [NSString stringWithFormat:@"%02X", input & 0xff];
+    CGRect rect = [self screenRectForWorldRect:CGRectMake(position.x, position.y, compact ? 80 : 120, 70)];
+    NSDictionary *attributes = @{
+        NSFontAttributeName: [UIFont monospacedDigitSystemFontOfSize:MAX(12.0, rect.size.height * 0.65) weight:UIFontWeightBold],
+        NSForegroundColorAttributeName: [UIColor colorWithRed:0.196 green:1.0 blue:0.31 alpha:1.0]
+    };
+    [text drawInRect:rect withAttributes:attributes];
+}
+
+- (void)drawObject:(CircuitObject *)object {
+    CGPoint pos = CGPointMake(object->pos.x, object->pos.y);
+
+    if (expandDrawGate(object)) {
+        [self drawSprite:gateBackgroundTop atWorldPoint:pos];
+        CGFloat middleY = pos.y + gateBackgroundTop.height - 1.0;
+        CGFloat middleHeight = vSpacing * 2 * MAX(object->type->numInputs, object->type->numOutputs) + 1.0;
+        UIImage *middle = [self.atlas imageForSprite:gateBackgroundMiddle];
+        [middle drawInRect:[self screenRectForWorldRect:CGRectMake(pos.x, middleY, gateBackgroundMiddle.width, middleHeight)]];
+        [self drawSprite:gateBackgroundBottom atWorldPoint:CGPointMake(pos.x, middleY + middleHeight - 1.0)];
+    } else {
+        [self drawSprite:gateBackgroundHeight2 atWorldPoint:pos];
+    }
+
+    if (object->type == &CircuitProcessIn || object->type == &CircuitProcessButton || object->type == &CircuitProcessPushButton) {
+        [self drawSprite:object->out ? switchOn : switchOff atWorldPoint:CGPointMake(pos.x - 50.0, pos.y - 50.0)];
+    } else if (object->type == &CircuitProcessLight) {
+        [self drawSprite:object->in ? ledOn : ledOff atWorldPoint:CGPointMake(pos.x + 70.0, pos.y - 85.0)];
+    } else if (object->type == &CircuitProcessLightGreen) {
+        [self drawSprite:object->in ? ledOnGreen : ledOff atWorldPoint:CGPointMake(pos.x + 70.0, pos.y - 85.0)];
+    } else {
+        [self drawSprite:[self textureForProcess:object->type] atWorldPoint:CGPointMake(pos.x + 9.0, pos.y)];
+    }
+
+    if (object->name[0] && !object->name[1]) {
+        SpriteTexturePos *letter = letterTable[(unsigned char)object->name[0]];
+        if (letter) {
+            [self drawSprite:*letter atWorldPoint:CGPointMake(pos.x + 105.0, pos.y + 43.0)];
+        }
+    }
+
+    for(int o = 0; o < object->type->numOutputs; o++) {
+        GLKVector3 dotPos = offsetForOutlet(object->type, o);
+        BOOL isConnected = object->outputs[o] != NULL;
+        if (object == _currentEditingLinkSource && o == _currentEditingLinkSourceIndex) isConnected = YES;
+        SpriteTexturePos texture = (object->out & 1 << o) ? (isConnected ? gateOutletActiveConnected : gateOutletActive) : (isConnected ? gateOutletInactiveConnected : gateOutletInactive);
+        [self drawSprite:texture atWorldPoint:CGPointMake(pos.x + dotPos.x, pos.y + dotPos.y)];
+    }
+
+    for(int o = 0; o < object->type->numInputs; o++) {
+        GLKVector3 dotPos = offsetForInlet(object->type, o);
+        BOOL isConnected = object->inputs[o] != NULL;
+        if (object == _currentEditingLinkTarget && o == _currentEditingLinkTargetIndex) isConnected = YES;
+        SpriteTexturePos texture = (object->in & 1 << o) ? (isConnected ? gateOutletActiveConnected : gateOutletActive) : (isConnected ? gateOutletInactiveConnected : gateOutletInactive);
+        [self drawSprite:texture atWorldPoint:CGPointMake(pos.x + dotPos.x, pos.y + dotPos.y)];
+    }
+}
+
+- (void)drawHighlightAt:(GLKVector2)position progress:(CGFloat)progress {
+    if (progress > 1.0) return;
+    CGPoint center = [self screenPointForWorldPoint:CGPointMake(position.x, position.y)];
+    CGFloat r = (24.0 + 60.0 * progress) * _scale.x;
+    UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(center.x - r, center.y - r, r * 2.0, r * 2.0)];
+    [[UIColor colorWithWhite:1.0 alpha:MAX(0.0, 1.0 - progress)] setStroke];
+    path.lineWidth = MAX(2.0, 4.0 * _scale.x);
+    [path stroke];
+}
+
+- (void)drawInRect:(CGRect)rect {
+    [self drawGridInRect:rect];
+
     Circuit *_circuit = self.document.circuit;
-    GLKMatrix4 viewProjectionMatrix = _viewProjectionMatrix;
     [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
         for(int sourceIndex = 0; sourceIndex < object->type->numOutputs; sourceIndex++) {
             CircuitLink *link = object->outputs[sourceIndex];
-            
             while(link) {
-                if (link->target != link->source) {
-                    GLKVector3 dotPos = offsetForOutlet(object->type, sourceIndex);
-                    GLKVector2 A = GLKVector2Make(object->pos.x + dotPos.x + radius, object->pos.y + dotPos.y + radius);
-                    dotPos = offsetForInlet(link->target->type, link->targetIndex);
-                    GLKVector2 B = GLKVector2Make(link->target->pos.x + dotPos.x + radius, link->target->pos.y + dotPos.y + radius);
-                    bool isActive = object->out & 1 << sourceIndex;
-                    [self->bezier drawFrom:A to:B withColor1:isActive ? active1 : inactive1 color2:isActive ? active2 : inactive2  active:isActive withTransform:viewProjectionMatrix];
-
-                }
+                GLKVector3 dotPos = offsetForOutlet(object->type, sourceIndex);
+                GLKVector2 A = GLKVector2Make(object->pos.x + dotPos.x + radius, object->pos.y + dotPos.y + radius);
+                dotPos = offsetForInlet(link->target->type, link->targetIndex);
+                GLKVector2 B = GLKVector2Make(link->target->pos.x + dotPos.x + radius, link->target->pos.y + dotPos.y + radius);
+                BOOL isActive = object->out & 1 << sourceIndex;
+                [self drawLinkFrom:A to:B active:isActive];
                 link = link->nextSibling;
             }
         }
     }];
-    
+
     if (_currentEditingLinkSource && !_currentEditingLink) {
         CircuitObject *object = _currentEditingLinkSource;
         GLKVector3 dotPos = offsetForOutlet(object->type, _currentEditingLinkSourceIndex);
         GLKVector2 A = GLKVector2Make(object->pos.x + dotPos.x + radius, object->pos.y + dotPos.y + radius);
         GLKVector2 B = GLKVector2Make(_currentEditingLinkTargetPosition.x + radius, _currentEditingLinkTargetPosition.y + radius);
-        bool isActive = object->out & 1 << _currentEditingLinkSourceIndex;
-        [bezier drawFrom:A to:B withColor1:isActive ? active1 : inactive1 color2:isActive ? active2 : inactive2  active:isActive withTransform:_viewProjectionMatrix];
-        
+        BOOL isActive = object->out & 1 << _currentEditingLinkSourceIndex;
+        [self drawLinkFrom:A to:B active:isActive];
     }
-    
-    [ShaderEffect checkError];
-    [self bufferSprites];
-    
-    [ShaderEffect checkError];
-    
-    [_gateSprites drawIndices:0 count:_count WithTransform:_viewProjectionMatrix];
-    
-    SevenSegmentDisplay *ss = sevenSegment;
-    
+
     [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
-        
+        [self drawObject:object];
+    }];
+
+    [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
         if (object->type == &CircuitProcess7Seg) {
-            GLKVector3 pos = *(GLKVector3*) &object->pos;
-            [ss drawAt:GLKVector3Make(pos.x + 40.0, pos.y + 40.0, 0.0) withInput:object->in withTransform:viewProjectionMatrix];
+            [self drawSevenSegmentAt:CGPointMake(object->pos.x + 40.0, object->pos.y + 40.0) input:object->in compact:NO];
         } else if (object->type == &CircuitProcess7SegBin) {
-            GLKVector3 pos = *(GLKVector3*) &object->pos;
-            [ss drawCompactAt:GLKVector3Make(pos.x + 100.0, pos.y + 40.0, 0.0) withBinaryInput:object->in withTransform:viewProjectionMatrix];
+            [self drawSevenSegmentAt:CGPointMake(object->pos.x + 100.0, object->pos.y + 40.0) input:object->in compact:YES];
         }
     }];
-    
-    [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
-        for(int sourceIndex = 0; sourceIndex < object->type->numOutputs; sourceIndex++) {
-            CircuitLink *link = object->outputs[sourceIndex];
-            
-            while(link) {
-                if (link->target == link->source) {
-                    
-                    GLKVector3 dotPos = offsetForOutlet(object->type, sourceIndex);
-                    GLKVector2 A = GLKVector2Make(object->pos.x + dotPos.x + radius, object->pos.y + dotPos.y + radius);
-                    dotPos = offsetForInlet(link->target->type, link->targetIndex);
-                    GLKVector2 B = GLKVector2Make(link->target->pos.x + dotPos.x + radius, link->target->pos.y + dotPos.y + radius);
-                    bool isActive = object->out & 1 << sourceIndex;
-                    [self->bezier drawFrom:A to:B withColor1:isActive ? active1 : inactive1 color2:isActive ? active2 : inactive2  active:isActive withTransform:self->_viewProjectionMatrix];
-                }
-                link = link->nextSibling;
-            }
-        }
-        
-    }];
-    
 
-    if (_highlightProgress <= 1.0) {
-        [_highlighter drawTouchMatchingAtPosition:_highlightLinkLocation progress:_highlightProgress withTransform:_viewProjectionMatrix];
-    }
-    
-    if (_highlightOutProgress <= 1.0) {
-        [_highlighter drawOutFromPosition:_highlightOutLinkLocation progress:_highlightOutProgress withTransform:_viewProjectionMatrix];
-    }
-
-    [ShaderEffect checkError];
-    GLKMatrixStackPop(stack);
+    [self drawHighlightAt:_highlightLinkLocation progress:_highlightProgress];
+    [self drawHighlightAt:_highlightOutLinkLocation progress:_highlightOutProgress];
 }
 
 @end

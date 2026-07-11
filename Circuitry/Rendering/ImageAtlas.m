@@ -34,20 +34,9 @@
     _json = [NSJSONSerialization JSONObjectWithStream:stream options:0 error:&err];
     if (err) [[NSException exceptionWithName:err.description reason:err.localizedFailureReason userInfo:@{}] raise];
 
-    NSError* error = nil;
-    
-    int mipmap_levels = 0;
-    
-    NSDictionary* options = [NSDictionary dictionaryWithObjectsAndKeys:
-                             [NSNumber numberWithBool: mipmap_levels > 0], GLKTextureLoaderGenerateMipmaps,
-                             [NSNumber numberWithBool:NO], GLKTextureLoaderApplyPremultiplication,
-                             nil
-                             ];
-    
-    _texture = [GLKTextureLoader textureWithContentsOfURL:atlasPng options:options error: &error];
-    
-    if (error) {
-        [[NSException exceptionWithName:error.localizedDescription reason:error.localizedFailureReason userInfo:@{}] raise];
+    _image = [UIImage imageWithContentsOfFile:atlasPng.path];
+    if (!_image) {
+        [[NSException exceptionWithName:@"ImageAtlasError" reason:@"Could not load generated atlas image." userInfo:@{}] raise];
     }
     
     
@@ -65,5 +54,14 @@
     pos.width = pos.twidth;
     pos.height = pos.theight;
     return pos;
+}
+
+- (UIImage *) imageForSprite:(SpriteTexturePos)position {
+    CGRect cropRect = CGRectMake(position.u, position.v, position.twidth, position.theight);
+    CGImageRef croppedImage = CGImageCreateWithImageInRect(self.image.CGImage, cropRect);
+    if (!croppedImage) return nil;
+    UIImage *image = [UIImage imageWithCGImage:croppedImage scale:self.image.scale orientation:self.image.imageOrientation];
+    CGImageRelease(croppedImage);
+    return image;
 }
 @end

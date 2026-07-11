@@ -125,10 +125,22 @@
     }];
 }
 
+- (void)showDocumentOpenErrorForDocument:(CircuitDocument *)document {
+    NSString *message = document.loadError.localizedDescription ?: @"This circuit could not be opened.";
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Could Not Open Circuit" message:message preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
 - (void) openProblem: (ProblemSetProblemInfo *) problemInfo {
     self.presentingDocument = [[CircuitDocument alloc] initWithFileURL:problemInfo.documentURL];
     self.presentingDocument.problemInfo = problemInfo;
     [self.presentingDocument openWithCompletionHandler:^(BOOL success){
+        if (!success || !self.presentingDocument.circuit) {
+            [self showDocumentOpenErrorForDocument:self.presentingDocument];
+            self.presentingDocument = nil;
+            return;
+        }
         [self performSegueWithIdentifier:@"presentDocument" sender:self];
     }];
 }
@@ -166,6 +178,11 @@
 - (void) openDocumentItem:(DocumentListItem *)documentListItem {
     self.presentingDocument = [[CircuitDocument alloc] initWithFileURL:documentListItem.url];
     [self.presentingDocument openWithCompletionHandler:^(BOOL success){
+        if (!success || !self.presentingDocument.circuit) {
+            [self showDocumentOpenErrorForDocument:self.presentingDocument];
+            self.presentingDocument = nil;
+            return;
+        }
         [self performSegueWithIdentifier:@"presentDocument" sender:self];
     }];
 }

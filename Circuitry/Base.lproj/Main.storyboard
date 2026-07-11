@@ -311,15 +311,15 @@ The linking wires in Circuitry allow these signals to be passed on from the outp
             </objects>
             <point key="canvasLocation" x="3559" y="-617"/>
         </scene>
-        <!--GLKit View Controller-->
+        <!--View Controller-->
         <scene sceneID="tXr-a1-R10">
             <objects>
-                <glkViewController storyboardIdentifier="Viewing Circuit" preferredFramesPerSecond="60" id="BV1-FR-VrT" customClass="ViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Viewing Circuit" id="BV1-FR-VrT" customClass="ViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="zAf-WF-YrM"/>
                         <viewControllerLayoutGuide type="bottom" id="4IW-dR-L7m"/>
                     </layoutGuides>
-                    <glkView key="view" contentMode="scaleToFill" id="3se-qz-xqx">
+                    <view key="view" contentMode="redraw" id="3se-qz-xqx" customClass="CircuitCanvasView">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -334,12 +334,12 @@ The linking wires in Circuitry allow these signals to be passed on from the outp
                             <outletCollection property="gestureRecognizers" destination="W0R-Er-cpe" appends="YES" id="s9W-GF-sNq"/>
                             <outletCollection property="gestureRecognizers" destination="II3-Do-ZfR" appends="YES" id="NfD-57-9La"/>
                         </connections>
-                    </glkView>
+                    </view>
                     <keyCommands/>
                     <connections>
                         <outlet property="pinchGestureRecognizer" destination="prC-OQ-El9" id="tZZ-eO-MgU"/>
                     </connections>
-                </glkViewController>
+                </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
                 <panGestureRecognizer minimumNumberOfTouches="1" id="q8S-aQ-v8R">
                     <connections>

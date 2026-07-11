@@ -13,18 +13,16 @@
 
 @interface CircuitDocument() <NSURLSessionTaskDelegate>
 @property (nonatomic) NSData *originalScreenshotData;
+@property (nonatomic) NSError *loadError;
 @end
 
 static NSString *screenshotPngPath = @"screenshot.png";
 static NSString *CircuitDocumentErrorDomain = @"CircuitDocumentErrorDomain";
 
-static BOOL CircuitDocumentSetLoadError(NSError **outError, NSString *message) {
-    if (outError) {
-        *outError = [NSError errorWithDomain:CircuitDocumentErrorDomain
-                                        code:1
-                                    userInfo:@{NSLocalizedDescriptionKey: message}];
-    }
-    return NO;
+static NSError *CircuitDocumentLoadError(NSString *message) {
+    return [NSError errorWithDomain:CircuitDocumentErrorDomain
+                               code:1
+                           userInfo:@{NSLocalizedDescriptionKey: message}];
 }
 
 static NSString *CircuitDocumentUnsupportedProcessType(NSArray *items) {
@@ -49,6 +47,7 @@ static NSString *CircuitDocumentUnsupportedProcessType(NSArray *items) {
 - (BOOL)loadFromContents:(id)contents ofType:(NSString *)typeName error:(NSError **)outError {
     
     NSError *err = nil;
+    self.loadError = nil;
     
     if ([typeName isEqualToString:@"public.json"]) {
         NSDictionary *full = [NSJSONSerialization JSONObjectWithData:contents options:0 error:&err];
@@ -56,12 +55,16 @@ static NSString *CircuitDocumentUnsupportedProcessType(NSArray *items) {
         
         NSString *unsupportedType = CircuitDocumentUnsupportedProcessType(full[@"items"]);
         if (unsupportedType) {
-            return CircuitDocumentSetLoadError(outError, [NSString stringWithFormat:@"This circuit contains an unsupported object type: %@.", unsupportedType]);
+            self.loadError = CircuitDocumentLoadError([NSString stringWithFormat:@"This circuit contains an unsupported object type: %@.", unsupportedType]);
+            if (outError) *outError = self.loadError;
+            return NO;
         }
         
         _circuit = [[Circuit alloc] initWithPackage:full items:full[@"items"]];
         if (!_circuit) {
-            return CircuitDocumentSetLoadError(outError, @"This circuit file is invalid and could not be loaded.");
+            self.loadError = CircuitDocumentLoadError(@"This circuit file is invalid and could not be loaded.");
+            if (outError) *outError = self.loadError;
+            return NO;
         }
         return YES;
     }
@@ -83,14 +86,18 @@ static NSString *CircuitDocumentUnsupportedProcessType(NSArray *items) {
     
     NSString *unsupportedType = CircuitDocumentUnsupportedProcessType(items);
     if (unsupportedType) {
-        return CircuitDocumentSetLoadError(outError, [NSString stringWithFormat:@"This circuit contains an unsupported object type: %@.", unsupportedType]);
+        self.loadError = CircuitDocumentLoadError([NSString stringWithFormat:@"This circuit contains an unsupported object type: %@.", unsupportedType]);
+        if (outError) *outError = self.loadError;
+        return NO;
     }
     
     _originalScreenshotData = [files[screenshotPngPath] regularFileContents];
      
     _circuit = [[Circuit alloc] initWithPackage:package items: items];
     if (!_circuit) {
-        return CircuitDocumentSetLoadError(outError, @"This circuit file is invalid and could not be loaded.");
+        self.loadError = CircuitDocumentLoadError(@"This circuit file is invalid and could not be loaded.");
+        if (outError) *outError = self.loadError;
+        return NO;
     }
     
     return YES;

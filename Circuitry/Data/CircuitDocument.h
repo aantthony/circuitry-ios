@@ -13,5 +13,6 @@
 @property (nonatomic, readonly) BOOL isProblem;
 @property (nonatomic) ProblemSetProblemInfo *problemInfo;
 @property (nonatomic, readonly) UIImage *screenshot;
+@property (nonatomic, readonly) NSError *loadError;
 - (void) useScreenshot:(UIImage *)image;
 @end

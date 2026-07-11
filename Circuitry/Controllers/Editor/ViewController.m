@@ -2,7 +2,6 @@
 
 #import "Viewport.h"
 #import "CircuitDocument.h"
-#import "Sprite.h"
 #import "DragGateGestureRecognizer.h"
 #import "CreateGatePanGestureRecognizer.h"
 #import "CreateLinkGestureRecognizer.h"
@@ -13,20 +12,15 @@
 
 #import "ToolbeltItem.h"
 
-// For iOS 8 support:
-#import <OpenGLES/ES1/glext.h>
-
 static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 
+@class ViewController;
+
+@interface CircuitCanvasView : UIView
+@property (nonatomic, weak) ViewController *viewController;
+@end
+
 @interface ViewController () {
-    GLKMatrix4 _modelViewProjectionMatrix;
-    GLKMatrix3 _normalMatrix;
-    
-    GLKMatrixStackRef _stack;
-    
-    GLuint _vertexArray;
-    GLuint _vertexBuffer;
-    
     float beginGestureScale;
     
     GLKVector3 beginLongPressGestureOffset;
@@ -43,16 +37,26 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 }
 @property (nonatomic) NSArray *selectedObjects;
 @property (nonatomic) NSTimer *timer;
+@property (nonatomic) CADisplayLink *displayLink;
+@property (nonatomic) NSTimeInterval timeSinceLastUpdate;
+@property (nonatomic) CFTimeInterval lastDisplayTimestamp;
+@property (nonatomic, getter=isPaused) BOOL paused;
 @property (nonatomic) BOOL canPan;
 @property (nonatomic) BOOL canZoom;
 @property (nonatomic) BOOL isTutorial;
-@property (nonatomic) Sprite *bg;
+@property (nonatomic) UIImage *backgroundImage;
 @property (nonatomic) IBOutlet UIPinchGestureRecognizer *pinchGestureRecognizer;
 @property (nonatomic, assign) CircuitObject *beginLongPressGestureObject;
 @property (nonatomic, assign) CircuitObject *holdDownGestureObject;
 
-- (void)tearDownGL;
+- (void)drawCanvasInRect:(CGRect)rect;
 
+@end
+
+@implementation CircuitCanvasView
+- (void)drawRect:(CGRect)rect {
+    [self.viewController drawCanvasInRect:self.bounds];
+}
 @end
 
 @implementation ViewController
@@ -82,9 +86,11 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 
 - (UIImage*)snapshot
 {
-    [EAGLContext setCurrentContext:self.context];
-    GLKView *view = (GLKView *)self.view;
-    return view.snapshot;
+    UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, self.view.opaque, 0.0);
+    [self.view drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:YES];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
 }
 
 -(void)appWillResignActive:(NSNotification*)note {
@@ -102,16 +108,6 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 -(void)appWillTerminate:(NSNotification*)note {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
 }
-+ (EAGLContext *) context {
-    static dispatch_once_t onceToken = 0;
-    static EAGLContext * context;
-    
-    dispatch_once(&onceToken, ^{
-        context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-    });
-    
-    return context;
-}
 + (ImageAtlas *) atlas {
     static dispatch_once_t onceToken = 0;
     static ImageAtlas *atlas;
@@ -122,18 +118,8 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     
     return atlas;
 }
-- (EAGLContext *) context {
-    return ViewController.context;
-}
 - (ImageAtlas *) atlas {
     return ViewController.atlas;
-}
-- (Sprite *) backgroundSprite {
-    static id instance;
-    if (instance) return instance;
-    
-    GLKTextureInfo *bgTexture = [Sprite textureWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"background" withExtension:@"jpg"]];
-    return instance = [[Sprite alloc] initWithTexture:bgTexture];
 }
 
 - (IBAction)group:(id)sender {
@@ -151,32 +137,18 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     animatingPan = NO;
     beginGestureScale = 0.0;
     
-    _stack = GLKMatrixStackCreate(NULL);
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
-    
-    if (!self.context) {
-        NSLog(@"Failed to create ES context");
-    }
-    CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.view.layer;
-    
-    eaglLayer.opaque = TRUE;
-    
-    GLKView *view = (GLKView *)self.view;
-    view.context = self.context;
-    view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
-    
-    [EAGLContext setCurrentContext:self.context];
-    [self checkError];
-    glEnable(GL_DEPTH_TEST);
-    
-    [self checkError];
-    
-    _viewport = [[Viewport alloc] initWithContext:self.context atlas: self.atlas];
-    
-    [self checkError];
-    
-    _bg = self.backgroundSprite;
+
+    CircuitCanvasView *canvasView = (CircuitCanvasView *)self.view;
+    canvasView.viewController = self;
+    canvasView.contentMode = UIViewContentModeRedraw;
+
+    _viewport = [[Viewport alloc] initWithAtlas:self.atlas];
+    _backgroundImage = [UIImage imageNamed:@"background.jpg"];
+
+    self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(displayLinkDidTick:)];
+    self.displayLink.preferredFramesPerSecond = 60;
+    [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
     
     self.document = _document;
     if (self.isTutorial) {
@@ -191,7 +163,7 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     CircuitObject *output = [self.document.circuit findObjectById:@"53c3cdc945f5603003000009"];
     BOOL isLandscape = self.view.frame.size.width > self.view.frame.size.height;
     if (!A || !B || !andGate || !output) {
-        NSParameterAssert(nil);
+        self.isTutorial = NO;
         return;
     }
     if (isLandscape) {
@@ -221,7 +193,7 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     CircuitObject *andGate = [self.document.circuit findObjectById:@"53c3cdc945f56030030041aa"];
     CircuitObject *output = [self.document.circuit findObjectById:@"53c3cdc945f5603003000009"];
     if (!A || !B || !andGate || !output) {
-        NSParameterAssert(nil);
+        self.isTutorial = NO;
         return NO;
     }
     BOOL isLandscape = self.view.frame.size.width > self.view.frame.size.height;
@@ -275,27 +247,27 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 }
 
 - (void)dealloc
-{    
-    [self tearDownGL];
-    
-    if ([EAGLContext currentContext] == self.context) {
-        [EAGLContext setCurrentContext:nil];
-    }
-}
-
-- (void)tearDownGL
 {
-    [EAGLContext setCurrentContext:self.context];
-    [self checkError];
-//    glDeleteBuffers(1, &_vertexBuffer);
-//    glDeleteVertexArraysOES(1, &_vertexArray);
+    [self.displayLink invalidate];
 }
 
-#pragma mark - GLKView and GLKViewController delegate methods
+#pragma mark - Drawing
 
 - (void) updateTuturialState {
     if (!self.isTutorial) return;
     [self.tutorialDelegate viewControllerTutorial:self didChange:nil];
+}
+
+- (void)displayLinkDidTick:(CADisplayLink *)displayLink {
+    if (self.lastDisplayTimestamp == 0) {
+        self.lastDisplayTimestamp = displayLink.timestamp;
+    }
+    self.timeSinceLastUpdate = displayLink.timestamp - self.lastDisplayTimestamp;
+    self.lastDisplayTimestamp = displayLink.timestamp;
+
+    if (!self.isPaused) {
+        [self update];
+    }
 }
 
 static BOOL animateGateToLockedPosition(CircuitObject *object, float x, float y) {
@@ -317,32 +289,11 @@ static BOOL animateGateToLockedPosition(CircuitObject *object, float x, float y)
 
 - (void)update
 {
-    [self checkError];
-    
     // Tutorial:
     [self updateTuturialState];
-    
-    // time differnce in seconds (float)
+
     NSTimeInterval dt = self.timeSinceLastUpdate;
-    
-//    float aspect = self.view.bounds.size.width / self.view.bounds.size.height;
-//    GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0f), aspect, 0.1f, 100.0f);
-    CGRect boundary = self.view.bounds;
-    GLKMatrix4 projectionMatrix = GLKMatrix4MakeOrtho(0.0, boundary.size.width, boundary.size.height, 0.0, -10.0, 10.0);
-//    GLKMatrix4 baseModelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, -4.0f);
-//    baseModelViewMatrix = GLKMatrix4Rotate(baseModelViewMatrix, _rotation, 0.0f, 1.0f, 0.0f);
-    
-    // Compute the model view matrix for the object rendered with ES2
-//    GLKMatrix4 modelViewMatrix = GLKMatrix4MakeTranslation(0.5 * floor(_rotation), 0.0f, 0.0f);
-      GLKMatrix4 modelViewMatrix = GLKMatrix4Identity;
-//    modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, _rotatio0, 1.0f, 1.0f, 1.0f);
-//    modelViewMatrix = GLKMatrix4Multiply(baseModelViewMatrix, modelViewMatrix);
-    
-    _normalMatrix = GLKMatrix3InvertAndTranspose(GLKMatrix4GetMatrix3(modelViewMatrix), NULL);
-    
-    _modelViewProjectionMatrix = GLKMatrix4Multiply(projectionMatrix, modelViewMatrix);
-    
-    [_viewport setProjectionMatrix:_modelViewProjectionMatrix];
+
     if (!isAnimatingScaleToSnap && beginGestureScale != 0.0 && !_pinchGestureRecognizer.numberOfTouches) {
         isAnimatingScaleToSnap = YES;
     }
@@ -395,28 +346,17 @@ static BOOL animateGateToLockedPosition(CircuitObject *object, float x, float y)
     } else {
         self.paused = YES;
     }
+    [self.view setNeedsDisplay];
 }
 
 // Faster one-part variant, called from within a rotating animation block, for additional animations during rotation.
 // A subclass may override this method, or the two-part variants below, but not both.
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration NS_AVAILABLE_IOS(3_0) {
     self.paused = NO;
+    [self.view setNeedsDisplay];
 }
 
 - (void) checkError {
-    int err;
-    if((err = glGetError()) != GL_NO_ERROR) {
-        NSDictionary *names = @{
-                                 @GL_INVALID_ENUM: @"GL_INVALID_ENUM",
-                                 @GL_INVALID_VALUE: @"GL_INVALID_VALUE",
-                                 @GL_INVALID_OPERATION: @"GL_INVALID_OPERATION",
-                                 @GL_INVALID_FRAMEBUFFER_OPERATION: @"GL_INVALID_FRAMEBUFFER_OPERATION",
-                                 @GL_OUT_OF_MEMORY: @"GL_OUT_OF_MEMORY",
-                                 @GL_STACK_UNDERFLOW: @"GL_STACK_UNDERFLOW",
-                                 @GL_STACK_OVERFLOW: @"GL_STACK_OVERFLOW"
-                                 };
-        [NSException raise:@"OpenGL Error" format:@"%@ (%d)", [names objectForKey:[NSNumber numberWithInt:err]], err];
-    }
 }
 
 
@@ -447,27 +387,17 @@ static CGFloat gridSize = 33.0;
     }];
     [self unpause];
 }
-- (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
+- (void)drawCanvasInRect:(CGRect)rect
 {
-    [self checkError];
-    glClearColor(0.4, 0.4, 0.4, 1.0f);
-
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//    glDisable(GL_DEPTH_TEST);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
-
-    [self checkError];
-    GLKMatrixStackLoadMatrix4(_stack, _modelViewProjectionMatrix);
-    [_bg drawWithSize:GLKVector2Make(rect.size.width, rect.size.height) withTransform:_modelViewProjectionMatrix];
-    [self checkError];
-    [_viewport drawWithStack:_stack];
-    [self checkError];
+    [[UIColor colorWithWhite:0.4 alpha:1.0] setFill];
+    UIRectFill(rect);
+    [self.backgroundImage drawInRect:rect];
+    [_viewport drawInRect:rect];
 }
 
 // Take a pt screen coordinate and translate it to pixel screen coordinates, because OpenGL only deals with pixels.
 CGPoint PX(float contentScaleFactor, CGPoint pt) {
-    return CGPointMake(contentScaleFactor * pt.x, contentScaleFactor * pt.y);
+    return pt;
 }
 
 - (void) stopPanAnimation {
@@ -673,6 +603,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 
 - (void) unpause {
     self.paused = NO;
+    [self.view setNeedsDisplay];
 }
 
 - (IBAction) handlePanGesture:(UIPanGestureRecognizer *)recognizer {

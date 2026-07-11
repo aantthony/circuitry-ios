@@ -11,8 +11,6 @@
 		9204C374182E2F5C006A008D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9204C373182E2F5C006A008D /* Foundation.framework */; };
 		9204C376182E2F5C006A008D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9204C375182E2F5C006A008D /* CoreGraphics.framework */; };
 		9204C378182E2F5C006A008D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9204C377182E2F5C006A008D /* UIKit.framework */; };
-		9204C37A182E2F5C006A008D /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9204C379182E2F5C006A008D /* GLKit.framework */; };
-		9204C37C182E2F5C006A008D /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9204C37B182E2F5C006A008D /* OpenGLES.framework */; };
 		9204C382182E2F5C006A008D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9204C380182E2F5C006A008D /* InfoPlist.strings */; };
 		9204C384182E2F5C006A008D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9204C383182E2F5C006A008D /* main.m */; };
 		9204C388182E2F5C006A008D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9204C387182E2F5C006A008D /* AppDelegate.m */; };
@@ -68,30 +66,16 @@
 		923585211AF602DF004DCD0F /* ProblemSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 923584E51AF602DE004DCD0F /* ProblemSet.m */; };
 		923585221AF602DF004DCD0F /* ProblemSetProblemInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 923584E71AF602DE004DCD0F /* ProblemSetProblemInfo.m */; };
 		923585231AF602DF004DCD0F /* ToolbeltItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 923584E91AF602DF004DCD0F /* ToolbeltItem.m */; };
-		923585241AF602DF004DCD0F /* BatchedSprite.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 923584EC1AF602DF004DCD0F /* BatchedSprite.fsh */; };
 		923585251AF602DF004DCD0F /* BatchedSprite.m in Sources */ = {isa = PBXBuildFile; fileRef = 923584EE1AF602DF004DCD0F /* BatchedSprite.m */; };
-		923585261AF602DF004DCD0F /* BatchedSprite.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 923584EF1AF602DF004DCD0F /* BatchedSprite.vsh */; };
 		923585271AF602DF004DCD0F /* Drawable.m in Sources */ = {isa = PBXBuildFile; fileRef = 923584F11AF602DF004DCD0F /* Drawable.m */; };
 		923585281AF602DF004DCD0F /* ImageAtlas.m in Sources */ = {isa = PBXBuildFile; fileRef = 923584F31AF602DF004DCD0F /* ImageAtlas.m */; };
 		923585291AF602DF004DCD0F /* ShaderEffect.m in Sources */ = {isa = PBXBuildFile; fileRef = 923584F51AF602DF004DCD0F /* ShaderEffect.m */; };
-		9235852A1AF602DF004DCD0F /* Shader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 923584F71AF602DF004DCD0F /* Shader.fsh */; };
-		9235852B1AF602DF004DCD0F /* Shader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 923584F81AF602DF004DCD0F /* Shader.vsh */; };
-		9235852C1AF602DF004DCD0F /* Sprite.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 923584FA1AF602DF004DCD0F /* Sprite.fsh */; };
 		9235852D1AF602DF004DCD0F /* Sprite.m in Sources */ = {isa = PBXBuildFile; fileRef = 923584FC1AF602DF004DCD0F /* Sprite.m */; };
-		9235852E1AF602DF004DCD0F /* Sprite.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 923584FD1AF602DF004DCD0F /* Sprite.vsh */; };
 		9235852F1AF602DF004DCD0F /* TransitionFromDocumentListToDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 923585001AF602DF004DCD0F /* TransitionFromDocumentListToDocument.m */; };
-		923585301AF602DF004DCD0F /* Grid.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 923585031AF602DF004DCD0F /* Grid.fsh */; };
 		923585311AF602DF004DCD0F /* Grid.m in Sources */ = {isa = PBXBuildFile; fileRef = 923585051AF602DF004DCD0F /* Grid.m */; };
-		923585321AF602DF004DCD0F /* Grid.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 923585061AF602DF004DCD0F /* Grid.vsh */; };
-		923585331AF602DF004DCD0F /* LinkBezier.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 923585081AF602DF004DCD0F /* LinkBezier.fsh */; };
 		923585341AF602DF004DCD0F /* LinkBezier.m in Sources */ = {isa = PBXBuildFile; fileRef = 9235850A1AF602DF004DCD0F /* LinkBezier.m */; };
-		923585351AF602DF004DCD0F /* LinkBezier.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 9235850B1AF602DF004DCD0F /* LinkBezier.vsh */; };
-		923585361AF602DF004DCD0F /* SevenSegmentDisplay.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9235850D1AF602DF004DCD0F /* SevenSegmentDisplay.fsh */; };
 		923585371AF602DF004DCD0F /* SevenSegmentDisplay.m in Sources */ = {isa = PBXBuildFile; fileRef = 9235850F1AF602DF004DCD0F /* SevenSegmentDisplay.m */; };
-		923585381AF602DF004DCD0F /* SevenSegmentDisplay.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 923585101AF602DF004DCD0F /* SevenSegmentDisplay.vsh */; };
-		923585391AF602DF004DCD0F /* TouchHighlight.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 923585121AF602DF004DCD0F /* TouchHighlight.fsh */; };
 		9235853A1AF602DF004DCD0F /* TouchHighlight.m in Sources */ = {isa = PBXBuildFile; fileRef = 923585141AF602DF004DCD0F /* TouchHighlight.m */; };
-		9235853B1AF602DF004DCD0F /* TouchHighlight.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 923585151AF602DF004DCD0F /* TouchHighlight.vsh */; };
 		9235853C1AF602DF004DCD0F /* Viewport.m in Sources */ = {isa = PBXBuildFile; fileRef = 923585181AF602DF004DCD0F /* Viewport.m */; };
 		923585721AF60311004DCD0F /* Problems in Resources */ = {isa = PBXBuildFile; fileRef = 923585711AF60311004DCD0F /* Problems */; };
 		923585751AF65BB2004DCD0F /* NavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 923585741AF65BB2004DCD0F /* NavigationViewController.m */; };
@@ -183,8 +167,6 @@
 		9204C373182E2F5C006A008D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9204C375182E2F5C006A008D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		9204C377182E2F5C006A008D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		9204C379182E2F5C006A008D /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
-		9204C37B182E2F5C006A008D /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		9204C37F182E2F5C006A008D /* Circuitry-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Circuitry-Info.plist"; sourceTree = "<group>"; };
 		9204C381182E2F5C006A008D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9204C383182E2F5C006A008D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -330,11 +312,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9204C37C182E2F5C006A008D /* OpenGLES.framework in Frameworks */,
-				9204C376182E2F5C006A008D /* CoreGraphics.framework in Frameworks */,
-				9204C378182E2F5C006A008D /* UIKit.framework in Frameworks */,
-				9204C37A182E2F5C006A008D /* GLKit.framework in Frameworks */,
-				9204C374182E2F5C006A008D /* Foundation.framework in Frameworks */,
+					9204C376182E2F5C006A008D /* CoreGraphics.framework in Frameworks */,
+					9204C378182E2F5C006A008D /* UIKit.framework in Frameworks */,
+					9204C374182E2F5C006A008D /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -374,12 +354,10 @@
 		9204C372182E2F5C006A008D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				9204C373182E2F5C006A008D /* Foundation.framework */,
-				9204C375182E2F5C006A008D /* CoreGraphics.framework */,
-				9204C377182E2F5C006A008D /* UIKit.framework */,
-				9204C379182E2F5C006A008D /* GLKit.framework */,
-				9204C37B182E2F5C006A008D /* OpenGLES.framework */,
-				9204C39A182E2F5C006A008D /* XCTest.framework */,
+					9204C373182E2F5C006A008D /* Foundation.framework */,
+					9204C375182E2F5C006A008D /* CoreGraphics.framework */,
+					9204C377182E2F5C006A008D /* UIKit.framework */,
+					9204C39A182E2F5C006A008D /* XCTest.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -850,35 +828,21 @@
 				926343401B1DDC9500F74E25 /* ipad-white-vertical-level-2.png in Resources */,
 				9232AD861A1CBE120030ADB2 /* Terms.rtf in Resources */,
 				923584CB1AF602C3004DCD0F /* background.jpg in Resources */,
-				923585261AF602DF004DCD0F /* BatchedSprite.vsh in Resources */,
-				923585301AF602DF004DCD0F /* Grid.fsh in Resources */,
-				923584CD1AF602C3004DCD0F /* or-gate@2x.png in Resources */,
-				9235852B1AF602DF004DCD0F /* Shader.vsh in Resources */,
-				923585721AF60311004DCD0F /* Problems in Resources */,
-				923584D11AF602C3004DCD0F /* tutorial-logo@2x.png in Resources */,
-				92CF45A322473E3F00B51791 /* LaunchScreen.storyboard in Resources */,
-				9235852E1AF602DF004DCD0F /* Sprite.vsh in Resources */,
-				923585351AF602DF004DCD0F /* LinkBezier.vsh in Resources */,
-				92020C0B189A578200B6D8F5 /* circuit.image-atlas in Resources */,
-				923584D01AF602C3004DCD0F /* tutorial-bg-3@2x.jpg in Resources */,
-				923584CF1AF602C3004DCD0F /* tutorial-bg-2@2x.jpg in Resources */,
-				9263433E1B1DDBFF00F74E25 /* adderexample.png in Resources */,
-				923584C31AF602C3004DCD0F /* blank.json in Resources */,
-				923585321AF602DF004DCD0F /* Grid.vsh in Resources */,
-				923584CE1AF602C3004DCD0F /* tutorial-bg-1@2x.jpg in Resources */,
-				923056A118759577005AE348 /* Configurations.plist in Resources */,
-				923585361AF602DF004DCD0F /* SevenSegmentDisplay.fsh in Resources */,
-				9235853B1AF602DF004DCD0F /* TouchHighlight.vsh in Resources */,
-				9235852C1AF602DF004DCD0F /* Sprite.fsh in Resources */,
-				9204C394182E2F5C006A008D /* Images.xcassets in Resources */,
-				923585381AF602DF004DCD0F /* SevenSegmentDisplay.vsh in Resources */,
-				923585391AF602DF004DCD0F /* TouchHighlight.fsh in Resources */,
-				923584CA1AF602C3004DCD0F /* and-gate@2x.png in Resources */,
-				9204C382182E2F5C006A008D /* InfoPlist.strings in Resources */,
-				9204C38B182E2F5C006A008D /* Main.storyboard in Resources */,
-				923585241AF602DF004DCD0F /* BatchedSprite.fsh in Resources */,
-				9235852A1AF602DF004DCD0F /* Shader.fsh in Resources */,
-				923585331AF602DF004DCD0F /* LinkBezier.fsh in Resources */,
+					923584CD1AF602C3004DCD0F /* or-gate@2x.png in Resources */,
+					923585721AF60311004DCD0F /* Problems in Resources */,
+					923584D11AF602C3004DCD0F /* tutorial-logo@2x.png in Resources */,
+					92CF45A322473E3F00B51791 /* LaunchScreen.storyboard in Resources */,
+					92020C0B189A578200B6D8F5 /* circuit.image-atlas in Resources */,
+					923584D01AF602C3004DCD0F /* tutorial-bg-3@2x.jpg in Resources */,
+					923584CF1AF602C3004DCD0F /* tutorial-bg-2@2x.jpg in Resources */,
+					9263433E1B1DDBFF00F74E25 /* adderexample.png in Resources */,
+					923584C31AF602C3004DCD0F /* blank.json in Resources */,
+					923584CE1AF602C3004DCD0F /* tutorial-bg-1@2x.jpg in Resources */,
+					923056A118759577005AE348 /* Configurations.plist in Resources */,
+					9204C394182E2F5C006A008D /* Images.xcassets in Resources */,
+					923584CA1AF602C3004DCD0F /* and-gate@2x.png in Resources */,
+					9204C382182E2F5C006A008D /* InfoPlist.strings in Resources */,
+					9204C38B182E2F5C006A008D /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -902,13 +866,10 @@
 				9235846B1AF60276004DCD0F /* MongoIDType.c in Sources */,
 				923584C61AF602C3004DCD0F /* CreateLinkGestureRecognizer.m in Sources */,
 				9235849D1AF602B1004DCD0F /* TestResultViewController.m in Sources */,
-				923585291AF602DF004DCD0F /* ShaderEffect.m in Sources */,
-				923585341AF602DF004DCD0F /* LinkBezier.m in Sources */,
 				9235851D1AF602DF004DCD0F /* Circuit.m in Sources */,
 				9235849F1AF602B1004DCD0F /* CircuitObjectListTableViewController.m in Sources */,
 				923584A71AF602B1004DCD0F /* TutorialPage1ViewController.m in Sources */,
 				923584C71AF602C3004DCD0F /* DragGateGestureRecognizer.m in Sources */,
-				923585311AF602DF004DCD0F /* Grid.m in Sources */,
 				9204C388182E2F5C006A008D /* AppDelegate.m in Sources */,
 				9235853C1AF602DF004DCD0F /* Viewport.m in Sources */,
 				923585201AF602DF004DCD0F /* MongoID.m in Sources */,
@@ -921,24 +882,19 @@
 				923584A21AF602B1004DCD0F /* CircuitCollectionViewCell.m in Sources */,
 				9235851F1AF602DF004DCD0F /* CircuitTestResult.m in Sources */,
 				9235849B1AF602B1004DCD0F /* ObjectUnlockedViewController.m in Sources */,
-				9235853A1AF602DF004DCD0F /* TouchHighlight.m in Sources */,
 				9235849C1AF602B1004DCD0F /* TestResultItemCell.m in Sources */,
-				923585251AF602DF004DCD0F /* BatchedSprite.m in Sources */,
-				923585371AF602DF004DCD0F /* SevenSegmentDisplay.m in Sources */,
 				9235849E1AF602B1004DCD0F /* ProblemInfoViewController.m in Sources */,
 				923584A51AF602B1004DCD0F /* MainViewController.m in Sources */,
 				923585211AF602DF004DCD0F /* ProblemSet.m in Sources */,
 				923584AA1AF602B1004DCD0F /* TutorialViewController.m in Sources */,
 				923585221AF602DF004DCD0F /* ProblemSetProblemInfo.m in Sources */,
 				923584641AF60267004DCD0F /* UIAlertView+MKBlockAdditions.m in Sources */,
-				923585271AF602DF004DCD0F /* Drawable.m in Sources */,
 				9235851C1AF602DF004DCD0F /* StyleManager.m in Sources */,
 				923584A61AF602B1004DCD0F /* BoringInfoViewController.m in Sources */,
 				923584C91AF602C3004DCD0F /* LongPressObjectGesture.m in Sources */,
 				923585231AF602DF004DCD0F /* ToolbeltItem.m in Sources */,
 				9235849A1AF602B1004DCD0F /* IntroTextViewController.m in Sources */,
 				923584C51AF602C3004DCD0F /* CreateGatePanGestureRecognizer.m in Sources */,
-				9235852D1AF602DF004DCD0F /* Sprite.m in Sources */,
 				9235851B1AF602DF004DCD0F /* CircuitManager.m in Sources */,
 				923584C81AF602C3004DCD0F /* HoldDownGestureRecognizer.m in Sources */,
 				923585281AF602DF004DCD0F /* ImageAtlas.m in Sources */,
@@ -1116,10 +1072,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 298;
 				DEVELOPMENT_TEAM = 5X6237AEMK;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(inherited)",
-					"GLES_SILENCE_DEPRECATION=1",
-				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Circuitry/Circuitry-Prefix.pch";
 				INFOPLIST_FILE = "Circuitry/Circuitry-Info.plist";
@@ -1146,10 +1098,6 @@
 				CURRENT_PROJECT_VERSION = 298;
 				DEVELOPMENT_TEAM = 5X6237AEMK;
 				GCC_OPTIMIZATION_LEVEL = fast;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(inherited)",
-					"GLES_SILENCE_DEPRECATION=1",
-				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Circuitry/Circuitry-Prefix.pch";
 				INFOPLIST_FILE = "Circuitry/Circuitry-Info.plist";
@@ -1270,10 +1218,6 @@
 				CURRENT_PROJECT_VERSION = 298;
 				DEVELOPMENT_TEAM = 5X6237AEMK;
 				GCC_OPTIMIZATION_LEVEL = fast;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(inherited)",
-					"GLES_SILENCE_DEPRECATION=1",
-				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Circuitry/Circuitry-Prefix.pch";
 				INFOPLIST_FILE = "Circuitry/Circuitry-Info.plist";
