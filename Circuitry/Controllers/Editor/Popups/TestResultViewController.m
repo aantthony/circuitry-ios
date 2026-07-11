@@ -13,6 +13,8 @@
 @interface TestResultViewController () <UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIImageView *bigTick;
+@property (weak, nonatomic) IBOutlet UIButton *dismissButton;
+@property (weak, nonatomic) IBOutlet UIView *buttonSeparator;
 @property (nonatomic) BOOL hasAppeared;
 @end
 
@@ -22,11 +24,38 @@
     [super viewDidLoad];
     [self configure];
     _bigTick.hidden = YES;
+    [self updatePreferredContentSize];
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+
+    static const CGFloat buttonHeight = 74.0;
+    static const CGFloat separatorHeight = 1.0;
+    CGFloat width = CGRectGetWidth(self.view.bounds);
+    CGFloat tableHeight = MAX(0.0, CGRectGetHeight(self.view.bounds) - buttonHeight);
+
+    self.tableView.frame = CGRectMake(0.0, 0.0, width, tableHeight);
+    self.buttonSeparator.frame = CGRectMake(0.0, tableHeight, width, separatorHeight);
+    self.dismissButton.frame = CGRectMake(0.0, tableHeight, width, buttonHeight);
+}
+
+- (void)updatePreferredContentSize {
+    static const CGFloat sheetWidth = 540.0;
+    static const CGFloat rowHeight = 50.0;
+    static const CGFloat buttonHeight = 74.0;
+    static const CGFloat maximumSheetHeight = 620.0;
+
+    NSUInteger checkCount = self.testResult.checks.count;
+    CGFloat tableHeight = rowHeight * (checkCount + 1); // Result rows plus header.
+    CGFloat sheetHeight = MIN(maximumSheetHeight, tableHeight + buttonHeight);
+    self.preferredContentSize = CGSizeMake(sheetWidth, sheetHeight);
 }
 
 - (void) setTestResult:(CircuitTestResult *)testResult {
     _testResult = testResult;
     [self.tableView reloadData];
+    [self updatePreferredContentSize];
 }
 
 

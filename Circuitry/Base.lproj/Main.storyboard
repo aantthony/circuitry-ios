@@ -183,6 +183,8 @@
                     <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="bigTick" destination="af4-b6-spB" id="PlA-b4-M8J"/>
+                        <outlet property="buttonSeparator" destination="jSh-rU-Qai" id="L4Z-km-xkM"/>
+                        <outlet property="dismissButton" destination="8I5-to-qvU" id="sCd-cW-dPX"/>
                         <outlet property="tableView" destination="VjK-Vs-avk" id="wry-sq-GKA"/>
                     </connections>
                 </viewController>

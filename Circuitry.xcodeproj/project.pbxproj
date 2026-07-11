@@ -66,16 +66,8 @@
 		923585211AF602DF004DCD0F /* ProblemSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 923584E51AF602DE004DCD0F /* ProblemSet.m */; };
 		923585221AF602DF004DCD0F /* ProblemSetProblemInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 923584E71AF602DE004DCD0F /* ProblemSetProblemInfo.m */; };
 		923585231AF602DF004DCD0F /* ToolbeltItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 923584E91AF602DF004DCD0F /* ToolbeltItem.m */; };
-		923585251AF602DF004DCD0F /* BatchedSprite.m in Sources */ = {isa = PBXBuildFile; fileRef = 923584EE1AF602DF004DCD0F /* BatchedSprite.m */; };
-		923585271AF602DF004DCD0F /* Drawable.m in Sources */ = {isa = PBXBuildFile; fileRef = 923584F11AF602DF004DCD0F /* Drawable.m */; };
 		923585281AF602DF004DCD0F /* ImageAtlas.m in Sources */ = {isa = PBXBuildFile; fileRef = 923584F31AF602DF004DCD0F /* ImageAtlas.m */; };
-		923585291AF602DF004DCD0F /* ShaderEffect.m in Sources */ = {isa = PBXBuildFile; fileRef = 923584F51AF602DF004DCD0F /* ShaderEffect.m */; };
-		9235852D1AF602DF004DCD0F /* Sprite.m in Sources */ = {isa = PBXBuildFile; fileRef = 923584FC1AF602DF004DCD0F /* Sprite.m */; };
 		9235852F1AF602DF004DCD0F /* TransitionFromDocumentListToDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 923585001AF602DF004DCD0F /* TransitionFromDocumentListToDocument.m */; };
-		923585311AF602DF004DCD0F /* Grid.m in Sources */ = {isa = PBXBuildFile; fileRef = 923585051AF602DF004DCD0F /* Grid.m */; };
-		923585341AF602DF004DCD0F /* LinkBezier.m in Sources */ = {isa = PBXBuildFile; fileRef = 9235850A1AF602DF004DCD0F /* LinkBezier.m */; };
-		923585371AF602DF004DCD0F /* SevenSegmentDisplay.m in Sources */ = {isa = PBXBuildFile; fileRef = 9235850F1AF602DF004DCD0F /* SevenSegmentDisplay.m */; };
-		9235853A1AF602DF004DCD0F /* TouchHighlight.m in Sources */ = {isa = PBXBuildFile; fileRef = 923585141AF602DF004DCD0F /* TouchHighlight.m */; };
 		9235853C1AF602DF004DCD0F /* Viewport.m in Sources */ = {isa = PBXBuildFile; fileRef = 923585181AF602DF004DCD0F /* Viewport.m */; };
 		923585721AF60311004DCD0F /* Problems in Resources */ = {isa = PBXBuildFile; fileRef = 923585711AF60311004DCD0F /* Problems */; };
 		923585751AF65BB2004DCD0F /* NavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 923585741AF65BB2004DCD0F /* NavigationViewController.m */; };
@@ -312,9 +304,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-					9204C376182E2F5C006A008D /* CoreGraphics.framework in Frameworks */,
-					9204C378182E2F5C006A008D /* UIKit.framework in Frameworks */,
-					9204C374182E2F5C006A008D /* Foundation.framework in Frameworks */,
+				9204C376182E2F5C006A008D /* CoreGraphics.framework in Frameworks */,
+				9204C378182E2F5C006A008D /* UIKit.framework in Frameworks */,
+				9204C374182E2F5C006A008D /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -354,10 +346,10 @@
 		9204C372182E2F5C006A008D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-					9204C373182E2F5C006A008D /* Foundation.framework */,
-					9204C375182E2F5C006A008D /* CoreGraphics.framework */,
-					9204C377182E2F5C006A008D /* UIKit.framework */,
-					9204C39A182E2F5C006A008D /* XCTest.framework */,
+				9204C373182E2F5C006A008D /* Foundation.framework */,
+				9204C375182E2F5C006A008D /* CoreGraphics.framework */,
+				9204C377182E2F5C006A008D /* UIKit.framework */,
+				9204C39A182E2F5C006A008D /* XCTest.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -789,7 +781,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 2650;
+				LastUpgradeCheck = 2660;
 				ORGANIZATIONNAME = Circuitry;
 				TargetAttributes = {
 					9204C36F182E2F5C006A008D = {
@@ -828,21 +820,21 @@
 				926343401B1DDC9500F74E25 /* ipad-white-vertical-level-2.png in Resources */,
 				9232AD861A1CBE120030ADB2 /* Terms.rtf in Resources */,
 				923584CB1AF602C3004DCD0F /* background.jpg in Resources */,
-					923584CD1AF602C3004DCD0F /* or-gate@2x.png in Resources */,
-					923585721AF60311004DCD0F /* Problems in Resources */,
-					923584D11AF602C3004DCD0F /* tutorial-logo@2x.png in Resources */,
-					92CF45A322473E3F00B51791 /* LaunchScreen.storyboard in Resources */,
-					92020C0B189A578200B6D8F5 /* circuit.image-atlas in Resources */,
-					923584D01AF602C3004DCD0F /* tutorial-bg-3@2x.jpg in Resources */,
-					923584CF1AF602C3004DCD0F /* tutorial-bg-2@2x.jpg in Resources */,
-					9263433E1B1DDBFF00F74E25 /* adderexample.png in Resources */,
-					923584C31AF602C3004DCD0F /* blank.json in Resources */,
-					923584CE1AF602C3004DCD0F /* tutorial-bg-1@2x.jpg in Resources */,
-					923056A118759577005AE348 /* Configurations.plist in Resources */,
-					9204C394182E2F5C006A008D /* Images.xcassets in Resources */,
-					923584CA1AF602C3004DCD0F /* and-gate@2x.png in Resources */,
-					9204C382182E2F5C006A008D /* InfoPlist.strings in Resources */,
-					9204C38B182E2F5C006A008D /* Main.storyboard in Resources */,
+				923584CD1AF602C3004DCD0F /* or-gate@2x.png in Resources */,
+				923585721AF60311004DCD0F /* Problems in Resources */,
+				923584D11AF602C3004DCD0F /* tutorial-logo@2x.png in Resources */,
+				92CF45A322473E3F00B51791 /* LaunchScreen.storyboard in Resources */,
+				92020C0B189A578200B6D8F5 /* circuit.image-atlas in Resources */,
+				923584D01AF602C3004DCD0F /* tutorial-bg-3@2x.jpg in Resources */,
+				923584CF1AF602C3004DCD0F /* tutorial-bg-2@2x.jpg in Resources */,
+				9263433E1B1DDBFF00F74E25 /* adderexample.png in Resources */,
+				923584C31AF602C3004DCD0F /* blank.json in Resources */,
+				923584CE1AF602C3004DCD0F /* tutorial-bg-1@2x.jpg in Resources */,
+				923056A118759577005AE348 /* Configurations.plist in Resources */,
+				9204C394182E2F5C006A008D /* Images.xcassets in Resources */,
+				923584CA1AF602C3004DCD0F /* and-gate@2x.png in Resources */,
+				9204C382182E2F5C006A008D /* InfoPlist.strings in Resources */,
+				9204C38B182E2F5C006A008D /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -956,6 +948,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -1012,6 +1005,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -1070,13 +1064,13 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 298;
+				CURRENT_PROJECT_VERSION = 299;
 				DEVELOPMENT_TEAM = 5X6237AEMK;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Circuitry/Circuitry-Prefix.pch";
 				INFOPLIST_FILE = "Circuitry/Circuitry-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.circuitry.circuitry;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1095,14 +1089,14 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 298;
+				CURRENT_PROJECT_VERSION = 299;
 				DEVELOPMENT_TEAM = 5X6237AEMK;
 				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Circuitry/Circuitry-Prefix.pch";
 				INFOPLIST_FILE = "Circuitry/Circuitry-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.circuitry.circuitry;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1157,6 +1151,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -1215,14 +1210,14 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 298;
+				CURRENT_PROJECT_VERSION = 299;
 				DEVELOPMENT_TEAM = 5X6237AEMK;
 				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Circuitry/Circuitry-Prefix.pch";
 				INFOPLIST_FILE = "Circuitry/Circuitry-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.circuitry.circuitry;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
