@@ -564,7 +564,7 @@ void CircuitDestroy(CircuitInternal *c) {
     free(c);
 }
 
-CircuitInternal * CircuitCreate() {
+CircuitInternal * CircuitCreate(void) {
     CircuitInternal *t = smalloc(sizeof(CircuitInternal));
     t->needsUpdate_count = 0;
     t->needsUpdate_size = 100000;

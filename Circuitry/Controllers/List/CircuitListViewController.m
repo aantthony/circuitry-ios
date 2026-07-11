@@ -13,8 +13,6 @@
 #import "AppDelegate.h"
 #import "CircuitCollectionViewCell.h"
 
-#import "UIAlertView+MKBlockAdditions.h"
-
 //#import "OpenDocumentFromDocumentsListSegue.h"
 
 #import "TransitionFromDocumentListToDocument.h"
@@ -60,7 +58,7 @@
 
 @end
 
-@interface CircuitListViewController () <UIActionSheetDelegate, UIViewControllerTransitioningDelegate, UINavigationControllerDelegate, MFMailComposeViewControllerDelegate, CircuitDocumentViewControllerDelegate>
+@interface CircuitListViewController () <UIViewControllerTransitioningDelegate, UINavigationControllerDelegate, MFMailComposeViewControllerDelegate, CircuitDocumentViewControllerDelegate>
 @property (nonatomic) NSMutableArray *circuits;
 @property (nonatomic) ProblemSet *problemSet;
 @property (nonatomic) ViewController *documentViewController;
@@ -277,54 +275,30 @@
             _actionSheetIndexPath = [self.collectionView indexPathForItemAtPoint: [sender locationInView:self.collectionView]];
             if (_actionSheetIndexPath == nil) return;
             CircuitCollectionViewCell *cell = (CircuitCollectionViewCell *) [self.collectionView cellForItemAtIndexPath:_actionSheetIndexPath];
-            UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:cell.textLabel.text delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete" otherButtonTitles: nil];
             CGRect rect = [self.view convertRect:cell.imageView.frame fromView:cell];
-            [sheet showFromRect:rect inView:self.view animated:YES];
+            UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:cell.textLabel.text message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+            [actionSheet addAction:[UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+                [self confirmDeleteSelectedCircuit];
+            }]];
+            [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+            actionSheet.popoverPresentationController.sourceView = self.view;
+            actionSheet.popoverPresentationController.sourceRect = rect;
+            [self presentViewController:actionSheet animated:YES completion:nil];
         }
     }
 }
 
-#pragma mark -
-#pragma mark UIActionSheetDelegate Methods
-
-- (void) actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    if (actionSheet.tag == 40) {
-        if (buttonIndex == 0) {
-            [self performSegueWithIdentifier:@"ShowTutorialAgain" sender:actionSheet];
-        } else if (buttonIndex == 1) {
-            [self showSendFeedback];
-        } else if (buttonIndex == 2) {
-            [self performSegueWithIdentifier:@"ShowBoringInfo" sender:actionSheet];
-        }
-        return;
-    }
-}
-
-// Called when a button is clicked. The view will be automatically dismissed after this call returns
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (actionSheet.tag == 40) {
-        return;
-    }
-    if (buttonIndex == 0) {
-        // delete
-        UIAlertView *alert = [UIAlertView alertViewWithTitle:@"Delete Circuit" message:@"Are you sure you want to delete this circuit?" cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Delete"] onDismiss:^(int buttonIndex) {
-            if (buttonIndex == 0) {
-                [self.collectionView performBatchUpdates:^{
-                    
-                    NSArray *selectedItemsIndexPaths = @[self.actionSheetIndexPath];
-
-                    [self deleteItemsFromDataSourceAtIndexPaths:selectedItemsIndexPaths];
-                    
-                    [self.collectionView deleteItemsAtIndexPaths:selectedItemsIndexPaths];
-                    
-                } completion:nil];
-            }
-        } onCancel:nil];
-        
-        [alert show];
-    } else if (buttonIndex == 1) {
-        [[[UIAlertView alloc] initWithTitle:@"Not implemented" message:@"Share feature not implemented" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
-    }
+- (void)confirmDeleteSelectedCircuit {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Delete Circuit" message:@"Are you sure you want to delete this circuit?" preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+        [self.collectionView performBatchUpdates:^{
+            NSArray *selectedItemsIndexPaths = @[self.actionSheetIndexPath];
+            [self deleteItemsFromDataSourceAtIndexPaths:selectedItemsIndexPaths];
+            [self.collectionView deleteItemsAtIndexPaths:selectedItemsIndexPaths];
+        } completion:nil];
+    }]];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void) deleteURL:(NSURL *)fileURL {
@@ -375,9 +349,19 @@
 
 - (IBAction)optionsPanel:(UIBarButtonItem *)sender {
         
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"About Circuitry", @"Send Feedback", @"Legal & Attributions", nil];
-    actionSheet.tag = 40;
-    [actionSheet showFromBarButtonItem:sender animated:YES];
+    UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    [actionSheet addAction:[UIAlertAction actionWithTitle:@"About Circuitry" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        [self performSegueWithIdentifier:@"ShowTutorialAgain" sender:action];
+    }]];
+    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Send Feedback" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        [self showSendFeedback];
+    }]];
+    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Legal & Attributions" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        [self performSegueWithIdentifier:@"ShowBoringInfo" sender:action];
+    }]];
+    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+    actionSheet.popoverPresentationController.barButtonItem = sender;
+    [self presentViewController:actionSheet animated:YES completion:nil];
     
 }
 
@@ -436,11 +420,6 @@
 - (IBAction)didSwipe:(UISwipeGestureRecognizer *)sender {
     // Disabled, as it is a bit confusing. It would need animation, which means not using a UICollectionViewControler...
     return;
-    if (sender.direction == UISwipeGestureRecognizerDirectionLeft && self.displayingProblems) {
-        self.displayingProblems = NO;
-    } else if (sender.direction == UISwipeGestureRecognizerDirectionRight && !self.displayingProblems) {
-        self.displayingProblems = YES;
-    }
 }
 
 - (UIImageView *) backgroundImageView {

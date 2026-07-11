@@ -47,7 +47,6 @@ static NSValue *valueForGate(CircuitProcess *process) {
                           @"xnor": valueForGate(&CircuitProcessXnor),
                           @"and": valueForGate(&CircuitProcessAnd),
                           @"nand": valueForGate(&CircuitProcessNand),
-                          @"not": valueForGate(&CircuitProcessNot),
                           @"ha": valueForGate(&CircuitProcessHA),
                           @"fa": valueForGate(&CircuitProcessFA),
                           @"bindec": valueForGate(&CircuitProcessBinDec),

@@ -29,12 +29,12 @@ static char CANCEL_IDENTIFER;
     return objc_getAssociatedObject(self, &DISMISS_IDENTIFER);
 }
 
-- (void)setCancelBlock:(void (^)())cancelBlock
+- (void)setCancelBlock:(void (^)(void))cancelBlock
 {
     objc_setAssociatedObject(self, &CANCEL_IDENTIFER, cancelBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-- (void (^)())cancelBlock
+- (void (^)(void))cancelBlock
 {
     return objc_getAssociatedObject(self, &CANCEL_IDENTIFER);
 }
@@ -44,8 +44,8 @@ static char CANCEL_IDENTIFER;
                     message:(NSString*) message 
           cancelButtonTitle:(NSString*) cancelButtonTitle
           otherButtonTitles:(NSArray*) otherButtons
-                  onDismiss:(void (^)(int buttonIndex)) dismissed                   
-                   onCancel:(void (^)()) cancelled {
+                  onDismiss:(void (^)(int buttonIndex)) dismissed
+                   onCancel:(void (^)(void)) cancelled {
         
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
                                                     message:message

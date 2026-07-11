@@ -49,6 +49,12 @@
 
 @implementation CircuitDocumentViewController
 
+- (void)showAlertWithTitle:(NSString *)title message:(NSString *)message {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
 - (BOOL) prefersStatusBarHidden {
     return NO;
 }
@@ -133,10 +139,10 @@
         _document.circuit.title = textField.text;
         if ([[textField.text lowercaseString] isEqualToString:@"unlock1234"]) {
             [[ProblemSet mainSet] unlockAll];
-            [[[UIAlertView alloc] initWithTitle:@"Unlock" message:@"All problems are now unlocked." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
+            [self showAlertWithTitle:@"Unlock" message:@"All problems are now unlocked."];
         } else if ([[textField.text lowercaseString] isEqualToString:@"reset1234"]) {
             [[ProblemSet mainSet] reset];
-            [[[UIAlertView alloc] initWithTitle:@"Unlock" message:@"All problems are now reset." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
+            [self showAlertWithTitle:@"Unlock" message:@"All problems are now reset."];
         }
     }
     [_document updateChangeCount:UIDocumentChangeDone];
@@ -594,7 +600,7 @@ static CGPoint hvrDragHereRight = {88,428};
 
 - (IBAction)checkAnswer:(UIBarButtonItem *)sender {
     if (!_document.circuit.tests.count) {
-        [[[UIAlertView alloc] initWithTitle:@"No Test" message:@"Unspecified." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
+        [self showAlertWithTitle:@"No Test" message:@"Unspecified."];
         return;
     }
     __block CircuitTestResult *failure = nil;

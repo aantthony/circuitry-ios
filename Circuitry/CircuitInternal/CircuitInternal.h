@@ -25,7 +25,7 @@ typedef struct CircuitProcess CircuitProcess;
 extern int CircuitObjectFlagLocked;
 
 // Lifecycle:
-CircuitInternal * CircuitCreate();
+CircuitInternal * CircuitCreate(void);
 void CircuitDestroy(CircuitInternal *c);
 
 

@@ -18,7 +18,7 @@
 
 static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 
-@interface ViewController () <UIActionSheetDelegate> {
+@interface ViewController () {
     GLKMatrix4 _modelViewProjectionMatrix;
     GLKMatrix3 _normalMatrix;
     
@@ -85,67 +85,6 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     [EAGLContext setCurrentContext:self.context];
     GLKView *view = (GLKView *)self.view;
     return view.snapshot;
-    
-    GLint backingWidth, backingHeight;
-    
-    // Bind the color renderbuffer used to render the OpenGL ES view
-    // If your application only creates a single color renderbuffer which is already bound at this point,
-    // this call is redundant, but it is needed if you're dealing with multiple renderbuffers.
-    // Note, replace "_colorRenderbuffer" with the actual name of the renderbuffer object defined in your class.
-//    glBindRenderbufferOES(GL_RENDERBUFFER_OES, _colorRenderbuffer);
-    [view bindDrawable];
-    // Get the size of the backing CAEAGLLayer
-    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &backingWidth);
-    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &backingHeight);
-    [self checkError];
-    GLint x = 0, y = 0, width = backingWidth, height = backingHeight;
-    NSInteger dataLength = width * height * 4;
-    GLubyte *data = (GLubyte*)malloc(dataLength * sizeof(GLubyte));
-
-    // Read pixel data from the framebuffer
-    glPixelStorei(GL_PACK_ALIGNMENT, 4);
-    glReadPixels(x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
-    
-    // Create a CGImage with the pixel data
-    // If your OpenGL ES content is opaque, use kCGImageAlphaNoneSkipLast to ignore the alpha channel
-    // otherwise, use kCGImageAlphaPremultipliedLast
-    CGDataProviderRef ref = CGDataProviderCreateWithData(NULL, data, dataLength, NULL);
-    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
-    CGImageRef iref = CGImageCreate(width, height, 8, 32, width * 4, colorspace, kCGBitmapByteOrder32Big | kCGImageAlphaNoneSkipLast,
-                                    ref, NULL, true, kCGRenderingIntentDefault);
-    
-    // OpenGL ES measures data in PIXELS
-    // Create a graphics context with the target size measured in POINTS
-    NSInteger widthInPoints, heightInPoints;
-    
-    // On iOS 4 and later, use UIGraphicsBeginImageContextWithOptions to take the scale into consideration
-    // Set the scale parameter to your OpenGL ES view's contentScaleFactor
-    // so that you get a high-resolution snapshot when its value is greater than 1.0
-    CGFloat scale = self.view.contentScaleFactor;
-    widthInPoints = width / scale;
-    heightInPoints = height / scale;
-    UIGraphicsBeginImageContextWithOptions(CGSizeMake(widthInPoints, heightInPoints), NO, scale);
-    
-    CGContextRef cgcontext = UIGraphicsGetCurrentContext();
-    
-    // UIKit coordinate system is upside down to GL/Quartz coordinate system
-    // Flip the CGImage by rendering it to the flipped bitmap context
-    // The size of the destination area is measured in POINTS
-    CGContextSetBlendMode(cgcontext, kCGBlendModeCopy);
-    CGContextDrawImage(cgcontext, CGRectMake(0.0, 0.0, widthInPoints, heightInPoints), iref);
-    
-    // Retrieve the UIImage from the current context
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    
-    UIGraphicsEndImageContext();
-    
-    // Clean up
-    free(data);
-    CFRelease(ref);
-    CFRelease(colorspace);
-    CGImageRelease(iref);
-    
-    return image;
 }
 
 -(void)appWillResignActive:(NSNotification*)note {
@@ -649,18 +588,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     } else if ([gestureRecognizer isKindOfClass:[CreateGatePanGestureRecognizer class]]) {
         // only starts if the finger is on the toolbelt
 //        CGPoint location = [gestureRecognizer locationInView:self.view];
-//        if (!CGRectContainsPoint(_hud.toolbelt.bounds, location)) {
-            return NO;
-//        }
-        
-        CGPoint p = [gestureRecognizer locationInView:self.view];
-        p.x = 0.0;
-        
-//        int index = [_hud.toolbelt indexAtPosition:p];
-//        if (index == -1) return NO;
-//        _hud.toolbelt.currentObjectIndex = index;
-        draggingOutFromToolbeltStart = p;
-        return YES;
+        return NO;
     } else if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
         // drag view pan
         UIPanGestureRecognizer *recogniser = (UIPanGestureRecognizer *)gestureRecognizer;
@@ -698,44 +626,40 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         ToolbeltItem *item = [ToolbeltItem toolbeltItemWithType:[NSString stringWithUTF8String:object->type->id]];
         if (!item) return;
         
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:item.fullName delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Remove" otherButtonTitles: nil];
-
         _selectedObjects = @[[NSValue valueWithPointer:object]];
         CGRect rect = [_viewport rectForObject:object inView:self.view];
-        
-        [actionSheet showFromRect:rect inView:self.view animated:YES];
-        
-    }
-    
-}
 
-#pragma mark -
-#pragma mark UIActionSheetDelegate
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 0) {
-        __block NSString *failureMessage = nil;
-        
-        [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
-            
-            for(id obj in self.selectedObjects) {
-                CircuitObject *object = [obj pointerValue];
-                if (object->flags & CircuitObjectFlagLocked) {
-                    failureMessage = @"This object cannot be removed.";
-                    return;
+        UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:item.fullName message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        [actionSheet addAction:[UIAlertAction actionWithTitle:@"Remove" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+            __block NSString *failureMessage = nil;
+
+            [self->_document.circuit performWriteBlock:^(CircuitInternal *internal) {
+                for(id obj in self.selectedObjects) {
+                    CircuitObject *object = [obj pointerValue];
+                    if (object->flags & CircuitObjectFlagLocked) {
+                        failureMessage = @"This object cannot be removed.";
+                        return;
+                    }
                 }
+
+                for(id obj in self.selectedObjects) {
+                    CircuitObject *object = [obj pointerValue];
+                    CircuitObjectRemove(internal, object);
+                    [self unpause];
+                }
+            }];
+            if (failureMessage) {
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:failureMessage preferredStyle:UIAlertControllerStyleAlert];
+                [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+                [self presentViewController:alert animated:YES completion:nil];
+                return;
             }
-            
-            for(id obj in self.selectedObjects) {
-                CircuitObject *object = [obj pointerValue];
-                CircuitObjectRemove(internal, object);
-                [self unpause];
-            }
-        }];
-        if (failureMessage) {
-            [[[UIAlertView alloc] initWithTitle:nil message:failureMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
-            return;
-        }
-        [self updateChangeCount:UIDocumentChangeDone];
+            [self updateChangeCount:UIDocumentChangeDone];
+        }]];
+        [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+        actionSheet.popoverPresentationController.sourceView = self.view;
+        actionSheet.popoverPresentationController.sourceRect = rect;
+        [self presentViewController:actionSheet animated:YES completion:nil];
     }
 }
 
@@ -926,7 +850,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
                 // Create a new link and tell the viewport renderer that it is the one being edited:
                 _viewport.currentEditingLinkTargetIndex = targetIndex;
                 [_circuit performWriteBlock:^(CircuitInternal *internal) {
-                    CircuitLink *newLink = CircuitLinkCreate(internal, _viewport.currentEditingLinkSource, viewport.currentEditingLinkSourceIndex, target, targetIndex);
+                    CircuitLink *newLink = CircuitLinkCreate(internal, self->_viewport.currentEditingLinkSource, viewport.currentEditingLinkSourceIndex, target, targetIndex);
                     viewport.currentEditingLink = newLink;
                 }];
                 [_viewport didAttachLink:_viewport.currentEditingLink];

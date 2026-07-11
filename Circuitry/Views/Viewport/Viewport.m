@@ -575,7 +575,7 @@ BOOL expandDrawGate(CircuitObject *object) {
             outlet->x = pos.x + dotPos.x;
             outlet->y = pos.y + dotPos.y;
             BOOL isConnected = object->outputs[o] != NULL;
-            if (object == _currentEditingLinkSource && o == _currentEditingLinkSourceIndex) isConnected = YES;
+            if (object == self->_currentEditingLinkSource && o == self->_currentEditingLinkSourceIndex) isConnected = YES;
             outlet->tex = (object->out & 1 << o) ? (isConnected ? gateOutletActiveConnected : gateOutletActive) : (isConnected ? gateOutletInactiveConnected : gateOutletInactive);
         }
         
@@ -586,7 +586,7 @@ BOOL expandDrawGate(CircuitObject *object) {
             outlet->x = pos.x + dotPos.x;
             outlet->y = pos.y + dotPos.y;
             BOOL isConnected = object->inputs[o] != NULL;
-            if (object == _currentEditingLinkTarget && o == _currentEditingLinkTargetIndex) isConnected = YES;
+            if (object == self->_currentEditingLinkTarget && o == self->_currentEditingLinkTargetIndex) isConnected = YES;
             outlet->tex = (object->in & 1 << o) ? (isConnected ? gateOutletActiveConnected : gateOutletActive) : (isConnected ? gateOutletInactiveConnected : gateOutletInactive);
         }
     }];
@@ -633,7 +633,7 @@ BOOL expandDrawGate(CircuitObject *object) {
                     dotPos = offsetForInlet(link->target->type, link->targetIndex);
                     GLKVector2 B = GLKVector2Make(link->target->pos.x + dotPos.x + radius, link->target->pos.y + dotPos.y + radius);
                     bool isActive = object->out & 1 << sourceIndex;
-                    [bezier drawFrom:A to:B withColor1:isActive ? active1 : inactive1 color2:isActive ? active2 : inactive2  active:isActive withTransform:viewProjectionMatrix];
+                    [self->bezier drawFrom:A to:B withColor1:isActive ? active1 : inactive1 color2:isActive ? active2 : inactive2  active:isActive withTransform:viewProjectionMatrix];
 
                 }
                 link = link->nextSibling;
@@ -683,7 +683,7 @@ BOOL expandDrawGate(CircuitObject *object) {
                     dotPos = offsetForInlet(link->target->type, link->targetIndex);
                     GLKVector2 B = GLKVector2Make(link->target->pos.x + dotPos.x + radius, link->target->pos.y + dotPos.y + radius);
                     bool isActive = object->out & 1 << sourceIndex;
-                    [bezier drawFrom:A to:B withColor1:isActive ? active1 : inactive1 color2:isActive ? active2 : inactive2  active:isActive withTransform:_viewProjectionMatrix];
+                    [self->bezier drawFrom:A to:B withColor1:isActive ? active1 : inactive1 color2:isActive ? active2 : inactive2  active:isActive withTransform:self->_viewProjectionMatrix];
                 }
                 link = link->nextSibling;
             }

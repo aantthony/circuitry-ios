@@ -61,7 +61,7 @@
     _congratsView.hidden = NO;
     self.hintButton.hidden = YES;
     [UIView animateWithDuration:0.3 animations:^{
-        _congratsView.alpha = 1.0;
+        self->_congratsView.alpha = 1.0;
     } completion:^(BOOL finished) {
         
     }];
@@ -72,7 +72,7 @@
     [self.buttonContinue setTitle:@"Go back to menu" forState:UIControlStateNormal];
     self.lblCongrats.text = @"Congratulations, you solved all the levels!";
     [UIView animateWithDuration:0.3 animations:^{
-        _congratsView.alpha = 1;
+        self->_congratsView.alpha = 1;
     }];
 }
 - (IBAction)didTapProblemDescriptionToHide:(UILongPressGestureRecognizer *)sender {
@@ -121,6 +121,8 @@
 
     [self updateHintButton];
 
-    [[[UIAlertView alloc] initWithTitle:@"Hint" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Hint" message:message preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 @end

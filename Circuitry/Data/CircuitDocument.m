@@ -142,7 +142,7 @@ static NSString *CircuitDocumentUnsupportedProcessType(NSArray *items) {
         }
         
         NSString *name = nil;
-        if (object->name != NULL) {
+        if (object->name[0] != '\0') {
             name = [NSString stringWithUTF8String:object->name];
         }
         NSMutableDictionary *d = [[NSMutableDictionary alloc] init];
