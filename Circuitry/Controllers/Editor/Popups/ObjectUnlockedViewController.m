@@ -20,9 +20,12 @@
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
 
-    CGPoint center = self.itemImage.center;
-    center.x = CGRectGetMidX(self.view.bounds);
-    self.itemImage.center = center;
+    CGFloat centerX = CGRectGetMidX(self.view.bounds);
+    for (UIView *subview in self.view.subviews) {
+        CGPoint center = subview.center;
+        center.x = centerX;
+        subview.center = center;
+    }
 }
 
 - (void) viewDidAppear:(BOOL)animated {
