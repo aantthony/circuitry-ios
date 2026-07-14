@@ -25,6 +25,11 @@
 
 @implementation CircuitObjectListTableViewController
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self.tableView reloadData];
+}
+
 - (void) searchThroughData {
     self.results = nil;
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name contains [search] %@", self.searchBar.text];
@@ -69,7 +74,9 @@
     }];
     
     self.results = self.items;
-    [self.tableView reloadData];
+    if (self.isViewLoaded && self.tableView.window) {
+        [self.tableView reloadData];
+    }
 }
 
 - (void) setDocument: (CircuitDocument *) document {
