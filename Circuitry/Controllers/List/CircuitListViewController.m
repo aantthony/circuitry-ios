@@ -360,6 +360,11 @@
     
 }
 
+- (void) showSourceCode {
+    NSURL *url = [NSURL URLWithString:@"https://github.com/aantthony/circuitry-ios"];
+    [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+}
+
 - (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
     [controller dismissViewControllerAnimated:YES completion:nil];
 }
@@ -372,6 +377,9 @@
     }]];
     [actionSheet addAction:[UIAlertAction actionWithTitle:@"Send Feedback" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         [self showSendFeedback];
+    }]];
+    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Source Code on GitHub" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        [self showSourceCode];
     }]];
     [actionSheet addAction:[UIAlertAction actionWithTitle:@"Legal & Attributions" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         [self performSegueWithIdentifier:@"ShowBoringInfo" sender:action];
