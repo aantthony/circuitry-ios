@@ -20,7 +20,6 @@
 		9204C39C182E2F5C006A008D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9204C373182E2F5C006A008D /* Foundation.framework */; };
 		9204C39D182E2F5C006A008D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9204C377182E2F5C006A008D /* UIKit.framework */; };
 		9204C3A5182E2F5C006A008D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9204C3A3182E2F5C006A008D /* InfoPlist.strings */; };
-		923056A118759577005AE348 /* Configurations.plist in Resources */ = {isa = PBXBuildFile; fileRef = 923056A018759577005AE348 /* Configurations.plist */; };
 		9232AD861A1CBE120030ADB2 /* Terms.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 9232AD851A1CBE120030ADB2 /* Terms.rtf */; };
 		923584641AF60267004DCD0F /* UIAlertView+MKBlockAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 923584631AF60267004DCD0F /* UIAlertView+MKBlockAdditions.m */; };
 		9235846A1AF60276004DCD0F /* CircuitInternal.c in Sources */ = {isa = PBXBuildFile; fileRef = 923584661AF60276004DCD0F /* CircuitInternal.c */; };
@@ -73,6 +72,7 @@
 		923585751AF65BB2004DCD0F /* NavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 923585741AF65BB2004DCD0F /* NavigationViewController.m */; };
 		9263433E1B1DDBFF00F74E25 /* adderexample.png in Resources */ = {isa = PBXBuildFile; fileRef = 9263433D1B1DDBFF00F74E25 /* adderexample.png */; };
 		926343401B1DDC9500F74E25 /* ipad-white-vertical-level-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 9263433F1B1DDC9500F74E25 /* ipad-white-vertical-level-2.png */; };
+		929512653007A349009C6E3B /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 929512643007A349009C6E3B /* PrivacyInfo.xcprivacy */; };
 		92AA6323189E73A000A135F3 /* MongoIDTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 92AA6322189E73A000A135F3 /* MongoIDTest.m */; };
 		92CF45A322473E3F00B51791 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 92CF45A222473E3F00B51791 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
@@ -171,7 +171,6 @@
 		9204C39A182E2F5C006A008D /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		9204C3A2182E2F5C006A008D /* CircuitryTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CircuitryTests-Info.plist"; sourceTree = "<group>"; };
 		9204C3A4182E2F5C006A008D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		923056A018759577005AE348 /* Configurations.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Configurations.plist; sourceTree = "<group>"; };
 		9232AD851A1CBE120030ADB2 /* Terms.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Terms.rtf; sourceTree = "<group>"; };
 		923584621AF60267004DCD0F /* UIAlertView+MKBlockAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+MKBlockAdditions.h"; sourceTree = "<group>"; };
 		923584631AF60267004DCD0F /* UIAlertView+MKBlockAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+MKBlockAdditions.m"; sourceTree = "<group>"; };
@@ -294,6 +293,7 @@
 		923585741AF65BB2004DCD0F /* NavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationViewController.m; sourceTree = "<group>"; };
 		9263433D1B1DDBFF00F74E25 /* adderexample.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = adderexample.png; sourceTree = "<group>"; };
 		9263433F1B1DDC9500F74E25 /* ipad-white-vertical-level-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ipad-white-vertical-level-2.png"; sourceTree = "<group>"; };
+		929512643007A349009C6E3B /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		92AA6322189E73A000A135F3 /* MongoIDTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoIDTest.m; sourceTree = "<group>"; };
 		92CF45A222473E3F00B51791 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		92DE44AD187C153F00014CB9 /* circuit.image-atlas */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "circuit.image-atlas"; sourceTree = "<group>"; };
@@ -326,6 +326,7 @@
 		9204C367182E2F5C006A008D = {
 			isa = PBXGroup;
 			children = (
+				929512643007A349009C6E3B /* PrivacyInfo.xcprivacy */,
 				923585711AF60311004DCD0F /* Problems */,
 				9204C37D182E2F5C006A008D /* Circuitry */,
 				9204C3A0182E2F5C006A008D /* CircuitryTests */,
@@ -387,7 +388,6 @@
 				9204C380182E2F5C006A008D /* InfoPlist.strings */,
 				9204C383182E2F5C006A008D /* main.m */,
 				9204C385182E2F5C006A008D /* Circuitry-Prefix.pch */,
-				923056A018759577005AE348 /* Configurations.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -829,8 +829,8 @@
 				923584CF1AF602C3004DCD0F /* tutorial-bg-2@2x.jpg in Resources */,
 				9263433E1B1DDBFF00F74E25 /* adderexample.png in Resources */,
 				923584C31AF602C3004DCD0F /* blank.json in Resources */,
+				929512653007A349009C6E3B /* PrivacyInfo.xcprivacy in Resources */,
 				923584CE1AF602C3004DCD0F /* tutorial-bg-1@2x.jpg in Resources */,
-				923056A118759577005AE348 /* Configurations.plist in Resources */,
 				9204C394182E2F5C006A008D /* Images.xcassets in Resources */,
 				923584CA1AF602C3004DCD0F /* and-gate@2x.png in Resources */,
 				9204C382182E2F5C006A008D /* InfoPlist.strings in Resources */,
@@ -1070,6 +1070,7 @@
 				GCC_PREFIX_HEADER = "Circuitry/Circuitry-Prefix.pch";
 				INFOPLIST_FILE = "Circuitry/Circuitry-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.circuitry.circuitry;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1096,6 +1097,7 @@
 				GCC_PREFIX_HEADER = "Circuitry/Circuitry-Prefix.pch";
 				INFOPLIST_FILE = "Circuitry/Circuitry-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.circuitry.circuitry;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1217,6 +1219,7 @@
 				GCC_PREFIX_HEADER = "Circuitry/Circuitry-Prefix.pch";
 				INFOPLIST_FILE = "Circuitry/Circuitry-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.circuitry.circuitry;
 				PRODUCT_NAME = "$(TARGET_NAME)";

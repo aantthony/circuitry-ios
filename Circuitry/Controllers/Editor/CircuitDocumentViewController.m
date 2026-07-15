@@ -674,14 +674,28 @@ static CGPoint hvrDragHereRight = {88,428};
 
 - (void) promptAppStoreReview {
     NSString *key = @"RequestedStoreReview";
-    
-    NSOperatingSystemVersion minVersion = (NSOperatingSystemVersion){10, 3, 0};
-    if ([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion: minVersion]) {
-        if (![[NSUserDefaults standardUserDefaults] boolForKey: key]) {
-            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:key];
-            [SKStoreReviewController requestReview];
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:key]) {
+        return;
+    }
+
+    UIWindowScene *windowScene = self.view.window.windowScene;
+    if (!windowScene) {
+        for (UIScene *scene in UIApplication.sharedApplication.connectedScenes) {
+            if ([scene isKindOfClass:UIWindowScene.class] &&
+                scene.activationState == UISceneActivationStateForegroundActive) {
+                windowScene = (UIWindowScene *)scene;
+                break;
+            }
         }
     }
+
+    if (!windowScene) {
+        return;
+    }
+
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:key];
+    [SKStoreReviewController requestReviewInScene:windowScene];
 }
 
 - (void) didWin {
