@@ -189,6 +189,51 @@ static CGPoint hvrDragHereRight = {88,428};
     return self.view.frame.size.width > self.view.frame.size.height;
 }
 
+- (UIView *) visibleDescendantOfView:(UIView *)view matchingTitle:(NSString *)title {
+    if (view.hidden || view.alpha <= 0.01 || !view.window) {
+        return nil;
+    }
+
+    if ([view.accessibilityLabel isEqualToString:title]) {
+        return view;
+    }
+    if ([view isKindOfClass:[UIButton class]] &&
+        [[(UIButton *)view currentTitle] isEqualToString:title]) {
+        return view;
+    }
+    if ([view isKindOfClass:[UILabel class]] &&
+        [[(UILabel *)view text] isEqualToString:title]) {
+        return view;
+    }
+
+    for (UIView *subview in view.subviews) {
+        UIView *match = [self visibleDescendantOfView:subview matchingTitle:title];
+        if (match) {
+            return match;
+        }
+    }
+    return nil;
+}
+
+- (CGFloat) checkAnswerButtonCenterX {
+    UINavigationBar *navigationBar = self.navigationController.navigationBar;
+    [navigationBar layoutIfNeeded];
+
+    NSString *title = self.navigationItem.rightBarButtonItem.title ?: @"Check Answer";
+    UIView *buttonView = [self visibleDescendantOfView:navigationBar matchingTitle:title];
+    if (buttonView) {
+        CGRect buttonFrame = [buttonView convertRect:buttonView.bounds toView:self.view];
+        if (!CGRectIsEmpty(buttonFrame)) {
+            return CGRectGetMidX(buttonFrame);
+        }
+    }
+
+    // The navigation item may not have installed its backing view yet. Keep the
+    // arrow near the centre of the trailing bar-button area until it has.
+    CGFloat trailingInset = MAX(self.view.safeAreaInsets.right, 16.0);
+    return CGRectGetWidth(self.view.bounds) - trailingInset - 64.0;
+}
+
 - (UIImageView *) hintViewTapAndHoldLeft {
     if (!_hintViewTapAndHoldLeft) {
         _hintViewTapAndHoldLeft = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"TapAndHoldOutlet"]];
@@ -283,18 +328,22 @@ static CGPoint hvrDragHereRight = {88,428};
         _hintViewCheckCorrect = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"CheckCorrect"]];
         [self.view addSubview:_hintViewCheckCorrect];
     }
-    
-    CGRect rect = CGRectMake(
-                                             270,
-                                             80,
-                                             _hintViewCheckCorrect.frame.size.width,
-                                             _hintViewCheckCorrect.frame.size.height
-                                             );
-    
-    if (self.landscape) {
-        rect.origin.x = 540;
+
+    CGSize calloutSize = _hintViewCheckCorrect.image.size;
+    CGFloat arrowTipX = calloutSize.width - 8.0;
+    CGFloat originX = [self checkAnswerButtonCenterX] - arrowTipX;
+
+    CGFloat leadingInset = self.view.safeAreaInsets.left + 16.0;
+    CGFloat trailingEdge = CGRectGetWidth(self.view.bounds) - self.view.safeAreaInsets.right - 16.0;
+    CGFloat maximumOriginX = trailingEdge - calloutSize.width;
+    if (maximumOriginX >= leadingInset) {
+        originX = MIN(MAX(originX, leadingInset), maximumOriginX);
+    } else {
+        originX = (CGRectGetWidth(self.view.bounds) - calloutSize.width) * 0.5;
     }
-    _hintViewCheckCorrect.frame = rect;
+
+    _hintViewCheckCorrect.frame = CGRectMake(originX, 80.0,
+                                             calloutSize.width, calloutSize.height);
     return _hintViewCheckCorrect;
 }
 
