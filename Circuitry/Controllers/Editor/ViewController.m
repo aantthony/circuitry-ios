@@ -87,7 +87,7 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 - (UIImage*)snapshot
 {
     UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, self.view.opaque, 0.0);
-    [self.view drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:YES];
+    [self drawCanvasInRect:self.view.bounds];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
