@@ -11,15 +11,6 @@
     return YES;
 }
 
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-    if ([[url scheme] isEqualToString:@"circuitry"]) {
-        NSLog(@"URL: %@", url);
-        return YES;
-    }
-    return NO;
-}
-
 - (NSURL *) documentsDirectory {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
