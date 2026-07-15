@@ -169,7 +169,7 @@ CircuitProcess CircuitProcessSR      = {"sr",      2,  2, SR };
 CircuitProcess CircuitProcessSER     = {"ser",      3,  2, SER };
 CircuitProcess CircuitProcessT       = {"t",       2,  2, T };
 CircuitProcess CircuitProcessD       = {"d",       2,  2, D };
-CircuitProcess CircuitProcessD4      = {"d4",      5,  8, D16 };
+CircuitProcess CircuitProcessD4      = {"d4",      5,  4, D16 };
 CircuitProcess CircuitProcessD8      = {"d8",      9,  8, D16 };
 CircuitProcess CircuitProcessD16     = {"d16",    17, 16, D16 };
 
