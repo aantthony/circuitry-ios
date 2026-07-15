@@ -14,6 +14,7 @@
 		9204C382182E2F5C006A008D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9204C380182E2F5C006A008D /* InfoPlist.strings */; };
 		9204C384182E2F5C006A008D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9204C383182E2F5C006A008D /* main.m */; };
 		9204C388182E2F5C006A008D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9204C387182E2F5C006A008D /* AppDelegate.m */; };
+		929F00012E26A00100C1A001 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 929F00032E26A00100C1A001 /* SceneDelegate.m */; };
 		9204C38B182E2F5C006A008D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9204C389182E2F5C006A008D /* Main.storyboard */; };
 		9204C394182E2F5C006A008D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9204C393182E2F5C006A008D /* Images.xcassets */; };
 		9204C39B182E2F5C006A008D /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9204C39A182E2F5C006A008D /* XCTest.framework */; };
@@ -165,6 +166,8 @@
 		9204C385182E2F5C006A008D /* Circuitry-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Circuitry-Prefix.pch"; sourceTree = "<group>"; };
 		9204C386182E2F5C006A008D /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		9204C387182E2F5C006A008D /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		929F00022E26A00100C1A001 /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
+		929F00032E26A00100C1A001 /* SceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
 		9204C38A182E2F5C006A008D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9204C393182E2F5C006A008D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		9204C399182E2F5C006A008D /* CircuitryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CircuitryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -373,6 +376,8 @@
 				92DE44AD187C153F00014CB9 /* circuit.image-atlas */,
 				9204C386182E2F5C006A008D /* AppDelegate.h */,
 				9204C387182E2F5C006A008D /* AppDelegate.m */,
+				929F00022E26A00100C1A001 /* SceneDelegate.h */,
+				929F00032E26A00100C1A001 /* SceneDelegate.m */,
 				9204C389182E2F5C006A008D /* Main.storyboard */,
 				9204C393182E2F5C006A008D /* Images.xcassets */,
 				9204C37E182E2F5C006A008D /* Supporting Files */,
@@ -863,6 +868,7 @@
 				923584A71AF602B1004DCD0F /* TutorialPage1ViewController.m in Sources */,
 				923584C71AF602C3004DCD0F /* DragGateGestureRecognizer.m in Sources */,
 				9204C388182E2F5C006A008D /* AppDelegate.m in Sources */,
+				929F00012E26A00100C1A001 /* SceneDelegate.m in Sources */,
 				9235853C1AF602DF004DCD0F /* Viewport.m in Sources */,
 				923585201AF602DF004DCD0F /* MongoID.m in Sources */,
 				923584A91AF602B1004DCD0F /* TutorialPage3ViewController.m in Sources */,
