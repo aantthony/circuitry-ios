@@ -1,47 +1,11 @@
 #import <UIKit/UIKit.h>
+#import <GLKit/GLKit.h>
 #include <math.h>
 
 #import "CircuitInternal.h"
 #import "ImageAtlas.h"
 @class CircuitDocument;
-
-typedef struct {
-    float x;
-    float y;
-} GLKVector2;
-
-typedef struct {
-    float x;
-    float y;
-    float z;
-} GLKVector3;
-
-typedef struct {
-    float m[16];
-} GLKMatrix4;
-
-static inline GLKVector2 GLKVector2Make(float x, float y) {
-    GLKVector2 vector = {x, y};
-    return vector;
-}
-
-static inline GLKVector3 GLKVector3Make(float x, float y, float z) {
-    GLKVector3 vector = {x, y, z};
-    return vector;
-}
-
-static inline GLKVector3 GLKVector3Add(GLKVector3 left, GLKVector3 right) {
-    return GLKVector3Make(left.x + right.x, left.y + right.y, left.z + right.z);
-}
-
-static inline GLKVector3 GLKVector3Subtract(GLKVector3 left, GLKVector3 right) {
-    return GLKVector3Make(left.x - right.x, left.y - right.y, left.z - right.z);
-}
-
-static inline float GLKVector3Distance(GLKVector3 left, GLKVector3 right) {
-    GLKVector3 delta = GLKVector3Subtract(left, right);
-    return sqrtf(delta.x * delta.x + delta.y * delta.y + delta.z * delta.z);
-}
+@class SKScene;
 
 @interface Viewport : NSObject
 
@@ -56,6 +20,12 @@ static inline float GLKVector3Distance(GLKVector3 left, GLKVector3 right) {
 - (void) translate: (GLKVector3) translate;
 - (void) setProjectionMatrix: (GLKMatrix4) projectionMatrix;
 - (void) drawInRect:(CGRect)rect;
+
+// GPU-backed editor rendering. Core Graphics drawing remains available for
+// document thumbnails and snapshots.
+- (void) attachToScene:(SKScene *)scene backgroundImage:(UIImage *)backgroundImage;
+- (void) setSceneContentNeedsUpdate;
+- (void) updateSceneForViewSize:(CGSize)viewSize allowContentRebuild:(BOOL)allowContentRebuild;
 
 - (void) setScaleWithFloat: (float) scale;
 - (float) scaleWithFloat;

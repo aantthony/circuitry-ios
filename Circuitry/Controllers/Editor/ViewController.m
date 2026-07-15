@@ -1,4 +1,5 @@
 #import "ViewController.h"
+#import <SpriteKit/SpriteKit.h>
 
 #import "Viewport.h"
 #import "CircuitDocument.h"
@@ -16,7 +17,11 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 
 @class ViewController;
 
-@interface CircuitCanvasView : UIView
+@interface CircuitScene : SKScene
+@property (nonatomic, weak) ViewController *viewController;
+@end
+
+@interface CircuitCanvasView : SKView
 @property (nonatomic, weak) ViewController *viewController;
 @end
 
@@ -33,12 +38,13 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     CGPoint draggingOutFromToolbeltStart;
     
     BOOL animatingPan;
+    BOOL isPanning;
     
 }
 @property (nonatomic) NSArray *selectedObjects;
-@property (nonatomic) NSTimer *timer;
-@property (nonatomic) CADisplayLink *displayLink;
+@property (nonatomic) CircuitScene *circuitScene;
 @property (nonatomic) NSTimeInterval timeSinceLastUpdate;
+@property (nonatomic) NSTimeInterval clockTickAccumulator;
 @property (nonatomic) CFTimeInterval lastDisplayTimestamp;
 @property (nonatomic, getter=isPaused) BOOL paused;
 @property (nonatomic) BOOL canPan;
@@ -50,12 +56,16 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 @property (nonatomic, assign) CircuitObject *holdDownGestureObject;
 
 - (void)drawCanvasInRect:(CGRect)rect;
+- (void)sceneDidUpdateAtTime:(NSTimeInterval)currentTime;
 
 @end
 
 @implementation CircuitCanvasView
-- (void)drawRect:(CGRect)rect {
-    [self.viewController drawCanvasInRect:self.bounds];
+@end
+
+@implementation CircuitScene
+- (void)update:(NSTimeInterval)currentTime {
+    [self.viewController sceneDidUpdateAtTime:currentTime];
 }
 @end
 
@@ -146,9 +156,16 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     _viewport = [[Viewport alloc] initWithAtlas:self.atlas];
     _backgroundImage = [UIImage imageNamed:@"background.jpg"];
 
-    self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(displayLinkDidTick:)];
-    self.displayLink.preferredFramesPerSecond = 60;
-    [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
+    NSInteger maximumFramesPerSecond = UIScreen.mainScreen.maximumFramesPerSecond;
+    canvasView.preferredFramesPerSecond = maximumFramesPerSecond;
+    canvasView.ignoresSiblingOrder = YES;
+    canvasView.shouldCullNonVisibleNodes = YES;
+    self.circuitScene = [[CircuitScene alloc] initWithSize:canvasView.bounds.size];
+    self.circuitScene.scaleMode = SKSceneScaleModeResizeFill;
+    self.circuitScene.viewController = self;
+    [canvasView presentScene:self.circuitScene];
+    [_viewport attachToScene:self.circuitScene backgroundImage:_backgroundImage];
+    [_viewport updateSceneForViewSize:canvasView.bounds.size allowContentRebuild:YES];
     
     self.document = _document;
     if (self.isTutorial) {
@@ -228,11 +245,17 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     return changes;
 }
 
-- (void) timerTick:(id) sender {
-    if (!_document.circuit) return;
-    static int d = 0;
-    d++;
-    if (d > 100) d = 0;
+- (BOOL)advanceClocksByElapsedTime:(NSTimeInterval)elapsedTime {
+    static const NSTimeInterval clockTickInterval = 0.005;
+    self.clockTickAccumulator += elapsedTime;
+    NSUInteger elapsedTicks = (NSUInteger)floor(self.clockTickAccumulator / clockTickInterval);
+    if (elapsedTicks == 0) return NO;
+
+    self.clockTickAccumulator -= elapsedTicks * clockTickInterval;
+    // Only the state at the next display refresh is observable. Two clock
+    // transitions cancel out without requiring duplicate circuit work.
+    if (elapsedTicks % 2 == 0 || !_document.circuit) return NO;
+
     __block int clocks = 0;
     [self.document.circuit performWriteBlock:^(CircuitInternal *internal) {
         [self.document.circuit enumerateClocksUsingBlock:^(CircuitObject *object, BOOL *stop) {
@@ -240,15 +263,7 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
             CircuitObjectSetOutput(internal, object, !object->out);
         }];
     }];
-    
-    if (clocks) {
-        [self unpause];
-    }
-}
-
-- (void)dealloc
-{
-    [self.displayLink invalidate];
+    return clocks > 0;
 }
 
 #pragma mark - Drawing
@@ -258,16 +273,20 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     [self.tutorialDelegate viewControllerTutorial:self didChange:nil];
 }
 
-- (void)displayLinkDidTick:(CADisplayLink *)displayLink {
+- (void)sceneDidUpdateAtTime:(NSTimeInterval)currentTime {
     if (self.lastDisplayTimestamp == 0) {
-        self.lastDisplayTimestamp = displayLink.timestamp;
+        self.lastDisplayTimestamp = currentTime;
     }
-    self.timeSinceLastUpdate = displayLink.timestamp - self.lastDisplayTimestamp;
-    self.lastDisplayTimestamp = displayLink.timestamp;
+    self.timeSinceLastUpdate = currentTime - self.lastDisplayTimestamp;
+    self.lastDisplayTimestamp = currentTime;
 
+    if ([self advanceClocksByElapsedTime:self.timeSinceLastUpdate]) {
+        [self unpause];
+    }
     if (!self.isPaused) {
         [self update];
     }
+    [_viewport updateSceneForViewSize:self.view.bounds.size allowContentRebuild:!isPanning && !animatingPan];
 }
 
 static BOOL animateGateToLockedPosition(CircuitObject *object, float x, float y) {
@@ -341,19 +360,21 @@ static BOOL animateGateToLockedPosition(CircuitObject *object, float x, float y)
     int circuitChanges = [_document.circuit simulate:512];
     changes += circuitChanges;
     changes += [_viewport update: dt];
-    if (animatingPan || isAnimatingScaleToSnap || changes) {
+    if (changes) {
+        [_viewport setSceneContentNeedsUpdate];
+    }
+    if (isPanning || animatingPan || isAnimatingScaleToSnap || changes) {
         self.paused = NO;
     } else {
         self.paused = YES;
     }
-    [self.view setNeedsDisplay];
 }
 
 // Faster one-part variant, called from within a rotating animation block, for additional animations during rotation.
 // A subclass may override this method, or the two-part variants below, but not both.
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration NS_AVAILABLE_IOS(3_0) {
     self.paused = NO;
-    [self.view setNeedsDisplay];
+    [_viewport setSceneContentNeedsUpdate];
 }
 
 - (void) checkError {
@@ -603,11 +624,12 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 
 - (void) unpause {
     self.paused = NO;
-    [self.view setNeedsDisplay];
+    [_viewport setSceneContentNeedsUpdate];
 }
 
 - (IBAction) handlePanGesture:(UIPanGestureRecognizer *)recognizer {
     if (!_canPan) return;
+    isPanning = recognizer.state == UIGestureRecognizerStateBegan || recognizer.state == UIGestureRecognizerStateChanged;
     CGPoint translation = [recognizer translationInView:self.view];
     [_viewport translate: GLKVector3Make(translation.x, translation.y, 0.0)];
     // this makes it so next time "handlePanGesture:" is called, translation will be relative to the last one. (ie. translation is a delta)
@@ -616,6 +638,8 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         // give it some momentum
         panVelocity = [recognizer velocityInView:self.view];
         animatingPan = YES;
+    } else if (recognizer.state == UIGestureRecognizerStateCancelled || recognizer.state == UIGestureRecognizerStateFailed) {
+        [self stopPanAnimation];
     }
     [self unpause];
 }
@@ -836,16 +860,14 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 
 - (void) viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [_timer invalidate];
-    _timer = nil;
+    self.circuitScene.paused = YES;
 }
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    if (!_timer) {
-        _timer = [NSTimer timerWithTimeInterval:0.005 target:self selector:@selector(timerTick:) userInfo:nil repeats:YES];
-        [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
-    }
+    self.lastDisplayTimestamp = 0;
+    self.clockTickAccumulator = 0;
+    self.circuitScene.paused = NO;
 }
 
 - (IBAction) handleTapGesture:(UITapGestureRecognizer *)sender {

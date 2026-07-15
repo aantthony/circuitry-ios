@@ -11,6 +11,7 @@
 @interface ImageAtlas() {
 }
 @property (nonatomic) NSDictionary *json;
+@property (nonatomic) NSMutableDictionary<NSValue *, UIImage *> *spriteImages;
 
 
 @end
@@ -38,6 +39,7 @@
     if (!_image) {
         [[NSException exceptionWithName:@"ImageAtlasError" reason:@"Could not load generated atlas image." userInfo:@{}] raise];
     }
+    _spriteImages = [NSMutableDictionary dictionary];
     
     
     return self;
@@ -58,10 +60,15 @@
 
 - (UIImage *) imageForSprite:(SpriteTexturePos)position {
     CGRect cropRect = CGRectMake(position.u, position.v, position.twidth, position.theight);
+    NSValue *key = [NSValue valueWithCGRect:cropRect];
+    UIImage *cachedImage = self.spriteImages[key];
+    if (cachedImage) return cachedImage;
+
     CGImageRef croppedImage = CGImageCreateWithImageInRect(self.image.CGImage, cropRect);
     if (!croppedImage) return nil;
     UIImage *image = [UIImage imageWithCGImage:croppedImage scale:self.image.scale orientation:self.image.imageOrientation];
     CGImageRelease(croppedImage);
+    self.spriteImages[key] = image;
     return image;
 }
 @end

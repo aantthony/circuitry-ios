@@ -1,4 +1,5 @@
 #import "Viewport.h"
+#import <SpriteKit/SpriteKit.h>
 
 #import "CircuitDocument.h"
 
@@ -8,6 +9,12 @@
 @property (nonatomic) float highlightOutProgress;
 @property (nonatomic) GLKVector2 highlightLinkLocation;
 @property (nonatomic) GLKVector2 highlightOutLinkLocation;
+@property (nonatomic, weak) SKScene *scene;
+@property (nonatomic) SKSpriteNode *sceneBackground;
+@property (nonatomic) SKShapeNode *sceneGrid;
+@property (nonatomic) SKNode *sceneWorld;
+@property (nonatomic) NSMutableDictionary<NSValue *, SKTexture *> *sceneTextures;
+@property (nonatomic) BOOL sceneContentNeedsUpdate;
 @end
 
 @implementation Viewport
@@ -78,6 +85,8 @@ static const CGFloat vSpacing = 33.0;
     _atlas = atlas;
     _highlightProgress = 10000.0;
     _highlightOutProgress = 10000.0;
+    _sceneTextures = [NSMutableDictionary dictionary];
+    _sceneContentNeedsUpdate = YES;
 
     CGFloat initialScale = 0.5;
     _translate = GLKVector3Make(0.0, 0.0, 0.0);
@@ -221,6 +230,7 @@ static GLKVector3 offsetForInlet(CircuitProcess *process, int index) {
 - (void)setDocument:(CircuitDocument *)document {
     _document = document;
     self.translate = GLKVector3Make(document.circuit.viewCenterX, document.circuit.viewCenterY, 0.0);
+    self.sceneContentNeedsUpdate = YES;
 }
 
 - (void)setProjectionMatrix:(GLKMatrix4)projectionMatrix {
@@ -378,6 +388,226 @@ static CGSize sizeOfObject(CircuitObject *object) {
 - (CGRect)screenRectForWorldRect:(CGRect)rect {
     CGPoint origin = [self screenPointForWorldPoint:rect.origin];
     return CGRectMake(origin.x, origin.y, rect.size.width * _scale.x, rect.size.height * _scale.y);
+}
+
+#pragma mark - SpriteKit rendering
+
+- (SKTexture *)sceneTextureForSprite:(SpriteTexturePos)position {
+    CGRect cropRect = CGRectMake(position.u, position.v, position.twidth, position.theight);
+    NSValue *key = [NSValue valueWithCGRect:cropRect];
+    SKTexture *texture = self.sceneTextures[key];
+    if (!texture) {
+        UIImage *image = [self.atlas imageForSprite:position];
+        if (!image) return nil;
+        texture = [SKTexture textureWithImage:image];
+        texture.filteringMode = SKTextureFilteringLinear;
+        self.sceneTextures[key] = texture;
+    }
+    return texture;
+}
+
+- (void)addSceneSprite:(SpriteTexturePos)texturePosition atWorldPoint:(CGPoint)point {
+    SKTexture *texture = [self sceneTextureForSprite:texturePosition];
+    if (!texture) return;
+    SKSpriteNode *sprite = [SKSpriteNode spriteNodeWithTexture:texture];
+    sprite.size = CGSizeMake(texturePosition.width, texturePosition.height);
+    sprite.position = CGPointMake(point.x + texturePosition.width * 0.5,
+                                  point.y + texturePosition.height * 0.5);
+    // sceneWorld flips UIKit's downward Y axis; flip bitmap content back.
+    sprite.yScale = -1.0;
+    // Preserve painter's-order semantics from the old Core Graphics renderer.
+    // Links occupy z=0...2; gate parts are layered in insertion order above them.
+    sprite.zPosition = 100.0 + self.sceneWorld.children.count * 0.001;
+    [self.sceneWorld addChild:sprite];
+}
+
+- (void)addSceneLinkFrom:(GLKVector2)A to:(GLKVector2)B active:(BOOL)isActive {
+    CGFloat dx = (B.x - A.x) * 0.5;
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathMoveToPoint(path, NULL, A.x, A.y);
+    CGPathAddCurveToPoint(path, NULL, A.x + dx, A.y, B.x - dx, B.y, B.x, B.y);
+
+    CGFloat width = MAX(7.0 / MAX(_scale.x, 0.001), 16.0);
+    NSArray<UIColor *> *colors = isActive
+        ? @[[UIColor colorWithRed:0.0 green:0.22 blue:0.03 alpha:1.0],
+            [UIColor colorWithRed:0.0 green:0.72 blue:0.09 alpha:1.0],
+            [UIColor colorWithRed:0.48 green:1.0 blue:0.53 alpha:1.0]]
+        : @[[UIColor colorWithWhite:0.08 alpha:1.0],
+            [UIColor colorWithWhite:0.68 alpha:1.0],
+            [UIColor colorWithWhite:0.9 alpha:1.0]];
+    CGFloat widths[] = { width, MAX(1.0, width - 2.0), MAX(2.0 / MAX(_scale.x, 0.001), width * 0.38) };
+    for (NSUInteger index = 0; index < colors.count; index++) {
+        SKShapeNode *line = [SKShapeNode shapeNodeWithPath:path];
+        line.strokeColor = colors[index];
+        line.lineWidth = widths[index];
+        line.lineCap = kCGLineCapRound;
+        line.lineJoin = kCGLineJoinRound;
+        line.zPosition = index;
+        [self.sceneWorld addChild:line];
+    }
+    CGPathRelease(path);
+}
+
+- (void)addSceneObject:(CircuitObject *)object {
+    CGPoint pos = CGPointMake(object->pos.x, object->pos.y);
+    if (expandDrawGate(object)) {
+        [self addSceneSprite:gateBackgroundTop atWorldPoint:pos];
+        CGFloat middleY = pos.y + gateBackgroundTop.height - 1.0;
+        CGFloat middleHeight = vSpacing * 2 * MAX(object->type->numInputs, object->type->numOutputs) + 1.0;
+        SpriteTexturePos middleTexture = gateBackgroundMiddle;
+        middleTexture.height = middleHeight;
+        [self addSceneSprite:middleTexture atWorldPoint:CGPointMake(pos.x, middleY)];
+        [self addSceneSprite:gateBackgroundBottom atWorldPoint:CGPointMake(pos.x, middleY + middleHeight - 1.0)];
+    } else {
+        [self addSceneSprite:gateBackgroundHeight2 atWorldPoint:pos];
+    }
+
+    if (object->type == &CircuitProcessIn || object->type == &CircuitProcessButton || object->type == &CircuitProcessPushButton) {
+        [self addSceneSprite:object->out ? switchOn : switchOff atWorldPoint:CGPointMake(pos.x - 50.0, pos.y - 50.0)];
+    } else if (object->type == &CircuitProcessLight) {
+        [self addSceneSprite:object->in ? ledOn : ledOff atWorldPoint:CGPointMake(pos.x + 70.0, pos.y - 85.0)];
+    } else if (object->type == &CircuitProcessLightGreen) {
+        [self addSceneSprite:object->in ? ledOnGreen : ledOff atWorldPoint:CGPointMake(pos.x + 70.0, pos.y - 85.0)];
+    } else {
+        [self addSceneSprite:[self textureForProcess:object->type] atWorldPoint:CGPointMake(pos.x + 9.0, pos.y)];
+    }
+
+    if (object->name[0] && !object->name[1]) {
+        SpriteTexturePos *letter = letterTable[(unsigned char)object->name[0]];
+        if (letter) [self addSceneSprite:*letter atWorldPoint:CGPointMake(pos.x + 105.0, pos.y + 43.0)];
+    }
+
+    for (int index = 0; index < object->type->numOutputs; index++) {
+        GLKVector3 dotPos = offsetForOutlet(object->type, index);
+        BOOL connected = object->outputs[index] != NULL || (object == _currentEditingLinkSource && index == _currentEditingLinkSourceIndex);
+        SpriteTexturePos texture = (object->out & 1 << index)
+            ? (connected ? gateOutletActiveConnected : gateOutletActive)
+            : (connected ? gateOutletInactiveConnected : gateOutletInactive);
+        [self addSceneSprite:texture atWorldPoint:CGPointMake(pos.x + dotPos.x, pos.y + dotPos.y)];
+    }
+    for (int index = 0; index < object->type->numInputs; index++) {
+        GLKVector3 dotPos = offsetForInlet(object->type, index);
+        BOOL connected = object->inputs[index] != NULL || (object == _currentEditingLinkTarget && index == _currentEditingLinkTargetIndex);
+        SpriteTexturePos texture = (object->in & 1 << index)
+            ? (connected ? gateOutletActiveConnected : gateOutletActive)
+            : (connected ? gateOutletInactiveConnected : gateOutletInactive);
+        [self addSceneSprite:texture atWorldPoint:CGPointMake(pos.x + dotPos.x, pos.y + dotPos.y)];
+    }
+
+    if (object->type == &CircuitProcess7Seg || object->type == &CircuitProcess7SegBin) {
+        BOOL compact = object->type == &CircuitProcess7SegBin;
+        static const unsigned char digitSegments[] = {
+            0b0111111, 0b0000110, 0b1011011, 0b1001111, 0b1100110, 0b1101101, 0b1111101, 0b0000111,
+            0b1111111, 0b1101111, 0b1110111, 0b1111100, 0b1011000, 0b1011110, 0b1111001, 0b1110001
+        };
+        int segments = compact ? digitSegments[object->in & 0xf] : object->in & 0xff;
+        SpriteTexturePos texture = sevenSegment;
+        texture.twidth /= 16.0;
+        texture.theight /= 8.0;
+        texture.u += (segments % 16) * texture.twidth;
+        texture.v += (segments / 16) * texture.theight;
+        texture.width = compact ? 120.0 : 240.0;
+        texture.height = compact ? 200.0 : 400.0;
+        CGPoint displayPos = compact ? CGPointMake(pos.x + 100.0, pos.y + 40.0) : CGPointMake(pos.x + 40.0, pos.y + 40.0);
+        [self addSceneSprite:texture atWorldPoint:displayPos];
+    }
+}
+
+- (void)addSceneHighlightAt:(GLKVector2)position progress:(CGFloat)progress {
+    if (progress > 1.0) return;
+    CGFloat radius = 24.0 + 60.0 * progress;
+    SKShapeNode *highlight = [SKShapeNode shapeNodeWithCircleOfRadius:radius];
+    highlight.position = CGPointMake(position.x, position.y);
+    highlight.strokeColor = [UIColor colorWithWhite:1.0 alpha:MAX(0.0, 1.0 - progress)];
+    highlight.lineWidth = MAX(2.0 / MAX(_scale.x, 0.001), 4.0);
+    highlight.zPosition = 200.0;
+    [self.sceneWorld addChild:highlight];
+}
+
+- (void)rebuildSceneContent {
+    [self.sceneWorld removeAllChildren];
+    Circuit *circuit = self.document.circuit;
+    [circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
+        for (int sourceIndex = 0; sourceIndex < object->type->numOutputs; sourceIndex++) {
+            CircuitLink *link = object->outputs[sourceIndex];
+            while (link) {
+                GLKVector3 dotPos = offsetForOutlet(object->type, sourceIndex);
+                GLKVector2 A = GLKVector2Make(object->pos.x + dotPos.x + radius, object->pos.y + dotPos.y + radius);
+                dotPos = offsetForInlet(link->target->type, link->targetIndex);
+                GLKVector2 B = GLKVector2Make(link->target->pos.x + dotPos.x + radius, link->target->pos.y + dotPos.y + radius);
+                [self addSceneLinkFrom:A to:B active:!!(object->out & 1 << sourceIndex)];
+                link = link->nextSibling;
+            }
+        }
+    }];
+    if (_currentEditingLinkSource && !_currentEditingLink) {
+        CircuitObject *object = _currentEditingLinkSource;
+        GLKVector3 dotPos = offsetForOutlet(object->type, _currentEditingLinkSourceIndex);
+        GLKVector2 A = GLKVector2Make(object->pos.x + dotPos.x + radius, object->pos.y + dotPos.y + radius);
+        GLKVector2 B = GLKVector2Make(_currentEditingLinkTargetPosition.x + radius, _currentEditingLinkTargetPosition.y + radius);
+        [self addSceneLinkFrom:A to:B active:!!(object->out & 1 << _currentEditingLinkSourceIndex)];
+    }
+    [circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
+        [self addSceneObject:object];
+    }];
+    [self addSceneHighlightAt:_highlightLinkLocation progress:_highlightProgress];
+    [self addSceneHighlightAt:_highlightOutLinkLocation progress:_highlightOutProgress];
+    self.sceneContentNeedsUpdate = NO;
+}
+
+- (void)attachToScene:(SKScene *)scene backgroundImage:(UIImage *)backgroundImage {
+    self.scene = scene;
+    [scene removeAllChildren];
+    self.sceneBackground = [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:backgroundImage]];
+    self.sceneBackground.zPosition = 0;
+    [scene addChild:self.sceneBackground];
+    self.sceneGrid = [SKShapeNode node];
+    self.sceneGrid.strokeColor = [UIColor colorWithWhite:1.0 alpha:0.12];
+    self.sceneGrid.lineWidth = 1.0;
+    self.sceneGrid.zPosition = 1;
+    [scene addChild:self.sceneGrid];
+    self.sceneWorld = [SKNode node];
+    self.sceneWorld.zPosition = 2;
+    [scene addChild:self.sceneWorld];
+    self.sceneContentNeedsUpdate = YES;
+}
+
+- (void)setSceneContentNeedsUpdate {
+    self.sceneContentNeedsUpdate = YES;
+}
+
+- (void)updateSceneForViewSize:(CGSize)viewSize allowContentRebuild:(BOOL)allowContentRebuild {
+    if (!self.scene) return;
+    self.sceneBackground.position = CGPointMake(viewSize.width * 0.5, viewSize.height * 0.5);
+    self.sceneBackground.size = viewSize;
+
+    self.sceneWorld.position = CGPointMake(_translate.x, viewSize.height - _translate.y);
+    self.sceneWorld.xScale = _scale.x;
+    self.sceneWorld.yScale = -_scale.y;
+
+    CGFloat scale = _scale.x ?: 1.0;
+    CGFloat factor = round(log2f(scale));
+    CGFloat grid = (60.0 / exp2f(factor)) * scale;
+    CGFloat startX = fmod(_translate.x, grid);
+    CGFloat startY = fmod(_translate.y, grid);
+    if (startX > 0.0) startX -= grid;
+    if (startY > 0.0) startY -= grid;
+    CGMutablePathRef gridPath = CGPathCreateMutable();
+    for (CGFloat x = startX; x < viewSize.width; x += grid) {
+        CGPathMoveToPoint(gridPath, NULL, x, 0.0);
+        CGPathAddLineToPoint(gridPath, NULL, x, viewSize.height);
+    }
+    for (CGFloat y = startY; y < viewSize.height; y += grid) {
+        CGFloat sceneY = viewSize.height - y;
+        CGPathMoveToPoint(gridPath, NULL, 0.0, sceneY);
+        CGPathAddLineToPoint(gridPath, NULL, viewSize.width, sceneY);
+    }
+    self.sceneGrid.path = gridPath;
+    CGPathRelease(gridPath);
+
+    if (allowContentRebuild && self.sceneContentNeedsUpdate) {
+        [self rebuildSceneContent];
+    }
 }
 
 - (void)drawSprite:(SpriteTexturePos)texture atWorldPoint:(CGPoint)point {
