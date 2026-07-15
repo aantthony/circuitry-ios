@@ -29,6 +29,7 @@ static SpriteTexturePos gateBackgroundBottom;
 static SpriteTexturePos ledOn;
 static SpriteTexturePos ledOnGreen;
 static SpriteTexturePos ledOff;
+static SpriteTexturePos sevenSegment;
 
 static SpriteTexturePos symbolOR;
 static SpriteTexturePos symbolNOR;
@@ -123,6 +124,7 @@ static const CGFloat vSpacing = 33.0;
     ledOn = [atlas positionForSprite:@"led-on"];
     ledOnGreen = [atlas positionForSprite:@"led-on-green"];
     ledOff = [atlas positionForSprite:@"led-off"];
+    sevenSegment = [atlas positionForSprite:@"7seg"];
 
     letterA = [atlas positionForSprite:@"A@2x"];
     letterB = [atlas positionForSprite:@"B@2x"];
@@ -445,13 +447,22 @@ static CGSize sizeOfObject(CircuitObject *object) {
 }
 
 - (void)drawSevenSegmentAt:(CGPoint)position input:(int)input compact:(BOOL)compact {
-    NSString *text = compact ? [NSString stringWithFormat:@"%X", input & 0xf] : [NSString stringWithFormat:@"%02X", input & 0xff];
-    CGRect rect = [self screenRectForWorldRect:CGRectMake(position.x, position.y, compact ? 80 : 120, 70)];
-    NSDictionary *attributes = @{
-        NSFontAttributeName: [UIFont monospacedDigitSystemFontOfSize:MAX(12.0, rect.size.height * 0.65) weight:UIFontWeightBold],
-        NSForegroundColorAttributeName: [UIColor colorWithRed:0.196 green:1.0 blue:0.31 alpha:1.0]
+    static const unsigned char digitSegments[] = {
+        0b0111111, 0b0000110, 0b1011011, 0b1001111,
+        0b1100110, 0b1101101, 0b1111101, 0b0000111,
+        0b1111111, 0b1101111, 0b1110111, 0b1111100,
+        0b1011000, 0b1011110, 0b1111001, 0b1110001
     };
-    [text drawInRect:rect withAttributes:attributes];
+    int segments = compact ? digitSegments[input & 0xf] : input & 0xff;
+
+    SpriteTexturePos texture = sevenSegment;
+    texture.twidth /= 16.0;
+    texture.theight /= 8.0;
+    texture.u += (segments % 16) * texture.twidth;
+    texture.v += (segments / 16) * texture.theight;
+    texture.width = compact ? 120.0 : 240.0;
+    texture.height = compact ? 200.0 : 400.0;
+    [self drawSprite:texture atWorldPoint:position];
 }
 
 - (void)drawObject:(CircuitObject *)object {
