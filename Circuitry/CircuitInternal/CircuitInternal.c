@@ -32,6 +32,9 @@ static int NAND (int x, unsigned int *d) { return x != 3;}
 static int NOT  (int x, unsigned int *d) { return !x; }
 static int NOR  (int x, unsigned int *d) { return !x; }
 static int OR   (int x, unsigned int *d) { return !!x; }
+static int MUX  (int x, unsigned int *d) { return (x & 4) ? ((x >> 1) & 1) : (x & 1); }
+static int MUX4 (int x, unsigned int *d) { return (x & 256) ? ((x >> 4) & 15) : (x & 15); }
+static int MUX8 (int x, unsigned int *d) { return (x & 65536) ? ((x >> 8) & 255) : (x & 255); }
 static int HA   (int x, unsigned int *d) { int a = x & 1; int b = x >> 1; return a+b; }
 static int FA   (int x, unsigned int *d) { int a = x & 1; int b = (x >> 1) & 1; int c = x >> 2; return a+b+c; }
 static int ADD8 (int x, unsigned int *d) { return (x&255) + (x >> 8); }
@@ -140,12 +143,27 @@ static int BIN7SEG(int x, unsigned int *d) {
     }
 }
 
+static int COUNTER4(int x, unsigned int *d) {
+    int value = *d & 15;
+    int previousClock = *d & 16;
+    int clock = x & 1;
+    if (x & 2) {
+        value = 0;
+    } else if (clock && !previousClock) {
+        value = (x & 4) ? ((x >> 3) & 15) : ((value + 1) & 15);
+    }
+    *d = value | (clock ? 16 : 0);
+    return value;
+}
+
 CircuitProcess CircuitProcessIn      = {"in",       0,  1, NULL };
 CircuitProcess CircuitProcessOut     = {"out",      1,  0, NULL };
 CircuitProcess CircuitProcessButton  = {"button",   0,  1, NULL };
 CircuitProcess CircuitProcessPushButton = {"pbtn",  0,  1, NULL };
 CircuitProcess CircuitProcessLight   = {"light",    1,  0, NULL };
 CircuitProcess CircuitProcessLightGreen = {"lightg",1,  0, NULL };
+CircuitProcess CircuitProcessLightBlue = {"lightb", 1,  0, NULL };
+CircuitProcess CircuitProcessLightWhite = {"lightw", 1,  0, NULL };
 CircuitProcess CircuitProcessOr      = {"or",       2,  1, OR };
 CircuitProcess CircuitProcessNot     = {"not",      1,  1, NOT };
 CircuitProcess CircuitProcessNor     = {"nor",      2,  1, NOR };
@@ -153,6 +171,9 @@ CircuitProcess CircuitProcessXor     = {"xor",      2,  1, XOR };
 CircuitProcess CircuitProcessXnor    = {"xnor",     2,  1, XNOR };
 CircuitProcess CircuitProcessAnd     = {"and",      2,  1, AND };
 CircuitProcess CircuitProcessNand    = {"nand",     2,  1, NAND };
+CircuitProcess CircuitProcessMux     = {"mux",      3,  1, MUX };
+CircuitProcess CircuitProcessMux4    = {"mux4",     9,  4, MUX4 };
+CircuitProcess CircuitProcessMux8    = {"mux8",    17,  8, MUX8 };
 CircuitProcess CircuitProcessHA      = {"ha",       2,  2, HA };
 CircuitProcess CircuitProcessFA      = {"fa",       3,  2, FA };
 CircuitProcess CircuitProcessBinDec  = {"bindec",   4, 16, BINDEC };
@@ -164,6 +185,8 @@ CircuitProcess CircuitProcessBin7Seg = {"bin7seg",  4,  7, BIN7SEG };
 CircuitProcess CircuitProcess7Seg    = {"7seg",     7,  0, NULL };
 CircuitProcess CircuitProcess7SegBin = {"7segbin",4,  0, NULL };
 CircuitProcess CircuitProcessClock   = {"clock",    0,  1, NULL };
+CircuitProcess CircuitProcessSlowClock = {"slowclock", 0, 1, NULL };
+CircuitProcess CircuitProcessCounter4 = {"counter4", 7, 4, COUNTER4 };
 CircuitProcess CircuitProcessJK      = {"jk",       3,  2, JK };
 CircuitProcess CircuitProcessSR      = {"sr",      2,  2, SR };
 CircuitProcess CircuitProcessSER     = {"ser",      3,  2, SER };
@@ -290,7 +313,7 @@ CircuitObject * CircuitObjectCreate(CircuitInternal *c, CircuitProcess *type) {
     o->outputs = scalloc(o->type->numOutputs + o->type->numInputs, sizeof(CircuitLink *));
     o->inputs = o->outputs + o->type->numOutputs;
     
-    if (type == &CircuitProcessClock) {
+    if (type == &CircuitProcessClock || type == &CircuitProcessSlowClock) {
         c->clocks[c->clocks_count++] = o;
     }
     

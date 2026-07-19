@@ -36,6 +36,7 @@
 - (CircuitLink *) findCircuitLinkAtOffset: (GLKVector3)offset attachedToObject:(CircuitObject *)object;
 - (CircuitObject*) findCircuitObjectAtPosition: (GLKVector3) pos;
 - (CircuitObject*) findCircuitObjectNearPosition: (GLKVector3) pos;
+- (BOOL) isPosition:(GLKVector3)position onMomentaryButtonCap:(CircuitObject *)object;
 - (CircuitNote *) findNoteAtPosition:(GLKVector3)pos;
 - (CircuitNote *) findNoteResizeHandleAtPosition:(GLKVector3)pos;
 - (CGRect) resizeHandleRectForNote:(CircuitNote *)note;

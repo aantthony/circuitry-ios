@@ -1,4 +1,5 @@
 #import "Viewport.h"
+#import <CoreImage/CoreImage.h>
 #import <SpriteKit/SpriteKit.h>
 
 #import "CircuitDocument.h"
@@ -14,6 +15,12 @@
 @property (nonatomic) SKShapeNode *sceneGrid;
 @property (nonatomic) SKNode *sceneWorld;
 @property (nonatomic) NSMutableDictionary<NSValue *, SKTexture *> *sceneTextures;
+@property (nonatomic) UIImage *ledOnGreenImage;
+@property (nonatomic) UIImage *ledOnRedImage;
+@property (nonatomic) UIImage *ledOnBlueImage;
+@property (nonatomic) SKTexture *ledOnGreenTexture;
+@property (nonatomic) SKTexture *ledOnRedTexture;
+@property (nonatomic) SKTexture *ledOnBlueTexture;
 @property (nonatomic) BOOL sceneContentNeedsUpdate;
 @end
 
@@ -27,14 +34,13 @@ static SpriteTexturePos gateOutletActiveConnected;
 static SpriteTexturePos gateOutletInactiveConnected;
 static SpriteTexturePos switchOn;
 static SpriteTexturePos switchOff;
-static SpriteTexturePos switchPressed;
 
 static SpriteTexturePos gateBackgroundTop;
 static SpriteTexturePos gateBackgroundMiddle;
 static SpriteTexturePos gateBackgroundBottom;
 
-static SpriteTexturePos ledOn;
 static SpriteTexturePos ledOnGreen;
+static SpriteTexturePos ledOnWhite;
 static SpriteTexturePos ledOff;
 static SpriteTexturePos sevenSegment;
 
@@ -77,6 +83,30 @@ static SpriteTexturePos letter4;
 static SpriteTexturePos* letterTable[256];
 static CGFloat radius;
 static const CGFloat vSpacing = 33.0;
+
+static UIImage *LEDImageByShiftingHue(UIImage *source, CGFloat angle, CGFloat saturation, CGFloat brightness, CGFloat contrast) {
+    CIImage *input = source.CIImage ?: [CIImage imageWithCGImage:source.CGImage];
+    if (!input) return source;
+
+    CIFilter *hueFilter = [CIFilter filterWithName:@"CIHueAdjust"];
+    [hueFilter setValue:input forKey:kCIInputImageKey];
+    [hueFilter setValue:@(angle) forKey:kCIInputAngleKey];
+
+    CIFilter *colorFilter = [CIFilter filterWithName:@"CIColorControls"];
+    [colorFilter setValue:hueFilter.outputImage forKey:kCIInputImageKey];
+    [colorFilter setValue:@(saturation) forKey:kCIInputSaturationKey];
+    [colorFilter setValue:@(brightness) forKey:kCIInputBrightnessKey];
+    [colorFilter setValue:@(contrast) forKey:kCIInputContrastKey];
+    CIImage *output = colorFilter.outputImage;
+    if (!output) return source;
+
+    CIContext *context = [CIContext contextWithOptions:nil];
+    CGImageRef imageRef = [context createCGImage:output fromRect:input.extent];
+    if (!imageRef) return source;
+    UIImage *result = [UIImage imageWithCGImage:imageRef scale:source.scale orientation:source.imageOrientation];
+    CGImageRelease(imageRef);
+    return result;
+}
 
 - (id)initWithAtlas:(ImageAtlas *)atlas {
     self = [super init];
@@ -128,11 +158,14 @@ static const CGFloat vSpacing = 33.0;
 
     switchOn = [atlas positionForSprite:@"switch-on"];
     switchOff = [atlas positionForSprite:@"switch-off"];
-    switchPressed = [atlas positionForSprite:@"switch-press"];
 
-    ledOn = [atlas positionForSprite:@"led-on"];
     ledOnGreen = [atlas positionForSprite:@"led-on-green"];
+    ledOnWhite = [atlas positionForSprite:@"led-on"];
     ledOff = [atlas positionForSprite:@"led-off"];
+    UIImage *greenLED = [atlas imageForSprite:ledOnGreen];
+    _ledOnGreenImage = LEDImageByShiftingHue(greenLED, 0.0, 1.35, -0.01, 1.04);
+    _ledOnRedImage = LEDImageByShiftingHue(greenLED, -(2.0 * M_PI / 3.0), 2.15, -0.03, 1.10);
+    _ledOnBlueImage = LEDImageByShiftingHue(greenLED, 2.0 * M_PI / 3.0, 2.15, -0.03, 1.10);
     sevenSegment = [atlas positionForSprite:@"7seg"];
 
     letterA = [atlas positionForSprite:@"A@2x"];
@@ -292,6 +325,18 @@ static CGSize sizeOfObject(CircuitObject *object) {
     return CGSizeMake(gateBackgroundHeight2.width, gateBackgroundHeight2.height);
 }
 
+static CGRect momentaryButtonCapRect(CircuitObject *object) {
+    CGSize objectSize = sizeOfObject(object);
+    static const CGFloat hitDiameter = 132.0;
+    static const CGFloat trailingTerminalArea = 70.0;
+    static const CGFloat verticalOpticalOffset = -6.0;
+    CGFloat usableWidth = objectSize.width - trailingTerminalArea;
+    return CGRectMake(object->pos.x + (usableWidth - hitDiameter) * 0.5,
+                      object->pos.y + (objectSize.height - hitDiameter) * 0.5 + verticalOpticalOffset,
+                      hitDiameter,
+                      hitDiameter);
+}
+
 - (CircuitObject*)findCircuitObjectAtPosition:(GLKVector3)pos {
     __block CircuitObject *o = NULL;
     Circuit *_circuit = self.document.circuit;
@@ -304,6 +349,14 @@ static CGSize sizeOfObject(CircuitObject *object) {
         }
     }];
     return o;
+}
+
+- (BOOL)isPosition:(GLKVector3)position onMomentaryButtonCap:(CircuitObject *)object {
+    if (!object || object->type != &CircuitProcessPushButton) return NO;
+    CGRect rect = momentaryButtonCapRect(object);
+    CGFloat dx = (position.x - CGRectGetMidX(rect)) / (CGRectGetWidth(rect) * 0.5);
+    CGFloat dy = (position.y - CGRectGetMidY(rect)) / (CGRectGetHeight(rect) * 0.5);
+    return dx * dx + dy * dy <= 1.0;
 }
 
 - (CircuitObject*)findCircuitObjectNearPosition:(GLKVector3)pos {
@@ -408,6 +461,8 @@ static CGSize sizeOfObject(CircuitObject *object) {
     else if (process == &CircuitProcessD4) return symbolCLKIN;
     else if (process == &CircuitProcessD8) return symbolCLKIN;
     else if (process == &CircuitProcessD16) return symbolCLKIN;
+    else if (process == &CircuitProcessClock) return symbolCLKIN;
+    else if (process == &CircuitProcessSlowClock) return symbolCLKIN;
 
     SpriteTexturePos pos;
     pos.u = pos.v = pos.theight = pos.twidth = pos.width = pos.height = 0.0;
@@ -519,6 +574,71 @@ static CGSize sizeOfObject(CircuitObject *object) {
     [self.sceneWorld addChild:label];
 }
 
+- (void)addSceneMomentaryButton:(CircuitObject *)object {
+    CGRect hitRect = momentaryButtonCapRect(object);
+    CGPoint center = CGPointMake(CGRectGetMidX(hitRect), CGRectGetMidY(hitRect));
+
+    SKShapeNode *bezel = [SKShapeNode shapeNodeWithCircleOfRadius:62.0];
+    bezel.position = center;
+    bezel.fillColor = [UIColor colorWithWhite:0.38 alpha:1.0];
+    bezel.strokeColor = [UIColor colorWithWhite:0.82 alpha:1.0];
+    bezel.lineWidth = 5.0;
+    bezel.zPosition = 120.0;
+    [self.sceneWorld addChild:bezel];
+
+    CGFloat capRadius = object->out ? 46.0 : 53.0;
+    SKShapeNode *cap = [SKShapeNode shapeNodeWithCircleOfRadius:capRadius];
+    cap.position = center;
+    cap.fillColor = object->out
+        ? [UIColor colorWithRed:0.30 green:0.78 blue:0.22 alpha:1.0]
+        : [UIColor colorWithWhite:0.94 alpha:1.0];
+    cap.strokeColor = object->out
+        ? [UIColor colorWithRed:0.08 green:0.32 blue:0.06 alpha:1.0]
+        : [UIColor colorWithWhite:0.62 alpha:1.0];
+    cap.lineWidth = 5.0;
+    cap.zPosition = 121.0;
+    [self.sceneWorld addChild:cap];
+
+    SKShapeNode *highlight = [SKShapeNode shapeNodeWithCircleOfRadius:MAX(8.0, capRadius - 12.0)];
+    highlight.position = center;
+    highlight.fillColor = UIColor.clearColor;
+    highlight.strokeColor = object->out
+        ? [UIColor colorWithRed:0.62 green:0.94 blue:0.55 alpha:0.82]
+        : [UIColor colorWithWhite:1.0 alpha:0.72];
+    highlight.lineWidth = 3.0;
+    highlight.zPosition = 122.0;
+    [self.sceneWorld addChild:highlight];
+}
+
+- (void)addSceneColoredLED:(CircuitObject *)object atWorldPoint:(CGPoint)point {
+    UIImage *image;
+    SKTexture *texture;
+    if (object->type == &CircuitProcessLightBlue) {
+        image = self.ledOnBlueImage;
+        texture = self.ledOnBlueTexture;
+    } else if (object->type == &CircuitProcessLightGreen) {
+        image = self.ledOnGreenImage;
+        texture = self.ledOnGreenTexture;
+    } else {
+        image = self.ledOnRedImage;
+        texture = self.ledOnRedTexture;
+    }
+    if (!texture) {
+        texture = [SKTexture textureWithImage:image];
+        texture.filteringMode = SKTextureFilteringLinear;
+        if (object->type == &CircuitProcessLightBlue) self.ledOnBlueTexture = texture;
+        else if (object->type == &CircuitProcessLightGreen) self.ledOnGreenTexture = texture;
+        else self.ledOnRedTexture = texture;
+    }
+    SKSpriteNode *sprite = [SKSpriteNode spriteNodeWithTexture:texture];
+    sprite.size = CGSizeMake(ledOnGreen.width, ledOnGreen.height);
+    sprite.position = CGPointMake(point.x + ledOnGreen.width * 0.5,
+                                  point.y + ledOnGreen.height * 0.5);
+    sprite.yScale = -1.0;
+    sprite.zPosition = 100.0 + self.sceneWorld.children.count * 0.001;
+    [self.sceneWorld addChild:sprite];
+}
+
 - (void)addSceneObject:(CircuitObject *)object {
     CGPoint pos = CGPointMake(object->pos.x, object->pos.y);
     if (expandDrawGate(object)) {
@@ -533,17 +653,25 @@ static CGSize sizeOfObject(CircuitObject *object) {
         [self addSceneSprite:gateBackgroundHeight2 atWorldPoint:pos];
     }
 
-    if (object->type == &CircuitProcessIn || object->type == &CircuitProcessButton || object->type == &CircuitProcessPushButton) {
+    if (object->type == &CircuitProcessPushButton) {
+        [self addSceneMomentaryButton:object];
+    } else if (object->type == &CircuitProcessIn || object->type == &CircuitProcessButton) {
         [self addSceneSprite:object->out ? switchOn : switchOff atWorldPoint:CGPointMake(pos.x - 50.0, pos.y - 50.0)];
-    } else if (object->type == &CircuitProcessLight) {
-        [self addSceneSprite:object->in ? ledOn : ledOff atWorldPoint:CGPointMake(pos.x + 70.0, pos.y - 85.0)];
-    } else if (object->type == &CircuitProcessLightGreen) {
-        [self addSceneSprite:object->in ? ledOnGreen : ledOff atWorldPoint:CGPointMake(pos.x + 70.0, pos.y - 85.0)];
+    } else if (object->type == &CircuitProcessLight || object->type == &CircuitProcessLightGreen || object->type == &CircuitProcessLightBlue) {
+        CGPoint ledPosition = CGPointMake(pos.x + 70.0, pos.y - 85.0);
+        if (object->in) [self addSceneColoredLED:object atWorldPoint:ledPosition];
+        else [self addSceneSprite:ledOff atWorldPoint:ledPosition];
+    } else if (object->type == &CircuitProcessLightWhite) {
+        [self addSceneSprite:object->in ? ledOnWhite : ledOff atWorldPoint:CGPointMake(pos.x + 70.0, pos.y - 85.0)];
     } else {
         [self addSceneSprite:[self textureForProcess:object->type] atWorldPoint:CGPointMake(pos.x + 9.0, pos.y)];
     }
 
-    if (object->name[0] && !object->name[1]) {
+    if (object->type == &CircuitProcessMux || object->type == &CircuitProcessMux4 || object->type == &CircuitProcessMux8) {
+        [self addSceneSprite:letterX atWorldPoint:CGPointMake(pos.x + 105.0, pos.y + 43.0)];
+    } else if (object->type == &CircuitProcessCounter4) {
+        [self addSceneSprite:letterC atWorldPoint:CGPointMake(pos.x + 105.0, pos.y + 43.0)];
+    } else if (object->name[0] && !object->name[1]) {
         SpriteTexturePos *letter = letterTable[(unsigned char)object->name[0]];
         if (letter) [self addSceneSprite:*letter atWorldPoint:CGPointMake(pos.x + 105.0, pos.y + 43.0)];
     }
@@ -783,22 +911,63 @@ static CGSize sizeOfObject(CircuitObject *object) {
         [self drawSprite:gateBackgroundHeight2 atWorldPoint:pos];
     }
 
-    if (object->type == &CircuitProcessIn || object->type == &CircuitProcessButton || object->type == &CircuitProcessPushButton) {
+    if (object->type == &CircuitProcessPushButton) {
+        CGRect hitRect = momentaryButtonCapRect(object);
+        CGPoint center = CGPointMake(CGRectGetMidX(hitRect), CGRectGetMidY(hitRect));
+        CGRect bezelRect = [self screenRectForWorldRect:CGRectMake(center.x - 62.0, center.y - 62.0, 124.0, 124.0)];
+        UIBezierPath *bezel = [UIBezierPath bezierPathWithOvalInRect:bezelRect];
+        [[UIColor colorWithWhite:0.38 alpha:1.0] setFill];
+        [bezel fill];
+        [[UIColor colorWithWhite:0.82 alpha:1.0] setStroke];
+        bezel.lineWidth = MAX(2.0, 5.0 * _scale.x);
+        [bezel stroke];
+
+        CGFloat capRadius = object->out ? 46.0 : 53.0;
+        CGRect capRect = [self screenRectForWorldRect:CGRectMake(center.x - capRadius,
+                                                                 center.y - capRadius,
+                                                                 capRadius * 2.0,
+                                                                 capRadius * 2.0)];
+        UIBezierPath *cap = [UIBezierPath bezierPathWithOvalInRect:capRect];
+        UIColor *capFill = object->out
+            ? [UIColor colorWithRed:0.30 green:0.78 blue:0.22 alpha:1.0]
+            : [UIColor colorWithWhite:0.94 alpha:1.0];
+        UIColor *capStroke = object->out
+            ? [UIColor colorWithRed:0.08 green:0.32 blue:0.06 alpha:1.0]
+            : [UIColor colorWithWhite:0.62 alpha:1.0];
+        [capFill setFill];
+        [cap fill];
+        [capStroke setStroke];
+        cap.lineWidth = MAX(2.0, 5.0 * _scale.x);
+        [cap stroke];
+    } else if (object->type == &CircuitProcessIn || object->type == &CircuitProcessButton) {
         [self drawSprite:object->out ? switchOn : switchOff atWorldPoint:CGPointMake(pos.x - 50.0, pos.y - 50.0)];
-    } else if (object->type == &CircuitProcessLight) {
-        [self drawSprite:object->in ? ledOn : ledOff atWorldPoint:CGPointMake(pos.x + 70.0, pos.y - 85.0)];
-    } else if (object->type == &CircuitProcessLightGreen) {
-        [self drawSprite:object->in ? ledOnGreen : ledOff atWorldPoint:CGPointMake(pos.x + 70.0, pos.y - 85.0)];
+    } else if (object->type == &CircuitProcessLight || object->type == &CircuitProcessLightGreen || object->type == &CircuitProcessLightBlue) {
+        CGPoint ledPosition = CGPointMake(pos.x + 70.0, pos.y - 85.0);
+        if (object->in) {
+            UIImage *image = object->type == &CircuitProcessLightBlue ? self.ledOnBlueImage :
+                (object->type == &CircuitProcessLightGreen ? self.ledOnGreenImage : self.ledOnRedImage);
+            CGRect rect = [self screenRectForWorldRect:CGRectMake(ledPosition.x, ledPosition.y, ledOnGreen.width, ledOnGreen.height)];
+            [image drawInRect:rect];
+        } else {
+            [self drawSprite:ledOff atWorldPoint:ledPosition];
+        }
+    } else if (object->type == &CircuitProcessLightWhite) {
+        [self drawSprite:object->in ? ledOnWhite : ledOff atWorldPoint:CGPointMake(pos.x + 70.0, pos.y - 85.0)];
     } else {
         [self drawSprite:[self textureForProcess:object->type] atWorldPoint:CGPointMake(pos.x + 9.0, pos.y)];
     }
 
-    if (object->name[0] && !object->name[1]) {
+    if (object->type == &CircuitProcessMux || object->type == &CircuitProcessMux4 || object->type == &CircuitProcessMux8) {
+        [self drawSprite:letterX atWorldPoint:CGPointMake(pos.x + 105.0, pos.y + 43.0)];
+    } else if (object->type == &CircuitProcessCounter4) {
+        [self drawSprite:letterC atWorldPoint:CGPointMake(pos.x + 105.0, pos.y + 43.0)];
+    } else if (object->name[0] && !object->name[1]) {
         SpriteTexturePos *letter = letterTable[(unsigned char)object->name[0]];
         if (letter) {
             [self drawSprite:*letter atWorldPoint:CGPointMake(pos.x + 105.0, pos.y + 43.0)];
         }
     }
+
 
     for(int o = 0; o < object->type->numOutputs; o++) {
         GLKVector3 dotPos = offsetForOutlet(object->type, o);

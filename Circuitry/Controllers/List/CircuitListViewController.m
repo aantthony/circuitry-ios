@@ -263,7 +263,7 @@
         _segmentControl.selectedSegmentIndex = 1;
         _createButton.enabled = YES;
         self.navigationItem.leftBarButtonItem = _createButton;
-        self.title = @"Saved Circuits";
+        self.title = @"Playground";
         self.backgroundImageView.image = [UIImage imageNamed:@"bgblur"];
         self.collectionView.backgroundColor = [UIColor blackColor];
         [self.collectionView reloadData];

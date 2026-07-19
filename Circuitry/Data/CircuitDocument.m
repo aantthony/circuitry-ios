@@ -160,7 +160,7 @@ static NSString *CircuitDocumentUnsupportedProcessType(NSArray *items) {
         d[@"in"]   = @(object->in);
         d[@"out"]  = @(object->out);
         d[@"outputs"] = outputs;
-        
+
         if (object->flags & CircuitObjectFlagLocked) {
             d[@"locked"] = @1;
         }

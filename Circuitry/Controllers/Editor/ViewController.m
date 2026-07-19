@@ -45,6 +45,7 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 @property (nonatomic) CircuitScene *circuitScene;
 @property (nonatomic) NSTimeInterval timeSinceLastUpdate;
 @property (nonatomic) NSTimeInterval clockTickAccumulator;
+@property (nonatomic) NSTimeInterval slowClockTickAccumulator;
 @property (nonatomic) CFTimeInterval lastDisplayTimestamp;
 @property (nonatomic, getter=isPaused) BOOL paused;
 @property (nonatomic) BOOL canPan;
@@ -189,13 +190,28 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     self.circuitScene = [[CircuitScene alloc] initWithSize:canvasView.bounds.size];
     self.circuitScene.scaleMode = SKSceneScaleModeResizeFill;
     self.circuitScene.viewController = self;
-    [canvasView presentScene:self.circuitScene];
     [_viewport attachToScene:self.circuitScene backgroundImage:_backgroundImage];
-    [_viewport updateSceneForViewSize:canvasView.bounds.size allowContentRebuild:YES];
     
     self.document = _document;
     if (self.isTutorial) {
         [self configureTutorialGatesToPosition];
+    }
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+
+    CircuitCanvasView *canvasView = (CircuitCanvasView *)self.view;
+    CGSize viewSize = canvasView.bounds.size;
+    if (!canvasView.window || !self.circuitScene || viewSize.width <= 0.0 || viewSize.height <= 0.0) return;
+
+    // Storyboard views briefly retain their design-time size while a new
+    // document controller is being installed in a resizable window. Prepare
+    // the scene using the laid-out bounds before SpriteKit can display it.
+    self.circuitScene.size = viewSize;
+    [_viewport updateSceneForViewSize:viewSize allowContentRebuild:YES];
+    if (canvasView.scene != self.circuitScene) {
+        [canvasView presentScene:self.circuitScene];
     }
 }
 
@@ -271,25 +287,63 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     return changes;
 }
 
-- (BOOL)advanceClocksByElapsedTime:(NSTimeInterval)elapsedTime {
-    static const NSTimeInterval clockTickInterval = 0.005;
-    self.clockTickAccumulator += elapsedTime;
-    NSUInteger elapsedTicks = (NSUInteger)floor(self.clockTickAccumulator / clockTickInterval);
-    if (elapsedTicks == 0) return NO;
+- (NSUInteger)clockTransitionsForElapsedTime:(NSTimeInterval)elapsedTime
+                                    interval:(NSTimeInterval)interval
+                                 accumulator:(NSTimeInterval *)accumulator {
+    *accumulator += elapsedTime;
+    NSUInteger transitions = (NSUInteger)floor(*accumulator / interval);
+    *accumulator -= transitions * interval;
 
-    self.clockTickAccumulator -= elapsedTicks * clockTickInterval;
-    // Only the state at the next display refresh is observable. Two clock
-    // transitions cancel out without requiring duplicate circuit work.
-    if (elapsedTicks % 2 == 0 || !_document.circuit) return NO;
+    // Avoid an unbounded catch-up after a debugger pause or a badly delayed
+    // frame while still preserving every transition during normal rendering.
+    return MIN(transitions, 64);
+}
 
-    __block int clocks = 0;
-    [self.document.circuit performWriteBlock:^(CircuitInternal *internal) {
-        [self.document.circuit enumerateClocksUsingBlock:^(CircuitObject *object, BOOL *stop) {
-            clocks++;
-            CircuitObjectSetOutput(internal, object, !object->out);
-        }];
+- (BOOL)advanceClockProcess:(CircuitProcess *)process transitionCount:(NSUInteger)transitionCount {
+    if (!_document.circuit || transitionCount == 0) return NO;
+
+    __block BOOL containsMatchingClock = NO;
+    [_document.circuit enumerateClocksUsingBlock:^(CircuitObject *object, BOOL *stop) {
+        if (object->type == process) {
+            containsMatchingClock = YES;
+            *stop = YES;
+        }
     }];
-    return clocks > 0;
+    if (!containsMatchingClock) return NO;
+
+    for (NSUInteger transition = 0; transition < transitionCount; transition++) {
+        [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
+            [self.document.circuit enumerateClocksUsingBlock:^(CircuitObject *object, BOOL *stop) {
+                if (object->type == process) {
+                    CircuitObjectSetOutput(internal, object, !object->out);
+                }
+            }];
+        }];
+        // Stateful components must observe every edge. The 512 steps are a
+        // propagation limit for settling this edge, not additional clock ticks.
+        [_document.circuit simulate:512];
+    }
+    return YES;
+}
+
+- (BOOL)advanceClocksByElapsedTime:(NSTimeInterval)elapsedTime {
+    static const NSTimeInterval fastClockTransitionInterval = 0.005; // 100 Hz cycle
+    static const NSTimeInterval slowClockTransitionInterval = 0.5;  // 1 Hz cycle
+
+    NSTimeInterval fastAccumulator = self.clockTickAccumulator;
+    NSUInteger fastTransitions = [self clockTransitionsForElapsedTime:elapsedTime
+                                                              interval:fastClockTransitionInterval
+                                                           accumulator:&fastAccumulator];
+    self.clockTickAccumulator = fastAccumulator;
+
+    NSTimeInterval slowAccumulator = self.slowClockTickAccumulator;
+    NSUInteger slowTransitions = [self clockTransitionsForElapsedTime:elapsedTime
+                                                              interval:slowClockTransitionInterval
+                                                           accumulator:&slowAccumulator];
+    self.slowClockTickAccumulator = slowAccumulator;
+
+    BOOL changed = [self advanceClockProcess:&CircuitProcessClock transitionCount:fastTransitions];
+    return [self advanceClockProcess:&CircuitProcessSlowClock transitionCount:slowTransitions] || changed;
 }
 
 #pragma mark - Drawing
@@ -516,6 +570,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         if (!object) return NO;
         
         if (object->type != [_document.circuit getProcessById:@"pbtn"]) return NO;
+        if (![_viewport isPosition:position onMomentaryButtonCap:object]) return NO;
         
         _holdDownGestureObject = object;
         
@@ -611,6 +666,9 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     if ([gestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]]) {
         return YES;
     }
+    BOOL holdAndDrag = ([gestureRecognizer isKindOfClass:[HoldDownGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[DragGateGestureRecognizer class]]) ||
+                       ([otherGestureRecognizer isKindOfClass:[HoldDownGestureRecognizer class]] && [gestureRecognizer isKindOfClass:[DragGateGestureRecognizer class]]);
+    if (holdAndDrag) return YES;
     if ([gestureRecognizer isKindOfClass:[LongPressObjectGesture class]] || [otherGestureRecognizer isKindOfClass:[LongPressObjectGesture class]]) {
         return YES;
     }
@@ -734,7 +792,9 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         
         [self updateChangeCount:UIDocumentChangeDone];
         [self unpause];
-    } else if (sender.state == UIGestureRecognizerStateEnded) {
+    } else if (sender.state == UIGestureRecognizerStateEnded ||
+               sender.state == UIGestureRecognizerStateCancelled ||
+               sender.state == UIGestureRecognizerStateFailed) {
         _holdDownGestureObject = NULL;
         [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
             CircuitObjectSetOutput(internal, object, 0);
@@ -751,6 +811,12 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     }
     
     CircuitObject *object = _beginLongPressGestureObject;
+    if (sender.state == UIGestureRecognizerStateBegan && object && object == _holdDownGestureObject) {
+        _holdDownGestureObject = NULL;
+        [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
+            CircuitObjectSetOutput(internal, object, 0);
+        }];
+    }
     if (sender.state == UIGestureRecognizerStateEnded) {
         [self updateChangeCount:UIDocumentChangeDone];
         if (_beginLongPressGestureObject && !self.document.isProblem) {
@@ -967,6 +1033,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     [super viewDidAppear:animated];
     self.lastDisplayTimestamp = 0;
     self.clockTickAccumulator = 0;
+    self.slowClockTickAccumulator = 0;
     self.circuitScene.paused = NO;
 }
 
