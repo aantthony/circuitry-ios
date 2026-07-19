@@ -159,7 +159,7 @@ static NSValue *valueForGate(CircuitProcess *process) {
     }
     
     self.userDescription = package[@"description"];
-    self.hints = package[@"hints"];
+    self.hints = [package[@"hints"] isKindOfClass:NSArray.class] ? package[@"hints"] : nil;
 
     _notes = [NSMutableArray array];
     NSArray *savedNotes = [package[@"notes"] isKindOfClass:NSArray.class] ? package[@"notes"] : @[];
@@ -200,13 +200,10 @@ static NSValue *valueForGate(CircuitProcess *process) {
             return;
         }
         
-        const char * utf8String = [obj[@"name"] UTF8String];
-        for(int i = 0; i < 4; i++) {
-            o->name[i] = utf8String[i];
-            if (utf8String[i] == 0) {
-                break;
-            }
-        }
+        NSString *name = [obj[@"name"] isKindOfClass:NSString.class] ? obj[@"name"] : nil;
+        const char * utf8String = name.UTF8String ?: "";
+        // o->name is a fixed 4-byte buffer and readers expect NUL termination.
+        strlcpy(o->name, utf8String, sizeof(o->name));
         o->in  = [[obj valueForKey:@"in"]  intValue];
         o->out = [[obj valueForKey:@"out"] intValue];
         

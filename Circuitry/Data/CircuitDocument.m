@@ -175,11 +175,12 @@ static NSString *CircuitDocumentUnsupportedProcessType(NSArray *items) {
 - (NSDictionary *) exportPackageDictionaryWithoutItems {
     NSMutableArray *testsArray = [NSMutableArray arrayWithCapacity:_circuit.tests.count];
     [_circuit.tests enumerateObjectsUsingBlock:^(CircuitTest *test, NSUInteger idx, BOOL *stop) {
+        // Bundled and hand-authored packages can omit per-test names and specs.
         NSMutableDictionary *testDictionary = [@{
-                                                 @"name": test.name,
+                                                 @"name": test.name ?: @"",
                                                  @"inputs": test.inputIds,
                                                  @"outputs": test.outputIds,
-                                                 @"spec": test.spec
+                                                 @"spec": test.spec ?: @[]
                                                  } mutableCopy];
         if (test.acceptedSpecs.count) {
             testDictionary[@"acceptedSpecs"] = test.acceptedSpecs;
@@ -192,19 +193,21 @@ static NSString *CircuitDocumentUnsupportedProcessType(NSArray *items) {
         [notes addObject:note.dictionaryRepresentation];
     }
 
+    // Every field here can be absent from an imported package; a nil value in
+    // the literal would throw during autosave and lose the user's edits.
     return @{
         @"_id": [MongoID stringWithId:_circuit.id],
-        @"name": _circuit.name,
-        @"version": _circuit.version,
-        @"description": _circuit.userDescription,
-        @"title": _circuit.title,
-        @"author": _circuit.author,
-        @"license": _circuit.license,
+        @"name": _circuit.name ?: @"",
+        @"version": _circuit.version ?: @"",
+        @"description": _circuit.userDescription ?: @"",
+        @"title": _circuit.title ?: @"",
+        @"author": _circuit.author ?: @"",
+        @"license": _circuit.license ?: @"",
         @"engines": @{@"circuitry": @">=0.0"},
         @"tests" : testsArray,
         @"notes": notes,
-        @"view": _circuit.viewDetails,
-        @"meta": _circuit.meta
+        @"view": _circuit.viewDetails ?: @{},
+        @"meta": _circuit.meta ?: @{}
     };
     
 }
