@@ -225,17 +225,21 @@ static void *reallocLinks(CircuitInternal *c) {
         if (!o->type) continue;
         for(int j = 0; j < o->type->numInputs; j++) {
             void *inputLink = o->inputs[j];
+            if (!inputLink) continue;
             // This inputLink will be updated by one of the other passes below.
             // We only need to update our reference *to* it.
             o->inputs[j] = inputLink + offsetBytes;
         }
         for(int j = 0; j < o->type->numOutputs; j++) {
             void *first = o->outputs[j];
+            if (!first) continue;
             o->outputs[j] = first + offsetBytes;
             CircuitLink *link = o->outputs[j];
             while(link) {
                 void *nextSibling = link->nextSibling;
-                link->nextSibling = nextSibling + offsetBytes;
+                if (nextSibling) {
+                    link->nextSibling = nextSibling + offsetBytes;
+                }
                 link = link->nextSibling;
             }
         }
@@ -245,35 +249,42 @@ static void *reallocLinks(CircuitInternal *c) {
 
 static void *reallocObjects(CircuitInternal *c) {
     c->objects_size *= 2;
-    void *oldPtr = &c->objects;
+    void *oldPtr = c->objects;
     void *newPtr = realloc(oldPtr, sizeof(CircuitObject) * c->objects_size);
+    if (!newPtr) return NULL;
     c->objects = newPtr;
-    
+
     long offsetBytes = newPtr - oldPtr;
-    
-    if (!newPtr || offsetBytes == 0) {
+
+    if (offsetBytes == 0) {
         // Nothing moved, all okay.
         return newPtr;
     }
-    
+
     // Move all of the references to objects:
     for(int i = 0; i < c->links_count; i++) {
         CircuitLink *link = &c->links[i];
         if (!link->source) continue;
         void *source = link->source;
         link->source = source + offsetBytes;
-        void *target = link->source;
+        void *target = link->target;
         link->target = target + offsetBytes;
+    }
+    for(int i = 0; i < c->clocks_count; i++) {
+        void *clock = c->clocks[i];
+        c->clocks[i] = clock + offsetBytes;
+    }
+    for(int i = 0; i < c->needsUpdate_count; i++) {
+        void *pending = c->needsUpdate[i];
+        c->needsUpdate[i] = pending + offsetBytes;
     }
     return newPtr;
 }
 
 static void reallocBuffer(CircuitInternal * c) {
     c->needsUpdate_size *= 2;
-    void *a = (void *)realloc(&c->needsUpdate,  sizeof(void *) * c->needsUpdate_size);
-    void *b = realloc(&c->needsUpdate2, sizeof(void *) * c->needsUpdate_size);
-    c->needsUpdate  = a;
-    c->needsUpdate2 = b;
+    c->needsUpdate  = realloc(c->needsUpdate,  sizeof(void *) * c->needsUpdate_size);
+    c->needsUpdate2 = realloc(c->needsUpdate2, sizeof(void *) * c->needsUpdate_size);
 }
 
 
@@ -314,6 +325,10 @@ CircuitObject * CircuitObjectCreate(CircuitInternal *c, CircuitProcess *type) {
     o->inputs = o->outputs + o->type->numOutputs;
     
     if (type == &CircuitProcessClock || type == &CircuitProcessSlowClock) {
+        if (c->clocks_count >= c->clocks_size) {
+            c->clocks_size *= 2;
+            c->clocks = realloc(c->clocks, sizeof(CircuitObject *) * c->clocks_size);
+        }
         c->clocks[c->clocks_count++] = o;
     }
     
@@ -336,6 +351,16 @@ void CircuitObjectRemove(CircuitInternal *c, CircuitObject *o) {
         }
     }
     
+    if (o->type == &CircuitProcessClock || o->type == &CircuitProcessSlowClock) {
+        for (int i = 0; i < c->clocks_count; i++) {
+            if (c->clocks[i] == o) {
+                c->clocks[i] = c->clocks[c->clocks_count - 1];
+                c->clocks_count--;
+                break;
+            }
+        }
+    }
+
     free(o->outputs);
     o->outputs = NULL;
     o->type = NULL;
@@ -412,9 +437,6 @@ CircuitLink *CircuitLinkCreate(CircuitInternal *c, CircuitObject *object, int in
     CircuitLink *prev = object->outputs[index];
     CircuitLink *link;
     
-#ifdef DEBUG
-    // Mindlessly continue...
-#else
     if (index >= object->type->numOutputs) {
         fail("FAIL: Invalid Link: Attempted to create link from outlet, but there are not enough outlets.");
     }
@@ -424,7 +446,6 @@ CircuitLink *CircuitLinkCreate(CircuitInternal *c, CircuitObject *object, int in
     if (target->inputs[targetIndex] != NULL) {
         fail("Internal Consistency Exceptino: Invalid Link: Attempted to create link to inlet, but there is already an attachment there.");
     }
-#endif
     
     if (!prev) {
         link = object->outputs[index] = makeLink(c);
