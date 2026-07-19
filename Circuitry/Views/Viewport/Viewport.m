@@ -84,6 +84,10 @@ static SpriteTexturePos* letterTable[256];
 static CGFloat radius;
 static const CGFloat vSpacing = 33.0;
 
+static CGFloat terminalHitRadius(void) {
+    return radius + 36.0;
+}
+
 static UIImage *LEDImageByShiftingHue(UIImage *source, CGFloat angle, CGFloat saturation, CGFloat brightness, CGFloat contrast) {
     CIImage *input = source.CIImage ?: [CIImage imageWithCGImage:source.CGImage];
     if (!input) return source;
@@ -298,19 +302,31 @@ static GLKVector3 offsetForInlet(CircuitProcess *process, int index) {
     int closest = -1;
     float dist = FLT_MAX;
     for(int i = 0; i < object->type->numOutputs; i++) {
-        float d = GLKVector3Distance(offsetForOutlet(object->type, i), offset);
+        GLKVector3 outletCenter = offsetForOutlet(object->type, i);
+        outletCenter.x += radius;
+        outletCenter.y += radius;
+        float d = GLKVector3Distance(outletCenter, offset);
         if (d < dist) {
             dist = d;
             closest = i;
         }
     }
-    return closest;
+
+    // The terminal sprite is deliberately given a larger touch target, but
+    // empty space elsewhere on the gate must remain available for dragging.
+    return dist <= terminalHitRadius() ? closest : -1;
 }
 
 - (CircuitLink *)findCircuitLinkAtOffset:(GLKVector3)offset attachedToObject:(CircuitObject *)object {
     int index = [self findInletIndexAtOffset:offset attachedToObject:object];
     if (index == -1) return NULL;
-    return object->inputs[index];
+    CircuitLink *link = object->inputs[index];
+    if (!link) return NULL;
+
+    GLKVector3 inletCenter = offsetForInlet(object->type, index);
+    inletCenter.x += radius;
+    inletCenter.y += radius;
+    return GLKVector3Distance(inletCenter, offset) <= terminalHitRadius() ? link : NULL;
 }
 
 static BOOL expandDrawGate(CircuitObject *object) {
