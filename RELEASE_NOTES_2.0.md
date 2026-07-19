@@ -1,21 +1,20 @@
 # Circuitry 2.0 — What's New (App Store)
 
-Circuitry 2.0 is our biggest update yet — faster, smoother, and easier to learn.
+The first update to Circuitry in a while. Mostly this brings the app up to date
+for modern iPhones and iPads and fixes a number of bugs along the way.
 
-• Rebuilt engine: circuits are now drawn with a brand-new graphics engine, so building and simulating feels noticeably faster and smoother — especially for circuits with clocks and counters.
+• Updated the app's graphics so circuits run more smoothly, especially ones with
+  clocks and counters.
 
-• Stuck on a puzzle? New in-app hints guide you one step at a time, so you can get unstuck without giving away the whole answer.
+• Added optional hints to puzzles, in case you get stuck.
 
-• Add and resize notes right on the canvas to label and organize your designs.
+• You can now add and resize notes on the canvas.
 
-• A bigger playground with more components to experiment with, plus a cleaner canvas layout.
+• A few more components to play with in the sandbox.
 
-• A refreshed tutorial and intro that look great on every screen size.
+• Fixed several crashes and cases where circuits — including older saved ones —
+  didn't load or save correctly.
 
-• More reliable puzzle checking, so valid solutions are recognized correctly.
+• Various small fixes and tidying up throughout.
 
-• Rock-solid stability: we fixed crashes and rare data issues so your circuits load and save safely — including older designs made in previous versions.
-
-• Lots of little polish: more accurate taps on push-buttons, sharper visuals, better Mac support, and many small fixes throughout.
-
-Thanks for playing Circuitry! If you're enjoying it, please leave us a rating.
+Thanks for playing.
