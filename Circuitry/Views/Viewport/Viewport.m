@@ -480,6 +480,10 @@ static CGRect momentaryButtonCapRect(CircuitObject *object) {
 
 #pragma mark - SpriteKit rendering
 
+- (CGFloat)nextSceneContentZPosition {
+    return 100.0 + self.sceneWorld.children.count * 0.001;
+}
+
 - (SKTexture *)sceneTextureForSprite:(SpriteTexturePos)position {
     CGRect cropRect = CGRectMake(position.u, position.v, position.twidth, position.theight);
     NSValue *key = [NSValue valueWithCGRect:cropRect];
@@ -505,7 +509,7 @@ static CGRect momentaryButtonCapRect(CircuitObject *object) {
     sprite.yScale = -1.0;
     // Preserve painter's-order semantics from the old Core Graphics renderer.
     // Links occupy z=0...2; gate parts are layered in insertion order above them.
-    sprite.zPosition = 100.0 + self.sceneWorld.children.count * 0.001;
+    sprite.zPosition = [self nextSceneContentZPosition];
     [self.sceneWorld addChild:sprite];
 }
 
@@ -583,7 +587,7 @@ static CGRect momentaryButtonCapRect(CircuitObject *object) {
     bezel.fillColor = [UIColor colorWithWhite:0.38 alpha:1.0];
     bezel.strokeColor = [UIColor colorWithWhite:0.82 alpha:1.0];
     bezel.lineWidth = 5.0;
-    bezel.zPosition = 120.0;
+    bezel.zPosition = [self nextSceneContentZPosition];
     [self.sceneWorld addChild:bezel];
 
     CGFloat capRadius = object->out ? 46.0 : 53.0;
@@ -596,7 +600,7 @@ static CGRect momentaryButtonCapRect(CircuitObject *object) {
         ? [UIColor colorWithRed:0.08 green:0.32 blue:0.06 alpha:1.0]
         : [UIColor colorWithWhite:0.62 alpha:1.0];
     cap.lineWidth = 5.0;
-    cap.zPosition = 121.0;
+    cap.zPosition = [self nextSceneContentZPosition];
     [self.sceneWorld addChild:cap];
 
     SKShapeNode *highlight = [SKShapeNode shapeNodeWithCircleOfRadius:MAX(8.0, capRadius - 12.0)];
@@ -606,7 +610,7 @@ static CGRect momentaryButtonCapRect(CircuitObject *object) {
         ? [UIColor colorWithRed:0.62 green:0.94 blue:0.55 alpha:0.82]
         : [UIColor colorWithWhite:1.0 alpha:0.72];
     highlight.lineWidth = 3.0;
-    highlight.zPosition = 122.0;
+    highlight.zPosition = [self nextSceneContentZPosition];
     [self.sceneWorld addChild:highlight];
 }
 
@@ -635,7 +639,7 @@ static CGRect momentaryButtonCapRect(CircuitObject *object) {
     sprite.position = CGPointMake(point.x + ledOnGreen.width * 0.5,
                                   point.y + ledOnGreen.height * 0.5);
     sprite.yScale = -1.0;
-    sprite.zPosition = 100.0 + self.sceneWorld.children.count * 0.001;
+    sprite.zPosition = [self nextSceneContentZPosition];
     [self.sceneWorld addChild:sprite];
 }
 
