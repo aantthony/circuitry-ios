@@ -61,6 +61,12 @@
     } else {
         self.items = self.allItems;
     }
+
+    // Notes are canvas annotations for free-form playground documents, not
+    // components that can be used to solve a problem.
+    if (self.isProblem) {
+        self.items = [self.items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"type != %@", @"note"]];
+    }
     
     [self.items enumerateObjectsUsingBlock:^(ToolbeltItem *item, NSUInteger idx, BOOL *stop) {
         if (self.isProblem) {

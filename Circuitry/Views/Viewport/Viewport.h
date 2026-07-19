@@ -5,6 +5,7 @@
 #import "CircuitInternal.h"
 #import "ImageAtlas.h"
 @class CircuitDocument;
+@class CircuitNote;
 @class SKScene;
 
 @interface Viewport : NSObject
@@ -35,7 +36,11 @@
 - (CircuitLink *) findCircuitLinkAtOffset: (GLKVector3)offset attachedToObject:(CircuitObject *)object;
 - (CircuitObject*) findCircuitObjectAtPosition: (GLKVector3) pos;
 - (CircuitObject*) findCircuitObjectNearPosition: (GLKVector3) pos;
+- (CircuitNote *) findNoteAtPosition:(GLKVector3)pos;
+- (CircuitNote *) findNoteResizeHandleAtPosition:(GLKVector3)pos;
+- (CGRect) resizeHandleRectForNote:(CircuitNote *)note;
 - (CGRect) rectForObject:(CircuitObject *) object inView:(UIView *)view;
+- (CGRect) rectForNote:(CircuitNote *)note inView:(UIView *)view;
 
 - (GLKVector3) unproject: (CGPoint) screenPos;
 

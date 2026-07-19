@@ -53,6 +53,8 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 @property (nonatomic) UIImage *backgroundImage;
 @property (nonatomic) IBOutlet UIPinchGestureRecognizer *pinchGestureRecognizer;
 @property (nonatomic, assign) CircuitObject *beginLongPressGestureObject;
+@property (nonatomic, strong) CircuitNote *beginDragNote;
+@property (nonatomic, strong) CircuitNote *beginResizeNote;
 @property (nonatomic, assign) CircuitObject *holdDownGestureObject;
 
 - (void)drawCanvasInRect:(CGRect)rect;
@@ -451,6 +453,21 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 }
 
 - (void) startCreatingObjectFromItem: (ToolbeltItem *) item {
+    if ([item.type isEqualToString:@"note"]) {
+        CGPoint center = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
+        center.x += (CGFloat)arc4random_uniform(121) - 60.0;
+        center.y += (CGFloat)arc4random_uniform(121) - 60.0;
+        GLKVector3 worldCenter = [self.viewport unproject:PX(self.view.contentScaleFactor, center)];
+        CircuitNote *note = [[CircuitNote alloc] initWithDictionary:@{
+            @"text": @"Untitled note, hold to edit text",
+            @"rect": @[@(worldCenter.x - 210.0), @(worldCenter.y - 110.0), @420.0, @220.0]
+        }];
+        [self.document.circuit.notes addObject:note];
+        [self updateChangeCount:UIDocumentChangeDone];
+        [self unpause];
+        return;
+    }
+
     Circuit *_circuit = _document.circuit;
     
     CGPoint locationInView = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
@@ -489,10 +506,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     if ([gestureRecognizer isKindOfClass:[LongPressObjectGesture class]]) {
         GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [gestureRecognizer locationInView:self.view])];
         
-        CircuitObject *object = [_viewport findCircuitObjectAtPosition:position];
-        if (!object) return NO;
-        
-        return YES;
+        return [_viewport findCircuitObjectAtPosition:position] || [_viewport findNoteAtPosition:position];
     }
     
     if ([gestureRecognizer isKindOfClass:[HoldDownGestureRecognizer class]]) {
@@ -551,11 +565,23 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         ;
         GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [recogniser locationInView:self.view])];
         // only accept long presses on circuit objects:
+        CircuitNote *resizeNote = [_viewport findNoteResizeHandleAtPosition:position];
+        if (resizeNote) {
+            _beginResizeNote = resizeNote;
+            return YES;
+        }
         CircuitObject *o;
         if ((o = [_viewport findCircuitObjectAtPosition:position])) {
             _beginLongPressGestureObject = o;
             GLKVector3 objectPosition = *(GLKVector3 *) &_beginLongPressGestureObject->pos;
             beginLongPressGestureOffset = GLKVector3Subtract(objectPosition, position);
+            return YES;
+        }
+        CircuitNote *note = [_viewport findNoteAtPosition:position];
+        if (note) {
+            _beginDragNote = note;
+            beginLongPressGestureOffset = GLKVector3Make(note.frame.origin.x - position.x,
+                                                         note.frame.origin.y - position.y, 0.0);
             return YES;
         }
         // Dragging the background, defer this to the other pan gesture recognizer.
@@ -569,7 +595,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         UIPanGestureRecognizer *recogniser = (UIPanGestureRecognizer *)gestureRecognizer;
         ;
         GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [recogniser locationInView:self.view])];
-        if ([_viewport findCircuitObjectAtPosition:position]) {
+        if ([_viewport findCircuitObjectAtPosition:position] || [_viewport findNoteAtPosition:position]) {
             return NO;
         }
         return YES;
@@ -596,6 +622,35 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     if (sender.state == UIGestureRecognizerStateBegan) {
         GLKVector3 position = [_viewport unproject:PX(self.view.contentScaleFactor, [sender locationInView:self.view])];
         CircuitObject *object = [_viewport findCircuitObjectAtPosition:position];
+        CircuitNote *note = object ? nil : [_viewport findNoteAtPosition:position];
+        if (note) {
+            CGRect rect = [_viewport rectForNote:note inView:self.view];
+            UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:@"Canvas Note" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+            [actionSheet addAction:[UIAlertAction actionWithTitle:@"Edit Text" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                UIAlertController *edit = [UIAlertController alertControllerWithTitle:@"Edit Note" message:nil preferredStyle:UIAlertControllerStyleAlert];
+                [edit addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+                    textField.text = note.text;
+                    textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+                }];
+                [edit addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+                [edit addAction:[UIAlertAction actionWithTitle:@"Save" style:UIAlertActionStyleDefault handler:^(UIAlertAction *saveAction) {
+                    note.text = edit.textFields.firstObject.text ?: @"";
+                    [self updateChangeCount:UIDocumentChangeDone];
+                    [self unpause];
+                }]];
+                [self presentViewController:edit animated:YES completion:nil];
+            }]];
+            [actionSheet addAction:[UIAlertAction actionWithTitle:@"Remove" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+                [self.document.circuit.notes removeObject:note];
+                [self updateChangeCount:UIDocumentChangeDone];
+                [self unpause];
+            }]];
+            [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+            actionSheet.popoverPresentationController.sourceView = self.view;
+            actionSheet.popoverPresentationController.sourceRect = rect;
+            [self presentViewController:actionSheet animated:YES completion:nil];
+            return;
+        }
         if (!object) return;
         
         ToolbeltItem *item = [ToolbeltItem toolbeltItemWithType:[NSString stringWithUTF8String:object->type->id]];
@@ -691,7 +746,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 }
 
 - (IBAction)handleDragGateGesture:(UIPanGestureRecognizer *)sender {
-    if (!_beginLongPressGestureObject) {
+    if (!_beginLongPressGestureObject && !_beginDragNote && !_beginResizeNote) {
         return;
     }
     
@@ -703,20 +758,41 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         }
         [self unpause];
         _beginLongPressGestureObject = NULL;
+        _beginDragNote = nil;
+        _beginResizeNote = nil;
         return;
     } else if ([sender numberOfTouches] != 1) {
         sender.enabled = NO;
         sender.enabled = YES;
         [self updateChangeCount:UIDocumentChangeDone];
         [self unpause];
+        _beginLongPressGestureObject = NULL;
+        _beginDragNote = nil;
+        _beginResizeNote = nil;
         return;
     }
     
     // world space position of touch:
     GLKVector3 curPos = [_viewport unproject: PX(self.view.contentScaleFactor, [sender locationOfTouch:0 inView:self.view])];
+
+    if (_beginResizeNote) {
+        CGRect frame = _beginResizeNote.frame;
+        frame.size = CGSizeMake(MAX(120.0, curPos.x - frame.origin.x),
+                                MAX(80.0, curPos.y - frame.origin.y));
+        _beginResizeNote.frame = frame;
+        [self unpause];
+        return;
+    }
     
     // This moves it so that the user can drag the gate from places other than the gates top left corner
     GLKVector3 newPos = GLKVector3Add(curPos, beginLongPressGestureOffset);
+    if (_beginDragNote) {
+        CGRect frame = _beginDragNote.frame;
+        frame.origin = CGPointMake(newPos.x, newPos.y);
+        _beginDragNote.frame = frame;
+        [self unpause];
+        return;
+    }
     object->pos.x = newPos.x;
     object->pos.y = newPos.y;
     object->pos.z = newPos.z;

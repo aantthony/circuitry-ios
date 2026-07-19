@@ -187,6 +187,11 @@ static NSString *CircuitDocumentUnsupportedProcessType(NSArray *items) {
         [testsArray addObject:testDictionary];
     }];
     
+    NSMutableArray *notes = [NSMutableArray arrayWithCapacity:_circuit.notes.count];
+    for (CircuitNote *note in _circuit.notes) {
+        [notes addObject:note.dictionaryRepresentation];
+    }
+
     return @{
         @"_id": [MongoID stringWithId:_circuit.id],
         @"name": _circuit.name,
@@ -197,6 +202,7 @@ static NSString *CircuitDocumentUnsupportedProcessType(NSArray *items) {
         @"license": _circuit.license,
         @"engines": @{@"circuitry": @">=0.0"},
         @"tests" : testsArray,
+        @"notes": notes,
         @"view": _circuit.viewDetails,
         @"meta": _circuit.meta
     };

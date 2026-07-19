@@ -3,6 +3,17 @@
 #import "CircuitInternal.h"
 @class CircuitTest;
 
+@interface CircuitNote : NSObject
+
+@property(nonatomic, copy) NSString *identifier;
+@property(nonatomic, copy) NSString *text;
+@property(nonatomic) CGRect frame;
+
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary;
+- (NSDictionary *)dictionaryRepresentation;
+
+@end
+
 @interface Circuit : NSObject
 
 @property(nonatomic, readonly) ObjectID id;
@@ -16,6 +27,7 @@
 @property(nonatomic) NSString *license;
 @property(nonatomic) NSMutableDictionary *dependencies;
 @property(nonatomic) NSMutableDictionary *meta;
+@property(nonatomic, readonly) NSMutableArray<CircuitNote *> *notes;
 
 @property(nonatomic, readonly) NSMutableDictionary * viewDetails;
 @property(nonatomic) float viewCenterX;

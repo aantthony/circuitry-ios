@@ -3,6 +3,35 @@
 #import "MongoID.h"
 #import "CircuitTest.h"
 
+@implementation CircuitNote
+
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary {
+    self = [super init];
+    if (!self) return nil;
+
+    _identifier = [dictionary[@"_id"] isKindOfClass:NSString.class] ? [dictionary[@"_id"] copy] : NSUUID.UUID.UUIDString;
+    _text = [dictionary[@"text"] isKindOfClass:NSString.class] ? [dictionary[@"text"] copy] : @"";
+    NSArray *rect = [dictionary[@"rect"] isKindOfClass:NSArray.class] ? dictionary[@"rect"] : nil;
+    if (rect.count >= 4) {
+        _frame = CGRectMake([rect[0] doubleValue], [rect[1] doubleValue],
+                            MAX(120.0, [rect[2] doubleValue]), MAX(80.0, [rect[3] doubleValue]));
+    } else {
+        _frame = CGRectMake(0.0, 0.0, 360.0, 200.0);
+    }
+    return self;
+}
+
+- (NSDictionary *)dictionaryRepresentation {
+    return @{
+        @"_id": self.identifier ?: NSUUID.UUID.UUIDString,
+        @"text": self.text ?: @"",
+        @"rect": @[@(self.frame.origin.x), @(self.frame.origin.y),
+                    @(self.frame.size.width), @(self.frame.size.height)]
+    };
+}
+
+@end
+
 @interface Circuit()
 @property (nonatomic, assign) CircuitInternal *internal;
 @property (nonatomic) NSArray *tests;
@@ -124,6 +153,13 @@ static NSValue *valueForGate(CircuitProcess *process) {
     
     self.userDescription = package[@"description"];
     self.hints = package[@"hints"];
+
+    _notes = [NSMutableArray array];
+    NSArray *savedNotes = [package[@"notes"] isKindOfClass:NSArray.class] ? package[@"notes"] : @[];
+    for (id savedNote in savedNotes) {
+        if (![savedNote isKindOfClass:NSDictionary.class]) continue;
+        [_notes addObject:[[CircuitNote alloc] initWithDictionary:savedNote]];
+    }
     
     if ([package valueForKey:@"_id"]) {
         _id = [MongoID idWithString:[package valueForKey:@"_id"]];

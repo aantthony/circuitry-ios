@@ -324,10 +324,43 @@ static CGSize sizeOfObject(CircuitObject *object) {
     return o;
 }
 
+- (CircuitNote *)findNoteAtPosition:(GLKVector3)pos {
+    for (CircuitNote *note in self.document.circuit.notes.reverseObjectEnumerator) {
+        if (CGRectContainsPoint(note.frame, CGPointMake(pos.x, pos.y))) {
+            return note;
+        }
+    }
+    return nil;
+}
+
+- (CGRect)resizeHandleRectForNote:(CircuitNote *)note {
+    // Keep the interactive target a comfortable, predictable size on screen,
+    // regardless of the current canvas zoom.
+    CGFloat worldSize = 56.0 / MAX(_scale.x, 0.001);
+    worldSize = MIN(worldSize, MIN(note.frame.size.width, note.frame.size.height));
+    return CGRectMake(CGRectGetMaxX(note.frame) - worldSize,
+                      CGRectGetMaxY(note.frame) - worldSize,
+                      worldSize, worldSize);
+}
+
+- (CircuitNote *)findNoteResizeHandleAtPosition:(GLKVector3)pos {
+    CGPoint point = CGPointMake(pos.x, pos.y);
+    for (CircuitNote *note in self.document.circuit.notes.reverseObjectEnumerator) {
+        if (CGRectContainsPoint([self resizeHandleRectForNote:note], point)) {
+            return note;
+        }
+    }
+    return nil;
+}
+
 - (CGRect)rectForObject:(CircuitObject *)object inView:(UIView *)view {
     CGSize size = sizeOfObject(object);
     CGPoint origin = [self screenPointForWorldPoint:CGPointMake(object->pos.x, object->pos.y)];
     return CGRectMake(origin.x, origin.y, size.width * _scale.x, size.height * _scale.y);
+}
+
+- (CGRect)rectForNote:(CircuitNote *)note inView:(UIView *)view {
+    return [self screenRectForWorldRect:note.frame];
 }
 
 - (void)setTranslate:(GLKVector3)translate {
@@ -442,10 +475,48 @@ static CGSize sizeOfObject(CircuitObject *object) {
         line.lineWidth = widths[index];
         line.lineCap = kCGLineCapRound;
         line.lineJoin = kCGLineJoinRound;
-        line.zPosition = index;
+        line.zPosition = 20.0 + index;
         [self.sceneWorld addChild:line];
     }
     CGPathRelease(path);
+}
+
+- (void)addSceneNote:(CircuitNote *)note {
+    CGRect frame = note.frame;
+    CGPathRef path = CGPathCreateWithRoundedRect(CGRectMake(0.0, 0.0, frame.size.width, frame.size.height),
+                                                 18.0, 18.0, NULL);
+    SKShapeNode *card = [SKShapeNode shapeNodeWithPath:path];
+    CGPathRelease(path);
+    card.position = frame.origin;
+    card.fillColor = [UIColor colorWithWhite:1.0 alpha:0.10];
+    card.strokeColor = [UIColor colorWithWhite:1.0 alpha:0.28];
+    card.lineWidth = 4.0;
+    card.zPosition = 10.0;
+    [self.sceneWorld addChild:card];
+
+    CGMutablePathRef handlePath = CGPathCreateMutable();
+    CGPathMoveToPoint(handlePath, NULL, CGRectGetMaxX(frame) - 44.0, CGRectGetMaxY(frame));
+    CGPathAddLineToPoint(handlePath, NULL, CGRectGetMaxX(frame), CGRectGetMaxY(frame) - 44.0);
+    SKShapeNode *handle = [SKShapeNode shapeNodeWithPath:handlePath];
+    CGPathRelease(handlePath);
+    handle.strokeColor = [UIColor colorWithWhite:1.0 alpha:0.35];
+    handle.lineWidth = 5.0;
+    handle.lineCap = kCGLineCapRound;
+    handle.zPosition = 12.0;
+    [self.sceneWorld addChild:handle];
+
+    SKLabelNode *label = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue-Medium"];
+    label.text = note.text.length ? note.text : @"Note";
+    label.fontSize = 28.0;
+    label.fontColor = [UIColor colorWithWhite:1.0 alpha:0.92];
+    label.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeLeft;
+    label.verticalAlignmentMode = SKLabelVerticalAlignmentModeTop;
+    label.numberOfLines = 0;
+    label.preferredMaxLayoutWidth = MAX(40.0, frame.size.width - 40.0);
+    label.position = CGPointMake(CGRectGetMinX(frame) + 20.0, CGRectGetMinY(frame) + 20.0);
+    label.yScale = -1.0;
+    label.zPosition = 11.0;
+    [self.sceneWorld addChild:label];
 }
 
 - (void)addSceneObject:(CircuitObject *)object {
@@ -527,6 +598,9 @@ static CGSize sizeOfObject(CircuitObject *object) {
 - (void)rebuildSceneContent {
     [self.sceneWorld removeAllChildren];
     Circuit *circuit = self.document.circuit;
+    for (CircuitNote *note in circuit.notes) {
+        [self addSceneNote:note];
+    }
     [circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
         for (int sourceIndex = 0; sourceIndex < object->type->numOutputs; sourceIndex++) {
             CircuitLink *link = object->outputs[sourceIndex];
@@ -753,10 +827,43 @@ static CGSize sizeOfObject(CircuitObject *object) {
     [path stroke];
 }
 
+- (void)drawNote:(CircuitNote *)note {
+    CGRect rect = [self screenRectForWorldRect:note.frame];
+    CGFloat cornerRadius = MAX(4.0, 18.0 * _scale.x);
+    UIBezierPath *card = [UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:cornerRadius];
+    [[UIColor colorWithWhite:1.0 alpha:0.10] setFill];
+    [card fill];
+    [[UIColor colorWithWhite:1.0 alpha:0.28] setStroke];
+    card.lineWidth = MAX(1.0, 4.0 * _scale.x);
+    [card stroke];
+
+    UIBezierPath *handle = [UIBezierPath bezierPath];
+    [handle moveToPoint:CGPointMake(CGRectGetMaxX(rect) - 44.0 * _scale.x, CGRectGetMaxY(rect))];
+    [handle addLineToPoint:CGPointMake(CGRectGetMaxX(rect), CGRectGetMaxY(rect) - 44.0 * _scale.y)];
+    handle.lineWidth = MAX(1.0, 5.0 * _scale.x);
+    handle.lineCapStyle = kCGLineCapRound;
+    [[UIColor colorWithWhite:1.0 alpha:0.35] setStroke];
+    [handle stroke];
+
+    CGFloat inset = MAX(8.0, 20.0 * _scale.x);
+    CGRect textRect = CGRectInset(rect, inset, inset);
+    NSMutableParagraphStyle *paragraph = [[NSMutableParagraphStyle alloc] init];
+    paragraph.lineBreakMode = NSLineBreakByWordWrapping;
+    NSDictionary *attributes = @{
+        NSFontAttributeName: [UIFont systemFontOfSize:MAX(10.0, 28.0 * _scale.x) weight:UIFontWeightMedium],
+        NSForegroundColorAttributeName: [UIColor colorWithWhite:1.0 alpha:0.92],
+        NSParagraphStyleAttributeName: paragraph
+    };
+    [(note.text.length ? note.text : @"Note") drawInRect:textRect withAttributes:attributes];
+}
+
 - (void)drawInRect:(CGRect)rect {
     [self drawGridInRect:rect];
 
     Circuit *_circuit = self.document.circuit;
+    for (CircuitNote *note in _circuit.notes) {
+        [self drawNote:note];
+    }
     [_circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
         for(int sourceIndex = 0; sourceIndex < object->type->numOutputs; sourceIndex++) {
             CircuitLink *link = object->outputs[sourceIndex];

@@ -34,7 +34,11 @@
 + (NSArray *) all {
     static NSArray *_all = nil;
     if (_all) return _all;
+    UIImageSymbolConfiguration *noteIconConfiguration = [UIImageSymbolConfiguration configurationWithPointSize:36.0
+                                                                                                         weight:UIImageSymbolWeightRegular];
+    UIImage *noteIcon = [[UIImage systemImageNamed:@"note.text"] imageByApplyingSymbolConfiguration:noteIconConfiguration];
     _all = @[
+             [[ToolbeltItem alloc] initWithType:@"note" level:0 image:noteIcon name:@"Note" fullName:@"Canvas Note" subtitle:@"Canvas annotation"],
              [[ToolbeltItem alloc] initWithType:@"button"  level:0  image:[UIImage imageNamed:@"switch"]   name:@"Button" fullName:@"Switch Button" subtitle:@"Toggle button"],
       // [[ToolbeltItem alloc] initWithType:@"pbtn"    image:[UIImage imageNamed:@"pushbutton"] name:@"Button" subtitle:@"Push button"],
              [[ToolbeltItem alloc] initWithType:@"light"   level:0  image:[UIImage imageNamed:@"led"]      name:@"Light" fullName:@"Light" subtitle:@"Light Emitting Diode"],
