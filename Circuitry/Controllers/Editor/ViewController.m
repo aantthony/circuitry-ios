@@ -28,14 +28,12 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 @interface ViewController () {
     float beginGestureScale;
     
-    GLKVector3 beginLongPressGestureOffset;
+    CGVector beginLongPressGestureOffset;
     
     CGPoint panVelocity;
     
     BOOL isAnimatingScaleToSnap;
     BOOL toolbeltTouchIntercept;
-    
-    CGPoint draggingOutFromToolbeltStart;
     
     BOOL animatingPan;
     BOOL isPanning;
@@ -58,7 +56,6 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 @property (nonatomic, strong) CircuitNote *beginResizeNote;
 @property (nonatomic, assign) CircuitObject *holdDownGestureObject;
 
-- (void)drawCanvasInRect:(CGRect)rect;
 - (void)sceneDidUpdateAtTime:(NSTimeInterval)currentTime;
 
 @end
@@ -123,11 +120,26 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 
 - (UIImage*)snapshot
 {
-    UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, self.view.opaque, 0.0);
-    [self drawCanvasInRect:self.view.bounds];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return image;
+    CGSize snapshotSize = self.view.bounds.size;
+    if (snapshotSize.width <= 0.0 || snapshotSize.height <= 0.0) {
+        return self.backgroundImage ?: [UIImage imageNamed:@"background.jpg"];
+    }
+
+    [_viewport updateSceneForViewSize:snapshotSize allowContentRebuild:YES];
+    SKView *canvasView = (SKView *)self.view;
+    SKTexture *snapshotTexture = [canvasView textureFromNode:self.circuitScene crop:self.circuitScene.frame];
+    CGImageRef imageRef = snapshotTexture.CGImage;
+    if (imageRef) {
+        CGFloat imageScale = CGImageGetWidth(imageRef) / snapshotSize.width;
+        UIImage *image = [UIImage imageWithCGImage:imageRef scale:MAX(imageScale, 1.0) orientation:UIImageOrientationUp];
+        CGImageRelease(imageRef);
+        return image;
+    }
+
+    UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithSize:snapshotSize];
+    return [renderer imageWithActions:^(UIGraphicsImageRendererContext *context) {
+        [self.backgroundImage drawInRect:(CGRect){ CGPointZero, snapshotSize }];
+    }];
 }
 
 -(void)appWillResignActive:(NSNotification*)note {
@@ -398,9 +410,9 @@ static BOOL animateGateToLockedPosition(CircuitObject *object, float x, float y)
     }
 
     if (isAnimatingScaleToSnap) {
-        float lEnd = round(log2f(_viewport.scaleWithFloat));
+        float lEnd = round(log2f(_viewport.zoomScale));
         if (lEnd > 2.0) lEnd = 2.0; // maximum zoom
-        float lNow = log2f(_viewport.scaleWithFloat);
+        float lNow = log2f(_viewport.zoomScale);
         float k = 0.1;
         if (fabsf(lEnd - lNow) < 0.001) {
             k = 1.0;
@@ -408,19 +420,20 @@ static BOOL animateGateToLockedPosition(CircuitObject *object, float x, float y)
         }
         
         // TODO: this is a bit of a hack. Clean up the translate / scale math so that isn't so disgusting:
-        CGPoint screenPos = PX(self.view.contentScaleFactor, CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2));
-        GLKVector3 aPos = [_viewport unproject: screenPos];
-        _viewport.scaleWithFloat = exp2f(lNow + (lEnd - lNow) * k);
-        GLKVector3 bPos = [_viewport unproject: screenPos];
+        CGPoint screenPos = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+        CGPoint aPos = [_viewport unproject: screenPos];
+        _viewport.zoomScale = exp2f(lNow + (lEnd - lNow) * k);
+        CGPoint bPos = [_viewport unproject: screenPos];
         
         // We want modelViewMatrix * curPos = newModelViewMatrix * curPos
         
         // A v = B v.. so what is B...
-        [_viewport translate: GLKVector3Make(_viewport.scaleWithFloat * (bPos.x - aPos.x), _viewport.scaleWithFloat * (bPos.y - aPos.y), 0.0)];
+        [_viewport translateBy:CGVectorMake(_viewport.zoomScale * (bPos.x - aPos.x),
+                                            _viewport.zoomScale * (bPos.y - aPos.y))];
         
     }
     
-    [_viewport translate: GLKVector3Make(panVelocity.x * dt, panVelocity.y * dt, 0.0)];
+    [_viewport translateBy:CGVectorMake(panVelocity.x * dt, panVelocity.y * dt)];
     if (animatingPan) {
         // momentum deceleration / friction:
         panVelocity.x -= panVelocity.x * dt * 10.0;
@@ -488,19 +501,6 @@ static CGFloat gridSize = 33.0;
     }];
     [self unpause];
 }
-- (void)drawCanvasInRect:(CGRect)rect
-{
-    [[UIColor colorWithWhite:0.4 alpha:1.0] setFill];
-    UIRectFill(rect);
-    [self.backgroundImage drawInRect:rect];
-    [_viewport drawInRect:rect];
-}
-
-// Take a pt screen coordinate and translate it to pixel screen coordinates, because OpenGL only deals with pixels.
-CGPoint PX(float contentScaleFactor, CGPoint pt) {
-    return pt;
-}
-
 - (void) stopPanAnimation {
     panVelocity = CGPointZero;
     animatingPan = NO;
@@ -511,7 +511,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         CGPoint center = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
         center.x += (CGFloat)arc4random_uniform(121) - 60.0;
         center.y += (CGFloat)arc4random_uniform(121) - 60.0;
-        GLKVector3 worldCenter = [self.viewport unproject:PX(self.view.contentScaleFactor, center)];
+        CGPoint worldCenter = [self.viewport unproject:center];
         CircuitNote *note = [[CircuitNote alloc] initWithDictionary:@{
             @"text": @"Untitled note, hold to edit text",
             @"rect": @[@(worldCenter.x - 210.0), @(worldCenter.y - 110.0), @420.0, @220.0]
@@ -526,7 +526,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     
     CGPoint locationInView = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
         
-    GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, locationInView)];
+    CGPoint position = [_viewport unproject:locationInView];
     
     position.x += (float)(arc4random_uniform(200)) - 100.0;
     position.y += (float)(arc4random_uniform(200)) - 100.0;
@@ -558,13 +558,13 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 	}
     
     if ([gestureRecognizer isKindOfClass:[LongPressObjectGesture class]]) {
-        GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [gestureRecognizer locationInView:self.view])];
+        CGPoint position = [_viewport unproject:[gestureRecognizer locationInView:self.view]];
         
         return [_viewport findCircuitObjectAtPosition:position] || [_viewport findNoteAtPosition:position];
     }
     
     if ([gestureRecognizer isKindOfClass:[HoldDownGestureRecognizer class]]) {
-        GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [gestureRecognizer locationInView:self.view])];
+        CGPoint position = [_viewport unproject:[gestureRecognizer locationInView:self.view]];
         
         CircuitObject *object = [_viewport findCircuitObjectAtPosition:position];
         if (!object) return NO;
@@ -581,14 +581,14 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     if ([gestureRecognizer isKindOfClass:[CreateLinkGestureRecognizer class]]) {
         // Create a link from a gate, or move a link that is connected to a gate
         
-        GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [gestureRecognizer locationInView:self.view])];
+        CGPoint position = [_viewport unproject:[gestureRecognizer locationInView:self.view]];
         
         CircuitObject *o;
         // find the object under the touch:
         if ((o = [_viewport findCircuitObjectNearPosition:position])) {
             // calculate the offset (which will be used to determine which output to edit)
-            GLKVector3 offset = GLKVector3Subtract(position, *(GLKVector3 *)&o->pos);
-            if (offset.x < 150.0) {
+            CGVector offset = CGVectorMake(position.x - o->pos.x, position.y - o->pos.y);
+            if (offset.dx < 150.0) {
                 // Left side: editing something connected to a gate (todo: don't make this guess, just use find attachment at index or something which finds either inlets or outlets, whichever is closer)
                 CircuitLink *existing = [_viewport findCircuitLinkAtOffset:offset attachedToObject:o];
                 if (!existing) return NO;
@@ -618,7 +618,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         // Drag a gate. This is done with a pan gesture recogniser that is only begins if the touch starts on top of a gate 
         DragGateGestureRecognizer *recogniser = (DragGateGestureRecognizer *)gestureRecognizer;
         ;
-        GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [recogniser locationInView:self.view])];
+        CGPoint position = [_viewport unproject:[recogniser locationInView:self.view]];
         // only accept long presses on circuit objects:
         CircuitNote *resizeNote = [_viewport findNoteResizeHandleAtPosition:position];
         if (resizeNote) {
@@ -628,15 +628,15 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         CircuitObject *o;
         if ((o = [_viewport findCircuitObjectAtPosition:position])) {
             _beginLongPressGestureObject = o;
-            GLKVector3 objectPosition = *(GLKVector3 *) &_beginLongPressGestureObject->pos;
-            beginLongPressGestureOffset = GLKVector3Subtract(objectPosition, position);
+            beginLongPressGestureOffset = CGVectorMake(_beginLongPressGestureObject->pos.x - position.x,
+                                                       _beginLongPressGestureObject->pos.y - position.y);
             return YES;
         }
         CircuitNote *note = [_viewport findNoteAtPosition:position];
         if (note) {
             _beginDragNote = note;
-            beginLongPressGestureOffset = GLKVector3Make(note.frame.origin.x - position.x,
-                                                         note.frame.origin.y - position.y, 0.0);
+            beginLongPressGestureOffset = CGVectorMake(note.frame.origin.x - position.x,
+                                                       note.frame.origin.y - position.y);
             return YES;
         }
         // Dragging the background, defer this to the other pan gesture recognizer.
@@ -649,7 +649,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         // drag view pan
         UIPanGestureRecognizer *recogniser = (UIPanGestureRecognizer *)gestureRecognizer;
         ;
-        GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [recogniser locationInView:self.view])];
+        CGPoint position = [_viewport unproject:[recogniser locationInView:self.view]];
         if ([_viewport findCircuitObjectAtPosition:position] || [_viewport findNoteAtPosition:position]) {
             return NO;
         }
@@ -678,7 +678,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 - (IBAction)handleLongPressObject:(UILongPressGestureRecognizer *)sender {
     
     if (sender.state == UIGestureRecognizerStateBegan) {
-        GLKVector3 position = [_viewport unproject:PX(self.view.contentScaleFactor, [sender locationInView:self.view])];
+        CGPoint position = [_viewport unproject:[sender locationInView:self.view]];
         CircuitObject *object = [_viewport findCircuitObjectAtPosition:position];
         CircuitNote *note = object ? nil : [_viewport findNoteAtPosition:position];
         if (note) {
@@ -754,7 +754,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 - (void) updateChangeCount:(UIDocumentChangeKind)change {
     if (self.document.isProblem) return;
     
-    [self.document.circuit setViewCenterX:_viewport.translate.x viewCenterY:_viewport.translate.y];
+    [self.document.circuit setViewCenterX:_viewport.translation.x viewCenterY:_viewport.translation.y];
     
     [self.document updateChangeCount:change];
 }
@@ -768,7 +768,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     if (!_canPan) return;
     isPanning = recognizer.state == UIGestureRecognizerStateBegan || recognizer.state == UIGestureRecognizerStateChanged;
     CGPoint translation = [recognizer translationInView:self.view];
-    [_viewport translate: GLKVector3Make(translation.x, translation.y, 0.0)];
+    [_viewport translateBy:CGVectorMake(translation.x, translation.y)];
     // this makes it so next time "handlePanGesture:" is called, translation will be relative to the last one. (ie. translation is a delta)
     [recognizer setTranslation:CGPointMake(0, 0) inView:self.view];
     if (recognizer.state == UIGestureRecognizerStateEnded) {
@@ -839,7 +839,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     }
     
     // world space position of touch:
-    GLKVector3 curPos = [_viewport unproject: PX(self.view.contentScaleFactor, [sender locationOfTouch:0 inView:self.view])];
+    CGPoint curPos = [_viewport unproject:[sender locationOfTouch:0 inView:self.view]];
 
     if (_beginResizeNote) {
         CGRect frame = _beginResizeNote.frame;
@@ -851,7 +851,8 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     }
     
     // This moves it so that the user can drag the gate from places other than the gates top left corner
-    GLKVector3 newPos = GLKVector3Add(curPos, beginLongPressGestureOffset);
+    CGPoint newPos = CGPointMake(curPos.x + beginLongPressGestureOffset.dx,
+                                 curPos.y + beginLongPressGestureOffset.dy);
     if (_beginDragNote) {
         CGRect frame = _beginDragNote.frame;
         frame.origin = CGPointMake(newPos.x, newPos.y);
@@ -861,53 +862,11 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     }
     object->pos.x = newPos.x;
     object->pos.y = newPos.y;
-    object->pos.z = newPos.z;
     [self unpause];
 }
 
 - (IBAction)handleCreateGateGesture:(UIPanGestureRecognizer *)sender {
-//    Circuit *_circuit = _document.circuit;
-//    if (draggingOutFromToolbeltLockY) {
-//        // still dragging it out of the toolbelt
-//        
-//        if ([sender numberOfTouches] != 1) {
-//            sender.enabled = NO;
-//            sender.enabled = YES;
-//            return;
-//        }
-//        CGPoint p = [sender locationOfTouch:0 inView:self.view];
-//        
-//        CGPoint diff = CGPointMake(p.x - draggingOutFromToolbeltStart.x, p.y - draggingOutFromToolbeltStart.y);
-//        if (diff.x > _hud.toolbelt.listWidth) {
-//            GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, p)];
-//            
-//            // the gate is out of the toolbelt, act the same as the normal drag gate gesture from now on:
-//            draggingOutFromToolbeltLockY = NO;
-//            
-//            ToolbeltItem *item = _hud.toolbelt.items[_hud.toolbelt.currentObjectIndex];
-//            
-//            
-//            // Create a new gate object, and start dragging the gate (as if the drag gate gesture recognizer started)
-//            
-//            CircuitObject *o = [_circuit addObject:item.type];
-//            beginLongPressGestureObject = o;
-//            o->pos.x = position.x;
-//            o->pos.y = position.y - 100.0;
-//            GLKVector3 objectPosition = *(GLKVector3 *) &beginLongPressGestureObject->pos;
-//
-//            beginLongPressGestureOffset = GLKVector3Subtract(objectPosition, position);
-//            
-//            beginLongPressGestureObject = o;
-//            
-//            _hud.toolbelt.currentObjectIndex = -1;
-//        } else {
-//            _hud.toolbelt.currentObjectX = diff.x;
-//        }
-//    } else {
-//        // the gate is out of the toolbelt:
-//        [self handleDragGateGesture:sender];
-//    }
-//    [self unpause];
+    (void)sender;
 }
 
 - (IBAction)handleCreateLinkGesture:(UILongPressGestureRecognizer *)sender {
@@ -931,7 +890,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         return;
     }
     // world space:
-    GLKVector3 curPos = [_viewport unproject: PX(self.view.contentScaleFactor, [sender locationOfTouch:0 inView:self.view])];
+    CGPoint curPos = [_viewport unproject:[sender locationOfTouch:0 inView:self.view]];
 
     CircuitObject *target;
     
@@ -939,9 +898,9 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     
     if ((target = [_viewport findCircuitObjectNearPosition:curPos])) {
         
-        GLKVector3 offset = GLKVector3Subtract(curPos, *(GLKVector3 *)&target->pos);
+        CGVector offset = CGVectorMake(curPos.x - target->pos.x, curPos.y - target->pos.y);
         int targetIndex = -1;
-        if (target == _viewport.currentEditingLinkSource && offset.x > 140.0) {
+        if (target == _viewport.currentEditingLinkSource && offset.dx > 140.0) {
             
         } else {
             targetIndex = [_viewport findInletIndexAtOffset:offset attachedToObject:target];
@@ -1000,25 +959,25 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         return;
     }
     // Zoom:
-    CGPoint screenPos = PX(self.view.contentScaleFactor, [recognizer locationInView:self.view]);
+    CGPoint screenPos = [recognizer locationInView:self.view];
     
     if (recognizer.state == UIGestureRecognizerStateBegan) {
-        beginGestureScale = _viewport.scaleWithFloat;
+        beginGestureScale = _viewport.zoomScale;
     }
     
-    GLKVector3 aPos = [_viewport unproject: screenPos];
-    _viewport.scaleWithFloat = beginGestureScale * recognizer.scale;
-    GLKVector3 bPos = [_viewport unproject: screenPos];
+    CGPoint aPos = [_viewport unproject: screenPos];
+    _viewport.zoomScale = beginGestureScale * recognizer.scale;
+    CGPoint bPos = [_viewport unproject: screenPos];
     
     // We want modelViewMatrix * curPos = newModelViewMatrix * curPos (i.e., scaling should not translate the center point of the gesture)
     
     // A v = B v.. so what is B...
-    [_viewport translate: GLKVector3Make(_viewport.scaleWithFloat * (bPos.x - aPos.x), _viewport.scaleWithFloat * (bPos.y - aPos.y), 0.0)];
+    [_viewport translateBy:CGVectorMake(_viewport.zoomScale * (bPos.x - aPos.x),
+                                        _viewport.zoomScale * (bPos.y - aPos.y))];
     [self unpause];
     
 ////#define LOG_TEST 0
 //#ifdef LOG_TEST
-//    GLKVector3 cPos = [_viewport unproject: PX(self.view.contentScaleFactor, [recognizer locationInView:self.view])];
 //    // the difference should be (0,0,0)
 //    NSLog(@"((%.2f, %.2f : %.2f) , (%.2f, %.2f : %.2f))", aPos.x, cPos.x, aPos.x - cPos.x , aPos.y, cPos.y, aPos.y - cPos.y);
 //#endif
@@ -1044,7 +1003,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         CGPoint screenPos = [sender locationOfTouch:i inView:self.view];
         
         // world space coordinates
-        GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, screenPos)];
+        CGPoint position = [_viewport unproject:screenPos];
         
         CircuitObject *object = [_viewport findCircuitObjectAtPosition:position];
         

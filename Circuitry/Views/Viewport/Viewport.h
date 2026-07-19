@@ -1,5 +1,4 @@
 #import <UIKit/UIKit.h>
-#import <GLKit/GLKit.h>
 #include <math.h>
 
 #import "CircuitInternal.h"
@@ -18,32 +17,26 @@
 - (void) didAttachLink:(CircuitLink *)link;
 - (void) didBeginCreatingLink:(CircuitObject *)object outletIndex:(int)outletIndex;
 
-- (void) translate: (GLKVector3) translate;
-- (void) setProjectionMatrix: (GLKMatrix4) projectionMatrix;
-- (void) drawInRect:(CGRect)rect;
+- (void)translateBy:(CGVector)translation;
 
-// GPU-backed editor rendering. Core Graphics drawing remains available for
-// document thumbnails and snapshots.
+// SpriteKit-backed editor rendering.
 - (void) attachToScene:(SKScene *)scene backgroundImage:(UIImage *)backgroundImage;
 - (void) setSceneContentNeedsUpdate;
 - (void) updateSceneForViewSize:(CGSize)viewSize allowContentRebuild:(BOOL)allowContentRebuild;
 
-- (void) setScaleWithFloat: (float) scale;
-- (float) scaleWithFloat;
-
-- (int) findOutletIndexAtOffset:(GLKVector3) offset attachedToObject:(CircuitObject *)object;
-- (int) findInletIndexAtOffset:(GLKVector3) offset attachedToObject:(CircuitObject *)object;
-- (CircuitLink *) findCircuitLinkAtOffset: (GLKVector3)offset attachedToObject:(CircuitObject *)object;
-- (CircuitObject*) findCircuitObjectAtPosition: (GLKVector3) pos;
-- (CircuitObject*) findCircuitObjectNearPosition: (GLKVector3) pos;
-- (BOOL) isPosition:(GLKVector3)position onMomentaryButtonCap:(CircuitObject *)object;
-- (CircuitNote *) findNoteAtPosition:(GLKVector3)pos;
-- (CircuitNote *) findNoteResizeHandleAtPosition:(GLKVector3)pos;
+- (int)findOutletIndexAtOffset:(CGVector)offset attachedToObject:(CircuitObject *)object;
+- (int)findInletIndexAtOffset:(CGVector)offset attachedToObject:(CircuitObject *)object;
+- (CircuitLink *)findCircuitLinkAtOffset:(CGVector)offset attachedToObject:(CircuitObject *)object;
+- (CircuitObject *)findCircuitObjectAtPosition:(CGPoint)position;
+- (CircuitObject *)findCircuitObjectNearPosition:(CGPoint)position;
+- (BOOL)isPosition:(CGPoint)position onMomentaryButtonCap:(CircuitObject *)object;
+- (CircuitNote *)findNoteAtPosition:(CGPoint)position;
+- (CircuitNote *)findNoteResizeHandleAtPosition:(CGPoint)position;
 - (CGRect) resizeHandleRectForNote:(CircuitNote *)note;
 - (CGRect) rectForObject:(CircuitObject *) object inView:(UIView *)view;
 - (CGRect) rectForNote:(CircuitNote *)note inView:(UIView *)view;
 
-- (GLKVector3) unproject: (CGPoint) screenPos;
+- (CGPoint)unproject:(CGPoint)screenPosition;
 
 @property (nonatomic) CircuitDocument *document;
 @property (nonatomic) CircuitLink *currentEditingLink;
@@ -51,9 +44,9 @@
 @property (nonatomic) CircuitObject *currentEditingLinkTarget;
 @property (nonatomic) int currentEditingLinkSourceIndex;
 @property (nonatomic) int currentEditingLinkTargetIndex;
-@property (nonatomic) GLKVector3 currentEditingLinkTargetPosition;
+@property (nonatomic) CGPoint currentEditingLinkTargetPosition;
 
-@property (nonatomic) GLKVector3 translate;
-@property (nonatomic) GLKVector3 scale;
+@property (nonatomic) CGPoint translation;
+@property (nonatomic) CGFloat zoomScale;
 
 @end

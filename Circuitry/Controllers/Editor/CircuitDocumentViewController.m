@@ -26,7 +26,7 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *objectListLeft;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *problemInfoBottom;
 @property (nonatomic, weak) ProblemInfoViewController *problemInfoViewController;
-@property (nonatomic, weak) ViewController *glkViewController;
+@property (nonatomic, weak) ViewController *editorViewController;
 @property (nonatomic) BOOL objectListVisible;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *checkAnswerButton;
 @property (nonatomic) BOOL problemInfoVisible;
@@ -60,7 +60,7 @@
 }
 
 - (UIImage *) snapshot {
-    return [_glkViewController snapshot];
+    return [_editorViewController snapshot];
 }
 
 - (UIView *) titleView {
@@ -123,7 +123,7 @@
     field.returnKeyType = UIReturnKeyDone;
     self.navigationItem.titleView = field;
     [self.view addGestureRecognizer:self.tapToDismissKeyboard];
-    self.glkViewController.view.userInteractionEnabled = NO;
+    self.editorViewController.view.userInteractionEnabled = NO;
     [self.navigationController.navigationBar layoutSubviews];
     
     [field becomeFirstResponder];
@@ -150,7 +150,7 @@
     
     [self.view removeGestureRecognizer:_tapToDismissKeyboard];
     self.tapToDismissKeyboard = nil;
-    self.glkViewController.view.userInteractionEnabled = YES;
+    self.editorViewController.view.userInteractionEnabled = YES;
 
     return YES;
 }
@@ -159,7 +159,7 @@
     NSParameterAssert(document.circuit);
     
     _objectListViewController.document = document;
-    _glkViewController.document = document;
+    _editorViewController.document = document;
     _problemInfoViewController.document = document;
     
     _document = document;
@@ -177,7 +177,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     _objectListViewController.document = _document;
-    _glkViewController.document = _document;
+    _editorViewController.document = _document;
     [self configureView];
     [self configureTitleView];
 }
@@ -385,18 +385,18 @@ static CGPoint hvrDragHereRight = {88,428};
             self.tutorialState = 6;
             return;
         }
-        if (_glkViewController.viewport.currentEditingLinkSource == A && _glkViewController.viewport.currentEditingLinkSourceIndex == 0) {
+        if (_editorViewController.viewport.currentEditingLinkSource == A && _editorViewController.viewport.currentEditingLinkSourceIndex == 0) {
             self.tutorialState = 5;
             return;
         }
-        if (_glkViewController.viewport.currentEditingLinkSource == B && _glkViewController.viewport.currentEditingLinkSourceIndex == 0) {
+        if (_editorViewController.viewport.currentEditingLinkSource == B && _editorViewController.viewport.currentEditingLinkSourceIndex == 0) {
             self.tutorialState = 3;
             return;
         }
         self.tutorialState = 4;
     } else {
         
-        if (_glkViewController.viewport.currentEditingLinkSource == B && _glkViewController.viewport.currentEditingLinkSourceIndex == 0) {
+        if (_editorViewController.viewport.currentEditingLinkSource == B && _editorViewController.viewport.currentEditingLinkSourceIndex == 0) {
             self.tutorialState = 2;
             return;
         }
@@ -754,7 +754,7 @@ static CGPoint hvrDragHereRight = {88,428};
 #pragma mark - Toolbelt delegate
 
 - (void) tableViewController:(CircuitObjectListTableViewController *)tableViewController didStartCreatingObject:(ToolbeltItem *)item {
-    [_glkViewController startCreatingObjectFromItem: item];
+    [_editorViewController startCreatingObjectFromItem: item];
 }
 
 
@@ -807,8 +807,8 @@ static CGPoint hvrDragHereRight = {88,428};
         controller.document = self.document;
     } else if ([d isKindOfClass:[ViewController class]]) {
         ViewController *controller = (ViewController *) d;
-        _glkViewController = controller;
-        _glkViewController.tutorialDelegate = self;
+        _editorViewController = controller;
+        _editorViewController.tutorialDelegate = self;
         controller.document = self.document;
     } else if ([d isKindOfClass:ProblemInfoViewController.class]) {
         ProblemInfoViewController * controller = (ProblemInfoViewController *) d;

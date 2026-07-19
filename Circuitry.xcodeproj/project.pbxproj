@@ -115,7 +115,6 @@
 				"$(INPUT_FILE_PATH)/led-off.png",
 				"$(INPUT_FILE_PATH)/led-on-green.png",
 				"$(INPUT_FILE_PATH)/led-on.png",
-				"$(INPUT_FILE_PATH)/single@2x.png",
 				"$(INPUT_FILE_PATH)/switch-off.png",
 				"$(INPUT_FILE_PATH)/switch-on.png",
 				"$(INPUT_FILE_PATH)/switch-press.png",
@@ -255,40 +254,10 @@
 		923584E71AF602DE004DCD0F /* ProblemSetProblemInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProblemSetProblemInfo.m; sourceTree = "<group>"; };
 		923584E81AF602DF004DCD0F /* ToolbeltItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolbeltItem.h; sourceTree = "<group>"; };
 		923584E91AF602DF004DCD0F /* ToolbeltItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolbeltItem.m; sourceTree = "<group>"; };
-		923584EC1AF602DF004DCD0F /* BatchedSprite.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = BatchedSprite.fsh; sourceTree = "<group>"; };
-		923584ED1AF602DF004DCD0F /* BatchedSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BatchedSprite.h; sourceTree = "<group>"; };
-		923584EE1AF602DF004DCD0F /* BatchedSprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BatchedSprite.m; sourceTree = "<group>"; };
-		923584EF1AF602DF004DCD0F /* BatchedSprite.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = BatchedSprite.vsh; sourceTree = "<group>"; };
-		923584F01AF602DF004DCD0F /* Drawable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Drawable.h; sourceTree = "<group>"; };
-		923584F11AF602DF004DCD0F /* Drawable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Drawable.m; sourceTree = "<group>"; };
 		923584F21AF602DF004DCD0F /* ImageAtlas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAtlas.h; sourceTree = "<group>"; };
 		923584F31AF602DF004DCD0F /* ImageAtlas.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAtlas.m; sourceTree = "<group>"; };
-		923584F41AF602DF004DCD0F /* ShaderEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderEffect.h; sourceTree = "<group>"; };
-		923584F51AF602DF004DCD0F /* ShaderEffect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShaderEffect.m; sourceTree = "<group>"; };
-		923584F71AF602DF004DCD0F /* Shader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Shader.fsh; sourceTree = "<group>"; };
-		923584F81AF602DF004DCD0F /* Shader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Shader.vsh; sourceTree = "<group>"; };
-		923584FA1AF602DF004DCD0F /* Sprite.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Sprite.fsh; sourceTree = "<group>"; };
-		923584FB1AF602DF004DCD0F /* Sprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sprite.h; sourceTree = "<group>"; };
-		923584FC1AF602DF004DCD0F /* Sprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sprite.m; sourceTree = "<group>"; };
-		923584FD1AF602DF004DCD0F /* Sprite.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Sprite.vsh; sourceTree = "<group>"; };
 		923584FF1AF602DF004DCD0F /* TransitionFromDocumentListToDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitionFromDocumentListToDocument.h; sourceTree = "<group>"; };
 		923585001AF602DF004DCD0F /* TransitionFromDocumentListToDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitionFromDocumentListToDocument.m; sourceTree = "<group>"; };
-		923585031AF602DF004DCD0F /* Grid.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Grid.fsh; sourceTree = "<group>"; };
-		923585041AF602DF004DCD0F /* Grid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Grid.h; sourceTree = "<group>"; };
-		923585051AF602DF004DCD0F /* Grid.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Grid.m; sourceTree = "<group>"; };
-		923585061AF602DF004DCD0F /* Grid.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Grid.vsh; sourceTree = "<group>"; };
-		923585081AF602DF004DCD0F /* LinkBezier.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = LinkBezier.fsh; sourceTree = "<group>"; };
-		923585091AF602DF004DCD0F /* LinkBezier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkBezier.h; sourceTree = "<group>"; };
-		9235850A1AF602DF004DCD0F /* LinkBezier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LinkBezier.m; sourceTree = "<group>"; };
-		9235850B1AF602DF004DCD0F /* LinkBezier.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = LinkBezier.vsh; sourceTree = "<group>"; };
-		9235850D1AF602DF004DCD0F /* SevenSegmentDisplay.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = SevenSegmentDisplay.fsh; sourceTree = "<group>"; };
-		9235850E1AF602DF004DCD0F /* SevenSegmentDisplay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SevenSegmentDisplay.h; sourceTree = "<group>"; };
-		9235850F1AF602DF004DCD0F /* SevenSegmentDisplay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SevenSegmentDisplay.m; sourceTree = "<group>"; };
-		923585101AF602DF004DCD0F /* SevenSegmentDisplay.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = SevenSegmentDisplay.vsh; sourceTree = "<group>"; };
-		923585121AF602DF004DCD0F /* TouchHighlight.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = TouchHighlight.fsh; sourceTree = "<group>"; };
-		923585131AF602DF004DCD0F /* TouchHighlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchHighlight.h; sourceTree = "<group>"; };
-		923585141AF602DF004DCD0F /* TouchHighlight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TouchHighlight.m; sourceTree = "<group>"; };
-		923585151AF602DF004DCD0F /* TouchHighlight.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = TouchHighlight.vsh; sourceTree = "<group>"; };
 		923585171AF602DF004DCD0F /* Viewport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Viewport.h; sourceTree = "<group>"; };
 		923585181AF602DF004DCD0F /* Viewport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Viewport.m; sourceTree = "<group>"; };
 		923585711AF60311004DCD0F /* Problems */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Problems; sourceTree = "<group>"; };
@@ -622,48 +591,10 @@
 		923584EA1AF602DF004DCD0F /* Rendering */ = {
 			isa = PBXGroup;
 			children = (
-				923584EB1AF602DF004DCD0F /* BatchedSprite */,
-				923584F01AF602DF004DCD0F /* Drawable.h */,
-				923584F11AF602DF004DCD0F /* Drawable.m */,
 				923584F21AF602DF004DCD0F /* ImageAtlas.h */,
 				923584F31AF602DF004DCD0F /* ImageAtlas.m */,
-				923584F41AF602DF004DCD0F /* ShaderEffect.h */,
-				923584F51AF602DF004DCD0F /* ShaderEffect.m */,
-				923584F61AF602DF004DCD0F /* Shaders */,
-				923584F91AF602DF004DCD0F /* Sprite */,
 			);
 			path = Rendering;
-			sourceTree = "<group>";
-		};
-		923584EB1AF602DF004DCD0F /* BatchedSprite */ = {
-			isa = PBXGroup;
-			children = (
-				923584EC1AF602DF004DCD0F /* BatchedSprite.fsh */,
-				923584ED1AF602DF004DCD0F /* BatchedSprite.h */,
-				923584EE1AF602DF004DCD0F /* BatchedSprite.m */,
-				923584EF1AF602DF004DCD0F /* BatchedSprite.vsh */,
-			);
-			path = BatchedSprite;
-			sourceTree = "<group>";
-		};
-		923584F61AF602DF004DCD0F /* Shaders */ = {
-			isa = PBXGroup;
-			children = (
-				923584F71AF602DF004DCD0F /* Shader.fsh */,
-				923584F81AF602DF004DCD0F /* Shader.vsh */,
-			);
-			path = Shaders;
-			sourceTree = "<group>";
-		};
-		923584F91AF602DF004DCD0F /* Sprite */ = {
-			isa = PBXGroup;
-			children = (
-				923584FA1AF602DF004DCD0F /* Sprite.fsh */,
-				923584FB1AF602DF004DCD0F /* Sprite.h */,
-				923584FC1AF602DF004DCD0F /* Sprite.m */,
-				923584FD1AF602DF004DCD0F /* Sprite.vsh */,
-			);
-			path = Sprite;
 			sourceTree = "<group>";
 		};
 		923584FE1AF602DF004DCD0F /* Segues */ = {
@@ -678,57 +609,9 @@
 		923585011AF602DF004DCD0F /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				923585021AF602DF004DCD0F /* Grid */,
-				923585071AF602DF004DCD0F /* LinkBezier */,
-				9235850C1AF602DF004DCD0F /* SevenSegmentDisplay */,
-				923585111AF602DF004DCD0F /* TouchHighlight */,
 				923585161AF602DF004DCD0F /* Viewport */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		923585021AF602DF004DCD0F /* Grid */ = {
-			isa = PBXGroup;
-			children = (
-				923585031AF602DF004DCD0F /* Grid.fsh */,
-				923585041AF602DF004DCD0F /* Grid.h */,
-				923585051AF602DF004DCD0F /* Grid.m */,
-				923585061AF602DF004DCD0F /* Grid.vsh */,
-			);
-			path = Grid;
-			sourceTree = "<group>";
-		};
-		923585071AF602DF004DCD0F /* LinkBezier */ = {
-			isa = PBXGroup;
-			children = (
-				923585081AF602DF004DCD0F /* LinkBezier.fsh */,
-				923585091AF602DF004DCD0F /* LinkBezier.h */,
-				9235850A1AF602DF004DCD0F /* LinkBezier.m */,
-				9235850B1AF602DF004DCD0F /* LinkBezier.vsh */,
-			);
-			path = LinkBezier;
-			sourceTree = "<group>";
-		};
-		9235850C1AF602DF004DCD0F /* SevenSegmentDisplay */ = {
-			isa = PBXGroup;
-			children = (
-				9235850D1AF602DF004DCD0F /* SevenSegmentDisplay.fsh */,
-				9235850E1AF602DF004DCD0F /* SevenSegmentDisplay.h */,
-				9235850F1AF602DF004DCD0F /* SevenSegmentDisplay.m */,
-				923585101AF602DF004DCD0F /* SevenSegmentDisplay.vsh */,
-			);
-			path = SevenSegmentDisplay;
-			sourceTree = "<group>";
-		};
-		923585111AF602DF004DCD0F /* TouchHighlight */ = {
-			isa = PBXGroup;
-			children = (
-				923585121AF602DF004DCD0F /* TouchHighlight.fsh */,
-				923585131AF602DF004DCD0F /* TouchHighlight.h */,
-				923585141AF602DF004DCD0F /* TouchHighlight.m */,
-				923585151AF602DF004DCD0F /* TouchHighlight.vsh */,
-			);
-			path = TouchHighlight;
 			sourceTree = "<group>";
 		};
 		923585161AF602DF004DCD0F /* Viewport */ = {

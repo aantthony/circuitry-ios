@@ -60,11 +60,21 @@
 
 - (UIImage *) imageForSprite:(SpriteTexturePos)position {
     CGRect cropRect = CGRectMake(position.u, position.v, position.twidth, position.theight);
+    CGImageRef atlasImage = self.image.CGImage;
+    if (!atlasImage || !isfinite(CGRectGetMinX(cropRect)) || !isfinite(CGRectGetMinY(cropRect)) ||
+        !isfinite(CGRectGetWidth(cropRect)) || !isfinite(CGRectGetHeight(cropRect)) ||
+        CGRectGetWidth(cropRect) <= 0.0 || CGRectGetHeight(cropRect) <= 0.0) {
+        return nil;
+    }
+
+    CGRect imageBounds = CGRectMake(0.0, 0.0, CGImageGetWidth(atlasImage), CGImageGetHeight(atlasImage));
+    if (!CGRectContainsRect(imageBounds, cropRect)) return nil;
+
     NSValue *key = [NSValue valueWithCGRect:cropRect];
     UIImage *cachedImage = self.spriteImages[key];
     if (cachedImage) return cachedImage;
 
-    CGImageRef croppedImage = CGImageCreateWithImageInRect(self.image.CGImage, cropRect);
+    CGImageRef croppedImage = CGImageCreateWithImageInRect(atlasImage, cropRect);
     if (!croppedImage) return nil;
     UIImage *image = [UIImage imageWithCGImage:croppedImage scale:self.image.scale orientation:self.image.imageOrientation];
     CGImageRelease(croppedImage);
