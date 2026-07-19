@@ -1022,7 +1022,8 @@ static CGFloat gridSize = 33.0;
             }];
             [self updateChangeCount:UIDocumentChangeDone];
         } else {
-            if (object->type == [_document.circuit getProcessById:@"pbtn"]) {
+            if (object->type == [_document.circuit getProcessById:@"pbtn"]
+                && [_viewport isPosition:position onMomentaryButtonCap:object]) {
                 hit = YES;
                 [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
                     if (object->out != 0) return;
