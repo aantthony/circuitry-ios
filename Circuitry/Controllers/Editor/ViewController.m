@@ -71,6 +71,30 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 
 @implementation ViewController
 
+- (BOOL)circuitContainsClocks {
+    if (!_document.circuit) return NO;
+
+    __block BOOL containsClocks = NO;
+    [_document.circuit enumerateClocksUsingBlock:^(CircuitObject *object, BOOL *stop) {
+        containsClocks = YES;
+        *stop = YES;
+    }];
+    return containsClocks;
+}
+
+- (void)setPaused:(BOOL)paused {
+    _paused = paused;
+
+    // Clockless circuits can stop SpriteKit entirely while idle. Circuits with
+    // clocks must keep receiving scene updates so their elapsed-time-driven
+    // clock transitions continue to run.
+    if (!paused) {
+        self.circuitScene.paused = NO;
+    } else if (![self circuitContainsClocks]) {
+        self.circuitScene.paused = YES;
+    }
+}
+
 - (void) setDocument:(CircuitDocument *) document {
     _document = document;
     _viewport.document = _document;
