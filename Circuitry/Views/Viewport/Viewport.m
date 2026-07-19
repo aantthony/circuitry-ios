@@ -14,6 +14,14 @@
 @property (nonatomic) SKSpriteNode *sceneBackground;
 @property (nonatomic) SKShapeNode *sceneGrid;
 @property (nonatomic) SKNode *sceneWorld;
+@property (nonatomic) SKNode *sceneNotesLayer;
+@property (nonatomic) SKNode *sceneLinksLayer;
+@property (nonatomic) SKNode *sceneEditingLinkLayer;
+@property (nonatomic) SKNode *sceneObjectsLayer;
+@property (nonatomic) SKNode *sceneOverlayLayer;
+@property (nonatomic) NSMutableDictionary<NSValue *, SKNode *> *sceneObjectNodes;
+@property (nonatomic) NSMutableDictionary<NSValue *, SKNode *> *sceneLinkNodes;
+@property (nonatomic) NSMutableDictionary<NSString *, SKNode *> *sceneNoteNodes;
 @property (nonatomic) NSMutableDictionary<NSValue *, SKTexture *> *sceneTextures;
 @property (nonatomic) UIImage *ledOnGreenImage;
 @property (nonatomic) UIImage *ledOnRedImage;
@@ -24,7 +32,12 @@
 @property (nonatomic) BOOL sceneContentNeedsUpdate;
 @end
 
-@implementation Viewport
+@implementation Viewport {
+    // Group node that the addScene… builders emit into, with a monotonically
+    // increasing local z so each group keeps painter's-order internally.
+    SKNode *_sceneBuildTarget;
+    CGFloat _sceneBuildZ;
+}
 
 static SpriteTexturePos gateBackgroundHeight2;
 static SpriteTexturePos gateOutletInactive;
@@ -103,7 +116,12 @@ static UIImage *LEDImageByShiftingHue(UIImage *source, CGFloat angle, CGFloat sa
     CIImage *output = colorFilter.outputImage;
     if (!output) return source;
 
-    CIContext *context = [CIContext contextWithOptions:nil];
+    // CIContext creation is expensive; share one across the LED variants.
+    static CIContext *context;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        context = [CIContext contextWithOptions:nil];
+    });
     CGImageRef imageRef = [context createCGImage:output fromRect:input.extent];
     if (!imageRef) return source;
     UIImage *result = [UIImage imageWithCGImage:imageRef scale:source.scale orientation:source.imageOrientation];
@@ -119,6 +137,9 @@ static UIImage *LEDImageByShiftingHue(UIImage *source, CGFloat angle, CGFloat sa
     _highlightProgress = 10000.0;
     _highlightOutProgress = 10000.0;
     _sceneTextures = [NSMutableDictionary dictionary];
+    _sceneObjectNodes = [NSMutableDictionary dictionary];
+    _sceneLinkNodes = [NSMutableDictionary dictionary];
+    _sceneNoteNodes = [NSMutableDictionary dictionary];
     _sceneContentNeedsUpdate = YES;
 
     CGFloat initialScale = 0.5;
@@ -475,7 +496,8 @@ static CGRect momentaryButtonCapRect(CircuitObject *object) {
 #pragma mark - SpriteKit rendering
 
 - (CGFloat)nextSceneContentZPosition {
-    return 100.0 + self.sceneWorld.children.count * 0.001;
+    _sceneBuildZ += 0.0001;
+    return _sceneBuildZ;
 }
 
 - (SKTexture *)sceneTextureForSprite:(SpriteTexturePos)position {
@@ -503,10 +525,8 @@ static CGRect momentaryButtonCapRect(CircuitObject *object) {
                                   point.y + texturePosition.height * 0.5);
     // sceneWorld flips UIKit's downward Y axis; flip bitmap content back.
     sprite.yScale = -1.0;
-    // Preserve painter's-order semantics from the old Core Graphics renderer.
-    // Links occupy z=0...2; gate parts are layered in insertion order above them.
     sprite.zPosition = [self nextSceneContentZPosition];
-    [self.sceneWorld addChild:sprite];
+    [_sceneBuildTarget addChild:sprite];
 }
 
 - (void)addSceneLinkFrom:(CGPoint)start to:(CGPoint)end active:(BOOL)isActive {
@@ -531,8 +551,8 @@ static CGRect momentaryButtonCapRect(CircuitObject *object) {
         line.lineWidth = widths[index];
         line.lineCap = kCGLineCapRound;
         line.lineJoin = kCGLineJoinRound;
-        line.zPosition = 20.0 + index;
-        [self.sceneWorld addChild:line];
+        line.zPosition = index;
+        [_sceneBuildTarget addChild:line];
     }
     CGPathRelease(path);
 }
@@ -547,8 +567,8 @@ static CGRect momentaryButtonCapRect(CircuitObject *object) {
     card.fillColor = [UIColor colorWithWhite:1.0 alpha:0.10];
     card.strokeColor = [UIColor colorWithWhite:1.0 alpha:0.28];
     card.lineWidth = 4.0;
-    card.zPosition = 10.0;
-    [self.sceneWorld addChild:card];
+    card.zPosition = 0.0;
+    [_sceneBuildTarget addChild:card];
 
     CGMutablePathRef handlePath = CGPathCreateMutable();
     CGPathMoveToPoint(handlePath, NULL, CGRectGetMaxX(frame) - 44.0, CGRectGetMaxY(frame));
@@ -558,8 +578,8 @@ static CGRect momentaryButtonCapRect(CircuitObject *object) {
     handle.strokeColor = [UIColor colorWithWhite:1.0 alpha:0.35];
     handle.lineWidth = 5.0;
     handle.lineCap = kCGLineCapRound;
-    handle.zPosition = 12.0;
-    [self.sceneWorld addChild:handle];
+    handle.zPosition = 2.0;
+    [_sceneBuildTarget addChild:handle];
 
     SKLabelNode *label = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue-Medium"];
     label.text = note.text.length ? note.text : @"Note";
@@ -571,8 +591,8 @@ static CGRect momentaryButtonCapRect(CircuitObject *object) {
     label.preferredMaxLayoutWidth = MAX(40.0, frame.size.width - 40.0);
     label.position = CGPointMake(CGRectGetMinX(frame) + 20.0, CGRectGetMinY(frame) + 20.0);
     label.yScale = -1.0;
-    label.zPosition = 11.0;
-    [self.sceneWorld addChild:label];
+    label.zPosition = 1.0;
+    [_sceneBuildTarget addChild:label];
 }
 
 - (void)addSceneMomentaryButton:(CircuitObject *)object {
@@ -585,7 +605,7 @@ static CGRect momentaryButtonCapRect(CircuitObject *object) {
     bezel.strokeColor = [UIColor colorWithWhite:0.82 alpha:1.0];
     bezel.lineWidth = 5.0;
     bezel.zPosition = [self nextSceneContentZPosition];
-    [self.sceneWorld addChild:bezel];
+    [_sceneBuildTarget addChild:bezel];
 
     CGFloat capRadius = object->out ? 46.0 : 53.0;
     SKShapeNode *cap = [SKShapeNode shapeNodeWithCircleOfRadius:capRadius];
@@ -598,7 +618,7 @@ static CGRect momentaryButtonCapRect(CircuitObject *object) {
         : [UIColor colorWithWhite:0.62 alpha:1.0];
     cap.lineWidth = 5.0;
     cap.zPosition = [self nextSceneContentZPosition];
-    [self.sceneWorld addChild:cap];
+    [_sceneBuildTarget addChild:cap];
 
     SKShapeNode *highlight = [SKShapeNode shapeNodeWithCircleOfRadius:MAX(8.0, capRadius - 12.0)];
     highlight.position = center;
@@ -608,7 +628,7 @@ static CGRect momentaryButtonCapRect(CircuitObject *object) {
         : [UIColor colorWithWhite:1.0 alpha:0.72];
     highlight.lineWidth = 3.0;
     highlight.zPosition = [self nextSceneContentZPosition];
-    [self.sceneWorld addChild:highlight];
+    [_sceneBuildTarget addChild:highlight];
 }
 
 - (void)addSceneColoredLED:(CircuitObject *)object atWorldPoint:(CGPoint)point {
@@ -637,7 +657,7 @@ static CGRect momentaryButtonCapRect(CircuitObject *object) {
                                   point.y + ledOnGreen.height * 0.5);
     sprite.yScale = -1.0;
     sprite.zPosition = [self nextSceneContentZPosition];
-    [self.sceneWorld addChild:sprite];
+    [_sceneBuildTarget addChild:sprite];
 }
 
 - (void)addSceneObject:(CircuitObject *)object {
@@ -720,31 +740,127 @@ static CGRect momentaryButtonCapRect(CircuitObject *object) {
     highlight.position = CGPointMake(position.x, position.y);
     highlight.strokeColor = [UIColor colorWithWhite:1.0 alpha:MAX(0.0, 1.0 - progress)];
     highlight.lineWidth = MAX(2.0 / MAX(_zoomScale, 0.001), 4.0);
-    highlight.zPosition = 200.0;
-    [self.sceneWorld addChild:highlight];
+    highlight.zPosition = [self nextSceneContentZPosition];
+    [_sceneBuildTarget addChild:highlight];
 }
 
-- (void)rebuildSceneContent {
-    [self.sceneWorld removeAllChildren];
-    Circuit *circuit = self.document.circuit;
-    for (CircuitNote *note in circuit.notes) {
-        [self addSceneNote:note];
+// Compact per-item fingerprints of everything the builders read, so a scene
+// update only rebuilds the nodes whose appearance actually changed.
+typedef struct {
+    float x, y;
+    const CircuitProcess *type;
+    int32_t in, out;
+    char name[4];
+    uint32_t connectedOutputs;
+    uint32_t connectedInputs;
+    int32_t editingSourceIndex;
+    int32_t editingTargetIndex;
+} SceneObjectState;
+
+typedef struct {
+    float startX, startY, endX, endY;
+    int32_t active;
+    float zoomScale; // link stroke widths depend on the zoom level
+} SceneLinkState;
+
+static BOOL nodeMatchesState(SKNode *node, const void *state, size_t length) {
+    NSData *stored = node.userData[@"state"];
+    return stored.length == length && memcmp(stored.bytes, state, length) == 0;
+}
+
+static void nodeStoreState(SKNode *node, const void *state, size_t length) {
+    if (!node.userData) node.userData = [NSMutableDictionary dictionary];
+    node.userData[@"state"] = [NSData dataWithBytes:state length:length];
+}
+
+- (SKNode *)groupNodeForKey:(id<NSCopying>)key in:(NSMutableDictionary *)nodes layer:(SKNode *)layer {
+    SKNode *group = nodes[key];
+    if (!group) {
+        group = [SKNode node];
+        [layer addChild:group];
+        nodes[key] = group;
+    } else {
+        [group removeAllChildren];
     }
+    _sceneBuildTarget = group;
+    _sceneBuildZ = 0.0;
+    return group;
+}
+
+- (void)pruneSceneNodes:(NSMutableDictionary *)nodes keeping:(NSSet *)liveKeys {
+    // Every live key is (re)inserted during the update pass, so equal counts
+    // mean nothing was removed.
+    if (nodes.count == liveKeys.count) return;
+    NSMutableArray *staleKeys = [NSMutableArray array];
+    for (id key in nodes) {
+        if (![liveKeys containsObject:key]) [staleKeys addObject:key];
+    }
+    for (id key in staleKeys) {
+        [nodes[key] removeFromParent];
+        [nodes removeObjectForKey:key];
+    }
+}
+
+- (void)updateSceneContent {
+    Circuit *circuit = self.document.circuit;
+
+    NSMutableSet<NSString *> *liveNoteKeys = [NSMutableSet set];
+    for (CircuitNote *note in circuit.notes) {
+        NSString *key = note.identifier ?: @"";
+        [liveNoteKeys addObject:key];
+        SKNode *existing = self.sceneNoteNodes[key];
+        if (existing
+            && [existing.userData[@"text"] isEqual:(note.text ?: @"")]
+            && CGRectEqualToRect([existing.userData[@"frame"] CGRectValue], note.frame)) {
+            continue;
+        }
+        SKNode *group = [self groupNodeForKey:key in:self.sceneNoteNodes layer:self.sceneNotesLayer];
+        [self addSceneNote:note];
+        _sceneBuildTarget = nil;
+        if (!group.userData) group.userData = [NSMutableDictionary dictionary];
+        group.userData[@"text"] = note.text ?: @"";
+        group.userData[@"frame"] = [NSValue valueWithCGRect:note.frame];
+    }
+    [self pruneSceneNodes:self.sceneNoteNodes keeping:liveNoteKeys];
+
+    NSMutableSet<NSValue *> *liveLinkKeys = [NSMutableSet set];
     [circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
         for (int sourceIndex = 0; sourceIndex < object->type->numOutputs; sourceIndex++) {
             CircuitLink *link = object->outputs[sourceIndex];
+            if (!link) continue;
+            CGVector sourceOffset = offsetForOutlet(object->type, sourceIndex);
+            CGPoint start = CGPointMake(object->pos.x + sourceOffset.dx + radius,
+                                        object->pos.y + sourceOffset.dy + radius);
+            BOOL active = !!(object->out & 1 << sourceIndex);
             while (link) {
-                CGVector sourceOffset = offsetForOutlet(object->type, sourceIndex);
-                CGPoint start = CGPointMake(object->pos.x + sourceOffset.dx + radius,
-                                            object->pos.y + sourceOffset.dy + radius);
                 CGVector targetOffset = offsetForInlet(link->target->type, link->targetIndex);
                 CGPoint end = CGPointMake(link->target->pos.x + targetOffset.dx + radius,
                                           link->target->pos.y + targetOffset.dy + radius);
-                [self addSceneLinkFrom:start to:end active:!!(object->out & 1 << sourceIndex)];
+                SceneLinkState state;
+                memset(&state, 0, sizeof(state));
+                state.startX = start.x;
+                state.startY = start.y;
+                state.endX = end.x;
+                state.endY = end.y;
+                state.active = active;
+                state.zoomScale = self->_zoomScale;
+
+                NSValue *key = [NSValue valueWithPointer:link];
+                [liveLinkKeys addObject:key];
+                SKNode *existing = self.sceneLinkNodes[key];
+                if (!existing || !nodeMatchesState(existing, &state, sizeof(state))) {
+                    SKNode *group = [self groupNodeForKey:key in:self.sceneLinkNodes layer:self.sceneLinksLayer];
+                    [self addSceneLinkFrom:start to:end active:active];
+                    self->_sceneBuildTarget = nil;
+                    nodeStoreState(group, &state, sizeof(state));
+                }
                 link = link->nextSibling;
             }
         }
     }];
+    [self pruneSceneNodes:self.sceneLinkNodes keeping:liveLinkKeys];
+
+    [self.sceneEditingLinkLayer removeAllChildren];
     if (_currentEditingLinkSource && !_currentEditingLink) {
         CircuitObject *object = _currentEditingLinkSource;
         CGVector offset = offsetForOutlet(object->type, _currentEditingLinkSourceIndex);
@@ -752,13 +868,55 @@ static CGRect momentaryButtonCapRect(CircuitObject *object) {
                                     object->pos.y + offset.dy + radius);
         CGPoint end = CGPointMake(_currentEditingLinkTargetPosition.x + radius,
                                   _currentEditingLinkTargetPosition.y + radius);
+        _sceneBuildTarget = self.sceneEditingLinkLayer;
+        _sceneBuildZ = 0.0;
         [self addSceneLinkFrom:start to:end active:!!(object->out & 1 << _currentEditingLinkSourceIndex)];
+        _sceneBuildTarget = nil;
     }
+
+    NSMutableSet<NSValue *> *liveObjectKeys = [NSMutableSet set];
+    __block NSUInteger objectIndex = 0;
     [circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
-        [self addSceneObject:object];
+        SceneObjectState state;
+        memset(&state, 0, sizeof(state));
+        state.x = object->pos.x;
+        state.y = object->pos.y;
+        state.type = object->type;
+        state.in = object->in;
+        state.out = object->out;
+        memcpy(state.name, object->name, sizeof(state.name));
+        for (int i = 0; i < object->type->numOutputs && i < 32; i++) {
+            if (object->outputs[i]) state.connectedOutputs |= 1u << i;
+        }
+        for (int i = 0; i < object->type->numInputs && i < 32; i++) {
+            if (object->inputs[i]) state.connectedInputs |= 1u << i;
+        }
+        state.editingSourceIndex = (object == self->_currentEditingLinkSource) ? self->_currentEditingLinkSourceIndex : -1;
+        state.editingTargetIndex = (object == self->_currentEditingLinkTarget) ? self->_currentEditingLinkTargetIndex : -1;
+
+        NSValue *key = [NSValue valueWithPointer:object];
+        [liveObjectKeys addObject:key];
+        SKNode *group = self.sceneObjectNodes[key];
+        if (!group || !nodeMatchesState(group, &state, sizeof(state))) {
+            group = [self groupNodeForKey:key in:self.sceneObjectNodes layer:self.sceneObjectsLayer];
+            [self addSceneObject:object];
+            self->_sceneBuildTarget = nil;
+            nodeStoreState(group, &state, sizeof(state));
+        }
+        // Painter's order must follow enumeration order even for groups that
+        // were built on an earlier pass, so refresh it unconditionally.
+        group.zPosition = objectIndex * 0.001;
+        objectIndex++;
     }];
+    [self pruneSceneNodes:self.sceneObjectNodes keeping:liveObjectKeys];
+
+    [self.sceneOverlayLayer removeAllChildren];
+    _sceneBuildTarget = self.sceneOverlayLayer;
+    _sceneBuildZ = 0.0;
     [self addSceneHighlightAt:_highlightLinkLocation progress:_highlightProgress];
     [self addSceneHighlightAt:_highlightOutLinkLocation progress:_highlightOutProgress];
+    _sceneBuildTarget = nil;
+
     self.sceneContentNeedsUpdate = NO;
 }
 
@@ -776,6 +934,26 @@ static CGRect momentaryButtonCapRect(CircuitObject *object) {
     self.sceneWorld = [SKNode node];
     self.sceneWorld.zPosition = 2;
     [scene addChild:self.sceneWorld];
+
+    self.sceneNotesLayer = [SKNode node];
+    self.sceneNotesLayer.zPosition = 10.0;
+    [self.sceneWorld addChild:self.sceneNotesLayer];
+    self.sceneLinksLayer = [SKNode node];
+    self.sceneLinksLayer.zPosition = 20.0;
+    [self.sceneWorld addChild:self.sceneLinksLayer];
+    self.sceneEditingLinkLayer = [SKNode node];
+    self.sceneEditingLinkLayer.zPosition = 24.0;
+    [self.sceneWorld addChild:self.sceneEditingLinkLayer];
+    self.sceneObjectsLayer = [SKNode node];
+    self.sceneObjectsLayer.zPosition = 100.0;
+    [self.sceneWorld addChild:self.sceneObjectsLayer];
+    self.sceneOverlayLayer = [SKNode node];
+    self.sceneOverlayLayer.zPosition = 200.0;
+    [self.sceneWorld addChild:self.sceneOverlayLayer];
+
+    [self.sceneObjectNodes removeAllObjects];
+    [self.sceneLinkNodes removeAllObjects];
+    [self.sceneNoteNodes removeAllObjects];
     self.sceneContentNeedsUpdate = YES;
 }
 
@@ -813,7 +991,7 @@ static CGRect momentaryButtonCapRect(CircuitObject *object) {
     CGPathRelease(gridPath);
 
     if (allowContentRebuild && self.sceneContentNeedsUpdate) {
-        [self rebuildSceneContent];
+        [self updateSceneContent];
     }
 }
 
