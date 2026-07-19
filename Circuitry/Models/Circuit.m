@@ -211,8 +211,12 @@ static NSValue *valueForGate(CircuitProcess *process) {
         o->out = [[obj valueForKey:@"out"] intValue];
         
         NSArray *outputs = [obj objectForKey:@"outputs"];
-        [outputs enumerateObjectsUsingBlock:^(id obj, NSUInteger sourceIndex, BOOL *stop) {
-            [obj enumerateObjectsUsingBlock:^(id obj, NSUInteger index2, BOOL *stop) {
+        [outputs enumerateObjectsUsingBlock:^(id linksFromOutlet, NSUInteger sourceIndex, BOOL *stop) {
+            // Gate types can lose outlets between app versions (the d4 register
+            // once exposed 8 outputs). Links from outlets that no longer exist
+            // are discarded rather than failing the whole document.
+            if (sourceIndex >= (NSUInteger)o->type->numOutputs) return;
+            [linksFromOutlet enumerateObjectsUsingBlock:^(id obj, NSUInteger index2, BOOL *stop) {
                 // obj === [targetId, n]
                 // targetId is the object to which the link connects.
                 // It connects into the nth input on that gate.
@@ -224,6 +228,8 @@ static NSValue *valueForGate(CircuitProcess *process) {
                     fail = YES;
                     return;
                 }
+                if (targetIndex < 0 || targetIndex >= target->type->numInputs) return;
+                if (target->inputs[targetIndex] != NULL) return;
                 CircuitLinkCreate(self.internal, o, (int)sourceIndex, target, targetIndex);
             }];
         }];
