@@ -5,13 +5,11 @@
 
 @implementation CircuitryGameUITests
 
-static const CGFloat kPadWidth = 820.0;
-static const CGFloat kPadHeight = 1180.0;
-
 - (XCUICoordinate *)point:(CGVector)point inApp:(XCUIApplication *)app
 {
-    return [app coordinateWithNormalizedOffset:CGVectorMake(point.dx / kPadWidth,
-                                                             point.dy / kPadHeight)];
+    CGSize appSize = app.frame.size;
+    return [app coordinateWithNormalizedOffset:CGVectorMake(point.dx / appSize.width,
+                                                             point.dy / appSize.height)];
 }
 
 - (void)wireFrom:(CGVector)source to:(CGVector)target inApp:(XCUIApplication *)app
@@ -21,9 +19,30 @@ static const CGFloat kPadHeight = 1180.0;
                             thenDragToCoordinate:[self point:target inApp:app]];
 }
 
+- (void)panCanvasRightBy:(CGFloat)distance inApp:(XCUIApplication *)app
+{
+    CGSize appSize = app.frame.size;
+    XCUICoordinate *start = [self point:CGVectorMake(appSize.width * 0.70,
+                                                     appSize.height * 0.65) inApp:app];
+    XCUICoordinate *end = [self point:CGVectorMake(appSize.width * 0.70 + distance,
+                                                   appSize.height * 0.65) inApp:app];
+    [start pressForDuration:0.1
+       thenDragToCoordinate:end
+               withVelocity:100.0
+        thenHoldForDuration:0.2];
+}
+
+- (void)panCanvasRightInApp:(XCUIApplication *)app
+{
+    [self panCanvasRightBy:115.0 inApp:app];
+}
+
 - (NSArray<NSValue *> *)portCenters:(XCUIApplication *)app
 {
     NSMutableArray<NSValue *> *ports = [NSMutableArray array];
+    CGSize appSize = app.frame.size;
+    CGFloat canvasLeft = MAX(230.0, appSize.width * 0.24);
+    CGFloat canvasBottom = appSize.height - 180.0;
     NSString *snapshot = app.debugDescription;
     NSRegularExpression *frames = [NSRegularExpression
         regularExpressionWithPattern:@"\\{\\{(-?[0-9.]+), (-?[0-9.]+)\\}, \\{(-?[0-9.]+), (-?[0-9.]+)\\}\\}"
@@ -37,7 +56,7 @@ static const CGFloat kPadHeight = 1180.0;
         CGFloat width = [[snapshot substringWithRange:[match rangeAtIndex:3]] doubleValue];
         CGFloat height = [[snapshot substringWithRange:[match rangeAtIndex:4]] doubleValue];
         if (width > 13.0 && width < 16.0 && height > 14.0 && height < 16.0 &&
-            x > 230.0 && y + height < 909.0) {
+            x > canvasLeft && y + height < canvasBottom) {
             [ports addObject:[NSValue valueWithCGVector:
                 CGVectorMake(x + width / 2.0, y + height / 2.0)]];
         }
@@ -206,6 +225,102 @@ static const CGFloat kPadHeight = 1180.0;
     [app.buttons[@"Check Answer"] tap];
     XCTAssertTrue([app.buttons[@"OK"] waitForExistenceWithTimeout:10]);
     XCTAssertEqual([app.images matchingIdentifier:@"TestResultMismatch"].count, 0u);
+}
+
+- (void)buildTwoOfThreeScreenshotCircuitInApp:(XCUIApplication *)app
+{
+    NSArray<NSValue *> *basePorts = [[self portCenters:app]
+        sortedArrayUsingComparator:^NSComparisonResult(NSValue *left, NSValue *right) {
+            CGVector a = left.CGVectorValue;
+            CGVector b = right.CGVectorValue;
+            if (a.dx < b.dx) return NSOrderedAscending;
+            if (a.dx > b.dx) return NSOrderedDescending;
+            return a.dy < b.dy ? NSOrderedAscending : NSOrderedDescending;
+        }];
+    XCTAssertEqual(basePorts.count, 4u);
+    if (basePorts.count != 4) return;
+
+    NSArray<NSValue *> *inputs = [[basePorts subarrayWithRange:NSMakeRange(0, 3)]
+        sortedArrayUsingComparator:^NSComparisonResult(NSValue *top, NSValue *bottom) {
+            return top.CGVectorValue.dy < bottom.CGVectorValue.dy
+                ? NSOrderedAscending : NSOrderedDescending;
+        }];
+    CGVector a = inputs[0].CGVectorValue;
+    CGVector b = inputs[1].CGVectorValue;
+    CGVector output = basePorts.lastObject.CGVectorValue;
+
+    CGFloat gateX = a.dx + 90.0;
+    NSArray<NSValue *> *xorGate = [self createGateNamed:@"XOR" inputs:2 outputs:1
+                                               atOrigin:CGVectorMake(gateX, a.dy - 70.0) inApp:app];
+    NSArray<NSValue *> *andGate = [self createGateNamed:@"AND" inputs:2 outputs:1
+                                               atOrigin:CGVectorMake(gateX, b.dy + 90.0) inApp:app];
+    NSArray<NSValue *> *notGate = [self createGateNamed:@"NOT" inputs:1 outputs:1
+                                               atOrigin:CGVectorMake(gateX + 210.0, b.dy + 90.0) inApp:app];
+    if (xorGate.count != 3 || andGate.count != 3 || notGate.count != 2) return;
+
+    [self wireFrom:a to:[xorGate[0] CGVectorValue] inApp:app];
+    [self wireFrom:b to:[xorGate[1] CGVectorValue] inApp:app];
+    [self wireFrom:[xorGate[2] CGVectorValue] to:output inApp:app];
+
+    [self wireFrom:a to:[andGate[0] CGVectorValue] inApp:app];
+    [self wireFrom:b to:[andGate[1] CGVectorValue] inApp:app];
+    [self wireFrom:[andGate[2] CGVectorValue] to:[notGate[0] CGVectorValue] inApp:app];
+
+    [[self point:CGVectorMake(b.dx - 55.0, b.dy) inApp:app] tap];
+    [self panCanvasRightInApp:app];
+
+    XCUIElement *problemFooter = app.staticTexts[@"Problem #12 - Exactly Two of Three"];
+    XCTAssertTrue(problemFooter.hittable);
+    [problemFooter tap];
+}
+
+- (void)captureAppStoreScreenshotNamed:(NSString *)name inApp:(XCUIApplication *)app
+{
+    XCTAssertEqual(app.state, XCUIApplicationStateRunningForeground);
+
+    XCUIScreenshot *screenshot = XCUIScreen.mainScreen.screenshot;
+    XCTAttachment *attachment = [XCTAttachment attachmentWithScreenshot:screenshot];
+    attachment.name = name;
+    attachment.lifetime = XCTAttachmentLifetimeKeepAlways;
+    [self addAttachment:attachment];
+}
+
+- (void)launchAppForScreenshots:(XCUIApplication *)app
+{
+    if (app.state != XCUIApplicationStateNotRunning) [app terminate];
+    [app launch];
+    XCTAssertTrue([app.navigationBars[@"Problems"] waitForExistenceWithTimeout:10]);
+    XCTAssertTrue([app.staticTexts[@"Connect an AND Gate"] waitForExistenceWithTimeout:10]);
+}
+
+- (void)testGenerateAppStoreScreenshots
+{
+    XCUIApplication *app = [[XCUIApplication alloc] init];
+    app.launchArguments = @[
+        @"-AppleLanguages", @"(en)",
+        @"-AppleLocale", @"en_AU",
+        @"-openedBefore", @"YES",
+        @"-CurrentLevelIndex", @"999"
+    ];
+    [self launchAppForScreenshots:app];
+
+    [self captureAppStoreScreenshotNamed:@"03-problems-overview" inApp:app];
+
+    [self openProblem:@"Connect an AND Gate" number:1 inApp:app];
+    [self captureAppStoreScreenshotNamed:@"02-guided-problem" inApp:app];
+    [self launchAppForScreenshots:app];
+
+    [self openProblem:@"Exactly Two of Three" number:12 inApp:app];
+    [self buildTwoOfThreeScreenshotCircuitInApp:app];
+    [self captureAppStoreScreenshotNamed:@"01-two-of-three" inApp:app];
+    [self launchAppForScreenshots:app];
+
+    [self openProblem:@"Multiply Two-Bit Numbers" number:17 inApp:app];
+    [self panCanvasRightBy:170.0 inApp:app];
+    XCUIElement *multiplierFooter = app.staticTexts[@"Problem #17 - Multiply Two-Bit Numbers"];
+    XCTAssertTrue(multiplierFooter.hittable);
+    [multiplierFooter tap];
+    [self captureAppStoreScreenshotNamed:@"04-binary-multiplier" inApp:app];
 }
 
 - (void)testCompletedProblemGridHasNoLockedCards

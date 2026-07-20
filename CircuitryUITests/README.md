@@ -42,3 +42,33 @@ CIRCUITRY_RUN_COUNTER_RECIPE=YES xcodebuild test \
 
 Use a single, booted simulator and disable parallel testing. Simulator clones have
 separate application containers, so their progress does not update the visible iPad.
+
+## App Store screenshots
+
+Generate the four App Store screenshots on the 13-inch iPad simulator:
+
+```sh
+./tools/generate-app-store-screenshots.sh
+```
+
+The script runs only `testGenerateAppStoreScreenshots`, exports its screenshot
+attachments, and writes upload-ready PNG files to
+`build/app-store-screenshots/`:
+
+- `01-two-of-three.png`
+- `02-guided-problem.png`
+- `03-problems-overview.png`
+- `04-binary-multiplier.png`
+
+The test forces English, skips the first-launch tutorial, and unlocks the problem
+list through launch-only defaults. It does not depend on a simulator's saved app
+state and does not change the defaults used by a normal app launch.
+
+The default destination is `iPad Pro 13-inch (M5)`. To use a differently named
+13-inch simulator or output directory, set either variable before running:
+
+```sh
+CIRCUITRY_SCREENSHOT_DEVICE='iPad Air 13-inch (M4)' \
+  CIRCUITRY_SCREENSHOT_OUTPUT="$PWD/build/store-assets" \
+  ./tools/generate-app-store-screenshots.sh
+```
