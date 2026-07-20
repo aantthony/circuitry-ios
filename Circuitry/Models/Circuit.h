@@ -3,6 +3,17 @@
 #import "CircuitInternal.h"
 @class CircuitTest;
 
+@interface CircuitNote : NSObject
+
+@property(nonatomic, copy) NSString *identifier;
+@property(nonatomic, copy) NSString *text;
+@property(nonatomic) CGRect frame;
+
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary;
+- (NSDictionary *)dictionaryRepresentation;
+
+@end
+
 @interface Circuit : NSObject
 
 @property(nonatomic, readonly) ObjectID id;
@@ -10,11 +21,13 @@
 @property(nonatomic) NSString *version;
 @property(nonatomic) NSString *userDescription;
 @property(nonatomic) NSString *title;
+@property(nonatomic) NSArray *hints;
 @property(nonatomic) NSString *author;
 @property(nonatomic) NSMutableArray *engines;
 @property(nonatomic) NSString *license;
 @property(nonatomic) NSMutableDictionary *dependencies;
 @property(nonatomic) NSMutableDictionary *meta;
+@property(nonatomic, readonly) NSMutableArray<CircuitNote *> *notes;
 
 @property(nonatomic, readonly) NSMutableDictionary * viewDetails;
 @property(nonatomic) float viewCenterX;
@@ -24,6 +37,7 @@
 
 - (NSArray *) tests;
 
++ (NSDictionary *) processesById;
 - (CircuitProcess *) getProcessById:(NSString *)_id;
 
 - (int) simulate: (int) ticks;

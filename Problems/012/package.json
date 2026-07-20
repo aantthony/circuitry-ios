@@ -1,6 +1,11 @@
 {
   "_id" : "54d7228f004aab735e0041b8",
-  "description" : "Make the output true when exactly one of the inputs is true.\nFor this problem, several types of logic gates are available.",
+  "description" : "Make the output true only when exactly one input is true.\n\nSeveral types of logic gates are available for this problem.",
+  "hints" : [
+    "The output should be true for A only, B only, or C only.",
+    "For each input, make a branch that requires that input to be true and the other two to be false.",
+    "OR the three branches together."
+  ],
   "license" : "Copyright",
   "view" : {
     "center" : [
@@ -33,7 +38,7 @@
   "engines" : {
     "circuitry" : ">=0.0"
   },
-  "title" : "One of Three",
+  "title" : "Exactly One of Three",
   "items": [
     {
       "_id" : "54d72294004aab735e0041b9",

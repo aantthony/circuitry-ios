@@ -11,10 +11,11 @@
 @interface CircuitTest : NSObject
 @property (nonatomic, readonly) NSString *name;
 @property (nonatomic, readonly) NSArray *spec;
+@property (nonatomic, readonly) NSArray *acceptedSpecs;
 
 - (CircuitTestResult *) runAndSimulate:(id)circuit;
 
-- (id) initWithName: (NSString *)name inputs:(NSArray *) inputs outputs: (NSArray *)outputs spec: (NSArray *) spec;
+- (id) initWithName: (NSString *)name inputs:(NSArray *) inputs outputs: (NSArray *)outputs spec: (NSArray *) spec acceptedSpecs:(NSArray *)acceptedSpecs;
 - (NSArray *) inputIds;
 - (NSArray *) outputIds;
 @end

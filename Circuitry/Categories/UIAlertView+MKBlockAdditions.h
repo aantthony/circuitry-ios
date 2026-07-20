@@ -20,11 +20,11 @@
                             message:(NSString*) message 
                   cancelButtonTitle:(NSString*) cancelButtonTitle
                   otherButtonTitles:(NSArray*) otherButtons
-                          onDismiss:(void (^)(int buttonIndex)) dismissed                   
-                           onCancel:(void (^)()) cancelled;
+                          onDismiss:(void (^)(int buttonIndex)) dismissed
+                           onCancel:(void (^)(void)) cancelled;
 
-- (void (^)())cancelBlock;
-- (void)setCancelBlock:(void (^)())cancelBlock;
+- (void (^)(void))cancelBlock;
+- (void)setCancelBlock:(void (^)(void))cancelBlock;
 
 
 - (void)setDismissBlock:(void (^)(int buttonIndex))dismissBlock;

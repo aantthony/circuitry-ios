@@ -25,6 +25,11 @@
 
 @implementation CircuitObjectListTableViewController
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self.tableView reloadData];
+}
+
 - (void) searchThroughData {
     self.results = nil;
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name contains [search] %@", self.searchBar.text];
@@ -56,6 +61,12 @@
     } else {
         self.items = self.allItems;
     }
+
+    // Notes are canvas annotations for free-form playground documents, not
+    // components that can be used to solve a problem.
+    if (self.isProblem) {
+        self.items = [self.items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"type != %@", @"note"]];
+    }
     
     [self.items enumerateObjectsUsingBlock:^(ToolbeltItem *item, NSUInteger idx, BOOL *stop) {
         if (self.isProblem) {
@@ -69,7 +80,9 @@
     }];
     
     self.results = self.items;
-    [self.tableView reloadData];
+    if (self.isViewLoaded && self.tableView.window) {
+        [self.tableView reloadData];
+    }
 }
 
 - (void) setDocument: (CircuitDocument *) document {

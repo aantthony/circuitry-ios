@@ -32,6 +32,9 @@ static int NAND (int x, unsigned int *d) { return x != 3;}
 static int NOT  (int x, unsigned int *d) { return !x; }
 static int NOR  (int x, unsigned int *d) { return !x; }
 static int OR   (int x, unsigned int *d) { return !!x; }
+static int MUX  (int x, unsigned int *d) { return (x & 4) ? ((x >> 1) & 1) : (x & 1); }
+static int MUX4 (int x, unsigned int *d) { return (x & 256) ? ((x >> 4) & 15) : (x & 15); }
+static int MUX8 (int x, unsigned int *d) { return (x & 65536) ? ((x >> 8) & 255) : (x & 255); }
 static int HA   (int x, unsigned int *d) { int a = x & 1; int b = x >> 1; return a+b; }
 static int FA   (int x, unsigned int *d) { int a = x & 1; int b = (x >> 1) & 1; int c = x >> 2; return a+b+c; }
 static int ADD8 (int x, unsigned int *d) { return (x&255) + (x >> 8); }
@@ -140,12 +143,27 @@ static int BIN7SEG(int x, unsigned int *d) {
     }
 }
 
+static int COUNTER4(int x, unsigned int *d) {
+    int value = *d & 15;
+    int previousClock = *d & 16;
+    int clock = x & 1;
+    if (x & 2) {
+        value = 0;
+    } else if (clock && !previousClock) {
+        value = (x & 4) ? ((x >> 3) & 15) : ((value + 1) & 15);
+    }
+    *d = value | (clock ? 16 : 0);
+    return value;
+}
+
 CircuitProcess CircuitProcessIn      = {"in",       0,  1, NULL };
 CircuitProcess CircuitProcessOut     = {"out",      1,  0, NULL };
 CircuitProcess CircuitProcessButton  = {"button",   0,  1, NULL };
 CircuitProcess CircuitProcessPushButton = {"pbtn",  0,  1, NULL };
 CircuitProcess CircuitProcessLight   = {"light",    1,  0, NULL };
 CircuitProcess CircuitProcessLightGreen = {"lightg",1,  0, NULL };
+CircuitProcess CircuitProcessLightBlue = {"lightb", 1,  0, NULL };
+CircuitProcess CircuitProcessLightWhite = {"lightw", 1,  0, NULL };
 CircuitProcess CircuitProcessOr      = {"or",       2,  1, OR };
 CircuitProcess CircuitProcessNot     = {"not",      1,  1, NOT };
 CircuitProcess CircuitProcessNor     = {"nor",      2,  1, NOR };
@@ -153,6 +171,9 @@ CircuitProcess CircuitProcessXor     = {"xor",      2,  1, XOR };
 CircuitProcess CircuitProcessXnor    = {"xnor",     2,  1, XNOR };
 CircuitProcess CircuitProcessAnd     = {"and",      2,  1, AND };
 CircuitProcess CircuitProcessNand    = {"nand",     2,  1, NAND };
+CircuitProcess CircuitProcessMux     = {"mux",      3,  1, MUX };
+CircuitProcess CircuitProcessMux4    = {"mux4",     9,  4, MUX4 };
+CircuitProcess CircuitProcessMux8    = {"mux8",    17,  8, MUX8 };
 CircuitProcess CircuitProcessHA      = {"ha",       2,  2, HA };
 CircuitProcess CircuitProcessFA      = {"fa",       3,  2, FA };
 CircuitProcess CircuitProcessBinDec  = {"bindec",   4, 16, BINDEC };
@@ -164,12 +185,14 @@ CircuitProcess CircuitProcessBin7Seg = {"bin7seg",  4,  7, BIN7SEG };
 CircuitProcess CircuitProcess7Seg    = {"7seg",     7,  0, NULL };
 CircuitProcess CircuitProcess7SegBin = {"7segbin",4,  0, NULL };
 CircuitProcess CircuitProcessClock   = {"clock",    0,  1, NULL };
+CircuitProcess CircuitProcessSlowClock = {"slowclock", 0, 1, NULL };
+CircuitProcess CircuitProcessCounter4 = {"counter4", 7, 4, COUNTER4 };
 CircuitProcess CircuitProcessJK      = {"jk",       3,  2, JK };
 CircuitProcess CircuitProcessSR      = {"sr",      2,  2, SR };
 CircuitProcess CircuitProcessSER     = {"ser",      3,  2, SER };
 CircuitProcess CircuitProcessT       = {"t",       2,  2, T };
 CircuitProcess CircuitProcessD       = {"d",       2,  2, D };
-CircuitProcess CircuitProcessD4      = {"d4",      5,  8, D16 };
+CircuitProcess CircuitProcessD4      = {"d4",      5,  4, D16 };
 CircuitProcess CircuitProcessD8      = {"d8",      9,  8, D16 };
 CircuitProcess CircuitProcessD16     = {"d16",    17, 16, D16 };
 
@@ -202,17 +225,21 @@ static void *reallocLinks(CircuitInternal *c) {
         if (!o->type) continue;
         for(int j = 0; j < o->type->numInputs; j++) {
             void *inputLink = o->inputs[j];
+            if (!inputLink) continue;
             // This inputLink will be updated by one of the other passes below.
             // We only need to update our reference *to* it.
             o->inputs[j] = inputLink + offsetBytes;
         }
         for(int j = 0; j < o->type->numOutputs; j++) {
             void *first = o->outputs[j];
+            if (!first) continue;
             o->outputs[j] = first + offsetBytes;
             CircuitLink *link = o->outputs[j];
             while(link) {
                 void *nextSibling = link->nextSibling;
-                link->nextSibling = nextSibling + offsetBytes;
+                if (nextSibling) {
+                    link->nextSibling = nextSibling + offsetBytes;
+                }
                 link = link->nextSibling;
             }
         }
@@ -222,35 +249,42 @@ static void *reallocLinks(CircuitInternal *c) {
 
 static void *reallocObjects(CircuitInternal *c) {
     c->objects_size *= 2;
-    void *oldPtr = &c->objects;
+    void *oldPtr = c->objects;
     void *newPtr = realloc(oldPtr, sizeof(CircuitObject) * c->objects_size);
+    if (!newPtr) return NULL;
     c->objects = newPtr;
-    
+
     long offsetBytes = newPtr - oldPtr;
-    
-    if (!newPtr || offsetBytes == 0) {
+
+    if (offsetBytes == 0) {
         // Nothing moved, all okay.
         return newPtr;
     }
-    
+
     // Move all of the references to objects:
     for(int i = 0; i < c->links_count; i++) {
         CircuitLink *link = &c->links[i];
         if (!link->source) continue;
         void *source = link->source;
         link->source = source + offsetBytes;
-        void *target = link->source;
+        void *target = link->target;
         link->target = target + offsetBytes;
+    }
+    for(int i = 0; i < c->clocks_count; i++) {
+        void *clock = c->clocks[i];
+        c->clocks[i] = clock + offsetBytes;
+    }
+    for(int i = 0; i < c->needsUpdate_count; i++) {
+        void *pending = c->needsUpdate[i];
+        c->needsUpdate[i] = pending + offsetBytes;
     }
     return newPtr;
 }
 
 static void reallocBuffer(CircuitInternal * c) {
     c->needsUpdate_size *= 2;
-    void *a = (void *)realloc(&c->needsUpdate,  sizeof(void *) * c->needsUpdate_size);
-    void *b = realloc(&c->needsUpdate2, sizeof(void *) * c->needsUpdate_size);
-    c->needsUpdate  = a;
-    c->needsUpdate2 = b;
+    c->needsUpdate  = realloc(c->needsUpdate,  sizeof(void *) * c->needsUpdate_size);
+    c->needsUpdate2 = realloc(c->needsUpdate2, sizeof(void *) * c->needsUpdate_size);
 }
 
 
@@ -290,7 +324,11 @@ CircuitObject * CircuitObjectCreate(CircuitInternal *c, CircuitProcess *type) {
     o->outputs = scalloc(o->type->numOutputs + o->type->numInputs, sizeof(CircuitLink *));
     o->inputs = o->outputs + o->type->numOutputs;
     
-    if (type == &CircuitProcessClock) {
+    if (type == &CircuitProcessClock || type == &CircuitProcessSlowClock) {
+        if (c->clocks_count >= c->clocks_size) {
+            c->clocks_size *= 2;
+            c->clocks = realloc(c->clocks, sizeof(CircuitObject *) * c->clocks_size);
+        }
         c->clocks[c->clocks_count++] = o;
     }
     
@@ -313,6 +351,16 @@ void CircuitObjectRemove(CircuitInternal *c, CircuitObject *o) {
         }
     }
     
+    if (o->type == &CircuitProcessClock || o->type == &CircuitProcessSlowClock) {
+        for (int i = 0; i < c->clocks_count; i++) {
+            if (c->clocks[i] == o) {
+                c->clocks[i] = c->clocks[c->clocks_count - 1];
+                c->clocks_count--;
+                break;
+            }
+        }
+    }
+
     free(o->outputs);
     o->outputs = NULL;
     o->type = NULL;
@@ -389,9 +437,6 @@ CircuitLink *CircuitLinkCreate(CircuitInternal *c, CircuitObject *object, int in
     CircuitLink *prev = object->outputs[index];
     CircuitLink *link;
     
-#ifdef DEBUG
-    // Mindlessly continue...
-#else
     if (index >= object->type->numOutputs) {
         fail("FAIL: Invalid Link: Attempted to create link from outlet, but there are not enough outlets.");
     }
@@ -401,7 +446,6 @@ CircuitLink *CircuitLinkCreate(CircuitInternal *c, CircuitObject *object, int in
     if (target->inputs[targetIndex] != NULL) {
         fail("Internal Consistency Exceptino: Invalid Link: Attempted to create link to inlet, but there is already an attachment there.");
     }
-#endif
     
     if (!prev) {
         link = object->outputs[index] = makeLink(c);
@@ -564,7 +608,7 @@ void CircuitDestroy(CircuitInternal *c) {
     free(c);
 }
 
-CircuitInternal * CircuitCreate() {
+CircuitInternal * CircuitCreate(void) {
     CircuitInternal *t = smalloc(sizeof(CircuitInternal));
     t->needsUpdate_count = 0;
     t->needsUpdate_size = 100000;

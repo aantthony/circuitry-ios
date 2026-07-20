@@ -1,8 +1,8 @@
 #import "ViewController.h"
+#import <SpriteKit/SpriteKit.h>
 
 #import "Viewport.h"
 #import "CircuitDocument.h"
-#import "Sprite.h"
 #import "DragGateGestureRecognizer.h"
 #import "CreateGatePanGestureRecognizer.h"
 #import "CreateLinkGestureRecognizer.h"
@@ -13,49 +13,87 @@
 
 #import "ToolbeltItem.h"
 
-// For iOS 8 support:
-#import <OpenGLES/ES1/glext.h>
-
 static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 
-@interface ViewController () <UIActionSheetDelegate> {
-    GLKMatrix4 _modelViewProjectionMatrix;
-    GLKMatrix3 _normalMatrix;
-    
-    GLKMatrixStackRef _stack;
-    
-    GLuint _vertexArray;
-    GLuint _vertexBuffer;
-    
+@class ViewController;
+
+@interface CircuitScene : SKScene
+@property (nonatomic, weak) ViewController *viewController;
+@end
+
+@interface CircuitCanvasView : SKView
+@property (nonatomic, weak) ViewController *viewController;
+@end
+
+@interface ViewController () {
     float beginGestureScale;
     
-    GLKVector3 beginLongPressGestureOffset;
+    CGVector beginLongPressGestureOffset;
     
     CGPoint panVelocity;
     
     BOOL isAnimatingScaleToSnap;
     BOOL toolbeltTouchIntercept;
     
-    CGPoint draggingOutFromToolbeltStart;
-    
     BOOL animatingPan;
+    BOOL isPanning;
     
 }
 @property (nonatomic) NSArray *selectedObjects;
-@property (nonatomic) NSTimer *timer;
+@property (nonatomic) CircuitScene *circuitScene;
+@property (nonatomic) NSTimeInterval timeSinceLastUpdate;
+@property (nonatomic) NSTimeInterval clockTickAccumulator;
+@property (nonatomic) NSTimeInterval slowClockTickAccumulator;
+@property (nonatomic) CFTimeInterval lastDisplayTimestamp;
+@property (nonatomic, getter=isPaused) BOOL paused;
 @property (nonatomic) BOOL canPan;
 @property (nonatomic) BOOL canZoom;
 @property (nonatomic) BOOL isTutorial;
-@property (nonatomic) Sprite *bg;
+@property (nonatomic) UIImage *backgroundImage;
 @property (nonatomic) IBOutlet UIPinchGestureRecognizer *pinchGestureRecognizer;
 @property (nonatomic, assign) CircuitObject *beginLongPressGestureObject;
+@property (nonatomic, strong) CircuitNote *beginDragNote;
+@property (nonatomic, strong) CircuitNote *beginResizeNote;
 @property (nonatomic, assign) CircuitObject *holdDownGestureObject;
 
-- (void)tearDownGL;
+- (void)sceneDidUpdateAtTime:(NSTimeInterval)currentTime;
 
 @end
 
+@implementation CircuitCanvasView
+@end
+
+@implementation CircuitScene
+- (void)update:(NSTimeInterval)currentTime {
+    [self.viewController sceneDidUpdateAtTime:currentTime];
+}
+@end
+
 @implementation ViewController
+
+- (BOOL)circuitContainsClocks {
+    if (!_document.circuit) return NO;
+
+    __block BOOL containsClocks = NO;
+    [_document.circuit enumerateClocksUsingBlock:^(CircuitObject *object, BOOL *stop) {
+        containsClocks = YES;
+        *stop = YES;
+    }];
+    return containsClocks;
+}
+
+- (void)setPaused:(BOOL)paused {
+    _paused = paused;
+
+    // Clockless circuits can stop SpriteKit entirely while idle. Circuits with
+    // clocks must keep receiving scene updates so their elapsed-time-driven
+    // clock transitions continue to run.
+    if (!paused) {
+        self.circuitScene.paused = NO;
+    } else if (![self circuitContainsClocks]) {
+        self.circuitScene.paused = YES;
+    }
+}
 
 - (void) setDocument:(CircuitDocument *) document {
     _document = document;
@@ -82,70 +120,26 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 
 - (UIImage*)snapshot
 {
-    [EAGLContext setCurrentContext:self.context];
-    GLKView *view = (GLKView *)self.view;
-    return view.snapshot;
-    
-    GLint backingWidth, backingHeight;
-    
-    // Bind the color renderbuffer used to render the OpenGL ES view
-    // If your application only creates a single color renderbuffer which is already bound at this point,
-    // this call is redundant, but it is needed if you're dealing with multiple renderbuffers.
-    // Note, replace "_colorRenderbuffer" with the actual name of the renderbuffer object defined in your class.
-//    glBindRenderbufferOES(GL_RENDERBUFFER_OES, _colorRenderbuffer);
-    [view bindDrawable];
-    // Get the size of the backing CAEAGLLayer
-    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &backingWidth);
-    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &backingHeight);
-    [self checkError];
-    GLint x = 0, y = 0, width = backingWidth, height = backingHeight;
-    NSInteger dataLength = width * height * 4;
-    GLubyte *data = (GLubyte*)malloc(dataLength * sizeof(GLubyte));
+    CGSize snapshotSize = self.view.bounds.size;
+    if (snapshotSize.width <= 0.0 || snapshotSize.height <= 0.0) {
+        return self.backgroundImage ?: [UIImage imageNamed:@"background.jpg"];
+    }
 
-    // Read pixel data from the framebuffer
-    glPixelStorei(GL_PACK_ALIGNMENT, 4);
-    glReadPixels(x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
-    
-    // Create a CGImage with the pixel data
-    // If your OpenGL ES content is opaque, use kCGImageAlphaNoneSkipLast to ignore the alpha channel
-    // otherwise, use kCGImageAlphaPremultipliedLast
-    CGDataProviderRef ref = CGDataProviderCreateWithData(NULL, data, dataLength, NULL);
-    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
-    CGImageRef iref = CGImageCreate(width, height, 8, 32, width * 4, colorspace, kCGBitmapByteOrder32Big | kCGImageAlphaNoneSkipLast,
-                                    ref, NULL, true, kCGRenderingIntentDefault);
-    
-    // OpenGL ES measures data in PIXELS
-    // Create a graphics context with the target size measured in POINTS
-    NSInteger widthInPoints, heightInPoints;
-    
-    // On iOS 4 and later, use UIGraphicsBeginImageContextWithOptions to take the scale into consideration
-    // Set the scale parameter to your OpenGL ES view's contentScaleFactor
-    // so that you get a high-resolution snapshot when its value is greater than 1.0
-    CGFloat scale = self.view.contentScaleFactor;
-    widthInPoints = width / scale;
-    heightInPoints = height / scale;
-    UIGraphicsBeginImageContextWithOptions(CGSizeMake(widthInPoints, heightInPoints), NO, scale);
-    
-    CGContextRef cgcontext = UIGraphicsGetCurrentContext();
-    
-    // UIKit coordinate system is upside down to GL/Quartz coordinate system
-    // Flip the CGImage by rendering it to the flipped bitmap context
-    // The size of the destination area is measured in POINTS
-    CGContextSetBlendMode(cgcontext, kCGBlendModeCopy);
-    CGContextDrawImage(cgcontext, CGRectMake(0.0, 0.0, widthInPoints, heightInPoints), iref);
-    
-    // Retrieve the UIImage from the current context
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    
-    UIGraphicsEndImageContext();
-    
-    // Clean up
-    free(data);
-    CFRelease(ref);
-    CFRelease(colorspace);
-    CGImageRelease(iref);
-    
-    return image;
+    [_viewport updateSceneForViewSize:snapshotSize allowContentRebuild:YES];
+    SKView *canvasView = (SKView *)self.view;
+    SKTexture *snapshotTexture = [canvasView textureFromNode:self.circuitScene crop:self.circuitScene.frame];
+    CGImageRef imageRef = snapshotTexture.CGImage;
+    if (imageRef) {
+        CGFloat imageScale = CGImageGetWidth(imageRef) / snapshotSize.width;
+        UIImage *image = [UIImage imageWithCGImage:imageRef scale:MAX(imageScale, 1.0) orientation:UIImageOrientationUp];
+        CGImageRelease(imageRef);
+        return image;
+    }
+
+    UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithSize:snapshotSize];
+    return [renderer imageWithActions:^(UIGraphicsImageRendererContext *context) {
+        [self.backgroundImage drawInRect:(CGRect){ CGPointZero, snapshotSize }];
+    }];
 }
 
 -(void)appWillResignActive:(NSNotification*)note {
@@ -163,16 +157,6 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 -(void)appWillTerminate:(NSNotification*)note {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
 }
-+ (EAGLContext *) context {
-    static dispatch_once_t onceToken = 0;
-    static EAGLContext * context;
-    
-    dispatch_once(&onceToken, ^{
-        context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-    });
-    
-    return context;
-}
 + (ImageAtlas *) atlas {
     static dispatch_once_t onceToken = 0;
     static ImageAtlas *atlas;
@@ -183,18 +167,8 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     
     return atlas;
 }
-- (EAGLContext *) context {
-    return ViewController.context;
-}
 - (ImageAtlas *) atlas {
     return ViewController.atlas;
-}
-- (Sprite *) backgroundSprite {
-    static id instance;
-    if (instance) return instance;
-    
-    GLKTextureInfo *bgTexture = [Sprite textureWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"background" withExtension:@"jpg"]];
-    return instance = [[Sprite alloc] initWithTexture:bgTexture];
 }
 
 - (IBAction)group:(id)sender {
@@ -212,36 +186,44 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     animatingPan = NO;
     beginGestureScale = 0.0;
     
-    _stack = GLKMatrixStackCreate(NULL);
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
-    
-    if (!self.context) {
-        NSLog(@"Failed to create ES context");
-    }
-    CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.view.layer;
-    
-    eaglLayer.opaque = TRUE;
-    
-    GLKView *view = (GLKView *)self.view;
-    view.context = self.context;
-    view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
-    
-    [EAGLContext setCurrentContext:self.context];
-    [self checkError];
-    glEnable(GL_DEPTH_TEST);
-    
-    [self checkError];
-    
-    _viewport = [[Viewport alloc] initWithContext:self.context atlas: self.atlas];
-    
-    [self checkError];
-    
-    _bg = self.backgroundSprite;
+
+    CircuitCanvasView *canvasView = (CircuitCanvasView *)self.view;
+    canvasView.viewController = self;
+    canvasView.contentMode = UIViewContentModeRedraw;
+
+    _viewport = [[Viewport alloc] initWithAtlas:self.atlas];
+    _backgroundImage = [UIImage imageNamed:@"background.jpg"];
+
+    NSInteger maximumFramesPerSecond = UIScreen.mainScreen.maximumFramesPerSecond;
+    canvasView.preferredFramesPerSecond = maximumFramesPerSecond;
+    canvasView.ignoresSiblingOrder = YES;
+    canvasView.shouldCullNonVisibleNodes = YES;
+    self.circuitScene = [[CircuitScene alloc] initWithSize:canvasView.bounds.size];
+    self.circuitScene.scaleMode = SKSceneScaleModeResizeFill;
+    self.circuitScene.viewController = self;
+    [_viewport attachToScene:self.circuitScene backgroundImage:_backgroundImage];
     
     self.document = _document;
     if (self.isTutorial) {
         [self configureTutorialGatesToPosition];
+    }
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+
+    CircuitCanvasView *canvasView = (CircuitCanvasView *)self.view;
+    CGSize viewSize = canvasView.bounds.size;
+    if (!canvasView.window || !self.circuitScene || viewSize.width <= 0.0 || viewSize.height <= 0.0) return;
+
+    // Storyboard views briefly retain their design-time size while a new
+    // document controller is being installed in a resizable window. Prepare
+    // the scene using the laid-out bounds before SpriteKit can display it.
+    self.circuitScene.size = viewSize;
+    [_viewport updateSceneForViewSize:viewSize allowContentRebuild:YES];
+    if (canvasView.scene != self.circuitScene) {
+        [canvasView presentScene:self.circuitScene];
     }
 }
 
@@ -252,7 +234,7 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     CircuitObject *output = [self.document.circuit findObjectById:@"53c3cdc945f5603003000009"];
     BOOL isLandscape = self.view.frame.size.width > self.view.frame.size.height;
     if (!A || !B || !andGate || !output) {
-        NSParameterAssert(nil);
+        self.isTutorial = NO;
         return;
     }
     if (isLandscape) {
@@ -282,7 +264,7 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     CircuitObject *andGate = [self.document.circuit findObjectById:@"53c3cdc945f56030030041aa"];
     CircuitObject *output = [self.document.circuit findObjectById:@"53c3cdc945f5603003000009"];
     if (!A || !B || !andGate || !output) {
-        NSParameterAssert(nil);
+        self.isTutorial = NO;
         return NO;
     }
     BOOL isLandscape = self.view.frame.size.width > self.view.frame.size.height;
@@ -317,46 +299,86 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     return changes;
 }
 
-- (void) timerTick:(id) sender {
-    if (!_document.circuit) return;
-    static int d = 0;
-    d++;
-    if (d > 100) d = 0;
-    __block int clocks = 0;
-    [self.document.circuit performWriteBlock:^(CircuitInternal *internal) {
-        [self.document.circuit enumerateClocksUsingBlock:^(CircuitObject *object, BOOL *stop) {
-            clocks++;
-            CircuitObjectSetOutput(internal, object, !object->out);
-        }];
+- (NSUInteger)clockTransitionsForElapsedTime:(NSTimeInterval)elapsedTime
+                                    interval:(NSTimeInterval)interval
+                                 accumulator:(NSTimeInterval *)accumulator {
+    *accumulator += elapsedTime;
+    NSUInteger transitions = (NSUInteger)floor(*accumulator / interval);
+    *accumulator -= transitions * interval;
+
+    // Avoid an unbounded catch-up after a debugger pause or a badly delayed
+    // frame while still preserving every transition during normal rendering.
+    return MIN(transitions, 64);
+}
+
+- (BOOL)advanceClockProcess:(CircuitProcess *)process transitionCount:(NSUInteger)transitionCount {
+    if (!_document.circuit || transitionCount == 0) return NO;
+
+    __block BOOL containsMatchingClock = NO;
+    [_document.circuit enumerateClocksUsingBlock:^(CircuitObject *object, BOOL *stop) {
+        if (object->type == process) {
+            containsMatchingClock = YES;
+            *stop = YES;
+        }
     }];
-    
-    if (clocks) {
-        [self unpause];
+    if (!containsMatchingClock) return NO;
+
+    for (NSUInteger transition = 0; transition < transitionCount; transition++) {
+        [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
+            [self.document.circuit enumerateClocksUsingBlock:^(CircuitObject *object, BOOL *stop) {
+                if (object->type == process) {
+                    CircuitObjectSetOutput(internal, object, !object->out);
+                }
+            }];
+        }];
+        // Stateful components must observe every edge. The 512 steps are a
+        // propagation limit for settling this edge, not additional clock ticks.
+        [_document.circuit simulate:512];
     }
+    return YES;
 }
 
-- (void)dealloc
-{    
-    [self tearDownGL];
-    
-    if ([EAGLContext currentContext] == self.context) {
-        [EAGLContext setCurrentContext:nil];
-    }
+- (BOOL)advanceClocksByElapsedTime:(NSTimeInterval)elapsedTime {
+    static const NSTimeInterval fastClockTransitionInterval = 0.005; // 100 Hz cycle
+    static const NSTimeInterval slowClockTransitionInterval = 0.5;  // 1 Hz cycle
+
+    NSTimeInterval fastAccumulator = self.clockTickAccumulator;
+    NSUInteger fastTransitions = [self clockTransitionsForElapsedTime:elapsedTime
+                                                              interval:fastClockTransitionInterval
+                                                           accumulator:&fastAccumulator];
+    self.clockTickAccumulator = fastAccumulator;
+
+    NSTimeInterval slowAccumulator = self.slowClockTickAccumulator;
+    NSUInteger slowTransitions = [self clockTransitionsForElapsedTime:elapsedTime
+                                                              interval:slowClockTransitionInterval
+                                                           accumulator:&slowAccumulator];
+    self.slowClockTickAccumulator = slowAccumulator;
+
+    BOOL changed = [self advanceClockProcess:&CircuitProcessClock transitionCount:fastTransitions];
+    return [self advanceClockProcess:&CircuitProcessSlowClock transitionCount:slowTransitions] || changed;
 }
 
-- (void)tearDownGL
-{
-    [EAGLContext setCurrentContext:self.context];
-    [self checkError];
-//    glDeleteBuffers(1, &_vertexBuffer);
-//    glDeleteVertexArraysOES(1, &_vertexArray);
-}
-
-#pragma mark - GLKView and GLKViewController delegate methods
+#pragma mark - Drawing
 
 - (void) updateTuturialState {
     if (!self.isTutorial) return;
     [self.tutorialDelegate viewControllerTutorial:self didChange:nil];
+}
+
+- (void)sceneDidUpdateAtTime:(NSTimeInterval)currentTime {
+    if (self.lastDisplayTimestamp == 0) {
+        self.lastDisplayTimestamp = currentTime;
+    }
+    self.timeSinceLastUpdate = currentTime - self.lastDisplayTimestamp;
+    self.lastDisplayTimestamp = currentTime;
+
+    if ([self advanceClocksByElapsedTime:self.timeSinceLastUpdate]) {
+        [self unpause];
+    }
+    if (!self.isPaused) {
+        [self update];
+    }
+    [_viewport updateSceneForViewSize:self.view.bounds.size allowContentRebuild:!isPanning && !animatingPan];
 }
 
 static BOOL animateGateToLockedPosition(CircuitObject *object, float x, float y) {
@@ -378,40 +400,19 @@ static BOOL animateGateToLockedPosition(CircuitObject *object, float x, float y)
 
 - (void)update
 {
-    [self checkError];
-    
     // Tutorial:
     [self updateTuturialState];
-    
-    // time differnce in seconds (float)
+
     NSTimeInterval dt = self.timeSinceLastUpdate;
-    
-//    float aspect = self.view.bounds.size.width / self.view.bounds.size.height;
-//    GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0f), aspect, 0.1f, 100.0f);
-    CGRect boundary = self.view.bounds;
-    GLKMatrix4 projectionMatrix = GLKMatrix4MakeOrtho(0.0, boundary.size.width, boundary.size.height, 0.0, -10.0, 10.0);
-//    GLKMatrix4 baseModelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, -4.0f);
-//    baseModelViewMatrix = GLKMatrix4Rotate(baseModelViewMatrix, _rotation, 0.0f, 1.0f, 0.0f);
-    
-    // Compute the model view matrix for the object rendered with ES2
-//    GLKMatrix4 modelViewMatrix = GLKMatrix4MakeTranslation(0.5 * floor(_rotation), 0.0f, 0.0f);
-      GLKMatrix4 modelViewMatrix = GLKMatrix4Identity;
-//    modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, _rotatio0, 1.0f, 1.0f, 1.0f);
-//    modelViewMatrix = GLKMatrix4Multiply(baseModelViewMatrix, modelViewMatrix);
-    
-    _normalMatrix = GLKMatrix3InvertAndTranspose(GLKMatrix4GetMatrix3(modelViewMatrix), NULL);
-    
-    _modelViewProjectionMatrix = GLKMatrix4Multiply(projectionMatrix, modelViewMatrix);
-    
-    [_viewport setProjectionMatrix:_modelViewProjectionMatrix];
+
     if (!isAnimatingScaleToSnap && beginGestureScale != 0.0 && !_pinchGestureRecognizer.numberOfTouches) {
         isAnimatingScaleToSnap = YES;
     }
 
     if (isAnimatingScaleToSnap) {
-        float lEnd = round(log2f(_viewport.scaleWithFloat));
+        float lEnd = round(log2f(_viewport.zoomScale));
         if (lEnd > 2.0) lEnd = 2.0; // maximum zoom
-        float lNow = log2f(_viewport.scaleWithFloat);
+        float lNow = log2f(_viewport.zoomScale);
         float k = 0.1;
         if (fabsf(lEnd - lNow) < 0.001) {
             k = 1.0;
@@ -419,19 +420,20 @@ static BOOL animateGateToLockedPosition(CircuitObject *object, float x, float y)
         }
         
         // TODO: this is a bit of a hack. Clean up the translate / scale math so that isn't so disgusting:
-        CGPoint screenPos = PX(self.view.contentScaleFactor, CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2));
-        GLKVector3 aPos = [_viewport unproject: screenPos];
-        _viewport.scaleWithFloat = exp2f(lNow + (lEnd - lNow) * k);
-        GLKVector3 bPos = [_viewport unproject: screenPos];
+        CGPoint screenPos = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+        CGPoint aPos = [_viewport unproject: screenPos];
+        _viewport.zoomScale = exp2f(lNow + (lEnd - lNow) * k);
+        CGPoint bPos = [_viewport unproject: screenPos];
         
         // We want modelViewMatrix * curPos = newModelViewMatrix * curPos
         
         // A v = B v.. so what is B...
-        [_viewport translate: GLKVector3Make(_viewport.scaleWithFloat * (bPos.x - aPos.x), _viewport.scaleWithFloat * (bPos.y - aPos.y), 0.0)];
+        [_viewport translateBy:CGVectorMake(_viewport.zoomScale * (bPos.x - aPos.x),
+                                            _viewport.zoomScale * (bPos.y - aPos.y))];
         
     }
     
-    [_viewport translate: GLKVector3Make(panVelocity.x * dt, panVelocity.y * dt, 0.0)];
+    [_viewport translateBy:CGVectorMake(panVelocity.x * dt, panVelocity.y * dt)];
     if (animatingPan) {
         // momentum deceleration / friction:
         panVelocity.x -= panVelocity.x * dt * 10.0;
@@ -451,7 +453,10 @@ static BOOL animateGateToLockedPosition(CircuitObject *object, float x, float y)
     int circuitChanges = [_document.circuit simulate:512];
     changes += circuitChanges;
     changes += [_viewport update: dt];
-    if (animatingPan || isAnimatingScaleToSnap || changes) {
+    if (changes) {
+        [_viewport setSceneContentNeedsUpdate];
+    }
+    if (isPanning || animatingPan || isAnimatingScaleToSnap || changes) {
         self.paused = NO;
     } else {
         self.paused = YES;
@@ -462,22 +467,10 @@ static BOOL animateGateToLockedPosition(CircuitObject *object, float x, float y)
 // A subclass may override this method, or the two-part variants below, but not both.
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration NS_AVAILABLE_IOS(3_0) {
     self.paused = NO;
+    [_viewport setSceneContentNeedsUpdate];
 }
 
 - (void) checkError {
-    int err;
-    if((err = glGetError()) != GL_NO_ERROR) {
-        NSDictionary *names = @{
-                                 @GL_INVALID_ENUM: @"GL_INVALID_ENUM",
-                                 @GL_INVALID_VALUE: @"GL_INVALID_VALUE",
-                                 @GL_INVALID_OPERATION: @"GL_INVALID_OPERATION",
-                                 @GL_INVALID_FRAMEBUFFER_OPERATION: @"GL_INVALID_FRAMEBUFFER_OPERATION",
-                                 @GL_OUT_OF_MEMORY: @"GL_OUT_OF_MEMORY",
-                                 @GL_STACK_UNDERFLOW: @"GL_STACK_UNDERFLOW",
-                                 @GL_STACK_OVERFLOW: @"GL_STACK_OVERFLOW"
-                                 };
-        [NSException raise:@"OpenGL Error" format:@"%@ (%d)", [names objectForKey:[NSNumber numberWithInt:err]], err];
-    }
 }
 
 
@@ -508,40 +501,32 @@ static CGFloat gridSize = 33.0;
     }];
     [self unpause];
 }
-- (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
-{
-    [self checkError];
-    glClearColor(0.4, 0.4, 0.4, 1.0f);
-
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//    glDisable(GL_DEPTH_TEST);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
-
-    [self checkError];
-    GLKMatrixStackLoadMatrix4(_stack, _modelViewProjectionMatrix);
-    [_bg drawWithSize:GLKVector2Make(rect.size.width, rect.size.height) withTransform:_modelViewProjectionMatrix];
-    [self checkError];
-    [_viewport drawWithStack:_stack];
-    [self checkError];
-}
-
-// Take a pt screen coordinate and translate it to pixel screen coordinates, because OpenGL only deals with pixels.
-CGPoint PX(float contentScaleFactor, CGPoint pt) {
-    return CGPointMake(contentScaleFactor * pt.x, contentScaleFactor * pt.y);
-}
-
 - (void) stopPanAnimation {
     panVelocity = CGPointZero;
     animatingPan = NO;
 }
 
 - (void) startCreatingObjectFromItem: (ToolbeltItem *) item {
+    if ([item.type isEqualToString:@"note"]) {
+        CGPoint center = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
+        center.x += (CGFloat)arc4random_uniform(121) - 60.0;
+        center.y += (CGFloat)arc4random_uniform(121) - 60.0;
+        CGPoint worldCenter = [self.viewport unproject:center];
+        CircuitNote *note = [[CircuitNote alloc] initWithDictionary:@{
+            @"text": @"Untitled note, hold to edit text",
+            @"rect": @[@(worldCenter.x - 210.0), @(worldCenter.y - 110.0), @420.0, @220.0]
+        }];
+        [self.document.circuit.notes addObject:note];
+        [self updateChangeCount:UIDocumentChangeDone];
+        [self unpause];
+        return;
+    }
+
     Circuit *_circuit = _document.circuit;
     
     CGPoint locationInView = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
         
-    GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, locationInView)];
+    CGPoint position = [_viewport unproject:locationInView];
     
     position.x += (float)(arc4random_uniform(200)) - 100.0;
     position.y += (float)(arc4random_uniform(200)) - 100.0;
@@ -573,21 +558,19 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 	}
     
     if ([gestureRecognizer isKindOfClass:[LongPressObjectGesture class]]) {
-        GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [gestureRecognizer locationInView:self.view])];
+        CGPoint position = [_viewport unproject:[gestureRecognizer locationInView:self.view]];
         
-        CircuitObject *object = [_viewport findCircuitObjectAtPosition:position];
-        if (!object) return NO;
-        
-        return YES;
+        return [_viewport findCircuitObjectAtPosition:position] || [_viewport findNoteAtPosition:position];
     }
     
     if ([gestureRecognizer isKindOfClass:[HoldDownGestureRecognizer class]]) {
-        GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [gestureRecognizer locationInView:self.view])];
+        CGPoint position = [_viewport unproject:[gestureRecognizer locationInView:self.view]];
         
         CircuitObject *object = [_viewport findCircuitObjectAtPosition:position];
         if (!object) return NO;
         
         if (object->type != [_document.circuit getProcessById:@"pbtn"]) return NO;
+        if (![_viewport isPosition:position onMomentaryButtonCap:object]) return NO;
         
         _holdDownGestureObject = object;
         
@@ -598,14 +581,14 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     if ([gestureRecognizer isKindOfClass:[CreateLinkGestureRecognizer class]]) {
         // Create a link from a gate, or move a link that is connected to a gate
         
-        GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [gestureRecognizer locationInView:self.view])];
+        CGPoint position = [_viewport unproject:[gestureRecognizer locationInView:self.view]];
         
         CircuitObject *o;
         // find the object under the touch:
         if ((o = [_viewport findCircuitObjectNearPosition:position])) {
             // calculate the offset (which will be used to determine which output to edit)
-            GLKVector3 offset = GLKVector3Subtract(position, *(GLKVector3 *)&o->pos);
-            if (offset.x < 150.0) {
+            CGVector offset = CGVectorMake(position.x - o->pos.x, position.y - o->pos.y);
+            if (offset.dx < 150.0) {
                 // Left side: editing something connected to a gate (todo: don't make this guess, just use find attachment at index or something which finds either inlets or outlets, whichever is closer)
                 CircuitLink *existing = [_viewport findCircuitLinkAtOffset:offset attachedToObject:o];
                 if (!existing) return NO;
@@ -635,13 +618,25 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         // Drag a gate. This is done with a pan gesture recogniser that is only begins if the touch starts on top of a gate 
         DragGateGestureRecognizer *recogniser = (DragGateGestureRecognizer *)gestureRecognizer;
         ;
-        GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [recogniser locationInView:self.view])];
+        CGPoint position = [_viewport unproject:[recogniser locationInView:self.view]];
         // only accept long presses on circuit objects:
+        CircuitNote *resizeNote = [_viewport findNoteResizeHandleAtPosition:position];
+        if (resizeNote) {
+            _beginResizeNote = resizeNote;
+            return YES;
+        }
         CircuitObject *o;
         if ((o = [_viewport findCircuitObjectAtPosition:position])) {
             _beginLongPressGestureObject = o;
-            GLKVector3 objectPosition = *(GLKVector3 *) &_beginLongPressGestureObject->pos;
-            beginLongPressGestureOffset = GLKVector3Subtract(objectPosition, position);
+            beginLongPressGestureOffset = CGVectorMake(_beginLongPressGestureObject->pos.x - position.x,
+                                                       _beginLongPressGestureObject->pos.y - position.y);
+            return YES;
+        }
+        CircuitNote *note = [_viewport findNoteAtPosition:position];
+        if (note) {
+            _beginDragNote = note;
+            beginLongPressGestureOffset = CGVectorMake(note.frame.origin.x - position.x,
+                                                       note.frame.origin.y - position.y);
             return YES;
         }
         // Dragging the background, defer this to the other pan gesture recognizer.
@@ -649,24 +644,13 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     } else if ([gestureRecognizer isKindOfClass:[CreateGatePanGestureRecognizer class]]) {
         // only starts if the finger is on the toolbelt
 //        CGPoint location = [gestureRecognizer locationInView:self.view];
-//        if (!CGRectContainsPoint(_hud.toolbelt.bounds, location)) {
-            return NO;
-//        }
-        
-        CGPoint p = [gestureRecognizer locationInView:self.view];
-        p.x = 0.0;
-        
-//        int index = [_hud.toolbelt indexAtPosition:p];
-//        if (index == -1) return NO;
-//        _hud.toolbelt.currentObjectIndex = index;
-        draggingOutFromToolbeltStart = p;
-        return YES;
+        return NO;
     } else if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
         // drag view pan
         UIPanGestureRecognizer *recogniser = (UIPanGestureRecognizer *)gestureRecognizer;
         ;
-        GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, [recogniser locationInView:self.view])];
-        if ([_viewport findCircuitObjectAtPosition:position]) {
+        CGPoint position = [_viewport unproject:[recogniser locationInView:self.view]];
+        if ([_viewport findCircuitObjectAtPosition:position] || [_viewport findNoteAtPosition:position]) {
             return NO;
         }
         return YES;
@@ -682,6 +666,9 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     if ([gestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]]) {
         return YES;
     }
+    BOOL holdAndDrag = ([gestureRecognizer isKindOfClass:[HoldDownGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[DragGateGestureRecognizer class]]) ||
+                       ([otherGestureRecognizer isKindOfClass:[HoldDownGestureRecognizer class]] && [gestureRecognizer isKindOfClass:[DragGateGestureRecognizer class]]);
+    if (holdAndDrag) return YES;
     if ([gestureRecognizer isKindOfClass:[LongPressObjectGesture class]] || [otherGestureRecognizer isKindOfClass:[LongPressObjectGesture class]]) {
         return YES;
     }
@@ -691,76 +678,105 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 - (IBAction)handleLongPressObject:(UILongPressGestureRecognizer *)sender {
     
     if (sender.state == UIGestureRecognizerStateBegan) {
-        GLKVector3 position = [_viewport unproject:PX(self.view.contentScaleFactor, [sender locationInView:self.view])];
+        CGPoint position = [_viewport unproject:[sender locationInView:self.view]];
         CircuitObject *object = [_viewport findCircuitObjectAtPosition:position];
+        CircuitNote *note = object ? nil : [_viewport findNoteAtPosition:position];
+        if (note) {
+            CGRect rect = [_viewport rectForNote:note inView:self.view];
+            UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:@"Canvas Note" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+            [actionSheet addAction:[UIAlertAction actionWithTitle:@"Edit Text" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                UIAlertController *edit = [UIAlertController alertControllerWithTitle:@"Edit Note" message:nil preferredStyle:UIAlertControllerStyleAlert];
+                [edit addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+                    textField.text = note.text;
+                    textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+                }];
+                [edit addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+                [edit addAction:[UIAlertAction actionWithTitle:@"Save" style:UIAlertActionStyleDefault handler:^(UIAlertAction *saveAction) {
+                    note.text = edit.textFields.firstObject.text ?: @"";
+                    [self updateChangeCount:UIDocumentChangeDone];
+                    [self unpause];
+                }]];
+                [self presentViewController:edit animated:YES completion:nil];
+            }]];
+            [actionSheet addAction:[UIAlertAction actionWithTitle:@"Remove" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+                [self.document.circuit.notes removeObject:note];
+                [self updateChangeCount:UIDocumentChangeDone];
+                [self unpause];
+            }]];
+            [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+            actionSheet.popoverPresentationController.sourceView = self.view;
+            actionSheet.popoverPresentationController.sourceRect = rect;
+            [self presentViewController:actionSheet animated:YES completion:nil];
+            return;
+        }
         if (!object) return;
         
         ToolbeltItem *item = [ToolbeltItem toolbeltItemWithType:[NSString stringWithUTF8String:object->type->id]];
         if (!item) return;
         
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:item.fullName delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Remove" otherButtonTitles: nil];
-
         _selectedObjects = @[[NSValue valueWithPointer:object]];
         CGRect rect = [_viewport rectForObject:object inView:self.view];
-        
-        [actionSheet showFromRect:rect inView:self.view animated:YES];
-        
-    }
-    
-}
 
-#pragma mark -
-#pragma mark UIActionSheetDelegate
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 0) {
-        __block NSString *failureMessage = nil;
-        
-        [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
-            
-            for(id obj in self.selectedObjects) {
-                CircuitObject *object = [obj pointerValue];
-                if (object->flags & CircuitObjectFlagLocked) {
-                    failureMessage = @"This object cannot be removed.";
-                    return;
+        UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:item.fullName message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        [actionSheet addAction:[UIAlertAction actionWithTitle:@"Remove" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+            __block NSString *failureMessage = nil;
+
+            [self->_document.circuit performWriteBlock:^(CircuitInternal *internal) {
+                for(id obj in self.selectedObjects) {
+                    CircuitObject *object = [obj pointerValue];
+                    if (object->flags & CircuitObjectFlagLocked) {
+                        failureMessage = @"This object cannot be removed.";
+                        return;
+                    }
                 }
+
+                for(id obj in self.selectedObjects) {
+                    CircuitObject *object = [obj pointerValue];
+                    CircuitObjectRemove(internal, object);
+                    [self unpause];
+                }
+            }];
+            if (failureMessage) {
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:failureMessage preferredStyle:UIAlertControllerStyleAlert];
+                [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+                [self presentViewController:alert animated:YES completion:nil];
+                return;
             }
-            
-            for(id obj in self.selectedObjects) {
-                CircuitObject *object = [obj pointerValue];
-                CircuitObjectRemove(internal, object);
-                [self unpause];
-            }
-        }];
-        if (failureMessage) {
-            [[[UIAlertView alloc] initWithTitle:nil message:failureMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
-            return;
-        }
-        [self updateChangeCount:UIDocumentChangeDone];
+            [self updateChangeCount:UIDocumentChangeDone];
+        }]];
+        [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+        actionSheet.popoverPresentationController.sourceView = self.view;
+        actionSheet.popoverPresentationController.sourceRect = rect;
+        [self presentViewController:actionSheet animated:YES completion:nil];
     }
 }
 
 - (void) updateChangeCount:(UIDocumentChangeKind)change {
     if (self.document.isProblem) return;
     
-    [self.document.circuit setViewCenterX:_viewport.translate.x viewCenterY:_viewport.translate.y];
+    [self.document.circuit setViewCenterX:_viewport.translation.x viewCenterY:_viewport.translation.y];
     
     [self.document updateChangeCount:change];
 }
 
 - (void) unpause {
     self.paused = NO;
+    [_viewport setSceneContentNeedsUpdate];
 }
 
 - (IBAction) handlePanGesture:(UIPanGestureRecognizer *)recognizer {
     if (!_canPan) return;
+    isPanning = recognizer.state == UIGestureRecognizerStateBegan || recognizer.state == UIGestureRecognizerStateChanged;
     CGPoint translation = [recognizer translationInView:self.view];
-    [_viewport translate: GLKVector3Make(translation.x, translation.y, 0.0)];
+    [_viewport translateBy:CGVectorMake(translation.x, translation.y)];
     // this makes it so next time "handlePanGesture:" is called, translation will be relative to the last one. (ie. translation is a delta)
     [recognizer setTranslation:CGPointMake(0, 0) inView:self.view];
     if (recognizer.state == UIGestureRecognizerStateEnded) {
         // give it some momentum
         panVelocity = [recognizer velocityInView:self.view];
         animatingPan = YES;
+    } else if (recognizer.state == UIGestureRecognizerStateCancelled || recognizer.state == UIGestureRecognizerStateFailed) {
+        [self stopPanAnimation];
     }
     [self unpause];
 }
@@ -776,7 +792,9 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         
         [self updateChangeCount:UIDocumentChangeDone];
         [self unpause];
-    } else if (sender.state == UIGestureRecognizerStateEnded) {
+    } else if (sender.state == UIGestureRecognizerStateEnded ||
+               sender.state == UIGestureRecognizerStateCancelled ||
+               sender.state == UIGestureRecognizerStateFailed) {
         _holdDownGestureObject = NULL;
         [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
             CircuitObjectSetOutput(internal, object, 0);
@@ -788,11 +806,17 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 }
 
 - (IBAction)handleDragGateGesture:(UIPanGestureRecognizer *)sender {
-    if (!_beginLongPressGestureObject) {
+    if (!_beginLongPressGestureObject && !_beginDragNote && !_beginResizeNote) {
         return;
     }
     
     CircuitObject *object = _beginLongPressGestureObject;
+    if (sender.state == UIGestureRecognizerStateBegan && object && object == _holdDownGestureObject) {
+        _holdDownGestureObject = NULL;
+        [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
+            CircuitObjectSetOutput(internal, object, 0);
+        }];
+    }
     if (sender.state == UIGestureRecognizerStateEnded) {
         [self updateChangeCount:UIDocumentChangeDone];
         if (_beginLongPressGestureObject && !self.document.isProblem) {
@@ -800,69 +824,49 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         }
         [self unpause];
         _beginLongPressGestureObject = NULL;
+        _beginDragNote = nil;
+        _beginResizeNote = nil;
         return;
     } else if ([sender numberOfTouches] != 1) {
         sender.enabled = NO;
         sender.enabled = YES;
         [self updateChangeCount:UIDocumentChangeDone];
         [self unpause];
+        _beginLongPressGestureObject = NULL;
+        _beginDragNote = nil;
+        _beginResizeNote = nil;
         return;
     }
     
     // world space position of touch:
-    GLKVector3 curPos = [_viewport unproject: PX(self.view.contentScaleFactor, [sender locationOfTouch:0 inView:self.view])];
+    CGPoint curPos = [_viewport unproject:[sender locationOfTouch:0 inView:self.view]];
+
+    if (_beginResizeNote) {
+        CGRect frame = _beginResizeNote.frame;
+        frame.size = CGSizeMake(MAX(120.0, curPos.x - frame.origin.x),
+                                MAX(80.0, curPos.y - frame.origin.y));
+        _beginResizeNote.frame = frame;
+        [self unpause];
+        return;
+    }
     
     // This moves it so that the user can drag the gate from places other than the gates top left corner
-    GLKVector3 newPos = GLKVector3Add(curPos, beginLongPressGestureOffset);
+    CGPoint newPos = CGPointMake(curPos.x + beginLongPressGestureOffset.dx,
+                                 curPos.y + beginLongPressGestureOffset.dy);
+    if (_beginDragNote) {
+        CGRect frame = _beginDragNote.frame;
+        frame.origin = CGPointMake(newPos.x, newPos.y);
+        _beginDragNote.frame = frame;
+        [self unpause];
+        return;
+    }
     object->pos.x = newPos.x;
     object->pos.y = newPos.y;
-    object->pos.z = newPos.z;
     [self unpause];
 }
 
 - (IBAction)handleCreateGateGesture:(UIPanGestureRecognizer *)sender {
-//    Circuit *_circuit = _document.circuit;
-//    if (draggingOutFromToolbeltLockY) {
-//        // still dragging it out of the toolbelt
-//        
-//        if ([sender numberOfTouches] != 1) {
-//            sender.enabled = NO;
-//            sender.enabled = YES;
-//            return;
-//        }
-//        CGPoint p = [sender locationOfTouch:0 inView:self.view];
-//        
-//        CGPoint diff = CGPointMake(p.x - draggingOutFromToolbeltStart.x, p.y - draggingOutFromToolbeltStart.y);
-//        if (diff.x > _hud.toolbelt.listWidth) {
-//            GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, p)];
-//            
-//            // the gate is out of the toolbelt, act the same as the normal drag gate gesture from now on:
-//            draggingOutFromToolbeltLockY = NO;
-//            
-//            ToolbeltItem *item = _hud.toolbelt.items[_hud.toolbelt.currentObjectIndex];
-//            
-//            
-//            // Create a new gate object, and start dragging the gate (as if the drag gate gesture recognizer started)
-//            
-//            CircuitObject *o = [_circuit addObject:item.type];
-//            beginLongPressGestureObject = o;
-//            o->pos.x = position.x;
-//            o->pos.y = position.y - 100.0;
-//            GLKVector3 objectPosition = *(GLKVector3 *) &beginLongPressGestureObject->pos;
-//
-//            beginLongPressGestureOffset = GLKVector3Subtract(objectPosition, position);
-//            
-//            beginLongPressGestureObject = o;
-//            
-//            _hud.toolbelt.currentObjectIndex = -1;
-//        } else {
-//            _hud.toolbelt.currentObjectX = diff.x;
-//        }
-//    } else {
-//        // the gate is out of the toolbelt:
-//        [self handleDragGateGesture:sender];
-//    }
-//    [self unpause];
+    (void)sender;
 }
 
 - (IBAction)handleCreateLinkGesture:(UILongPressGestureRecognizer *)sender {
@@ -886,7 +890,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         return;
     }
     // world space:
-    GLKVector3 curPos = [_viewport unproject: PX(self.view.contentScaleFactor, [sender locationOfTouch:0 inView:self.view])];
+    CGPoint curPos = [_viewport unproject:[sender locationOfTouch:0 inView:self.view]];
 
     CircuitObject *target;
     
@@ -894,9 +898,9 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
     
     if ((target = [_viewport findCircuitObjectNearPosition:curPos])) {
         
-        GLKVector3 offset = GLKVector3Subtract(curPos, *(GLKVector3 *)&target->pos);
+        CGVector offset = CGVectorMake(curPos.x - target->pos.x, curPos.y - target->pos.y);
         int targetIndex = -1;
-        if (target == _viewport.currentEditingLinkSource && offset.x > 140.0) {
+        if (target == _viewport.currentEditingLinkSource && offset.dx > 140.0) {
             
         } else {
             targetIndex = [_viewport findInletIndexAtOffset:offset attachedToObject:target];
@@ -926,7 +930,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
                 // Create a new link and tell the viewport renderer that it is the one being edited:
                 _viewport.currentEditingLinkTargetIndex = targetIndex;
                 [_circuit performWriteBlock:^(CircuitInternal *internal) {
-                    CircuitLink *newLink = CircuitLinkCreate(internal, _viewport.currentEditingLinkSource, viewport.currentEditingLinkSourceIndex, target, targetIndex);
+                    CircuitLink *newLink = CircuitLinkCreate(internal, self->_viewport.currentEditingLinkSource, viewport.currentEditingLinkSourceIndex, target, targetIndex);
                     viewport.currentEditingLink = newLink;
                 }];
                 [_viewport didAttachLink:_viewport.currentEditingLink];
@@ -955,25 +959,25 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         return;
     }
     // Zoom:
-    CGPoint screenPos = PX(self.view.contentScaleFactor, [recognizer locationInView:self.view]);
+    CGPoint screenPos = [recognizer locationInView:self.view];
     
     if (recognizer.state == UIGestureRecognizerStateBegan) {
-        beginGestureScale = _viewport.scaleWithFloat;
+        beginGestureScale = _viewport.zoomScale;
     }
     
-    GLKVector3 aPos = [_viewport unproject: screenPos];
-    _viewport.scaleWithFloat = beginGestureScale * recognizer.scale;
-    GLKVector3 bPos = [_viewport unproject: screenPos];
+    CGPoint aPos = [_viewport unproject: screenPos];
+    _viewport.zoomScale = beginGestureScale * recognizer.scale;
+    CGPoint bPos = [_viewport unproject: screenPos];
     
     // We want modelViewMatrix * curPos = newModelViewMatrix * curPos (i.e., scaling should not translate the center point of the gesture)
     
     // A v = B v.. so what is B...
-    [_viewport translate: GLKVector3Make(_viewport.scaleWithFloat * (bPos.x - aPos.x), _viewport.scaleWithFloat * (bPos.y - aPos.y), 0.0)];
+    [_viewport translateBy:CGVectorMake(_viewport.zoomScale * (bPos.x - aPos.x),
+                                        _viewport.zoomScale * (bPos.y - aPos.y))];
     [self unpause];
     
 ////#define LOG_TEST 0
 //#ifdef LOG_TEST
-//    GLKVector3 cPos = [_viewport unproject: PX(self.view.contentScaleFactor, [recognizer locationInView:self.view])];
 //    // the difference should be (0,0,0)
 //    NSLog(@"((%.2f, %.2f : %.2f) , (%.2f, %.2f : %.2f))", aPos.x, cPos.x, aPos.x - cPos.x , aPos.y, cPos.y, aPos.y - cPos.y);
 //#endif
@@ -981,16 +985,15 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
 
 - (void) viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [_timer invalidate];
-    _timer = nil;
+    self.circuitScene.paused = YES;
 }
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    if (!_timer) {
-        _timer = [NSTimer timerWithTimeInterval:0.005 target:self selector:@selector(timerTick:) userInfo:nil repeats:YES];
-        [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
-    }
+    self.lastDisplayTimestamp = 0;
+    self.clockTickAccumulator = 0;
+    self.slowClockTickAccumulator = 0;
+    self.circuitScene.paused = NO;
 }
 
 - (IBAction) handleTapGesture:(UITapGestureRecognizer *)sender {
@@ -1000,7 +1003,7 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
         CGPoint screenPos = [sender locationOfTouch:i inView:self.view];
         
         // world space coordinates
-        GLKVector3 position = [_viewport unproject: PX(self.view.contentScaleFactor, screenPos)];
+        CGPoint position = [_viewport unproject:screenPos];
         
         CircuitObject *object = [_viewport findCircuitObjectAtPosition:position];
         
@@ -1019,7 +1022,8 @@ CGPoint PX(float contentScaleFactor, CGPoint pt) {
             }];
             [self updateChangeCount:UIDocumentChangeDone];
         } else {
-            if (object->type == [_document.circuit getProcessById:@"pbtn"]) {
+            if (object->type == [_document.circuit getProcessById:@"pbtn"]
+                && [_viewport isPosition:position onMomentaryButtonCap:object]) {
                 hit = YES;
                 [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
                     if (object->out != 0) return;

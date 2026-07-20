@@ -11,6 +11,7 @@
 @interface ImageAtlas() {
 }
 @property (nonatomic) NSDictionary *json;
+@property (nonatomic) NSMutableDictionary<NSValue *, UIImage *> *spriteImages;
 
 
 @end
@@ -34,21 +35,11 @@
     _json = [NSJSONSerialization JSONObjectWithStream:stream options:0 error:&err];
     if (err) [[NSException exceptionWithName:err.description reason:err.localizedFailureReason userInfo:@{}] raise];
 
-    NSError* error = nil;
-    
-    int mipmap_levels = 0;
-    
-    NSDictionary* options = [NSDictionary dictionaryWithObjectsAndKeys:
-                             [NSNumber numberWithBool: mipmap_levels > 0], GLKTextureLoaderGenerateMipmaps,
-                             [NSNumber numberWithBool:NO], GLKTextureLoaderApplyPremultiplication,
-                             nil
-                             ];
-    
-    _texture = [GLKTextureLoader textureWithContentsOfURL:atlasPng options:options error: &error];
-    
-    if (error) {
-        [[NSException exceptionWithName:error.localizedDescription reason:error.localizedFailureReason userInfo:@{}] raise];
+    _image = [UIImage imageWithContentsOfFile:atlasPng.path];
+    if (!_image) {
+        [[NSException exceptionWithName:@"ImageAtlasError" reason:@"Could not load generated atlas image." userInfo:@{}] raise];
     }
+    _spriteImages = [NSMutableDictionary dictionary];
     
     
     return self;
@@ -65,5 +56,29 @@
     pos.width = pos.twidth;
     pos.height = pos.theight;
     return pos;
+}
+
+- (UIImage *) imageForSprite:(SpriteTexturePos)position {
+    CGRect cropRect = CGRectMake(position.u, position.v, position.twidth, position.theight);
+    CGImageRef atlasImage = self.image.CGImage;
+    if (!atlasImage || !isfinite(CGRectGetMinX(cropRect)) || !isfinite(CGRectGetMinY(cropRect)) ||
+        !isfinite(CGRectGetWidth(cropRect)) || !isfinite(CGRectGetHeight(cropRect)) ||
+        CGRectGetWidth(cropRect) <= 0.0 || CGRectGetHeight(cropRect) <= 0.0) {
+        return nil;
+    }
+
+    CGRect imageBounds = CGRectMake(0.0, 0.0, CGImageGetWidth(atlasImage), CGImageGetHeight(atlasImage));
+    if (!CGRectContainsRect(imageBounds, cropRect)) return nil;
+
+    NSValue *key = [NSValue valueWithCGRect:cropRect];
+    UIImage *cachedImage = self.spriteImages[key];
+    if (cachedImage) return cachedImage;
+
+    CGImageRef croppedImage = CGImageCreateWithImageInRect(atlasImage, cropRect);
+    if (!croppedImage) return nil;
+    UIImage *image = [UIImage imageWithCGImage:croppedImage scale:self.image.scale orientation:self.image.imageOrientation];
+    CGImageRelease(croppedImage);
+    self.spriteImages[key] = image;
+    return image;
 }
 @end

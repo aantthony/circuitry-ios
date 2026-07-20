@@ -57,12 +57,12 @@
                             <constraint firstItem="2Ns-D2-J66" firstAttribute="leading" secondItem="U6a-IS-6io" secondAttribute="leading" id="Jht-JQ-dht"/>
                             <constraint firstItem="isi-1p-ZHn" firstAttribute="leading" secondItem="U6a-IS-6io" secondAttribute="leading" id="Jqn-1k-3nr"/>
                             <constraint firstItem="8GE-Pt-Sug" firstAttribute="top" secondItem="aYZ-yF-N0r" secondAttribute="bottom" id="NlX-MW-rX4"/>
-                            <constraint firstItem="0Ys-4M-3pE" firstAttribute="top" secondItem="0G8-Qd-p90" secondAttribute="bottom" id="R5J-2P-60i"/>
+                            <constraint firstAttribute="bottom" secondItem="0G8-Qd-p90" secondAttribute="bottom" id="R5J-2P-60i"/>
                             <constraint firstItem="8GE-Pt-Sug" firstAttribute="leading" secondItem="U6a-IS-6io" secondAttribute="leading" id="VKu-Gt-L8u"/>
                             <constraint firstAttribute="trailing" secondItem="isi-1p-ZHn" secondAttribute="trailing" id="ezk-0B-41R"/>
                             <constraint firstAttribute="trailing" secondItem="2Ns-D2-J66" secondAttribute="trailing" id="m1r-Bm-BbS"/>
                             <constraint firstItem="0G8-Qd-p90" firstAttribute="leading" secondItem="U6a-IS-6io" secondAttribute="leading" id="oBv-W6-v2G"/>
-                            <constraint firstItem="0Ys-4M-3pE" firstAttribute="top" secondItem="isi-1p-ZHn" secondAttribute="bottom" id="ttf-Kg-M0G"/>
+                            <constraint firstAttribute="bottom" secondItem="isi-1p-ZHn" secondAttribute="bottom" id="ttf-Kg-M0G"/>
                             <constraint firstItem="0G8-Qd-p90" firstAttribute="top" secondItem="2Ns-D2-J66" secondAttribute="bottom" id="uVE-3P-YbF"/>
                         </constraints>
                     </view>
@@ -132,7 +132,7 @@
                                                     <rect key="frame" x="540" y="0.0" width="50" height="50"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="50" id="ONj-5r-Il5"/>
-                                                        <constraint firstAttribute="height" constant="50" id="xig-Pl-BIB"/>
+                                                        <constraint firstAttribute="height" priority="999" constant="50" id="xig-Pl-BIB"/>
                                                     </constraints>
                                                 </imageView>
                                             </subviews>
@@ -166,7 +166,7 @@
                                 <color key="backgroundColor" white="0.79017310049019618" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="BigTick" translatesAutoresizingMaskIntoConstraints="NO" id="af4-b6-spB">
-                                <rect key="frame" x="192" y="207" width="156" height="156"/>
+                                <rect key="frame" x="192" y="232" width="156" height="156"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="156" id="HeM-sl-9Uj"/>
                                     <constraint firstAttribute="height" constant="156" id="t73-IY-FpE"/>
@@ -176,13 +176,15 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="af4-b6-spB" secondAttribute="centerX" id="5pP-n7-xtb"/>
-                            <constraint firstItem="af4-b6-spB" firstAttribute="top" secondItem="RSx-fP-3W0" secondAttribute="bottom" constant="207" id="b7t-dM-We7"/>
+                            <constraint firstAttribute="centerY" secondItem="af4-b6-spB" secondAttribute="centerY" id="b7t-dM-We7"/>
                         </constraints>
                     </view>
                     <nil key="simulatedTopBarMetrics"/>
                     <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="bigTick" destination="af4-b6-spB" id="PlA-b4-M8J"/>
+                        <outlet property="buttonSeparator" destination="jSh-rU-Qai" id="L4Z-km-xkM"/>
+                        <outlet property="dismissButton" destination="8I5-to-qvU" id="sCd-cW-dPX"/>
                         <outlet property="tableView" destination="VjK-Vs-avk" id="wry-sq-GKA"/>
                     </connections>
                 </viewController>
@@ -311,15 +313,15 @@ The linking wires in Circuitry allow these signals to be passed on from the outp
             </objects>
             <point key="canvasLocation" x="3559" y="-617"/>
         </scene>
-        <!--GLKit View Controller-->
+        <!--View Controller-->
         <scene sceneID="tXr-a1-R10">
             <objects>
-                <glkViewController storyboardIdentifier="Viewing Circuit" preferredFramesPerSecond="60" id="BV1-FR-VrT" customClass="ViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Viewing Circuit" id="BV1-FR-VrT" customClass="ViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="zAf-WF-YrM"/>
                         <viewControllerLayoutGuide type="bottom" id="4IW-dR-L7m"/>
                     </layoutGuides>
-                    <glkView key="view" contentMode="scaleToFill" id="3se-qz-xqx">
+                    <view key="view" contentMode="redraw" id="3se-qz-xqx" customClass="CircuitCanvasView">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -334,12 +336,12 @@ The linking wires in Circuitry allow these signals to be passed on from the outp
                             <outletCollection property="gestureRecognizers" destination="W0R-Er-cpe" appends="YES" id="s9W-GF-sNq"/>
                             <outletCollection property="gestureRecognizers" destination="II3-Do-ZfR" appends="YES" id="NfD-57-9La"/>
                         </connections>
-                    </glkView>
+                    </view>
                     <keyCommands/>
                     <connections>
                         <outlet property="pinchGestureRecognizer" destination="prC-OQ-El9" id="tZZ-eO-MgU"/>
                     </connections>
-                </glkViewController>
+                </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
                 <panGestureRecognizer minimumNumberOfTouches="1" id="q8S-aQ-v8R">
                     <connections>
@@ -549,7 +551,7 @@ The linking wires in Circuitry allow these signals to be passed on from the outp
                         <outlet property="createButton" destination="vXF-Ph-Sji" id="g0o-mm-xOa"/>
                         <outlet property="segmentControl" destination="9OF-Pa-xpp" id="WIC-xZ-ZYF"/>
                         <segue destination="2hA-su-58g" kind="push" identifier="presentDocument" id="MpB-7m-KJD"/>
-                        <segue destination="SLJ-zi-R7l" kind="modal" identifier="ShowTutorialAgain" modalTransitionStyle="flipHorizontal" id="gnN-9s-ocl"/>
+                        <segue destination="SLJ-zi-R7l" kind="modal" identifier="ShowTutorialAgain" modalPresentationStyle="fullScreen" modalTransitionStyle="flipHorizontal" id="gnN-9s-ocl"/>
                         <segue destination="fgr-9P-fIo" kind="modal" identifier="ShowBoringInfo" modalTransitionStyle="coverVertical" id="0tP-rl-eoO"/>
                     </connections>
                 </collectionViewController>
@@ -714,7 +716,7 @@ The linking wires in Circuitry allow these signals to be passed on from the outp
         <!--View Controller-->
         <scene sceneID="7yQ-Lz-w2b">
             <objects>
-                <viewController storyboardIdentifier="Tutorial-Page-2" useStoryboardIdentifierAsRestorationIdentifier="YES" id="gCS-XG-Uk1" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Tutorial-Page-2" useStoryboardIdentifierAsRestorationIdentifier="YES" id="gCS-XG-Uk1" customClass="TutorialPage2ViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="PGG-BL-aDQ"/>
                         <viewControllerLayoutGuide type="bottom" id="rcS-cb-0qB"/>
@@ -794,7 +796,7 @@ The linking wires in Circuitry allow these signals to be passed on from the outp
                                     </label>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="Zx9-i6-yMt" secondAttribute="trailing" constant="151" id="1jW-UH-5Zv"/>
+                                    <constraint firstAttribute="trailing" secondItem="Zx9-i6-yMt" secondAttribute="trailing" constant="152" id="1jW-UH-5Zv"/>
                                     <constraint firstAttribute="centerY" secondItem="Zx9-i6-yMt" secondAttribute="centerY" id="C45-uS-8u3"/>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="168" id="DxF-os-7fa"/>
                                     <constraint firstItem="Zx9-i6-yMt" firstAttribute="leading" secondItem="g5c-E0-yAK" secondAttribute="leading" constant="152" id="MSK-JY-hFQ"/>
@@ -832,7 +834,7 @@ The linking wires in Circuitry allow these signals to be passed on from the outp
                     </navigationBar>
                     <connections>
                         <segue destination="bMV-Gg-1ab" kind="relationship" relationship="rootViewController" id="krF-hO-kAj"/>
-                        <segue destination="SLJ-zi-R7l" kind="modal" identifier="ShowTutorial" modalTransitionStyle="crossDissolve" id="l2a-A5-LGd"/>
+                        <segue destination="SLJ-zi-R7l" kind="modal" identifier="ShowTutorial" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="l2a-A5-LGd"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="y7C-L5-AcO" userLabel="First Responder" sceneMemberID="firstResponder"/>

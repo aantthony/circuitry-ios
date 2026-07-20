@@ -1,6 +1,11 @@
 {
   "_id" : "54d7228f004aab735e0041b9",
-  "description" : "A Flip-Flop circuit, or a 'Latch' is a circuit that has two stable states and can be used to store information.\n\nA flip-flop stores a single bit (binary digit) of data.\n\nA common type of Flip-flop is the SR ('set-reset') Flip-flop, which has two inputs S (Set) and R (Reset). The Set turns on the output (which stays on even after the S input goes back to zero), and the Reset turns off the output. Figure out how to make one!\n(hint: Google)",
+  "description" : "A latch is a circuit with two stable states, so it can store information.\n\nAn SR latch stores one bit. It has an S input to set the output and an R input to reset it. After S turns the output on, the output should stay on until R turns it off.\n\nBuild an SR latch that controls Q.",
+  "hints" : [
+    "An SR latch is made from two cross-coupled gates.",
+    "The output of each NOR gate feeds one input of the other NOR gate.",
+    "S should set Q, and R should reset Q."
+  ],
   "license" : "Copyright",
   "view" : {
     "center" : [
@@ -36,7 +41,7 @@
   "engines" : {
     "circuitry" : ">=0.0"
   },
-  "title" : "Flip Flop",
+  "title" : "Build an SR Latch",
   "items": [
     {
       "_id" : "5548bbac4fa5ddaa390041ac",

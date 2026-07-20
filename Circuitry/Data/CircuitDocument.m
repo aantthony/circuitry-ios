@@ -13,9 +13,28 @@
 
 @interface CircuitDocument() <NSURLSessionTaskDelegate>
 @property (nonatomic) NSData *originalScreenshotData;
+@property (nonatomic) NSError *loadError;
 @end
 
 static NSString *screenshotPngPath = @"screenshot.png";
+static NSString *CircuitDocumentErrorDomain = @"CircuitDocumentErrorDomain";
+
+static NSError *CircuitDocumentLoadError(NSString *message) {
+    return [NSError errorWithDomain:CircuitDocumentErrorDomain
+                               code:1
+                           userInfo:@{NSLocalizedDescriptionKey: message}];
+}
+
+static NSString *CircuitDocumentUnsupportedProcessType(NSArray *items) {
+    NSDictionary *processesById = [Circuit processesById];
+    for (NSDictionary *item in items) {
+        NSString *type = item[@"type"];
+        if (!type.length || !processesById[type]) {
+            return type ?: @"";
+        }
+    }
+    return nil;
+}
 
 @implementation CircuitDocument
 - (void) setProblemInfo:(ProblemSetProblemInfo *)problemInfo {
@@ -27,13 +46,26 @@ static NSString *screenshotPngPath = @"screenshot.png";
 }
 - (BOOL)loadFromContents:(id)contents ofType:(NSString *)typeName error:(NSError **)outError {
     
-    NSError *err;
+    NSError *err = nil;
+    self.loadError = nil;
     
     if ([typeName isEqualToString:@"public.json"]) {
         NSDictionary *full = [NSJSONSerialization JSONObjectWithData:contents options:0 error:&err];
+        if (err) return NO;
+        
+        NSString *unsupportedType = CircuitDocumentUnsupportedProcessType(full[@"items"]);
+        if (unsupportedType) {
+            self.loadError = CircuitDocumentLoadError([NSString stringWithFormat:@"This circuit contains an unsupported object type: %@.", unsupportedType]);
+            if (outError) *outError = self.loadError;
+            return NO;
+        }
         
         _circuit = [[Circuit alloc] initWithPackage:full items:full[@"items"]];
-        if (err) return NO;
+        if (!_circuit) {
+            self.loadError = CircuitDocumentLoadError(@"This circuit file is invalid and could not be loaded.");
+            if (outError) *outError = self.loadError;
+            return NO;
+        }
         return YES;
     }
     
@@ -52,9 +84,21 @@ static NSString *screenshotPngPath = @"screenshot.png";
         if (err) return NO;
     }
     
+    NSString *unsupportedType = CircuitDocumentUnsupportedProcessType(items);
+    if (unsupportedType) {
+        self.loadError = CircuitDocumentLoadError([NSString stringWithFormat:@"This circuit contains an unsupported object type: %@.", unsupportedType]);
+        if (outError) *outError = self.loadError;
+        return NO;
+    }
+    
     _originalScreenshotData = [files[screenshotPngPath] regularFileContents];
      
     _circuit = [[Circuit alloc] initWithPackage:package items: items];
+    if (!_circuit) {
+        self.loadError = CircuitDocumentLoadError(@"This circuit file is invalid and could not be loaded.");
+        if (outError) *outError = self.loadError;
+        return NO;
+    }
     
     return YES;
 }
@@ -105,7 +149,7 @@ static NSString *screenshotPngPath = @"screenshot.png";
         }
         
         NSString *name = nil;
-        if (object->name != NULL) {
+        if (object->name[0] != '\0') {
             name = [NSString stringWithUTF8String:object->name];
         }
         NSMutableDictionary *d = [[NSMutableDictionary alloc] init];
@@ -116,7 +160,7 @@ static NSString *screenshotPngPath = @"screenshot.png";
         d[@"in"]   = @(object->in);
         d[@"out"]  = @(object->out);
         d[@"outputs"] = outputs;
-        
+
         if (object->flags & CircuitObjectFlagLocked) {
             d[@"locked"] = @1;
         }
@@ -131,26 +175,39 @@ static NSString *screenshotPngPath = @"screenshot.png";
 - (NSDictionary *) exportPackageDictionaryWithoutItems {
     NSMutableArray *testsArray = [NSMutableArray arrayWithCapacity:_circuit.tests.count];
     [_circuit.tests enumerateObjectsUsingBlock:^(CircuitTest *test, NSUInteger idx, BOOL *stop) {
-        [testsArray addObject:@{
-                                @"name": test.name,
-                                @"inputs": test.inputIds,
-                                @"outputs": test.outputIds,
-                                @"spec": test.spec
-                                }];
+        // Bundled and hand-authored packages can omit per-test names and specs.
+        NSMutableDictionary *testDictionary = [@{
+                                                 @"name": test.name ?: @"",
+                                                 @"inputs": test.inputIds,
+                                                 @"outputs": test.outputIds,
+                                                 @"spec": test.spec ?: @[]
+                                                 } mutableCopy];
+        if (test.acceptedSpecs.count) {
+            testDictionary[@"acceptedSpecs"] = test.acceptedSpecs;
+        }
+        [testsArray addObject:testDictionary];
     }];
     
+    NSMutableArray *notes = [NSMutableArray arrayWithCapacity:_circuit.notes.count];
+    for (CircuitNote *note in _circuit.notes) {
+        [notes addObject:note.dictionaryRepresentation];
+    }
+
+    // Every field here can be absent from an imported package; a nil value in
+    // the literal would throw during autosave and lose the user's edits.
     return @{
         @"_id": [MongoID stringWithId:_circuit.id],
-        @"name": _circuit.name,
-        @"version": _circuit.version,
-        @"description": _circuit.userDescription,
-        @"title": _circuit.title,
-        @"author": _circuit.author,
-        @"license": _circuit.license,
+        @"name": _circuit.name ?: @"",
+        @"version": _circuit.version ?: @"",
+        @"description": _circuit.userDescription ?: @"",
+        @"title": _circuit.title ?: @"",
+        @"author": _circuit.author ?: @"",
+        @"license": _circuit.license ?: @"",
         @"engines": @{@"circuitry": @">=0.0"},
         @"tests" : testsArray,
-        @"view": _circuit.viewDetails,
-        @"meta": _circuit.meta
+        @"notes": notes,
+        @"view": _circuit.viewDetails ?: @{},
+        @"meta": _circuit.meta ?: @{}
     };
     
 }

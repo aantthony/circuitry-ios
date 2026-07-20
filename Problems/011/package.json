@@ -1,6 +1,11 @@
 {
   "_id" : "54d721f5004aab735e0041b0",
-  "description" : "A NOR gate outputs true only when neither of its inputs are true. Using NOR gates, make a NAND gate. Since NAND gates can be used to make any gate, a solution to this problem implies that NOR gates can also be used to construct any gate.",
+  "description" : "A NOR gate outputs true only when neither input is true.\n\nUse NOR gates to make a NAND gate. Because NAND gates can be used to build any other gate, solving this also shows that NOR gates can build any gate.",
+  "hints" : [
+    "A NOR gate can become a NOT gate when both of its inputs receive the same signal.",
+    "Use NOR gates as NOT gates to create NOT A and NOT B.",
+    "Combine those inverted inputs to make A AND B, then invert that result to get NAND."
+  ],
   "license" : "Copyright",
   "view" : {
     "center" : [
@@ -29,7 +34,7 @@
   "engines" : {
     "circuitry" : ">=0.0"
   },
-  "title" : "NAND Using NOR gates",
+  "title" : "Build NAND from NOR",
   "items": [
     {
       "_id" : "54d72201004aab735e0041b1",

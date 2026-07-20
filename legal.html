@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Legal - Circuitry</title>
+  <meta name="description" content="Circuitry legal notices, attributions, and privacy information." />
+  <link rel="stylesheet" type="text/css" href="styles/index2.css" />
+  <script src="https://use.typekit.net/yod6gxq.js"></script>
+  <script>try{Typekit.load();}catch(e){}</script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">Circuitry</a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="index.html#learn">Learn</a>
+      <a href="index.html#gallery">Gallery</a>
+    </nav>
+  </header>
+
+  <main class="subpage">
+    <article class="page-panel legal-copy">
+      <p class="eyebrow">Legal</p>
+      <h1>Notices and attributions.</h1>
+
+      <h2>Attributions</h2>
+      <h3>Background images</h3>
+      <ul>
+        <li>Page 3: <a href="http://ronocthede.deviantart.com/art/The-Grid-325760367">The Grid, by ronocthede</a> (Conor)</li>
+        <li>Page 2: <a href="http://commons.wikimedia.org/wiki/File:Silego_clock_generator.JPG">Silego, by AAAndrey A</a> (Public Domain)</li>
+        <li>Various Gate Symbols, by jjbeard (Public Domain)</li>
+        <li>Seven Segment Glyphs by Crissov (Public Domain)</li>
+        <li>Seven Segment Symbol by Artur perm (Public Domain)</li>
+      </ul>
+
+      <h3>Version 1</h3>
+      <ul>
+        <li>Sindre Seppola</li>
+        <li>Lachlan McIntosh</li>
+      </ul>
+
+      <h2>Legal</h2>
+      <p>This software has no warranty. You agree to waive all rights regarding any implied warranties and also to waive all rights regarding any ability to sue based on the performance, content, or capabilities of this software.</p>
+      <p>Circuitry was designed and developed in Melbourne, Australia.</p>
+      <p>Copyright &copy; 2015.</p>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div>
+        <a class="brand footer-brand" href="index.html">Circuitry</a>
+        <p>Made by Anthony Foster in Melbourne, Australia.</p>
+      </div>
+      <div class="footer-links">
+        <a href="legal.html">Legal</a>
+        <a href="https://twitter.com/circuitryapp" aria-label="Circuitry on Twitter">Twitter</a>
+      </div>
+    </div>
+  </footer>
+  <script>
+    var siteHeader = document.querySelector('.site-header');
+    function updateHeaderSurface() {
+      siteHeader.classList.toggle('is-scrolled', window.scrollY > 8);
+    }
+    updateHeaderSurface();
+    window.addEventListener('scroll', updateHeaderSurface, { passive: true });
+  </script>
+</body>
+</html>

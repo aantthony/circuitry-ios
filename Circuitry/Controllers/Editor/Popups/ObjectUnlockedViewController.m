@@ -17,6 +17,17 @@
     
 }
 
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+
+    CGFloat centerX = CGRectGetMidX(self.view.bounds);
+    for (UIView *subview in self.view.subviews) {
+        CGPoint center = subview.center;
+        center.x = centerX;
+        subview.center = center;
+    }
+}
+
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     

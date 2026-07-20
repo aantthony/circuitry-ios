@@ -8,8 +8,6 @@
 
 #import "TutorialViewController.h"
 
-#import "AnalyticsManager.h"
-
 @interface TutorialViewController () <UIScrollViewDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *image1;
 @property (weak, nonatomic) IBOutlet UIImageView *image2;
@@ -18,11 +16,26 @@
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIPageControl *pageControl;
 @property (nonatomic) BOOL buttonEnabled;
+@property (nonatomic) BOOL overridesMacWindowAppearance;
+@property (nonatomic) UIUserInterfaceStyle previousWindowUserInterfaceStyle;
+@property (weak, nonatomic) UIWindow *appearanceWindow;
 @end
 
 @implementation TutorialViewController
 
 static int pageCount = 3;
+
+- (void)overrideMacWindowAppearanceIfNeeded:(UIWindow *)window {
+    if (@available(iOS 14.0, *)) {
+        if (NSProcessInfo.processInfo.iOSAppOnMac && window && !self.overridesMacWindowAppearance) {
+            self.previousWindowUserInterfaceStyle = window.overrideUserInterfaceStyle;
+            window.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
+            self.appearanceWindow = window;
+            self.overridesMacWindowAppearance = YES;
+        }
+    }
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -55,6 +68,30 @@ static int pageCount = 3;
     }
     
     [self configureBackgroundFade];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+
+    UIWindow *window = self.presentingViewController.view.window ?: self.view.window;
+    [self overrideMacWindowAppearanceIfNeeded:window];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self overrideMacWindowAppearanceIfNeeded:self.view.window];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+
+    if (@available(iOS 14.0, *)) {
+        if (self.overridesMacWindowAppearance) {
+            self.appearanceWindow.overrideUserInterfaceStyle = self.previousWindowUserInterfaceStyle;
+            self.appearanceWindow = nil;
+            self.overridesMacWindowAppearance = NO;
+        }
+    }
 }
 
 - (UIImageView *) imageViewForIndex:(int)index {
@@ -145,7 +182,6 @@ static int pageCount = 3;
 }
 
 - (IBAction)continue:(id)sender {
-    [[AnalyticsManager shared] trackFinishSplash];
     [self.delegate tutorialViewController:self didFinishWithResult:YES];
     
     [self dismissViewControllerAnimated:YES completion:nil];

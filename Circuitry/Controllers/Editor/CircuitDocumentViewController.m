@@ -12,7 +12,6 @@
 #import "CircuitObjectListTableViewController.h"
 #import "ViewController.h"
 #import "ProblemInfoViewController.h"
-#import "AnalyticsManager.h"
 #import "TestResultViewController.h"
 #import "CircuitTest.h"
 #import "Viewport.h"
@@ -27,7 +26,7 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *objectListLeft;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *problemInfoBottom;
 @property (nonatomic, weak) ProblemInfoViewController *problemInfoViewController;
-@property (nonatomic, weak) ViewController *glkViewController;
+@property (nonatomic, weak) ViewController *editorViewController;
 @property (nonatomic) BOOL objectListVisible;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *checkAnswerButton;
 @property (nonatomic) BOOL problemInfoVisible;
@@ -50,12 +49,18 @@
 
 @implementation CircuitDocumentViewController
 
+- (void)showAlertWithTitle:(NSString *)title message:(NSString *)message {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
 - (BOOL) prefersStatusBarHidden {
     return NO;
 }
 
 - (UIImage *) snapshot {
-    return [_glkViewController snapshot];
+    return [_editorViewController snapshot];
 }
 
 - (UIView *) titleView {
@@ -118,7 +123,7 @@
     field.returnKeyType = UIReturnKeyDone;
     self.navigationItem.titleView = field;
     [self.view addGestureRecognizer:self.tapToDismissKeyboard];
-    self.glkViewController.view.userInteractionEnabled = NO;
+    self.editorViewController.view.userInteractionEnabled = NO;
     [self.navigationController.navigationBar layoutSubviews];
     
     [field becomeFirstResponder];
@@ -134,10 +139,10 @@
         _document.circuit.title = textField.text;
         if ([[textField.text lowercaseString] isEqualToString:@"unlock1234"]) {
             [[ProblemSet mainSet] unlockAll];
-            [[[UIAlertView alloc] initWithTitle:@"Unlock" message:@"All problems are now unlocked." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
+            [self showAlertWithTitle:@"Unlock" message:@"All problems are now unlocked."];
         } else if ([[textField.text lowercaseString] isEqualToString:@"reset1234"]) {
             [[ProblemSet mainSet] reset];
-            [[[UIAlertView alloc] initWithTitle:@"Unlock" message:@"All problems are now reset." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
+            [self showAlertWithTitle:@"Unlock" message:@"All problems are now reset."];
         }
     }
     [_document updateChangeCount:UIDocumentChangeDone];
@@ -145,7 +150,7 @@
     
     [self.view removeGestureRecognizer:_tapToDismissKeyboard];
     self.tapToDismissKeyboard = nil;
-    self.glkViewController.view.userInteractionEnabled = YES;
+    self.editorViewController.view.userInteractionEnabled = YES;
 
     return YES;
 }
@@ -154,7 +159,7 @@
     NSParameterAssert(document.circuit);
     
     _objectListViewController.document = document;
-    _glkViewController.document = document;
+    _editorViewController.document = document;
     _problemInfoViewController.document = document;
     
     _document = document;
@@ -164,7 +169,6 @@
     
     [self configureTitleView];
     
-    [[AnalyticsManager shared] trackStartProblem:document];
     if (self.view) {
         [self configureView];
     }
@@ -173,7 +177,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     _objectListViewController.document = _document;
-    _glkViewController.document = _document;
+    _editorViewController.document = _document;
     [self configureView];
     [self configureTitleView];
 }
@@ -185,10 +189,63 @@ static CGPoint hvrDragHereRight = {88,428};
     return self.view.frame.size.width > self.view.frame.size.height;
 }
 
+- (UIView *) visibleDescendantOfView:(UIView *)view matchingTitle:(NSString *)title {
+    if (view.hidden || view.alpha <= 0.01 || !view.window) {
+        return nil;
+    }
+
+    if ([view.accessibilityLabel isEqualToString:title]) {
+        return view;
+    }
+    if ([view isKindOfClass:[UIButton class]] &&
+        [[(UIButton *)view currentTitle] isEqualToString:title]) {
+        return view;
+    }
+    if ([view isKindOfClass:[UILabel class]] &&
+        [[(UILabel *)view text] isEqualToString:title]) {
+        return view;
+    }
+
+    for (UIView *subview in view.subviews) {
+        UIView *match = [self visibleDescendantOfView:subview matchingTitle:title];
+        if (match) {
+            return match;
+        }
+    }
+    return nil;
+}
+
+- (CGFloat) checkAnswerButtonCenterX {
+    UINavigationBar *navigationBar = self.navigationController.navigationBar;
+    [navigationBar layoutIfNeeded];
+
+    NSString *title = self.navigationItem.rightBarButtonItem.title ?: @"Check Answer";
+    UIView *buttonView = [self visibleDescendantOfView:navigationBar matchingTitle:title];
+    if (buttonView) {
+        CGRect buttonFrame = [buttonView convertRect:buttonView.bounds toView:self.view];
+        if (!CGRectIsEmpty(buttonFrame)) {
+            return CGRectGetMidX(buttonFrame);
+        }
+    }
+
+    // The navigation item may not have installed its backing view yet. Keep the
+    // arrow near the centre of the trailing bar-button area until it has.
+    CGFloat trailingInset = MAX(self.view.safeAreaInsets.right, 16.0);
+    return CGRectGetWidth(self.view.bounds) - trailingInset - 64.0;
+}
+
+- (void)addTutorialHintView:(UIView *)hintView {
+    if (self.problemInfoView.superview == self.view) {
+        [self.view insertSubview:hintView belowSubview:self.problemInfoView];
+    } else {
+        [self.view addSubview:hintView];
+    }
+}
+
 - (UIImageView *) hintViewTapAndHoldLeft {
     if (!_hintViewTapAndHoldLeft) {
         _hintViewTapAndHoldLeft = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"TapAndHoldOutlet"]];
-        [self.view addSubview:_hintViewTapAndHoldLeft];
+        [self addTutorialHintView:_hintViewTapAndHoldLeft];
     }
     
     if (self.landscape) {
@@ -209,7 +266,7 @@ static CGPoint hvrDragHereRight = {88,428};
 - (UIImageView *) hintViewToggleLeft1 {
     if (!_hintViewToggleLeft1) {
         _hintViewToggleLeft1 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"TapToToggle"]];
-        [self.view addSubview:_hintViewToggleLeft1];
+        [self addTutorialHintView:_hintViewToggleLeft1];
     }
     
     
@@ -232,7 +289,7 @@ static CGPoint hvrDragHereRight = {88,428};
 - (UIImageView *) hintViewToggleLeft2 {
     if (!_hintViewToggleLeft2) {
         _hintViewToggleLeft2 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"TapToToggle"]];
-        [self.view addSubview:_hintViewToggleLeft2];
+        [self addTutorialHintView:_hintViewToggleLeft2];
     }
     
     CGFloat offsetY = self.landscape ? 200 : 400;
@@ -256,7 +313,7 @@ static CGPoint hvrDragHereRight = {88,428};
 - (UIImageView *) hintViewDragHereRight {
     if (!_hintViewDragHereRight) {
         _hintViewDragHereRight = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"DragIntoHere"]];
-        [self.view addSubview:_hintViewDragHereRight];
+        [self addTutorialHintView:_hintViewDragHereRight];
     }
     if (self.landscape) {
         hvrDragHereRight.y = 326;
@@ -277,20 +334,24 @@ static CGPoint hvrDragHereRight = {88,428};
 - (UIImageView *) hintViewCheckCorrect {
     if (!_hintViewCheckCorrect) {
         _hintViewCheckCorrect = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"CheckCorrect"]];
-        [self.view addSubview:_hintViewCheckCorrect];
+        [self addTutorialHintView:_hintViewCheckCorrect];
     }
-    
-    CGRect rect = CGRectMake(
-                                             270,
-                                             80,
-                                             _hintViewCheckCorrect.frame.size.width,
-                                             _hintViewCheckCorrect.frame.size.height
-                                             );
-    
-    if (self.landscape) {
-        rect.origin.x = 540;
+
+    CGSize calloutSize = _hintViewCheckCorrect.image.size;
+    CGFloat arrowTipX = calloutSize.width - 8.0;
+    CGFloat originX = [self checkAnswerButtonCenterX] - arrowTipX;
+
+    CGFloat leadingInset = self.view.safeAreaInsets.left + 16.0;
+    CGFloat trailingEdge = CGRectGetWidth(self.view.bounds) - self.view.safeAreaInsets.right - 16.0;
+    CGFloat maximumOriginX = trailingEdge - calloutSize.width;
+    if (maximumOriginX >= leadingInset) {
+        originX = MIN(MAX(originX, leadingInset), maximumOriginX);
+    } else {
+        originX = (CGRectGetWidth(self.view.bounds) - calloutSize.width) * 0.5;
     }
-    _hintViewCheckCorrect.frame = rect;
+
+    _hintViewCheckCorrect.frame = CGRectMake(originX, 80.0,
+                                             calloutSize.width, calloutSize.height);
     return _hintViewCheckCorrect;
 }
 
@@ -332,18 +393,18 @@ static CGPoint hvrDragHereRight = {88,428};
             self.tutorialState = 6;
             return;
         }
-        if (_glkViewController.viewport.currentEditingLinkSource == A && _glkViewController.viewport.currentEditingLinkSourceIndex == 0) {
+        if (_editorViewController.viewport.currentEditingLinkSource == A && _editorViewController.viewport.currentEditingLinkSourceIndex == 0) {
             self.tutorialState = 5;
             return;
         }
-        if (_glkViewController.viewport.currentEditingLinkSource == B && _glkViewController.viewport.currentEditingLinkSourceIndex == 0) {
+        if (_editorViewController.viewport.currentEditingLinkSource == B && _editorViewController.viewport.currentEditingLinkSourceIndex == 0) {
             self.tutorialState = 3;
             return;
         }
         self.tutorialState = 4;
     } else {
         
-        if (_glkViewController.viewport.currentEditingLinkSource == B && _glkViewController.viewport.currentEditingLinkSourceIndex == 0) {
+        if (_editorViewController.viewport.currentEditingLinkSource == B && _editorViewController.viewport.currentEditingLinkSourceIndex == 0) {
             self.tutorialState = 2;
             return;
         }
@@ -596,7 +657,7 @@ static CGPoint hvrDragHereRight = {88,428};
 
 - (IBAction)checkAnswer:(UIBarButtonItem *)sender {
     if (!_document.circuit.tests.count) {
-        [[[UIAlertView alloc] initWithTitle:@"No Test" message:@"Unspecified." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
+        [self showAlertWithTitle:@"No Test" message:@"Unspecified."];
         return;
     }
     __block CircuitTestResult *failure = nil;
@@ -614,27 +675,35 @@ static CGPoint hvrDragHereRight = {88,428};
     
     [self performSegueWithIdentifier:@"ShowTestResult" sender:self];
     
-    if (failure) {
-        [[AnalyticsManager shared] trackCheckProblem:self.document withResult:failure];
-        
-    } else {
-        [[AnalyticsManager shared] trackFinishProblem:self.document];
-        
+    if (!failure) {
         sender.enabled = NO;
-        
     }
 }
 
 - (void) promptAppStoreReview {
     NSString *key = @"RequestedStoreReview";
-    
-    NSOperatingSystemVersion minVersion = (NSOperatingSystemVersion){10, 3, 0};
-    if ([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion: minVersion]) {
-        if (![[NSUserDefaults standardUserDefaults] boolForKey: key]) {
-            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:key];
-            [SKStoreReviewController requestReview];
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:key]) {
+        return;
+    }
+
+    UIWindowScene *windowScene = self.view.window.windowScene;
+    if (!windowScene) {
+        for (UIScene *scene in UIApplication.sharedApplication.connectedScenes) {
+            if ([scene isKindOfClass:UIWindowScene.class] &&
+                scene.activationState == UISceneActivationStateForegroundActive) {
+                windowScene = (UIWindowScene *)scene;
+                break;
+            }
         }
     }
+
+    if (!windowScene) {
+        return;
+    }
+
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:key];
+    [SKStoreReviewController requestReviewInScene:windowScene];
 }
 
 - (void) didWin {
@@ -693,7 +762,7 @@ static CGPoint hvrDragHereRight = {88,428};
 #pragma mark - Toolbelt delegate
 
 - (void) tableViewController:(CircuitObjectListTableViewController *)tableViewController didStartCreatingObject:(ToolbeltItem *)item {
-    [_glkViewController startCreatingObjectFromItem: item];
+    [_editorViewController startCreatingObjectFromItem: item];
 }
 
 
@@ -746,8 +815,8 @@ static CGPoint hvrDragHereRight = {88,428};
         controller.document = self.document;
     } else if ([d isKindOfClass:[ViewController class]]) {
         ViewController *controller = (ViewController *) d;
-        _glkViewController = controller;
-        _glkViewController.tutorialDelegate = self;
+        _editorViewController = controller;
+        _editorViewController.tutorialDelegate = self;
         controller.document = self.document;
     } else if ([d isKindOfClass:ProblemInfoViewController.class]) {
         ProblemInfoViewController * controller = (ProblemInfoViewController *) d;

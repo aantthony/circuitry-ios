@@ -1,6 +1,11 @@
 {
   "_id" : "54d7228f004aab735e0041b8",
-  "description" : "Make the output true when exactly two of the inputs are true.",
+  "description" : "Make the output true only when exactly two inputs are true.",
+  "hints" : [
+    "The output should be true for AB, AC, or BC.",
+    "Make one branch for each pair of true inputs.",
+    "OR the three pair branches together."
+  ],
   "license" : "Copyright",
   "view" : {
     "center" : [
@@ -33,7 +38,7 @@
   "engines" : {
     "circuitry" : ">=0.0"
   },
-  "title" : "Two of Three",
+  "title" : "Exactly Two of Three",
   "items": [
     {
       "_id" : "54d72294004aab735e0041b9",
