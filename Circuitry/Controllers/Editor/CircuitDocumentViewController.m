@@ -234,10 +234,18 @@ static CGPoint hvrDragHereRight = {88,428};
     return CGRectGetWidth(self.view.bounds) - trailingInset - 64.0;
 }
 
+- (void)addTutorialHintView:(UIView *)hintView {
+    if (self.problemInfoView.superview == self.view) {
+        [self.view insertSubview:hintView belowSubview:self.problemInfoView];
+    } else {
+        [self.view addSubview:hintView];
+    }
+}
+
 - (UIImageView *) hintViewTapAndHoldLeft {
     if (!_hintViewTapAndHoldLeft) {
         _hintViewTapAndHoldLeft = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"TapAndHoldOutlet"]];
-        [self.view addSubview:_hintViewTapAndHoldLeft];
+        [self addTutorialHintView:_hintViewTapAndHoldLeft];
     }
     
     if (self.landscape) {
@@ -258,7 +266,7 @@ static CGPoint hvrDragHereRight = {88,428};
 - (UIImageView *) hintViewToggleLeft1 {
     if (!_hintViewToggleLeft1) {
         _hintViewToggleLeft1 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"TapToToggle"]];
-        [self.view addSubview:_hintViewToggleLeft1];
+        [self addTutorialHintView:_hintViewToggleLeft1];
     }
     
     
@@ -281,7 +289,7 @@ static CGPoint hvrDragHereRight = {88,428};
 - (UIImageView *) hintViewToggleLeft2 {
     if (!_hintViewToggleLeft2) {
         _hintViewToggleLeft2 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"TapToToggle"]];
-        [self.view addSubview:_hintViewToggleLeft2];
+        [self addTutorialHintView:_hintViewToggleLeft2];
     }
     
     CGFloat offsetY = self.landscape ? 200 : 400;
@@ -305,7 +313,7 @@ static CGPoint hvrDragHereRight = {88,428};
 - (UIImageView *) hintViewDragHereRight {
     if (!_hintViewDragHereRight) {
         _hintViewDragHereRight = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"DragIntoHere"]];
-        [self.view addSubview:_hintViewDragHereRight];
+        [self addTutorialHintView:_hintViewDragHereRight];
     }
     if (self.landscape) {
         hvrDragHereRight.y = 326;
@@ -326,7 +334,7 @@ static CGPoint hvrDragHereRight = {88,428};
 - (UIImageView *) hintViewCheckCorrect {
     if (!_hintViewCheckCorrect) {
         _hintViewCheckCorrect = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"CheckCorrect"]];
-        [self.view addSubview:_hintViewCheckCorrect];
+        [self addTutorialHintView:_hintViewCheckCorrect];
     }
 
     CGSize calloutSize = _hintViewCheckCorrect.image.size;
