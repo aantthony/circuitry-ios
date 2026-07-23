@@ -711,13 +711,51 @@ static CGFloat gridSize = 33.0;
         }
         if (!object) return;
         
-        ToolbeltItem *item = [ToolbeltItem toolbeltItemWithType:[NSString stringWithUTF8String:object->type->id]];
+        NSString *typeId = [NSString stringWithUTF8String:object->type->id];
+        ToolbeltItem *item = [ToolbeltItem toolbeltItemWithType:typeId];
         if (!item) return;
-        
+
         _selectedObjects = @[[NSValue valueWithPointer:object]];
         CGRect rect = [_viewport rectForObject:object inView:self.view];
 
         UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:item.fullName message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        BOOL supportsLabel = [@[@"button", @"pbtn", @"light", @"lightg", @"lightb", @"lightw"] containsObject:typeId];
+        if (supportsLabel && !self.document.isProblem) {
+            [actionSheet addAction:[UIAlertAction actionWithTitle:@"Edit Label" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                UIAlertController *edit = [UIAlertController alertControllerWithTitle:@"Edit Label" message:@"Up to 3 characters, shown on the component." preferredStyle:UIAlertControllerStyleAlert];
+                [edit addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+                    textField.text = [NSString stringWithUTF8String:object->name] ?: @"";
+                    textField.placeholder = @"e.g. CLK";
+                    textField.autocapitalizationType = UITextAutocapitalizationTypeAllCharacters;
+                    textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+                }];
+                [edit addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+                [edit addAction:[UIAlertAction actionWithTitle:@"Save" style:UIAlertActionStyleDefault handler:^(UIAlertAction *saveAction) {
+                    NSString *entered = edit.textFields.firstObject.text ?: @"";
+                    NSString *text = [[entered stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet] uppercaseString];
+                    // Truncate on composed-character boundaries to what fits in the
+                    // object's fixed name buffer, so the stored bytes stay valid UTF-8.
+                    __block NSUInteger safeEnd = 0;
+                    [text enumerateSubstringsInRange:NSMakeRange(0, text.length)
+                                             options:NSStringEnumerationByComposedCharacterSequences
+                                          usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
+                        NSUInteger end = NSMaxRange(substringRange);
+                        if ([[text substringToIndex:end] lengthOfBytesUsingEncoding:NSUTF8StringEncoding] >= sizeof(object->name)) {
+                            *stop = YES;
+                            return;
+                        }
+                        safeEnd = end;
+                    }];
+                    NSString *label = [text substringToIndex:safeEnd];
+                    [self->_document.circuit performWriteBlock:^(CircuitInternal *internal) {
+                        strlcpy(object->name, label.UTF8String ?: "", sizeof(object->name));
+                    }];
+                    [self updateChangeCount:UIDocumentChangeDone];
+                    [self unpause];
+                }]];
+                [self presentViewController:edit animated:YES completion:nil];
+            }]];
+        }
         [actionSheet addAction:[UIAlertAction actionWithTitle:@"Remove" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
             __block NSString *failureMessage = nil;
 
