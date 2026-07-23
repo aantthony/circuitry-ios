@@ -660,6 +660,41 @@ static CGRect momentaryButtonCapRect(CircuitObject *object) {
     [_sceneBuildTarget addChild:sprite];
 }
 
+- (void)addSceneNameLabel:(CircuitObject *)object {
+    CGPoint pos = CGPointMake(object->pos.x, object->pos.y);
+    if (!object->name[1]) {
+        SpriteTexturePos *letter = letterTable[(unsigned char)object->name[0]];
+        if (letter) {
+            [self addSceneSprite:*letter atWorldPoint:CGPointMake(pos.x + 105.0, pos.y + 43.0)];
+            return;
+        }
+    }
+
+    NSString *text = [NSString stringWithUTF8String:object->name];
+    if (!text.length) return;
+
+    SKLabelNode *label = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue-Medium"];
+    label.text = text;
+    label.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
+    label.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
+    label.fontColor = UIColor.blackColor;
+    // sceneWorld flips UIKit's downward Y axis; flip text content back.
+    label.yScale = -1.0;
+    label.zPosition = [self nextSceneContentZPosition];
+    if (object->type == &CircuitProcessPushButton) {
+        // The round cap covers the body face, so the label goes on the cap.
+        CGRect capRect = momentaryButtonCapRect(object);
+        label.fontSize = 38.0;
+        label.position = CGPointMake(CGRectGetMidX(capRect), CGRectGetMidY(capRect));
+    } else {
+        label.fontSize = text.length > 1 ? 48.0 : 68.0;
+        // Center in the same box the atlas letter sprites occupy.
+        label.position = CGPointMake(pos.x + 105.0 + letterA.width * 0.5,
+                                     pos.y + 43.0 + letterA.height * 0.5);
+    }
+    [_sceneBuildTarget addChild:label];
+}
+
 - (void)addSceneObject:(CircuitObject *)object {
     CGPoint pos = CGPointMake(object->pos.x, object->pos.y);
     if (expandDrawGate(object)) {
@@ -692,9 +727,8 @@ static CGRect momentaryButtonCapRect(CircuitObject *object) {
         [self addSceneSprite:letterX atWorldPoint:CGPointMake(pos.x + 105.0, pos.y + 43.0)];
     } else if (object->type == &CircuitProcessCounter4) {
         [self addSceneSprite:letterC atWorldPoint:CGPointMake(pos.x + 105.0, pos.y + 43.0)];
-    } else if (object->name[0] && !object->name[1]) {
-        SpriteTexturePos *letter = letterTable[(unsigned char)object->name[0]];
-        if (letter) [self addSceneSprite:*letter atWorldPoint:CGPointMake(pos.x + 105.0, pos.y + 43.0)];
+    } else if (object->name[0]) {
+        [self addSceneNameLabel:object];
     }
 
     for (int index = 0; index < object->type->numOutputs; index++) {
