@@ -8,7 +8,7 @@ mixing UI automation into the existing unit-test target.
 - Real XCUITest long-press-and-drag wiring gestures (no save-state mutation).
 - Accessibility-snapshot port discovery, including exact snapped gate geometry.
 - Named toolbelt selection and reusable one-, two-, and three-input gate placement.
-- A non-destructive check that all 21 shipped problems are unlocked and visible.
+- A non-destructive check that all 22 shipped problems are unlocked and visible.
 - The final four-bit ripple-counter recipe, including the important Q-bar/startup ordering.
 
 The exploratory reset-to-finish script was deliberately not retained verbatim. It

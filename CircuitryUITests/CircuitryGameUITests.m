@@ -335,7 +335,8 @@
         @"Build NAND from NOR", @"Exactly One of Three", @"Exactly Two of Three",
         @"Add Two Binary Digits", @"Build a Full Adder", @"Add Two-Bit Numbers",
         @"Add Four-Bit Numbers", @"Multiply Two-Bit Numbers", @"Build an SR Latch",
-        @"Build a Gated SR Latch", @"Build a JK Flip-Flop", @"Build a Binary Counter"
+        @"Build a Gated SR Latch", @"Build a JK Flip-Flop", @"Build a Binary Counter",
+        @"Build a One-Bit ALU"
     ];
     NSMutableSet<NSString *> *seen = [NSMutableSet set];
     BOOL sawLockedCard = NO;

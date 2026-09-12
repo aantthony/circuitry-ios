@@ -98,6 +98,11 @@
     {
       "path": "023",
       "title": "Build a Binary Counter"
+    },
+    {
+      "path": "024",
+      "title": "Build a One-Bit ALU",
+      "image": "ic"
     }
   ]
 }

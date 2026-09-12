@@ -1,0 +1,581 @@
+{
+  "_id": "650000000000000000000000",
+  "title": "Build a One-Bit ALU",
+  "description": "An arithmetic logic unit (ALU) selects between arithmetic and logic operations. Build a one-bit ALU using A and B as data inputs, Cin as carry-in, and S1 and S0 to choose the operation.\n\nS1 S0 = 00: A AND B\nS1 S0 = 01: A OR B\nS1 S0 = 10: A XOR B\nS1 S0 = 11: A + B + Cin\n\nR is the one-bit result. For addition, Co is the carry-out: the total is R + 2 x Co. For all logic operations, ignore Cin and keep Co at 0.\n\nThis is one slice of a larger ALU: multiple slices can share the select inputs and pass carry from one slice to the next.",
+  "hints": [
+    "Build the AND, OR, XOR, and full-adder results in parallel. The full adder accepts A, B, and Cin.",
+    "A MUX selects its first data input when select is 0 and its second when select is 1. Use S0 to choose AND versus OR in one MUX, and XOR versus sum in another.",
+    "Use S1 in a third MUX to choose between those two results for R. Co should be the full-adder carry AND S1 AND S0."
+  ],
+  "license": "Apache-2.0",
+  "version": "1.0.0",
+  "engines": {
+    "circuitry": ">=0.0"
+  },
+  "view": {
+    "center": [
+      -200,
+      0
+    ]
+  },
+  "name": "",
+  "author": "",
+  "meta": {
+    "toolbelt": [
+      "button",
+      "lightg",
+      "and",
+      "or",
+      "not",
+      "xor",
+      "nand",
+      "nor",
+      "ha",
+      "fa",
+      "mux"
+    ]
+  },
+  "tests": [
+    {
+      "inputs": [
+        "650000000000000000000001",
+        "650000000000000000000002",
+        "650000000000000000000003",
+        "650000000000000000000004",
+        "650000000000000000000005"
+      ],
+      "outputs": [
+        "650000000000000000000006",
+        "650000000000000000000007"
+      ],
+      "spec": [
+        [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          [
+            0,
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          [
+            1,
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        [
+          [
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          [
+            1,
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          [
+            0,
+            1,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          [
+            1,
+            1,
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        [
+          [
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          [
+            1,
+            0,
+            0,
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        [
+          [
+            0,
+            1,
+            0,
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        [
+          [
+            1,
+            1,
+            0,
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        [
+          [
+            0,
+            0,
+            1,
+            0,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          [
+            1,
+            0,
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        [
+          [
+            0,
+            1,
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        [
+          [
+            1,
+            1,
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        [
+          [
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          [
+            1,
+            0,
+            0,
+            1,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        [
+          [
+            0,
+            1,
+            0,
+            1,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        [
+          [
+            1,
+            1,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          [
+            0,
+            0,
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          [
+            1,
+            0,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        [
+          [
+            0,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        [
+          [
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          [
+            0,
+            0,
+            0,
+            1,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          [
+            1,
+            0,
+            0,
+            1,
+            1
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        [
+          [
+            0,
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        [
+          [
+            1,
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            0,
+            0,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        [
+          [
+            1,
+            0,
+            1,
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            0,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ]
+      ]
+    }
+  ],
+  "items": [
+    {
+      "_id": "650000000000000000000001",
+      "type": "in",
+      "name": "A",
+      "locked": true,
+      "in": 0,
+      "out": 0,
+      "outputs": [
+        []
+      ],
+      "pos": [
+        550,
+        350,
+        0
+      ]
+    },
+    {
+      "_id": "650000000000000000000002",
+      "type": "in",
+      "name": "B",
+      "locked": true,
+      "in": 0,
+      "out": 0,
+      "outputs": [
+        []
+      ],
+      "pos": [
+        550,
+        530,
+        0
+      ]
+    },
+    {
+      "_id": "650000000000000000000003",
+      "type": "in",
+      "name": "Cin",
+      "locked": true,
+      "in": 0,
+      "out": 0,
+      "outputs": [
+        []
+      ],
+      "pos": [
+        550,
+        710,
+        0
+      ]
+    },
+    {
+      "_id": "650000000000000000000004",
+      "type": "in",
+      "name": "S1",
+      "locked": true,
+      "in": 0,
+      "out": 0,
+      "outputs": [
+        []
+      ],
+      "pos": [
+        550,
+        890,
+        0
+      ]
+    },
+    {
+      "_id": "650000000000000000000005",
+      "type": "in",
+      "name": "S0",
+      "locked": true,
+      "in": 0,
+      "out": 0,
+      "outputs": [
+        []
+      ],
+      "pos": [
+        550,
+        1070,
+        0
+      ]
+    },
+    {
+      "_id": "650000000000000000000006",
+      "type": "lightg",
+      "name": "R",
+      "locked": true,
+      "in": 0,
+      "out": 0,
+      "outputs": [],
+      "pos": [
+        1550,
+        650,
+        0
+      ]
+    },
+    {
+      "_id": "650000000000000000000007",
+      "type": "lightg",
+      "name": "Co",
+      "locked": true,
+      "in": 0,
+      "out": 0,
+      "outputs": [],
+      "pos": [
+        1550,
+        950,
+        0
+      ]
+    }
+  ]
+}
