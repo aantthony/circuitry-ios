@@ -569,6 +569,7 @@ static CGPoint hvrDragHereRight = {88,428};
 }
 
 - (void) viewDidDisappear:(BOOL)animated {
+    [self finishTestInspection];
     [super viewDidDisappear:animated];
     [self.delegate circuitDocumentViewController:self didFinish:self.document];
 }
