@@ -283,7 +283,9 @@
     __block CircuitObject *output;
     [circuit performWriteBlock:^(CircuitInternal *internal) {
         input = CircuitObjectCreate(internal, &CircuitProcessIn);
+        input->id = [MongoID id];
         output = CircuitObjectCreate(internal, &CircuitProcessOut);
+        output->id = [MongoID id];
         CircuitLinkCreate(internal, input, 0, output, 0);
         // Preserve a queued transition and sequential state across test execution.
         CircuitObjectSetOutput(internal, input, 1);
