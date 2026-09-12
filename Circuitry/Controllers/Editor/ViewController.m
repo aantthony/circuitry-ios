@@ -52,6 +52,8 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 @property (nonatomic) NSTimeInterval slowClockTickAccumulator;
 @property (nonatomic) CFTimeInterval lastDisplayTimestamp;
 @property (nonatomic, getter=isPaused) BOOL paused;
+@property (nonatomic) UIButton *simulationPauseButton;
+@property (nonatomic) UIButton *simulationStepButton;
 @property (nonatomic) BOOL canPan;
 @property (nonatomic) BOOL canZoom;
 @property (nonatomic) BOOL isTutorial;
@@ -96,9 +98,76 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     // clock transitions continue to run.
     if (!paused) {
         self.circuitScene.paused = NO;
-    } else if (![self circuitContainsClocks]) {
+    } else if (self.simulationPaused || ![self circuitContainsClocks]) {
         self.circuitScene.paused = YES;
     }
+}
+
+- (void)setSimulationPaused:(BOOL)simulationPaused {
+    _simulationPaused = simulationPaused;
+    // Never replay time spent paused when resuming.
+    self.lastDisplayTimestamp = 0;
+    self.clockTickAccumulator = 0;
+    self.slowClockTickAccumulator = 0;
+    [self updateSimulationControls];
+    [self unpause];
+}
+
+- (void)toggleSimulationPaused:(id)sender {
+    self.simulationPaused = !self.simulationPaused;
+}
+
+- (void)stepClock {
+    self.simulationPaused = YES;
+    Circuit *circuit = self.document.circuit;
+    // Settle any input edits before delivering the edge. All clock sources
+    // change together so connected components observe a single manual edge.
+    [circuit simulate:512];
+    [circuit performWriteBlock:^(CircuitInternal *internal) {
+        [circuit enumerateClocksUsingBlock:^(CircuitObject *object, BOOL *stop) {
+            CircuitObjectSetOutput(internal, object, !object->out);
+        }];
+    }];
+    [circuit simulate:512];
+    [self unpause];
+}
+
+- (void)stepClockFromControl:(id)sender {
+    [self stepClock];
+}
+
+- (void)updateSimulationControls {
+    [self.simulationPauseButton setTitle:self.simulationPaused ? @"Resume" : @"Pause" forState:UIControlStateNormal];
+    self.simulationPauseButton.accessibilityLabel = self.simulationPaused ? @"Resume simulation" : @"Pause simulation";
+    self.simulationStepButton.enabled = self.simulationPaused && [self circuitContainsClocks];
+    self.simulationStepButton.alpha = self.simulationStepButton.enabled ? 1 : 0.45;
+}
+
+- (void)configureSimulationControls {
+    self.simulationPauseButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.simulationPauseButton.accessibilityIdentifier = @"simulation.pause";
+    [self.simulationPauseButton addTarget:self action:@selector(toggleSimulationPaused:) forControlEvents:UIControlEventTouchUpInside];
+    self.simulationStepButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.simulationStepButton.accessibilityIdentifier = @"simulation.step";
+    self.simulationStepButton.accessibilityLabel = @"Step clock";
+    self.simulationStepButton.accessibilityHint = @"Advances every clock by one edge and keeps simulation paused.";
+    [self.simulationStepButton setTitle:@"Step clock" forState:UIControlStateNormal];
+    [self.simulationStepButton addTarget:self action:@selector(stepClockFromControl:) forControlEvents:UIControlEventTouchUpInside];
+    UIStackView *controls = [[UIStackView alloc] initWithArrangedSubviews:@[self.simulationPauseButton, self.simulationStepButton]];
+    controls.translatesAutoresizingMaskIntoConstraints = NO;
+    controls.spacing = 12;
+    controls.layoutMarginsRelativeArrangement = YES;
+    controls.directionalLayoutMargins = NSDirectionalEdgeInsetsMake(0, 12, 0, 12);
+    controls.backgroundColor = [UIColor colorWithWhite:0.1 alpha:0.9];
+    controls.layer.cornerRadius = 10;
+    controls.tintColor = UIColor.whiteColor;
+    [self.view addSubview:controls];
+    [NSLayoutConstraint activateConstraints:@[
+        [controls.trailingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.trailingAnchor constant:-12],
+        [controls.bottomAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.bottomAnchor constant:-12],
+        [controls.heightAnchor constraintGreaterThanOrEqualToConstant:44]
+    ]];
+    [self updateSimulationControls];
 }
 
 - (void) setDocument:(CircuitDocument *) document {
@@ -214,6 +283,7 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     [_viewport attachToScene:self.circuitScene backgroundImage:_backgroundImage];
     
     [self installSelectionControls];
+    [self configureSimulationControls];
     self.document = _document;
     if (self.isTutorial) {
         [self configureTutorialGatesToPosition];
@@ -444,7 +514,7 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     self.timeSinceLastUpdate = currentTime - self.lastDisplayTimestamp;
     self.lastDisplayTimestamp = currentTime;
 
-    if ([self advanceClocksByElapsedTime:self.timeSinceLastUpdate]) {
+    if (!self.simulationPaused && [self advanceClocksByElapsedTime:self.timeSinceLastUpdate]) {
         [self unpause];
     }
     if (!self.isPaused) {
@@ -522,7 +592,8 @@ static BOOL animateGateToLockedPosition(CircuitObject *object, float x, float y)
         }
     }
     
-    int circuitChanges = [_document.circuit simulate:512];
+    int circuitChanges = self.simulationPaused ? 0 : [_document.circuit simulate:512];
+    [self updateSimulationControls];
     changes += circuitChanges;
     changes += [_viewport update: dt];
     if (changes) {
@@ -619,6 +690,7 @@ static CGFloat gridSize = 33.0;
 }
 
 #pragma mark -  Gesture methods
+
 
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {

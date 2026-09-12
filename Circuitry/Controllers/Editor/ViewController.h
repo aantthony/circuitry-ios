@@ -10,6 +10,9 @@
 
 @property (nonatomic) Viewport *viewport;
 @property (nonatomic) CircuitDocument *document;
+// Explicit simulation control, independent of the renderer’s idle state.
+@property (nonatomic) BOOL simulationPaused;
+- (void)stepClock;
 @property (nonatomic, weak) id <ViewControllerTutorialProtocol> tutorialDelegate;
 
 // Gesture events:
