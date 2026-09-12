@@ -39,6 +39,7 @@
 - (CGPoint)unproject:(CGPoint)screenPosition;
 
 @property (nonatomic) CircuitDocument *document;
+@property (nonatomic, copy) NSSet<NSString *> *selectedObjectIDs;
 @property (nonatomic) CircuitLink *currentEditingLink;
 @property (nonatomic) CircuitObject *currentEditingLinkSource;
 @property (nonatomic) CircuitObject *currentEditingLinkTarget;

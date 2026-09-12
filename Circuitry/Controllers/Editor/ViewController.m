@@ -40,6 +40,12 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     
 }
 @property (nonatomic) NSArray *selectedObjects;
+@property (nonatomic) BOOL selectingObjects;
+@property (nonatomic) NSMutableOrderedSet<NSString *> *duplicationSelection;
+@property (nonatomic) NSDictionary<NSString *, NSValue *> *selectionDragOrigins;
+@property (nonatomic) UIStackView *selectionControls;
+@property (nonatomic) UIButton *selectObjectsButton;
+@property (nonatomic) UIButton *duplicateObjectsButton;
 @property (nonatomic) CircuitScene *circuitScene;
 @property (nonatomic) NSTimeInterval timeSinceLastUpdate;
 @property (nonatomic) NSTimeInterval clockTickAccumulator;
@@ -97,6 +103,9 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 
 - (void) setDocument:(CircuitDocument *) document {
     _document = document;
+    self.selectingObjects = NO;
+    self.duplicationSelection = [NSMutableOrderedSet orderedSet];
+    [self refreshSelectionControls];
     _viewport.document = _document;
     _canPan = YES;
     _canZoom = YES;
@@ -204,10 +213,73 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     self.circuitScene.viewController = self;
     [_viewport attachToScene:self.circuitScene backgroundImage:_backgroundImage];
     
+    [self installSelectionControls];
     self.document = _document;
     if (self.isTutorial) {
         [self configureTutorialGatesToPosition];
     }
+}
+
+- (void)installSelectionControls {
+    self.selectObjectsButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.selectObjectsButton.accessibilityIdentifier = @"selectComponents";
+    [self.selectObjectsButton addTarget:self action:@selector(toggleObjectSelection:) forControlEvents:UIControlEventTouchUpInside];
+    self.duplicateObjectsButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.duplicateObjectsButton.accessibilityIdentifier = @"duplicateSelection";
+    [self.duplicateObjectsButton addTarget:self action:@selector(duplicateObjectSelection:) forControlEvents:UIControlEventTouchUpInside];
+    self.selectionControls = [[UIStackView alloc] initWithArrangedSubviews:@[self.selectObjectsButton, self.duplicateObjectsButton]];
+    self.selectionControls.axis = UILayoutConstraintAxisHorizontal;
+    self.selectionControls.spacing = 8.0;
+    self.selectionControls.layoutMargins = UIEdgeInsetsMake(4, 10, 4, 10);
+    self.selectionControls.layoutMarginsRelativeArrangement = YES;
+    self.selectionControls.backgroundColor = UIColor.secondarySystemBackgroundColor;
+    self.selectionControls.layer.cornerRadius = 12.0;
+    self.selectionControls.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addSubview:self.selectionControls];
+    [NSLayoutConstraint activateConstraints:@[
+        [self.selectionControls.leadingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.leadingAnchor constant:12],
+        [self.selectionControls.bottomAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.bottomAnchor constant:-12],
+        [self.selectObjectsButton.heightAnchor constraintGreaterThanOrEqualToConstant:44],
+        [self.duplicateObjectsButton.heightAnchor constraintGreaterThanOrEqualToConstant:44]
+    ]];
+    [self refreshSelectionControls];
+}
+
+- (void)refreshSelectionControls {
+    self.selectionControls.hidden = !self.document || self.document.isProblem;
+    [self.selectObjectsButton setTitle:self.selectingObjects ? @"Done" : @"Select" forState:UIControlStateNormal];
+    self.selectObjectsButton.accessibilityHint = self.selectingObjects ? @"Finish selecting components" : @"Tap components to select a group for duplication";
+    self.duplicateObjectsButton.hidden = !self.selectingObjects;
+    self.duplicateObjectsButton.enabled = self.duplicationSelection.count > 0;
+    [self.duplicateObjectsButton setTitle:[NSString stringWithFormat:@"Duplicate (%lu)", (unsigned long)self.duplicationSelection.count] forState:UIControlStateNormal];
+    self.viewport.selectedObjectIDs = [NSSet setWithArray:self.duplicationSelection.array ?: @[]];
+    [self unpause];
+}
+
+- (void)toggleObjectSelection:(id)sender {
+    if (self.document.isProblem) return;
+    self.selectingObjects = !self.selectingObjects;
+    [self.duplicationSelection removeAllObjects];
+    self.selectionDragOrigins = nil;
+    [self refreshSelectionControls];
+    if (self.selectingObjects) UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, @"Tap components to select them. Drag selected components to move the group.");
+}
+
+- (void)duplicateObjectSelection:(id)sender {
+    if (self.document.isProblem || !self.selectingObjects || !self.duplicationSelection.count) return;
+    // A screen-relative offset keeps the copies nearby at every zoom level.
+    CGFloat offset = round((60.0 / MAX(self.viewport.zoomScale, 0.001)) / 33.0) * 33.0;
+    NSArray *copies = [self.document duplicateObjectsWithIDs:self.duplicationSelection.array offset:CGVectorMake(offset, offset)];
+    self.duplicationSelection = [NSMutableOrderedSet orderedSetWithArray:copies];
+    [self refreshSelectionControls];
+    UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, @"Selection duplicated. Drag a selected component to move the copies together.");
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    for (UIView *view = touch.view; view && view != self.view; view = view.superview) {
+        if ([view isKindOfClass:UIControl.class]) return NO;
+    }
+    return YES;
 }
 
 - (void)viewDidLayoutSubviews {
@@ -552,6 +624,9 @@ static CGFloat gridSize = 33.0;
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
     [self unpause];
     [self stopPanAnimation];
+    if (self.selectingObjects && ([gestureRecognizer isKindOfClass:LongPressObjectGesture.class] ||
+                                  [gestureRecognizer isKindOfClass:HoldDownGestureRecognizer.class] ||
+                                  [gestureRecognizer isKindOfClass:CreateLinkGestureRecognizer.class])) return NO;
 	if ( [gestureRecognizer isKindOfClass:[UIPinchGestureRecognizer class]] ) {
         isAnimatingScaleToSnap = NO;
         return YES;
@@ -620,6 +695,10 @@ static CGFloat gridSize = 33.0;
         ;
         CGPoint position = [_viewport unproject:[recogniser locationInView:self.view]];
         // only accept long presses on circuit objects:
+        if (self.selectingObjects) {
+            CircuitObject *selected = [_viewport findCircuitObjectAtPosition:position];
+            if (!selected || ![self.duplicationSelection containsObject:[MongoID stringWithId:selected->id]]) return NO;
+        }
         CircuitNote *resizeNote = [_viewport findNoteResizeHandleAtPosition:position];
         if (resizeNote) {
             _beginResizeNote = resizeNote;
@@ -849,6 +928,34 @@ static CGFloat gridSize = 33.0;
     }
     
     CircuitObject *object = _beginLongPressGestureObject;
+    if (self.selectingObjects && object) {
+        if (sender.state == UIGestureRecognizerStateBegan) {
+            NSMutableDictionary *origins = [NSMutableDictionary dictionary];
+            for (NSString *identifier in self.duplicationSelection) {
+                CircuitObject *selected = [self.document.circuit findObjectById:identifier];
+                if (selected) origins[identifier] = [NSValue valueWithCGPoint:CGPointMake(selected->pos.x, selected->pos.y)];
+            }
+            self.selectionDragOrigins = origins;
+        }
+        CGPoint delta = [sender translationInView:self.view];
+        CGFloat dx = delta.x / self.viewport.zoomScale;
+        CGFloat dy = delta.y / self.viewport.zoomScale;
+        BOOL ended = sender.state == UIGestureRecognizerStateEnded;
+        for (NSString *identifier in self.selectionDragOrigins) {
+            CircuitObject *selected = [self.document.circuit findObjectById:identifier];
+            if (!selected) continue;
+            CGPoint origin = self.selectionDragOrigins[identifier].CGPointValue;
+            selected->pos.x = origin.x + (ended ? round(dx / gridSize) * gridSize : dx);
+            selected->pos.y = origin.y + (ended ? round(dy / gridSize) * gridSize : dy);
+        }
+        if (ended || sender.state == UIGestureRecognizerStateCancelled || sender.state == UIGestureRecognizerStateFailed) {
+            [self updateChangeCount:UIDocumentChangeDone];
+            self.selectionDragOrigins = nil;
+            self.beginLongPressGestureObject = NULL;
+        }
+        [self unpause];
+        return;
+    }
     if (sender.state == UIGestureRecognizerStateBegan && object && object == _holdDownGestureObject) {
         _holdDownGestureObject = NULL;
         [_document.circuit performWriteBlock:^(CircuitInternal *internal) {
@@ -1035,6 +1142,17 @@ static CGFloat gridSize = 33.0;
 }
 
 - (IBAction) handleTapGesture:(UITapGestureRecognizer *)sender {
+    if (self.selectingObjects && !self.document.isProblem) {
+        CGPoint position = [self.viewport unproject:[sender locationInView:self.view]];
+        CircuitObject *object = [self.viewport findCircuitObjectAtPosition:position];
+        if (object) {
+            NSString *identifier = [MongoID stringWithId:object->id];
+            if ([self.duplicationSelection containsObject:identifier]) [self.duplicationSelection removeObject:identifier];
+            else [self.duplicationSelection addObject:identifier];
+        }
+        [self refreshSelectionControls];
+        return;
+    }
     BOOL hit = NO;
 
     for(int i = 0; i < sender.numberOfTouches; i++) {

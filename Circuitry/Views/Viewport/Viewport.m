@@ -287,6 +287,11 @@ static CGFloat distanceBetweenVectors(CGVector a, CGVector b) {
                                             object->pos.y + offset.dy + radius);
 }
 
+- (void)setSelectedObjectIDs:(NSSet<NSString *> *)selectedObjectIDs {
+    _selectedObjectIDs = [selectedObjectIDs copy];
+    [self setSceneContentNeedsUpdate];
+}
+
 - (void)setDocument:(CircuitDocument *)document {
     _document = document;
     self.translation = CGPointMake(document.circuit.viewCenterX, document.circuit.viewCenterY);
@@ -947,6 +952,17 @@ static void nodeStoreState(SKNode *node, const void *state, size_t length) {
     [self.sceneOverlayLayer removeAllChildren];
     _sceneBuildTarget = self.sceneOverlayLayer;
     _sceneBuildZ = 0.0;
+    [circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
+        if (![self.selectedObjectIDs containsObject:[MongoID stringWithId:object->id]]) return;
+        CGSize size = sizeOfObject(object);
+        CGRect rect = CGRectInset(CGRectMake(object->pos.x, object->pos.y, size.width, size.height), -12.0, -12.0);
+        SKShapeNode *outline = [SKShapeNode shapeNodeWithRect:rect cornerRadius:18.0];
+        outline.strokeColor = UIColor.systemCyanColor;
+        outline.fillColor = UIColor.clearColor;
+        outline.lineWidth = 3.0 / MAX(self.zoomScale, 0.001);
+        outline.zPosition = [self nextSceneContentZPosition];
+        [self->_sceneBuildTarget addChild:outline];
+    }];
     [self addSceneHighlightAt:_highlightLinkLocation progress:_highlightProgress];
     [self addSceneHighlightAt:_highlightOutLinkLocation progress:_highlightOutProgress];
     _sceneBuildTarget = nil;

@@ -15,5 +15,6 @@
 @property (nonatomic, readonly) UIImage *screenshot;
 @property (nonatomic, readonly) BOOL needsScreenshotUpdate;
 @property (nonatomic, readonly) NSError *loadError;
+- (NSArray<NSString *> *)duplicateObjectsWithIDs:(NSArray<NSString *> *)objectIDs offset:(CGVector)offset;
 - (void) useScreenshot:(UIImage *)image;
 @end

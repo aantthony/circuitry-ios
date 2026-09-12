@@ -272,4 +272,59 @@ static NSString *CircuitDocumentUnsupportedProcessType(NSArray *items) {
     return wrapper;
 }
 
+// Snapshot IDs and values before allocating: growing the circuit can relocate objects.
+- (NSArray<NSString *> *)duplicateObjectsWithIDs:(NSArray<NSString *> *)objectIDs offset:(CGVector)offset {
+    if (self.isProblem || !self.circuit || !objectIDs.count) return @[];
+    NSArray<NSString *> *uniqueIDs = [NSOrderedSet orderedSetWithArray:objectIDs].array;
+    NSSet *selected = [NSSet setWithArray:uniqueIDs];
+    NSMutableArray *objects = [NSMutableArray array];
+    NSMutableArray *links = [NSMutableArray array];
+    for (NSString *identifier in uniqueIDs) {
+        CircuitObject *object = [self.circuit findObjectById:identifier];
+        if (!object) continue;
+        [objects addObject:@{@"id": identifier, @"type": [NSString stringWithUTF8String:object->type->id],
+                             @"name": [NSString stringWithUTF8String:object->name] ?: @"",
+                             @"x": @(object->pos.x), @"y": @(object->pos.y), @"z": @(object->pos.z),
+                             @"out": @(object->out), @"data": @(object->data)}];
+        for (int i = 0; i < object->type->numOutputs; i++) {
+            for (CircuitLink *link = object->outputs[i]; link; link = link->nextSibling) {
+                NSString *targetID = [MongoID stringWithId:link->target->id];
+                if ([selected containsObject:targetID]) {
+                    [links addObject:@{@"source": identifier, @"target": targetID,
+                                       @"sourceIndex": @(i), @"targetIndex": @(link->targetIndex)}];
+                }
+            }
+        }
+    }
+    if (!objects.count) return @[];
+    [self beginCircuitEdit:@"Duplicate Selection"];
+    NSMutableDictionary<NSString *, NSString *> *copies = [NSMutableDictionary dictionary];
+    NSMutableArray<NSString *> *newIDs = [NSMutableArray array];
+    [self.circuit performWriteBlock:^(CircuitInternal *internal) {
+        for (NSDictionary *saved in objects) {
+            CircuitObject *copy = CircuitObjectCreate(internal, [self.circuit getProcessById:saved[@"type"]]);
+            if (!copy) continue;
+            copy->id = [MongoID id];
+            copy->pos.x = [saved[@"x"] floatValue] + offset.dx;
+            copy->pos.y = [saved[@"y"] floatValue] + offset.dy;
+            copy->pos.z = [saved[@"z"] floatValue];
+            copy->data = [saved[@"data"] unsignedIntValue];
+            strlcpy(copy->name, [saved[@"name"] UTF8String], sizeof(copy->name));
+            CircuitObjectSetOutput(internal, copy, [saved[@"out"] intValue]);
+            NSString *newID = [MongoID stringWithId:copy->id];
+            copies[saved[@"id"]] = newID;
+            [newIDs addObject:newID];
+        }
+        for (NSDictionary *saved in links) {
+            NSString *sourceID = copies[saved[@"source"]];
+            NSString *targetID = copies[saved[@"target"]];
+            if (!sourceID || !targetID) continue;
+            CircuitLinkCreate(internal, [self.circuit findObjectById:sourceID], [saved[@"sourceIndex"] intValue],
+                              [self.circuit findObjectById:targetID], [saved[@"targetIndex"] intValue]);
+        }
+    }];
+    [self finishCircuitEdit];
+    return newIDs;
+}
+
 @end

@@ -86,6 +86,71 @@
 }
 
 
+- (void)testDuplicateSelectionPreservesInternalFanoutAndIsPlaygroundOnly {
+    CircuitDocument *document = [[CircuitDocument alloc] initWithFileURL:[NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:@"duplicate-test.circuit"]]];
+    document.circuit = [[Circuit alloc] initWithPackage:@{@"name": @"duplicate", @"version": @"1"} items:@[]];
+    __block NSString *buttonID, *lightID, *externalID;
+    [document.circuit performWriteBlock:^(CircuitInternal *internal) {
+        CircuitObject *button = CircuitObjectCreate(internal, &CircuitProcessButton);
+        button->id = [MongoID id];
+        button->pos.x = 33; button->pos.y = 66;
+        strlcpy(button->name, "CLK", sizeof(button->name));
+        buttonID = [MongoID stringWithId:button->id];
+        CircuitObject *light = CircuitObjectCreate(internal, &CircuitProcessLight);
+        light->id = [MongoID id];
+        lightID = [MongoID stringWithId:light->id];
+        CircuitObject *external = CircuitObjectCreate(internal, &CircuitProcessLight);
+        external->id = [MongoID id];
+        externalID = [MongoID stringWithId:external->id];
+        CircuitLinkCreate(internal, button, 0, light, 0);
+        CircuitLinkCreate(internal, button, 0, external, 0);
+        CircuitObjectSetOutput(internal, button, 1);
+    }];
+    [document.circuit simulate:512];
+    NSArray *copies = [document duplicateObjectsWithIDs:@[buttonID, lightID, buttonID] offset:CGVectorMake(99, 132)];
+    XCTAssertEqual(copies.count, 2u);
+    CircuitObject *buttonCopy = [document.circuit findObjectById:copies[0]];
+    CircuitObject *lightCopy = [document.circuit findObjectById:copies[1]];
+    XCTAssertNotEqualObjects(copies[0], buttonID);
+    XCTAssertNotEqualObjects(copies[1], lightID);
+    XCTAssertEqualObjects([NSString stringWithUTF8String:buttonCopy->name], @"CLK");
+    XCTAssertEqual(buttonCopy->pos.x, 132);
+    XCTAssertEqual(buttonCopy->pos.y, 198);
+    XCTAssertEqual(buttonCopy->outputs[0]->target, lightCopy);
+    XCTAssertEqual(buttonCopy->outputs[0]->nextSibling, NULL);
+    XCTAssertEqual(lightCopy->inputs[0]->source, buttonCopy);
+    XCTAssertEqual([document.circuit findObjectById:externalID]->inputs[0]->source, [document.circuit findObjectById:buttonID]);
+    [document.circuit simulate:512];
+    XCTAssertEqual(lightCopy->in, 1);
+    [document.editorUndoManager undo];
+    XCTAssertEqual([document.circuit findObjectById:copies[0]], NULL);
+    XCTAssertNotEqual([document.circuit findObjectById:buttonID], NULL);
+    [document.editorUndoManager redo];
+    XCTAssertNotEqual([document.circuit findObjectById:copies[0]], NULL);
+    document.problemInfo = [[ProblemSetProblemInfo alloc] init];
+    XCTAssertEqual([document duplicateObjectsWithIDs:@[buttonID] offset:CGVectorMake(99, 99)].count, 0u);
+}
+
+- (void)testDuplicateSelectionDoesNotCopyIncomingExternalWires {
+    CircuitDocument *document = [[CircuitDocument alloc] initWithFileURL:[NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:@"duplicate-boundary.circuit"]]];
+    document.circuit = [[Circuit alloc] initWithPackage:@{@"name": @"duplicate", @"version": @"1"} items:@[]];
+    __block NSString *lightID;
+    [document.circuit performWriteBlock:^(CircuitInternal *internal) {
+        CircuitObject *button = CircuitObjectCreate(internal, &CircuitProcessButton);
+        button->id = [MongoID id];
+        CircuitObject *light = CircuitObjectCreate(internal, &CircuitProcessLight);
+        light->id = [MongoID id];
+        lightID = [MongoID stringWithId:light->id];
+        CircuitLinkCreate(internal, button, 0, light, 0);
+        CircuitObjectSetOutput(internal, button, 1);
+    }];
+    NSArray *copies = [document duplicateObjectsWithIDs:@[lightID] offset:CGVectorMake(33, 33)];
+    CircuitObject *copy = [document.circuit findObjectById:copies.firstObject];
+    XCTAssertEqual(copy->inputs[0], NULL);
+    XCTAssertEqual(copy->in, 0);
+    XCTAssertEqual([document duplicateObjectsWithIDs:@[@"000000000000000000000000"] offset:CGVectorMake(33, 33)].count, 0u);
+}
+
 - (void)testProgressMigrationAndNewLevels {
     NSString *suite = [@"ProgressTests-" stringByAppendingString:NSUUID.UUID.UUIDString];
     NSUserDefaults *defaults = [[NSUserDefaults alloc] initWithSuiteName:suite];
