@@ -695,6 +695,19 @@ static CGRect momentaryButtonCapRect(CircuitObject *object) {
     } else if (object->name[0] && !object->name[1]) {
         SpriteTexturePos *letter = letterTable[(unsigned char)object->name[0]];
         if (letter) [self addSceneSprite:*letter atWorldPoint:CGPointMake(pos.x + 105.0, pos.y + 43.0)];
+    } else if (object->name[0]) {
+        // ALU terminals use short names such as Cin, S0 and Co. The atlas
+        // contains only individual letters, so render longer names as text.
+        SKLabelNode *label = [SKLabelNode labelNodeWithFontNamed:@"HelveticaNeue"];
+        label.text = [NSString stringWithUTF8String:object->name];
+        label.fontSize = label.text.length > 2 ? 50.0 : 60.0;
+        label.fontColor = UIColor.blackColor;
+        label.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
+        label.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
+        label.position = CGPointMake(pos.x + 130.0, pos.y + 75.0);
+        label.yScale = -1.0;
+        label.zPosition = [self nextSceneContentZPosition];
+        [_sceneBuildTarget addChild:label];
     }
 
     for (int index = 0; index < object->type->numOutputs; index++) {

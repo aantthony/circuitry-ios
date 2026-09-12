@@ -10,9 +10,12 @@
 
 @interface ProblemSet()
 @property (nonatomic) NSArray *problems;
+@property (nonatomic) NSUserDefaults *defaults;
 @end
 
 static NSString *kDefaultsCurrentLevelIndex = @"CurrentLevelIndex";
+static NSString *kCompletedProblems = @"CompletedProblemPaths";
+static NSString *kAllProblemsUnlocked = @"AllProblemsUnlocked";
 
 @implementation ProblemSet
 
@@ -22,12 +25,14 @@ static NSString *kDefaultsCurrentLevelIndex = @"CurrentLevelIndex";
 }
 
 - (void) unlockAll {
-    [[NSUserDefaults standardUserDefaults] setInteger:999 forKey:kDefaultsCurrentLevelIndex];
+    [self.defaults setBool:YES forKey:kAllProblemsUnlocked];
     [self refresh];
 }
 
 - (void) reset {
-    [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:kDefaultsCurrentLevelIndex];
+    [self.defaults setInteger:0 forKey:kDefaultsCurrentLevelIndex];
+    [self.defaults setObject:@[] forKey:kCompletedProblems];
+    [self.defaults setBool:NO forKey:kAllProblemsUnlocked];
     [self refresh];
 }
 
@@ -39,8 +44,13 @@ static NSString *kDefaultsCurrentLevelIndex = @"CurrentLevelIndex";
 }
 
 - (ProblemSet *) initWithDirectoryPath:(NSString *) directoryPath {
-    
+    return [self initWithDirectoryPath:directoryPath defaults:NSUserDefaults.standardUserDefaults];
+}
+
+- (instancetype)initWithDirectoryPath:(NSString *)directoryPath defaults:(NSUserDefaults *)defaults {
     self = [super init];
+    if (!self) return nil;
+    _defaults = defaults;
     NSURL *baseUrl = [NSURL fileURLWithPath:directoryPath isDirectory:YES];
     NSDictionary *index = [ProblemSet loadIndexAtUrl:[baseUrl URLByAppendingPathComponent:@"index.json"]];
     
@@ -72,30 +82,40 @@ static NSString *kDefaultsCurrentLevelIndex = @"CurrentLevelIndex";
     return _problems;
 }
 
-- (void) refresh {
-    
-    NSUInteger playerCurrentLevelIndex = [[NSUserDefaults standardUserDefaults] integerForKey:kDefaultsCurrentLevelIndex];
-    
-    [_problems enumerateObjectsUsingBlock:^(ProblemSetProblemInfo *obj, NSUInteger i, BOOL *stop) {
-        BOOL completed = obj.problemIndex < playerCurrentLevelIndex;
-        BOOL accessible = obj.problemIndex <= playerCurrentLevelIndex;
+// Store stable paths so appending or reordering levels cannot grant completion.
+- (void)migrateLegacyProgressIfNeeded {
+    if ([self.defaults objectForKey:kCompletedProblems] != nil) return;
+    NSInteger legacyIndex = [self.defaults integerForKey:kDefaultsCurrentLevelIndex];
+    // Old "unlock all" saves (999), and older oversized indices, must not
+    // complete newly added levels. The original catalog had 21 visible levels.
+    NSInteger count = legacyIndex > 22 ? 21 : MAX(0, legacyIndex);
+    NSArray *legacyPaths = @[@"001", @"002", @"003", @"004", @"005", @"006",
+        @"007", @"008", @"009", @"011", @"012", @"013", @"014", @"015",
+        @"016", @"017", @"018", @"020", @"021", @"022", @"023", @"024"];
+    [self.defaults setObject:[legacyPaths subarrayWithRange:NSMakeRange(0, count)]
+                     forKey:kCompletedProblems];
+    if (legacyIndex > 22) [self.defaults setBool:YES forKey:kAllProblemsUnlocked];
+}
 
-        obj.isCompleted = completed;
-        obj.isAccessible = accessible;
-    }];
+- (void) refresh {
+    [self migrateLegacyProgressIfNeeded];
+    NSSet *completed = [NSSet setWithArray:[self.defaults arrayForKey:kCompletedProblems]];
+    BOOL allUnlocked = [self.defaults boolForKey:kAllProblemsUnlocked];
+    BOOL previousCompleted = YES;
+    for (ProblemSetProblemInfo *info in self.problems) {
+        info.isCompleted = [completed containsObject:info.documentURL.lastPathComponent];
+        info.isAccessible = allUnlocked || previousCompleted || info.isCompleted;
+        previousCompleted = info.isCompleted;
+    }
 }
 
 - (void) didCompleteProblem:(ProblemSetProblemInfo *)problemInfo {
-    
-    NSUInteger playerCurrentLevelIndex = [[NSUserDefaults standardUserDefaults] integerForKey:kDefaultsCurrentLevelIndex];
-    
-    NSUInteger updatedCurrentLevelIndex = problemInfo.problemIndex + 1;
-    if (updatedCurrentLevelIndex <= playerCurrentLevelIndex) {
-        return;
-    }
-
-    [[NSUserDefaults standardUserDefaults] setInteger:updatedCurrentLevelIndex forKey:kDefaultsCurrentLevelIndex];
-    
+    if (![self.problems containsObject:problemInfo]) return;
+    [self migrateLegacyProgressIfNeeded];
+    NSMutableSet *completed = [NSMutableSet setWithArray:[self.defaults arrayForKey:kCompletedProblems]];
+    [completed addObject:problemInfo.documentURL.lastPathComponent];
+    [self.defaults setObject:[[completed allObjects] sortedArrayUsingSelector:@selector(compare:)]
+                     forKey:kCompletedProblems];
     [self refresh];
 }
 

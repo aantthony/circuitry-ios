@@ -10,6 +10,7 @@
 
 @interface ProblemSet : NSObject
 - (ProblemSet *) initWithDirectoryPath:(NSString *) path;
+- (instancetype)initWithDirectoryPath:(NSString *)path defaults:(NSUserDefaults *)defaults;
 - (NSArray *) problems;
 - (void) refresh;
 - (ProblemSetProblemInfo *) problemAfterProblem:(ProblemSetProblemInfo *)info;
