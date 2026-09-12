@@ -40,6 +40,12 @@
 @property (nonatomic) UIView *titleView;
 @property (nonatomic) BOOL isTutorial;
 @property (nonatomic) CircuitTestResult *testResult;
+@property (nonatomic) NSDictionary *inspectionPreviousState;
+@property (nonatomic) BOOL inspectionWasPaused;
+@property (nonatomic) BOOL inspectionHidBackButton;
+@property (nonatomic) NSDictionary<NSString *, UIView *> *inspectionHighlights;
+@property (nonatomic) UIView *inspectionOverlay;
+@property (nonatomic) NSArray<UIBarButtonItem *> *inspectionDisabledItems;
 @property (nonatomic) CircuitDocument *nextDocument;
 @property (nonatomic) UITapGestureRecognizer *tapToDismissKeyboard;
 @property (nonatomic) NSMutableArray *showingUnlockedToolbeltItems;
@@ -734,6 +740,102 @@ static CGPoint hvrDragHereRight = {88,428};
         [_problemInfoViewController showWonGameScreen];
     }
     // Success!
+}
+
+- (void)testResultViewController:(TestResultViewController *)viewController inspectCheck:(CircuitTestResultCheck *)check {
+    if (check.isMatch || !check.simulationState) return;
+    [viewController dismissViewControllerAnimated:YES completion:^{
+        self.inspectionPreviousState = [self.document.circuit captureSimulationState];
+        self.inspectionWasPaused = self.editorViewController.simulationPaused;
+        self.editorViewController.simulationPaused = YES;
+        [self.document.circuit restoreSimulationState:check.simulationState];
+        [self.editorViewController.viewport setSceneContentNeedsUpdate];
+        [self.editorViewController.viewport updateSceneForViewSize:self.editorViewController.view.bounds.size allowContentRebuild:YES];
+
+        NSMutableArray *disabledItems = [NSMutableArray array];
+        for (UIBarButtonItem *item in [(self.navigationItem.leftBarButtonItems ?: @[]) arrayByAddingObjectsFromArray:self.navigationItem.rightBarButtonItems ?: @[]]) {
+            if (item.enabled) { [disabledItems addObject:item]; item.enabled = NO; }
+        }
+        self.inspectionDisabledItems = disabledItems;
+        self.inspectionHidBackButton = self.navigationItem.hidesBackButton;
+        self.navigationItem.hidesBackButton = YES;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishTestInspection) name:UIApplicationWillResignActiveNotification object:nil];
+        UIView *overlay = [[UIView alloc] initWithFrame:self.view.bounds];
+        overlay.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        overlay.accessibilityIdentifier = @"failedTestInspection";
+        self.inspectionOverlay = overlay;
+        [self.view addSubview:overlay];
+
+        NSMutableDictionary *highlights = [NSMutableDictionary dictionary];
+        for (NSString *identifier in check.mismatchingOutputIDs) {
+            CircuitObject *object = [self.document.circuit findObjectById:identifier];
+            if (!object) continue;
+            CGRect rect = [self.editorViewController.viewport rectForObject:object inView:self.editorViewController.view];
+            rect = [self.editorViewController.view convertRect:rect toView:overlay];
+            UIView *highlight = [[UIView alloc] initWithFrame:CGRectInset(rect, -5, -5)];
+            highlight.layer.borderColor = UIColor.systemRedColor.CGColor;
+            highlight.layer.borderWidth = 3;
+            highlight.layer.cornerRadius = 8;
+            highlight.userInteractionEnabled = NO;
+            [overlay addSubview:highlight];
+            highlights[identifier] = highlight;
+        }
+
+        self.inspectionHighlights = highlights;
+
+        UIStackView *banner = [[UIStackView alloc] init];
+        banner.axis = UILayoutConstraintAxisVertical;
+        banner.spacing = 8;
+        banner.layoutMarginsRelativeArrangement = YES;
+        banner.layoutMargins = UIEdgeInsetsMake(12, 16, 12, 16);
+        banner.backgroundColor = UIColor.secondarySystemBackgroundColor;
+        banner.layer.cornerRadius = 12;
+        banner.translatesAutoresizingMaskIntoConstraints = NO;
+        UILabel *label = [[UILabel alloc] init];
+        label.numberOfLines = 0;
+        label.font = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
+        label.text = [NSString stringWithFormat:@"Inspecting failed test • Inputs: %@\nExpected: %@ · Actual: %@\nMismatching outputs are outlined in red.", [check.inputs componentsJoinedByString:@", "], [check.expectedOutputs componentsJoinedByString:@", "], [check.actualOutputs componentsJoinedByString:@", "]];
+        [banner addArrangedSubview:label];
+        UIButton *done = [UIButton buttonWithType:UIButtonTypeSystem];
+        [done setTitle:@"Done inspecting" forState:UIControlStateNormal];
+        done.accessibilityIdentifier = @"doneInspectingTest";
+        [done addTarget:self action:@selector(finishTestInspection) forControlEvents:UIControlEventTouchUpInside];
+        [banner addArrangedSubview:done];
+        [overlay addSubview:banner];
+        [NSLayoutConstraint activateConstraints:@[
+            [banner.topAnchor constraintEqualToAnchor:overlay.safeAreaLayoutGuide.topAnchor constant:8],
+            [banner.centerXAnchor constraintEqualToAnchor:overlay.centerXAnchor],
+            [banner.widthAnchor constraintLessThanOrEqualToConstant:540],
+            [banner.leadingAnchor constraintGreaterThanOrEqualToAnchor:overlay.leadingAnchor constant:12],
+            [banner.trailingAnchor constraintLessThanOrEqualToAnchor:overlay.trailingAnchor constant:-12]
+        ]];
+    }];
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    [self.inspectionHighlights enumerateKeysAndObjectsUsingBlock:^(NSString *identifier, UIView *highlight, BOOL *stop) {
+        CircuitObject *object = [self.document.circuit findObjectById:identifier];
+        if (!object) return;
+        CGRect rect = [self.editorViewController.viewport rectForObject:object inView:self.editorViewController.view];
+        highlight.frame = CGRectInset([self.editorViewController.view convertRect:rect toView:self.inspectionOverlay], -5, -5);
+    }];
+}
+
+- (void)finishTestInspection {
+    if (!self.inspectionPreviousState) return;
+    [self.document.circuit restoreSimulationState:self.inspectionPreviousState];
+    self.inspectionPreviousState = nil;
+    [self.inspectionOverlay removeFromSuperview];
+    self.inspectionOverlay = nil;
+    for (UIBarButtonItem *item in self.inspectionDisabledItems) item.enabled = YES;
+    self.inspectionDisabledItems = nil;
+    self.navigationItem.hidesBackButton = self.inspectionHidBackButton;
+    self.inspectionHighlights = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
+    [self.editorViewController.viewport setSceneContentNeedsUpdate];
+    self.editorViewController.simulationPaused = self.inspectionWasPaused;
+    [self.editorViewController.viewport updateSceneForViewSize:self.editorViewController.view.bounds.size allowContentRebuild:YES];
 }
 
 - (void) testResultViewController:(TestResultViewController *)viewController didFinish:(id)sender {

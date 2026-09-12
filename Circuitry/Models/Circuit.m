@@ -338,6 +338,36 @@ static NSValue *valueForGate(CircuitProcess *process) {
     return CircuitSimulate(_internal, ticks);
 }
 
+- (NSDictionary *)captureSimulationState {
+    NSMutableDictionary *objects = [NSMutableDictionary dictionary];
+    [self enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
+        objects[[MongoID stringWithId:object->id]] = @[@(object->in), @(object->out), @(object->data)];
+    }];
+    NSMutableArray *pending = [NSMutableArray array];
+    for (int i = 0; i < _internal->needsUpdate_count; i++) {
+        [pending addObject:[MongoID stringWithId:_internal->needsUpdate[i]->id]];
+    }
+    return @{ @"objects": objects, @"pending": pending };
+}
+
+- (void)restoreSimulationState:(NSDictionary *)state {
+    if (!state) return;
+    [self enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
+        NSArray *values = state[@"objects"][[MongoID stringWithId:object->id]];
+        if (values.count != 3) return;
+        object->in = [values[0] intValue];
+        object->out = [values[1] intValue];
+        object->data = [values[2] unsignedIntValue];
+    }];
+    _internal->needsUpdate_count = 0;
+    for (NSString *identifier in state[@"pending"]) {
+        CircuitObject *object = [self findObjectById:identifier];
+        if (object && _internal->needsUpdate_count < _internal->needsUpdate_size) {
+            _internal->needsUpdate[_internal->needsUpdate_count++] = object;
+        }
+    }
+}
+
 - (void) performWriteBlock:(void (^)(CircuitInternal *internal)) block {
     block(_internal);
 }

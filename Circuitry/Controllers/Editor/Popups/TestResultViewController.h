@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Circuitry. All rights reserved.
 //
 
-@class CircuitTestResult;
+@class CircuitTestResult, CircuitTestResultCheck;
 @protocol TestResultViewControllerDelegate;
 @interface TestResultViewController : UIViewController
 @property (nonatomic) CircuitTestResult *testResult;
@@ -14,6 +14,9 @@
 @end
 
 @protocol TestResultViewControllerDelegate <NSObject>
+
+@optional
+- (void)testResultViewController:(TestResultViewController *)viewController inspectCheck:(CircuitTestResultCheck *)check;
 
 @required
 - (void) testResultViewController:(TestResultViewController *)viewController didFinish:(id) sender;

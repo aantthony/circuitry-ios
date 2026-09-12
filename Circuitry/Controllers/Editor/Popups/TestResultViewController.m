@@ -10,7 +10,7 @@
 #import "TestResultItemCell.h"
 #import "CircuitTestResult.h"
 
-@interface TestResultViewController () <UITableViewDataSource>
+@interface TestResultViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIImageView *bigTick;
 @property (weak, nonatomic) IBOutlet UIButton *dismissButton;
@@ -114,6 +114,21 @@
 }
 
 - (void) configure {
+    self.tableView.delegate = self;
+}
+
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == 0) return nil;
+    CircuitTestResultCheck *check = self.testResult.checks[indexPath.row];
+    return !check.isMatch && check.simulationState ? indexPath : nil;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    CircuitTestResultCheck *check = self.testResult.checks[indexPath.row];
+    if (!check.isMatch && [self.delegate respondsToSelector:@selector(testResultViewController:inspectCheck:)]) {
+        [self.delegate testResultViewController:self inspectCheck:check];
+    }
 }
 
 #pragma mark - UITableViewDataSource
@@ -133,6 +148,9 @@
     TestResultItemCell * cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
     CircuitTestResultCheck *check = _testResult.checks[indexPath.row];
     cell.check = check;
+    cell.accessoryType = check.isMatch ? UITableViewCellAccessoryNone : UITableViewCellAccessoryDisclosureIndicator;
+    cell.selectionStyle = check.isMatch ? UITableViewCellSelectionStyleNone : UITableViewCellSelectionStyleDefault;
+    cell.accessibilityHint = check.isMatch ? nil : @"Double tap to inspect this failed test in the circuit.";
     if (!self.hasAppeared) {
         [cell setShowResult:NO animated:NO];
     } else {

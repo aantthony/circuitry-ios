@@ -42,6 +42,10 @@
 
 - (int) simulate: (int) ticks;
 
+// Transient inspection state; restore only while the circuit topology is unchanged.
+- (NSDictionary *)captureSimulationState;
+- (void)restoreSimulationState:(NSDictionary *)state;
+
 - (void) enumerateObjectsUsingBlock:(void (^)(CircuitObject *object, BOOL *stop))block;
 - (void) enumerateObjectsInReverseUsingBlock:(void (^)(CircuitObject *object, BOOL *stop))block;
 

@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 #import "MongoID.h"
 #import "Circuit.h"
+#import "CircuitTest.h"
 #import "ProblemSet.h"
 #import "CircuitDocument.h"
 #import "Viewport.h"
@@ -204,6 +205,40 @@
     XCTAssertEqual(copy->inputs[0], NULL);
     XCTAssertEqual(copy->in, 0);
     XCTAssertEqual([document duplicateObjectsWithIDs:@[@"000000000000000000000000"] offset:CGVectorMake(33, 33)].count, 0u);
+}
+
+- (void)testFailedCheckInspectionRestoresExactSimulationState {
+    Circuit *circuit = [[Circuit alloc] initWithPackage:@{@"name": @"inspection", @"version": @"1"} items:@[]];
+    __block CircuitObject *input;
+    __block CircuitObject *output;
+    [circuit performWriteBlock:^(CircuitInternal *internal) {
+        input = CircuitObjectCreate(internal, &CircuitProcessIn);
+        output = CircuitObjectCreate(internal, &CircuitProcessOut);
+        CircuitLinkCreate(internal, input, 0, output, 0);
+        // Preserve a queued transition and sequential state across test execution.
+        CircuitObjectSetOutput(internal, input, 1);
+        input->data = 42;
+    }];
+    NSDictionary *before = [circuit captureSimulationState];
+    CircuitTest *test = [[CircuitTest alloc] initWithName:@"Mismatch"
+        inputs:@[[NSValue valueWithPointer:input]] outputs:@[[NSValue valueWithPointer:output]]
+        spec:@[@[@[@0], @[@1]], @[@[@1], @[@1]]] acceptedSpecs:nil];
+    CircuitTestResult *result = [test runAndSimulate:circuit];
+    XCTAssertFalse(result.passed);
+    XCTAssertEqualObjects(before, [circuit captureSimulationState]);
+    CircuitTestResultCheck *failed = result.checks[0];
+    XCTAssertFalse(failed.isMatch);
+    XCTAssertEqualObjects(failed.actualOutputs, @[@0]);
+    XCTAssertEqualObjects(failed.mismatchingOutputIDs, @[[MongoID stringWithId:output->id]]);
+    XCTAssertTrue(((CircuitTestResultCheck *)result.checks[1]).isMatch);
+    [circuit restoreSimulationState:failed.simulationState];
+    XCTAssertEqual(input->out, 0);
+    XCTAssertEqual(output->in, 0);
+    [circuit restoreSimulationState:before];
+    XCTAssertEqualObjects(before, [circuit captureSimulationState]);
+    XCTAssertEqual(input->data, 42u);
+    [circuit simulate:512];
+    XCTAssertEqual(output->in, 1);
 }
 
 - (void)testProgressMigrationAndNewLevels {
