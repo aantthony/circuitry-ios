@@ -293,6 +293,49 @@
     XCTAssertTrue([app.staticTexts[@"Connect an AND Gate"] waitForExistenceWithTimeout:10]);
 }
 
+- (void)testEditorHistorySelectionAndFailedInspection {
+    self.continueAfterFailure = NO;
+    XCUIApplication *app = [[XCUIApplication alloc] init];
+    app.launchArguments = @[@"-AppleLanguages", @"(en)", @"-AppleLocale", @"en_AU", @"-openedBefore", @"YES", @"-CurrentLevelIndex", @"999"];
+    [self launchAppForScreenshots:app];
+    [self openProblem:@"Build a Three-Input AND" number:2 inApp:app];
+    XCTAssertFalse(app.buttons[@"selectComponents"].exists);
+    [app.buttons[@"Check Answer"] tap];
+    XCTAssertTrue([app.buttons[@"OK"] waitForExistenceWithTimeout:10]);
+    XCUIElement *failedRow = [app.cells containingType:XCUIElementTypeImage identifier:@"TestResultMismatch"].firstMatch;
+    XCTAssertTrue(failedRow.exists);
+    [failedRow tap];
+    XCTAssertTrue([app.buttons[@"doneInspectingTest"] waitForExistenceWithTimeout:5]);
+    XCTAttachment *inspection = [XCTAttachment attachmentWithScreenshot:app.screenshot];
+    inspection.name = @"failed-test-inspection"; inspection.lifetime = XCTAttachmentLifetimeKeepAlways;
+    [self addAttachment:inspection];
+    [app.buttons[@"doneInspectingTest"] tap];
+    XCTAssertTrue(app.buttons[@"Check Answer"].enabled);
+    [self launchAppForScreenshots:app];
+    [app.buttons[@"Playground"] tap];
+    [app.buttons[@"Add"] tap];
+    XCTAssertTrue([app.buttons[@"selectComponents"] waitForExistenceWithTimeout:10]);
+    XCTAssertTrue(app.buttons[@"selectComponents"].hittable);
+    XCTAssertFalse(app.buttons[@"circuit.undo"].enabled);
+    NSArray<NSValue *> *ports = [self createGateNamed:@"AND" inputs:2 outputs:1 atOrigin:CGVectorMake(380, 360) inApp:app];
+    XCTAssertTrue(app.buttons[@"circuit.undo"].enabled);
+    [app.buttons[@"selectComponents"] tap];
+    CGVector inlet = ports.firstObject.CGVectorValue;
+    [[self point:CGVectorMake(inlet.dx + 62, inlet.dy + 17) inApp:app] tap];
+    XCTAssertTrue(app.buttons[@"duplicateSelection"].enabled);
+    XCTAssertEqualObjects(app.buttons[@"duplicateSelection"].label, @"Duplicate (1)");
+    [app.buttons[@"duplicateSelection"] tap];
+    [app.buttons[@"circuit.undo"] tap];
+    XCTAssertTrue(app.buttons[@"circuit.redo"].enabled);
+    [app.buttons[@"circuit.redo"] tap];
+    [app.buttons[@"selectComponents"] tap];
+    [app.buttons[@"simulation.pause"] tap];
+    XCTAssertEqualObjects(app.buttons[@"simulation.pause"].label, @"Resume simulation");
+    XCTAttachment *playground = [XCTAttachment attachmentWithScreenshot:app.screenshot];
+    playground.name = @"playground-editor-controls"; playground.lifetime = XCTAttachmentLifetimeKeepAlways;
+    [self addAttachment:playground];
+}
+
 - (void)testGenerateAppStoreScreenshots
 {
     XCUIApplication *app = [[XCUIApplication alloc] init];

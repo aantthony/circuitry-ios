@@ -784,6 +784,7 @@ static CGPoint hvrDragHereRight = {88,428};
         UIView *overlay = [[UIView alloc] initWithFrame:self.view.bounds];
         overlay.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         overlay.accessibilityIdentifier = @"failedTestInspection";
+        overlay.accessibilityViewIsModal = YES;
         self.inspectionOverlay = overlay;
         [self.view addSubview:overlay];
 
@@ -812,15 +813,28 @@ static CGPoint hvrDragHereRight = {88,428};
         banner.backgroundColor = UIColor.secondarySystemBackgroundColor;
         banner.layer.cornerRadius = 12;
         banner.translatesAutoresizingMaskIntoConstraints = NO;
-        UITextView *label = [[UITextView alloc] init];
-        label.editable = NO;
-        label.backgroundColor = UIColor.clearColor;
-        label.textContainerInset = UIEdgeInsetsZero;
-        label.textContainer.lineFragmentPadding = 0;
-        [label.heightAnchor constraintEqualToConstant:64].active = YES;
+        UIScrollView *details = [[UIScrollView alloc] init];
+        if (@available(iOS 26.0, *)) {
+            details.topEdgeEffect.hidden = YES;
+            details.bottomEdgeEffect.hidden = YES;
+            details.leftEdgeEffect.hidden = YES;
+            details.rightEdgeEffect.hidden = YES;
+        }
+        [details.heightAnchor constraintEqualToConstant:72].active = YES;
+        UILabel *label = [[UILabel alloc] init];
+        label.numberOfLines = 0;
+        label.translatesAutoresizingMaskIntoConstraints = NO;
         label.font = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
         label.text = [NSString stringWithFormat:@"Inspecting failed test • Inputs: %@\nExpected: %@ · Actual: %@\nMismatching outputs are outlined in red.", [check.inputs componentsJoinedByString:@", "], [check.expectedOutputs componentsJoinedByString:@", "], [check.actualOutputs componentsJoinedByString:@", "]];
-        [banner addArrangedSubview:label];
+        [details addSubview:label];
+        [NSLayoutConstraint activateConstraints:@[
+            [label.leadingAnchor constraintEqualToAnchor:details.contentLayoutGuide.leadingAnchor],
+            [label.trailingAnchor constraintEqualToAnchor:details.contentLayoutGuide.trailingAnchor],
+            [label.topAnchor constraintEqualToAnchor:details.contentLayoutGuide.topAnchor],
+            [label.bottomAnchor constraintEqualToAnchor:details.contentLayoutGuide.bottomAnchor],
+            [label.widthAnchor constraintEqualToAnchor:details.frameLayoutGuide.widthAnchor]
+        ]];
+        [banner addArrangedSubview:details];
         UIButton *done = [UIButton buttonWithType:UIButtonTypeSystem];
         [done setTitle:@"Done inspecting" forState:UIControlStateNormal];
         done.accessibilityIdentifier = @"doneInspectingTest";
@@ -846,6 +860,17 @@ static CGPoint hvrDragHereRight = {88,428};
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
+    CGFloat bottomInset = 0;
+    if (!self.problemInfoView.hidden) {
+        CGRect footer = [self.problemInfoView convertRect:self.problemInfoView.bounds toView:self.view];
+        bottomInset = MAX(0, CGRectGetMaxY(self.view.safeAreaLayoutGuide.layoutFrame) - CGRectGetMinY(footer));
+    }
+    CGFloat leftInset = 0;
+    if (!self.objectListView.hidden) {
+        CGRect palette = [self.objectListView convertRect:self.objectListView.bounds toView:self.view];
+        leftInset = MAX(0, CGRectGetMaxX(palette) - CGRectGetMinX(self.view.safeAreaLayoutGuide.layoutFrame));
+    }
+    [self.editorViewController layoutControlsInView:self.view bottomInset:bottomInset leftInset:leftInset];
     [self layoutTestInspection];
 }
 

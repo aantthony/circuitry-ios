@@ -45,6 +45,10 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 @property (nonatomic) NSDictionary<NSString *, NSValue *> *selectionDragOrigins;
 @property (nonatomic) UIStackView *selectionControls;
 @property (nonatomic) NSLayoutConstraint *selectionBottomConstraint;
+@property (nonatomic) NSLayoutConstraint *selectionLeadingConstraint;
+@property (nonatomic) NSLayoutConstraint *simulationBottomConstraint;
+@property (nonatomic) NSArray<NSLayoutConstraint *> *selectionPositionConstraints;
+@property (nonatomic) NSArray<NSLayoutConstraint *> *simulationPositionConstraints;
 @property (nonatomic) UIStackView *simulationControls;
 @property (nonatomic) UIButton *selectObjectsButton;
 @property (nonatomic) UIButton *duplicateObjectsButton;
@@ -167,11 +171,13 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     controls.layer.cornerRadius = 10;
     controls.tintColor = UIColor.whiteColor;
     [self.view addSubview:controls];
-    [NSLayoutConstraint activateConstraints:@[
+    self.simulationBottomConstraint = [controls.bottomAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.bottomAnchor constant:-12];
+    self.simulationPositionConstraints = @[
         [controls.trailingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.trailingAnchor constant:-12],
-        [controls.bottomAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.bottomAnchor constant:-12],
-        [controls.heightAnchor constraintGreaterThanOrEqualToConstant:44]
-    ]];
+        self.simulationBottomConstraint
+    ];
+    [NSLayoutConstraint activateConstraints:self.simulationPositionConstraints];
+    [controls.heightAnchor constraintGreaterThanOrEqualToConstant:44].active = YES;
     [self updateSimulationControls];
 }
 
@@ -315,12 +321,14 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     self.selectionControls.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:self.selectionControls];
     self.selectionBottomConstraint = [self.selectionControls.bottomAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.bottomAnchor constant:-12];
-    [NSLayoutConstraint activateConstraints:@[
-        [self.selectionControls.leadingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.leadingAnchor constant:12],
-        self.selectionBottomConstraint,
-        [self.selectObjectsButton.heightAnchor constraintGreaterThanOrEqualToConstant:44],
-        [self.duplicateObjectsButton.heightAnchor constraintGreaterThanOrEqualToConstant:44]
-    ]];
+    self.selectionLeadingConstraint = [self.selectionControls.leadingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.leadingAnchor constant:12];
+    self.selectionPositionConstraints = @[
+        self.selectionLeadingConstraint,
+        self.selectionBottomConstraint
+    ];
+    [NSLayoutConstraint activateConstraints:self.selectionPositionConstraints];
+    [self.selectObjectsButton.heightAnchor constraintGreaterThanOrEqualToConstant:44].active = YES;
+    [self.duplicateObjectsButton.heightAnchor constraintGreaterThanOrEqualToConstant:44].active = YES;
     [self refreshSelectionControls];
 }
 
@@ -333,6 +341,7 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     [self.duplicateObjectsButton setTitle:[NSString stringWithFormat:@"Duplicate (%lu)", (unsigned long)self.duplicationSelection.count] forState:UIControlStateNormal];
     self.viewport.selectedObjectIDs = [NSSet setWithArray:self.duplicationSelection.array ?: @[]];
     [self.view setNeedsLayout];
+    [self.parentViewController.view setNeedsLayout];
     [self unpause];
 }
 
@@ -414,6 +423,13 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     self.viewport.currentEditingLink = NULL;
     self.viewport.currentEditingLinkSource = NULL;
     self.viewport.currentEditingLinkTarget = NULL;
+    // History is unavailable while a finger is down. A restored short tap
+    // therefore has no corresponding touch to release its momentary button.
+    [self.document.circuit performWriteBlock:^(CircuitInternal *internal) {
+        [self.document.circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
+            if (object->type == &CircuitProcessPushButton && object->out) CircuitObjectSetOutput(internal, object, 0);
+        }];
+    }];
     [self unpause];
 }
 
@@ -440,12 +456,35 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     ];
 }
 
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-    CGFloat availableWidth = CGRectGetWidth(self.view.safeAreaLayoutGuide.layoutFrame);
+- (void)layoutControlsInView:(UIView *)host bottomInset:(CGFloat)bottomInset leftInset:(CGFloat)leftInset {
+    if (!self.selectionControls || !self.simulationControls) return;
+    if (self.selectionControls.superview != host) {
+        [NSLayoutConstraint deactivateConstraints:self.selectionPositionConstraints];
+        [NSLayoutConstraint deactivateConstraints:self.simulationPositionConstraints];
+        [host addSubview:self.selectionControls];
+        [host addSubview:self.simulationControls];
+        self.selectionBottomConstraint = [self.selectionControls.bottomAnchor constraintEqualToAnchor:host.safeAreaLayoutGuide.bottomAnchor constant:-12];
+        self.simulationBottomConstraint = [self.simulationControls.bottomAnchor constraintEqualToAnchor:host.safeAreaLayoutGuide.bottomAnchor constant:-12];
+        self.selectionLeadingConstraint = [self.selectionControls.leadingAnchor constraintEqualToAnchor:host.safeAreaLayoutGuide.leadingAnchor constant:12];
+        self.selectionPositionConstraints = @[self.selectionLeadingConstraint, self.selectionBottomConstraint];
+        self.simulationPositionConstraints = @[[self.simulationControls.trailingAnchor constraintEqualToAnchor:host.safeAreaLayoutGuide.trailingAnchor constant:-12], self.simulationBottomConstraint];
+        [NSLayoutConstraint activateConstraints:self.selectionPositionConstraints];
+        [NSLayoutConstraint activateConstraints:self.simulationPositionConstraints];
+    }
     CGSize selectionSize = [self.selectionControls systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
     CGSize simulationSize = [self.simulationControls systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
-    self.selectionBottomConstraint.constant = availableWidth < selectionSize.width + simulationSize.width + 36 ? -68 : -12;
+    CGFloat availableWidth = CGRectGetWidth(host.safeAreaLayoutGuide.layoutFrame);
+    BOOL stackControls = availableWidth < leftInset + selectionSize.width + simulationSize.width + 36;
+    self.selectionLeadingConstraint.constant = stackControls ? MAX(12, availableWidth - selectionSize.width - 12) : leftInset + 12;
+    self.selectionBottomConstraint.constant = -bottomInset - (stackControls ? 68 : 12);
+    self.simulationBottomConstraint.constant = -bottomInset - 12;
+    self.selectionControls.userInteractionEnabled = self.view.userInteractionEnabled;
+    self.simulationControls.userInteractionEnabled = self.view.userInteractionEnabled;
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    if (!self.parentViewController) [self layoutControlsInView:self.view bottomInset:0 leftInset:0];
 
     CircuitCanvasView *canvasView = (CircuitCanvasView *)self.view;
     CGSize viewSize = canvasView.bounds.size;

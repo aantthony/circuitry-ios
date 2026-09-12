@@ -24,6 +24,7 @@
 - (IBAction) handleTapGesture:(UITapGestureRecognizer *)sender;
 - (IBAction) handleLongPressObject:(UILongPressGestureRecognizer *)sender;
 
+- (void)layoutControlsInView:(UIView *)host bottomInset:(CGFloat)bottomInset leftInset:(CGFloat)leftInset;
 - (void) update;
 
 - (void) startCreatingObjectFromItem: (ToolbeltItem *) item;
