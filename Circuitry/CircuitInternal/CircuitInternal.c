@@ -434,24 +434,25 @@ void CircuitLinkRemove(CircuitInternal *c, CircuitLink *link) {
 
 // Add a link to the circuit (and will queue the targets recalculation if necessary). *All* links have a target (this is required for the CircuitInteral object to always be a consistent state). The half-made links in the Viewport are fakes.
 CircuitLink *CircuitLinkCreate(CircuitInternal *c, CircuitObject *object, int index, CircuitObject *target, int targetIndex) {
-    CircuitLink *prev = object->outputs[index];
-    CircuitLink *link;
-    
-    if (index >= object->type->numOutputs) {
+    if (index < 0 || index >= object->type->numOutputs) {
         fail("FAIL: Invalid Link: Attempted to create link from outlet, but there are not enough outlets.");
     }
-    if (targetIndex >= target->type->numInputs) {
+    if (targetIndex < 0 || targetIndex >= target->type->numInputs) {
         fail("FAIL: Invalid Link: Attempted to create link into inlet, but the object doesn't have that many inlets.");
     }
     if (target->inputs[targetIndex] != NULL) {
         fail("Internal Consistency Exceptino: Invalid Link: Attempted to create link to inlet, but there is already an attachment there.");
     }
     
+    // Allocating can relocate every existing link. Read the sibling pointer
+    // only after makeLink has repaired the circuit's references.
+    CircuitLink *link = makeLink(c);
+    CircuitLink *prev = object->outputs[index];
     if (!prev) {
-        link = object->outputs[index] = makeLink(c);
+        object->outputs[index] = link;
     } else {
         while (prev->nextSibling && (prev = prev->nextSibling)) {}
-        link = prev->nextSibling = makeLink(c);
+        prev->nextSibling = link;
     }
     link->source = object;
     link->target = target;
@@ -555,11 +556,13 @@ int CircuitSimulate(CircuitInternal *c, int ticks) {
         
         // Swap active buffer to clear:
         c->needsUpdate = c->needsUpdate2;
+        c->needsUpdate2 = updating;
         c->needsUpdate_count = 0;
         
         // copy outputs of the recently recalculated gates to the inputs of those connected
         for(int i = 0; i < updatingCount; i++) {
-            CircuitObject *o = updating[i];
+            // Queuing targets can resize both buffers during this pass.
+            CircuitObject *o = c->needsUpdate2[i];
             if (!o) continue;
             // printf("Copying output from %s gate 0x%x\n", o->type->id, o->out);
             int newOut = o->out;
@@ -583,14 +586,12 @@ int CircuitSimulate(CircuitInternal *c, int ticks) {
                         if (a) link->target->in |= mask;
                         // printf("Now that %s gate has input 0x%x\n", link->target->type->id, link->target->in);
                         needsUpdate(c, link->target);
-                    } else break;
+                    }
                     link = link->nextSibling;
                 }
             }
         }
         
-        // Swap back buffer
-        c->needsUpdate2 = updating;
     }
     return nAffected;
 }
@@ -600,6 +601,10 @@ int CircuitSimulate(CircuitInternal *c, int ticks) {
 
 
 void CircuitDestroy(CircuitInternal *c) {
+    for (int i = 0; i < c->objects_count; i++) {
+        // Removed objects have already released and cleared this allocation.
+        free(c->objects[i].outputs);
+    }
     free(c->needsUpdate);
     free(c->needsUpdate2);
     free(c->links);

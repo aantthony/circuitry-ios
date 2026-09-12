@@ -6,7 +6,7 @@
     "The lowest bit toggles on every rising edge of C.",
     "Each higher bit toggles when the previous bit rolls over."
   ],
-  "license" : "Copyright",
+  "license" : "Apache-2.0",
   "view" : {
     "center" : [
       -250,

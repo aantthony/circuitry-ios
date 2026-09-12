@@ -6,7 +6,7 @@
     "Carry from the low bit into the high bit.",
     "A pair of half adders or full-adder logic will handle each bit position."
   ],
-  "license" : "Copyright",
+  "license" : "Apache-2.0",
   "view" : {
     "center" : [
       0,

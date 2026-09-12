@@ -6,7 +6,7 @@
     "Use NOR gates as NOT gates to create NOT A and NOT B.",
     "Combine those inverted inputs to make A AND B, then invert that result to get NAND."
   ],
-  "license" : "Copyright",
+  "license" : "Apache-2.0",
   "view" : {
     "center" : [
       -250,

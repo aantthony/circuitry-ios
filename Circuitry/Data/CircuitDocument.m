@@ -13,6 +13,7 @@
 
 @interface CircuitDocument() <NSURLSessionTaskDelegate>
 @property (nonatomic) NSData *originalScreenshotData;
+@property (nonatomic) BOOL needsScreenshotUpdate;
 @property (nonatomic) NSError *loadError;
 @end
 
@@ -42,7 +43,13 @@ static NSString *CircuitDocumentUnsupportedProcessType(NSArray *items) {
     _problemInfo = problemInfo;
 }
 - (instancetype) initWithFileURL:(NSURL *)url {
-    return [super initWithFileURL:url];
+    self = [super initWithFileURL:url];
+    if (self) {
+        // New documents do not have a screenshot until the editor has rendered
+        // one, even though their initial package has already been saved.
+        _needsScreenshotUpdate = YES;
+    }
+    return self;
 }
 - (BOOL)loadFromContents:(id)contents ofType:(NSString *)typeName error:(NSError **)outError {
     
@@ -92,6 +99,7 @@ static NSString *CircuitDocumentUnsupportedProcessType(NSArray *items) {
     }
     
     _originalScreenshotData = [files[screenshotPngPath] regularFileContents];
+    _needsScreenshotUpdate = _originalScreenshotData == nil;
      
     _circuit = [[Circuit alloc] initWithPackage:package items: items];
     if (!_circuit) {
@@ -129,7 +137,21 @@ static NSString *CircuitDocumentUnsupportedProcessType(NSArray *items) {
     } UIGraphicsEndImageContext();
 
     _screenshot = newImage;
-    
+    _needsScreenshotUpdate = NO;
+
+    // The screenshot is part of the document package. Mark it as a document
+    // change so close/autosave persists it even when circuit data was already
+    // autosaved before the screenshot was rendered.
+    [super updateChangeCount:UIDocumentChangeDone];
+}
+
+- (void)updateChangeCount:(UIDocumentChangeKind)change {
+    if (change == UIDocumentChangeDone ||
+        change == UIDocumentChangeUndone ||
+        change == UIDocumentChangeRedone) {
+        _needsScreenshotUpdate = YES;
+    }
+    [super updateChangeCount:change];
 }
 
 - (NSArray *) exportItems {

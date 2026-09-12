@@ -6,7 +6,7 @@
     "The low bit is A XOR B.",
     "The high bit is A AND B."
   ],
-  "license" : "Copyright",
+  "license" : "Apache-2.0",
   "view" : {
     "center" : [
       -250,

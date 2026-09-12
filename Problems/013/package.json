@@ -6,7 +6,7 @@
     "Make one branch for each pair of true inputs.",
     "OR the three pair branches together."
   ],
-  "license" : "Copyright",
+  "license" : "Apache-2.0",
   "view" : {
     "center" : [
       -150,

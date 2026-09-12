@@ -6,7 +6,7 @@
     "Each partial product bit is an AND of one bit from each input.",
     "Add the partial products to produce the displayed result."
   ],
-  "license" : "Copyright",
+  "license" : "Apache-2.0",
   "view" : {
     "center" : [
       0,

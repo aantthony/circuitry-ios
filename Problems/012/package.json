@@ -6,7 +6,7 @@
     "For each input, make a branch that requires that input to be true and the other two to be false.",
     "OR the three branches together."
   ],
-  "license" : "Copyright",
+  "license" : "Apache-2.0",
   "view" : {
     "center" : [
       -50,

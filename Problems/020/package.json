@@ -6,7 +6,7 @@
     "The output of each NOR gate feeds one input of the other NOR gate.",
     "S should set Q, and R should reset Q."
   ],
-  "license" : "Copyright",
+  "license" : "Apache-2.0",
   "view" : {
     "center" : [
       -200,

@@ -6,7 +6,7 @@
     "Use E to decide whether S and R are allowed through.",
     "When E is off, the latch should keep its previous state."
   ],
-  "license" : "Copyright",
+  "license" : "Apache-2.0",
   "view" : {
     "center" : [
       -200,

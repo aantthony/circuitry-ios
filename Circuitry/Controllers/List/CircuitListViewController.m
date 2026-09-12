@@ -165,7 +165,7 @@
     NSLog(@"Unsaved changes: %@", doc.hasUnsavedChanges ? @"YES" : @"NO");
     
     
-    if (doc.hasUnsavedChanges) {
+    if (!doc.isProblem && doc.needsScreenshotUpdate) {
         [doc useScreenshot: viewController.snapshot];
     }
     

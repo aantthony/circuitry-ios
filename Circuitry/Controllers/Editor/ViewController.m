@@ -145,7 +145,7 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 -(void)appWillResignActive:(NSNotification*)note {
     if (_document.isProblem) return;
     
-    if (_document.hasUnsavedChanges) {
+    if (_document.needsScreenshotUpdate) {
         [_document useScreenshot: self.snapshot];
         
         [_document savePresentedItemChangesWithCompletionHandler:^(NSError *errorOrNil) {

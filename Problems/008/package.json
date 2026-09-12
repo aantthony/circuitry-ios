@@ -6,7 +6,7 @@
     "Use NAND gates as NOT gates by wiring the same signal into both inputs.",
     "Invert A, invert B, then NAND those two inverted signals together."
   ],
-  "license" : "Copyright",
+  "license" : "Apache-2.0",
   "view" : {
     "center" : [
       -200,

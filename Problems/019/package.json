@@ -6,7 +6,7 @@
     "Use AND gates to create one shifted partial product for each multiplier bit.",
     "Add the shifted partial products together; the output may need up to eight bits."
   ],
-  "license" : "Copyright",
+  "license" : "Apache-2.0",
   "view" : {
     "center" : [
       0,

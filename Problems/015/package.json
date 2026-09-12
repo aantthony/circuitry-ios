@@ -6,7 +6,7 @@
     "First add A and B. Then add that sum to the carry input C.",
     "The final carry is true if either half-adder carry is true."
   ],
-  "license" : "Copyright",
+  "license" : "Apache-2.0",
   "view" : {
     "center" : [
       -200,

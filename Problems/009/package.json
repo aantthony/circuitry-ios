@@ -6,7 +6,7 @@
     "First compute A NAND B.",
     "Invert the NAND result using another NAND wired as a NOT gate."
   ],
-  "license" : "Copyright",
+  "license" : "Apache-2.0",
   "view" : {
     "center" : [
       -200,
