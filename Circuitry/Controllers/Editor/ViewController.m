@@ -44,6 +44,8 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 @property (nonatomic) NSMutableOrderedSet<NSString *> *duplicationSelection;
 @property (nonatomic) NSDictionary<NSString *, NSValue *> *selectionDragOrigins;
 @property (nonatomic) UIStackView *selectionControls;
+@property (nonatomic) NSLayoutConstraint *selectionBottomConstraint;
+@property (nonatomic) UIStackView *simulationControls;
 @property (nonatomic) UIButton *selectObjectsButton;
 @property (nonatomic) UIButton *duplicateObjectsButton;
 @property (nonatomic) CircuitScene *circuitScene;
@@ -154,6 +156,7 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     [self.simulationStepButton setTitle:@"Step clock" forState:UIControlStateNormal];
     [self.simulationStepButton addTarget:self action:@selector(stepClockFromControl:) forControlEvents:UIControlEventTouchUpInside];
     UIStackView *controls = [[UIStackView alloc] initWithArrangedSubviews:@[self.simulationPauseButton, self.simulationStepButton]];
+    self.simulationControls = controls;
     controls.translatesAutoresizingMaskIntoConstraints = NO;
     controls.spacing = 12;
     controls.layoutMarginsRelativeArrangement = YES;
@@ -302,13 +305,15 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     self.selectionControls.spacing = 8.0;
     self.selectionControls.layoutMargins = UIEdgeInsetsMake(4, 10, 4, 10);
     self.selectionControls.layoutMarginsRelativeArrangement = YES;
-    self.selectionControls.backgroundColor = UIColor.secondarySystemBackgroundColor;
+    self.selectionControls.backgroundColor = [UIColor colorWithWhite:0.1 alpha:0.9];
+    self.selectionControls.tintColor = UIColor.whiteColor;
     self.selectionControls.layer.cornerRadius = 12.0;
     self.selectionControls.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:self.selectionControls];
+    self.selectionBottomConstraint = [self.selectionControls.bottomAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.bottomAnchor constant:-12];
     [NSLayoutConstraint activateConstraints:@[
         [self.selectionControls.leadingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.leadingAnchor constant:12],
-        [self.selectionControls.bottomAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.bottomAnchor constant:-12],
+        self.selectionBottomConstraint,
         [self.selectObjectsButton.heightAnchor constraintGreaterThanOrEqualToConstant:44],
         [self.duplicateObjectsButton.heightAnchor constraintGreaterThanOrEqualToConstant:44]
     ]];
@@ -323,6 +328,7 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     self.duplicateObjectsButton.enabled = self.duplicationSelection.count > 0;
     [self.duplicateObjectsButton setTitle:[NSString stringWithFormat:@"Duplicate (%lu)", (unsigned long)self.duplicationSelection.count] forState:UIControlStateNormal];
     self.viewport.selectedObjectIDs = [NSSet setWithArray:self.duplicationSelection.array ?: @[]];
+    [self.view setNeedsLayout];
     [self unpause];
 }
 
@@ -338,7 +344,7 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 - (void)duplicateObjectSelection:(id)sender {
     if (self.document.isProblem || !self.selectingObjects || !self.duplicationSelection.count) return;
     // A screen-relative offset keeps the copies nearby at every zoom level.
-    CGFloat offset = round((60.0 / MAX(self.viewport.zoomScale, 0.001)) / 33.0) * 33.0;
+    CGFloat offset = MAX(33.0, round((60.0 / MAX(self.viewport.zoomScale, 0.001)) / 33.0) * 33.0);
     NSArray *copies = [self.document duplicateObjectsWithIDs:self.duplicationSelection.array offset:CGVectorMake(offset, offset)];
     self.duplicationSelection = [NSMutableOrderedSet orderedSetWithArray:copies];
     [self refreshSelectionControls];
@@ -354,6 +360,10 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
+    CGFloat availableWidth = CGRectGetWidth(self.view.safeAreaLayoutGuide.layoutFrame);
+    CGSize selectionSize = [self.selectionControls systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+    CGSize simulationSize = [self.simulationControls systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+    self.selectionBottomConstraint.constant = availableWidth < selectionSize.width + simulationSize.width + 36 ? -68 : -12;
 
     CircuitCanvasView *canvasView = (CircuitCanvasView *)self.view;
     CGSize viewSize = canvasView.bounds.size;
