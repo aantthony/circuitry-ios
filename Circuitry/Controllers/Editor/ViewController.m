@@ -358,6 +358,10 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     for (UIView *view = touch.view; view && view != self.view; view = view.superview) {
         if ([view isKindOfClass:UIControl.class]) return NO;
+    }
+    return YES;
+}
+
 - (void)configureHistoryControls {
     self.undoButton = [UIButton buttonWithType:UIButtonTypeSystem];
     self.redoButton = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -414,7 +418,7 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 }
 
 - (BOOL)canPerformCircuitHistory {
-    if (self.document.circuitEditInProgress || self.presentedViewController) return NO;
+    if (!self.view.userInteractionEnabled || self.document.circuitEditInProgress || self.presentedViewController) return NO;
     for (UIGestureRecognizer *gesture in self.view.gestureRecognizers) {
         if (gesture.state == UIGestureRecognizerStateBegan || gesture.state == UIGestureRecognizerStateChanged) return NO;
     }

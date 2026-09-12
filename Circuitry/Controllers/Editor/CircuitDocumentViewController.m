@@ -42,6 +42,7 @@
 @property (nonatomic) CircuitTestResult *testResult;
 @property (nonatomic) NSDictionary *inspectionPreviousState;
 @property (nonatomic) BOOL inspectionWasPaused;
+@property (nonatomic) BOOL inspectionEditorWasInteractive;
 @property (nonatomic) CGPoint inspectionPreviousTranslation;
 @property (nonatomic) CGFloat inspectionPreviousZoom;
 @property (nonatomic) BOOL inspectionObjectListHidden;
@@ -759,6 +760,8 @@ static CGPoint hvrDragHereRight = {88,428};
     [viewController dismissViewControllerAnimated:YES completion:^{
         self.inspectionPreviousState = [self.document.circuit captureSimulationState];
         self.inspectionWasPaused = self.editorViewController.simulationPaused;
+        self.inspectionEditorWasInteractive = self.editorViewController.view.userInteractionEnabled;
+        self.editorViewController.view.userInteractionEnabled = NO;
         self.inspectionPreviousTranslation = self.editorViewController.viewport.translation;
         self.inspectionPreviousZoom = self.editorViewController.viewport.zoomScale;
         self.inspectionObjectListHidden = self.objectListView.hidden;
@@ -896,6 +899,7 @@ static CGPoint hvrDragHereRight = {88,428};
     self.inspectionHighlights = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
     [self.editorViewController.viewport setSceneContentNeedsUpdate];
+    self.editorViewController.view.userInteractionEnabled = self.inspectionEditorWasInteractive;
     self.editorViewController.simulationPaused = self.inspectionWasPaused;
     [self.editorViewController.viewport updateSceneForViewSize:self.editorViewController.view.bounds.size allowContentRebuild:YES];
 }
