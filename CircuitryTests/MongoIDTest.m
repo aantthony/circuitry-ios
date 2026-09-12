@@ -34,6 +34,27 @@
 
 @implementation MongoIDTest
 
+- (void)testCircuitUndoPreservesExactPendingSimulationWork {
+    for (NSNumber *settled in @[@NO, @YES]) {
+        CircuitDocument *document = [[CircuitDocument alloc] initWithFileURL:[NSURL fileURLWithPath:@"/tmp/undo-state-test.circuit"]];
+        document.circuit = [[Circuit alloc] initWithPackage:@{} items:@[]];
+        [document.circuit performWriteBlock:^(CircuitInternal *internal) {
+            CircuitObject *object = CircuitObjectCreate(internal, &CircuitProcessD);
+            object->id = [MongoID id];
+        }];
+        if (settled.boolValue) [document.circuit simulate:512];
+        NSDictionary *original = [document.circuit captureSimulationState];
+        [document beginCircuitEdit:@"Rename"];
+        document.circuit.title = @"Renamed";
+        [document finishCircuitEdit];
+        [document.editorUndoManager undo];
+        XCTAssertEqualObjects([document.circuit captureSimulationState], original);
+        [document.editorUndoManager redo];
+        XCTAssertEqualObjects([document.circuit captureSimulationState], original);
+        if (settled.boolValue) XCTAssertEqual([document.circuit simulate:512], 0);
+    }
+}
+
 - (void)testCircuitUndoRestoresDeletedComponentWiringAndNotes {
     CircuitDocument *document = [[CircuitDocument alloc] initWithFileURL:[NSURL fileURLWithPath:@"/tmp/undo-test.circuit"]];
     document.circuit = [[Circuit alloc] initWithPackage:@{ @"title": @"Undo test", @"hints": @[@"Keep me"] } items:@[]];

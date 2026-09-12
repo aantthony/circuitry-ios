@@ -54,16 +54,10 @@ static NSString *CircuitDocumentUnsupportedProcessType(NSArray *items) {
 }
 
 - (NSDictionary *)circuitEditSnapshot {
-    NSMutableArray *items = [NSMutableArray array];
-    for (NSDictionary *item in [self exportItems]) {
-        NSMutableDictionary *copy = [item mutableCopy];
-        CircuitObject *object = [self.circuit findObjectById:item[@"_id"]];
-        copy[@"data"] = @(object->data);
-        [items addObject:copy];
-    }
     NSMutableArray *notes = [NSMutableArray array];
     for (CircuitNote *note in self.circuit.notes) [notes addObject:note.dictionaryRepresentation];
-    return @{ @"items": items, @"notes": notes, @"title": self.circuit.title ?: @"" };
+    return @{ @"items": [self exportItems], @"notes": notes, @"title": self.circuit.title ?: @"",
+              @"simulation": [self.circuit captureSimulationState] };
 }
 
 - (NSDictionary *)structureOfSnapshot:(NSDictionary *)snapshot {
@@ -111,12 +105,9 @@ static NSString *CircuitDocumentUnsupportedProcessType(NSArray *items) {
     Circuit *restored = [[Circuit alloc] initWithPackage:package items:snapshot[@"items"]];
     if (!restored) return;
     restored.hints = self.circuit.hints;
-    for (NSDictionary *item in snapshot[@"items"]) {
-        CircuitObject *object = [restored findObjectById:item[@"_id"]];
-        object->in = [item[@"in"] intValue];
-        object->out = [item[@"out"] intValue];
-        object->data = [item[@"data"] unsignedIntValue];
-    }
+    // Loading builds an initial propagation queue. Restore the original queue as
+    // well as signal values so undo does not introduce extra sequential edges.
+    [restored restoreSimulationState:snapshot[@"simulation"]];
     [[self.editorUndoManager prepareWithInvocationTarget:self] restoreCircuitEditSnapshot:inverse actionName:name];
     [self.editorUndoManager setActionName:name];
     self.circuit = restored;

@@ -1152,7 +1152,7 @@ static CGFloat gridSize = 33.0;
         _beginDragNote = nil;
         _beginResizeNote = nil;
         return;
-    } else if ([sender numberOfTouches] != 1) {
+    } else if (sender.state == UIGestureRecognizerStateCancelled || sender.state == UIGestureRecognizerStateFailed || [sender numberOfTouches] != 1) {
         sender.enabled = NO;
         sender.enabled = YES;
         [self finishCircuitEdit];
