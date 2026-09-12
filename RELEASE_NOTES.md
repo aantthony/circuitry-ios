@@ -1,3 +1,8 @@
+# Next release (draft)
+
+- Personalize buttons and LEDs in your own circuits: long-press a component and choose Edit Label to add or change its short label.
+- Display multi-character labels on components, including labels on momentary button caps.
+
 # Version 2.1 (build 304) release notes
 
 - Build your own one-bit ALU in a new challenge covering AND, OR, XOR, and addition, with guided hints and carry handling.
