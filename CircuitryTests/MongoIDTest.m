@@ -34,6 +34,76 @@
 
 @implementation MongoIDTest
 
+- (void)testCircuitUndoRestoresDeletedComponentWiringAndNotes {
+    CircuitDocument *document = [[CircuitDocument alloc] initWithFileURL:[NSURL fileURLWithPath:@"/tmp/undo-test.circuit"]];
+    document.circuit = [[Circuit alloc] initWithPackage:@{ @"title": @"Undo test", @"hints": @[@"Keep me"] } items:@[]];
+    __block NSString *sourceID;
+    __block NSString *targetID;
+    [document beginCircuitEdit:@"Build Circuit"];
+    [document.circuit performWriteBlock:^(CircuitInternal *internal) {
+        CircuitObject *source = CircuitObjectCreate(internal, &CircuitProcessButton);
+        source->id = [MongoID id];
+        sourceID = [MongoID stringWithId:source->id];
+        source->pos.x = 99;
+        strlcpy(source->name, "CLK", sizeof(source->name));
+        CircuitObject *target = CircuitObjectCreate(internal, &CircuitProcessLight);
+        target->id = [MongoID id];
+        targetID = [MongoID stringWithId:target->id];
+        CircuitLinkCreate(internal, source, 0, target, 0);
+    }];
+    [document.circuit.notes addObject:[[CircuitNote alloc] initWithDictionary:@{ @"text": @"Wired", @"rect": @[@0, @0, @200, @100] }]];
+    [document finishCircuitEdit];
+    [document beginCircuitEdit:@"Delete"];
+    [document.circuit performWriteBlock:^(CircuitInternal *internal) {
+        CircuitObjectRemove(internal, [document.circuit findObjectById:sourceID]);
+    }];
+    [document.circuit.notes removeAllObjects];
+    [document finishCircuitEdit];
+    [document.editorUndoManager undo];
+    CircuitObject *restored = [document.circuit findObjectById:sourceID];
+    XCTAssertNotEqual(restored, NULL);
+    XCTAssertEqual(restored->pos.x, 99);
+    XCTAssertEqualObjects([NSString stringWithUTF8String:restored->name], @"CLK");
+    XCTAssertEqual(restored->outputs[0]->target, [document.circuit findObjectById:targetID]);
+    XCTAssertEqualObjects(document.circuit.notes.firstObject.text, @"Wired");
+    XCTAssertEqualObjects(document.circuit.hints, @[@"Keep me"]);
+    [document.editorUndoManager redo];
+    XCTAssertEqual([document.circuit findObjectById:sourceID], NULL);
+    XCTAssertEqual(document.circuit.notes.count, 0u);
+    [document.editorUndoManager undo];
+    [document.editorUndoManager undo];
+    XCTAssertEqual([document.circuit findObjectById:targetID], NULL);
+    XCTAssertFalse(document.editorUndoManager.canUndo);
+}
+
+- (void)testCircuitUndoGroupsDragsIgnoresSimulationAndClearsRedoOnNewEdit {
+    CircuitDocument *document = [[CircuitDocument alloc] initWithFileURL:[NSURL fileURLWithPath:@"/tmp/undo-drag-test.circuit"]];
+    document.circuit = [[Circuit alloc] initWithPackage:@{} items:@[]];
+    __block NSString *objectID;
+    [document.circuit performWriteBlock:^(CircuitInternal *internal) {
+        CircuitObject *object = CircuitObjectCreate(internal, &CircuitProcessClock);
+        object->id = [MongoID id];
+        objectID = [MongoID stringWithId:object->id];
+    }];
+    [document beginCircuitEdit:@"No Movement"];
+    [document.circuit findObjectById:objectID]->out = 1;
+    [document finishCircuitEdit];
+    XCTAssertFalse(document.editorUndoManager.canUndo);
+    [document beginCircuitEdit:@"Move"];
+    for (int i = 0; i < 100; i++) [document.circuit findObjectById:objectID]->pos.x = i;
+    [document finishCircuitEdit];
+    [document.editorUndoManager undo];
+    XCTAssertEqual([document.circuit findObjectById:objectID]->pos.x, 0);
+    XCTAssertFalse(document.editorUndoManager.canUndo);
+    XCTAssertTrue(document.editorUndoManager.canRedo);
+    [document beginCircuitEdit:@"Rename"];
+    document.circuit.title = @"New branch";
+    [document finishCircuitEdit];
+    XCTAssertFalse(document.editorUndoManager.canRedo);
+    [document.editorUndoManager undo];
+    XCTAssertEqualObjects(document.circuit.title, @"");
+}
+
 - (void)setUp
 {
     [super setUp];

@@ -48,6 +48,8 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 @property (nonatomic) UIStackView *simulationControls;
 @property (nonatomic) UIButton *selectObjectsButton;
 @property (nonatomic) UIButton *duplicateObjectsButton;
+@property (nonatomic) UIButton *undoButton;
+@property (nonatomic) UIButton *redoButton;
 @property (nonatomic) CircuitScene *circuitScene;
 @property (nonatomic) NSTimeInterval timeSinceLastUpdate;
 @property (nonatomic) NSTimeInterval clockTickAccumulator;
@@ -178,6 +180,7 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     self.selectingObjects = NO;
     self.duplicationSelection = [NSMutableOrderedSet orderedSet];
     [self refreshSelectionControls];
+    [self updateHistoryControls];
     _viewport.document = _document;
     _canPan = YES;
     _canZoom = YES;
@@ -287,6 +290,7 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     
     [self installSelectionControls];
     [self configureSimulationControls];
+    [self configureHistoryControls];
     self.document = _document;
     if (self.isTutorial) {
         [self configureTutorialGatesToPosition];
@@ -354,8 +358,82 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     for (UIView *view = touch.view; view && view != self.view; view = view.superview) {
         if ([view isKindOfClass:UIControl.class]) return NO;
+- (void)configureHistoryControls {
+    self.undoButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.redoButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [self.undoButton setTitle:@"Undo" forState:UIControlStateNormal];
+    [self.redoButton setTitle:@"Redo" forState:UIControlStateNormal];
+    self.undoButton.accessibilityIdentifier = @"circuit.undo";
+    self.redoButton.accessibilityIdentifier = @"circuit.redo";
+    [self.undoButton addTarget:self action:@selector(undoCircuitEdit:) forControlEvents:UIControlEventTouchUpInside];
+    [self.redoButton addTarget:self action:@selector(redoCircuitEdit:) forControlEvents:UIControlEventTouchUpInside];
+    UIStackView *controls = [[UIStackView alloc] initWithArrangedSubviews:@[self.undoButton, self.redoButton]];
+    controls.spacing = 16;
+    controls.layoutMargins = UIEdgeInsetsMake(0, 12, 0, 12);
+    controls.layoutMarginsRelativeArrangement = YES;
+    controls.backgroundColor = [UIColor colorWithWhite:0.1 alpha:0.9];
+    controls.layer.cornerRadius = 10;
+    controls.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addSubview:controls];
+    [NSLayoutConstraint activateConstraints:@[
+        [controls.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor constant:8],
+        [controls.trailingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.trailingAnchor constant:-12],
+        [controls.heightAnchor constraintEqualToConstant:44]
+    ]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(historyDidChange:) name:CircuitDocumentHistoryDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(circuitDidRestore:) name:CircuitDocumentCircuitDidRestoreNotification object:nil];
+    [self updateHistoryControls];
+}
+
+- (void)historyDidChange:(NSNotification *)notification {
+    if (notification.object == self.document) [self updateHistoryControls];
+}
+
+- (void)updateHistoryControls {
+    BOOL available = self.document && !self.document.circuitEditInProgress;
+    self.undoButton.enabled = available && self.document.editorUndoManager.canUndo;
+    self.redoButton.enabled = available && self.document.editorUndoManager.canRedo;
+    self.undoButton.accessibilityHint = self.document.editorUndoManager.undoActionName;
+    self.redoButton.accessibilityHint = self.document.editorUndoManager.redoActionName;
+}
+
+- (void)circuitDidRestore:(NSNotification *)notification {
+    if (notification.object != self.document) return;
+    _beginLongPressGestureObject = NULL;
+    _holdDownGestureObject = NULL;
+    _beginDragNote = nil;
+    _beginResizeNote = nil;
+    self.selectedObjects = nil;
+    self.selectionDragOrigins = nil;
+    [self.duplicationSelection removeAllObjects];
+    [self refreshSelectionControls];
+    self.viewport.currentEditingLink = NULL;
+    self.viewport.currentEditingLinkSource = NULL;
+    self.viewport.currentEditingLinkTarget = NULL;
+    [self unpause];
+}
+
+- (BOOL)canPerformCircuitHistory {
+    if (self.document.circuitEditInProgress || self.presentedViewController) return NO;
+    for (UIGestureRecognizer *gesture in self.view.gestureRecognizers) {
+        if (gesture.state == UIGestureRecognizerStateBegan || gesture.state == UIGestureRecognizerStateChanged) return NO;
     }
     return YES;
+}
+
+- (void)undoCircuitEdit:(id)sender {
+    if ([self canPerformCircuitHistory]) [self.document.editorUndoManager undo];
+}
+
+- (void)redoCircuitEdit:(id)sender {
+    if ([self canPerformCircuitHistory]) [self.document.editorUndoManager redo];
+}
+
+- (NSArray<UIKeyCommand *> *)keyCommands {
+    return @[
+        [UIKeyCommand keyCommandWithInput:@"z" modifierFlags:UIKeyModifierCommand action:@selector(undoCircuitEdit:)],
+        [UIKeyCommand keyCommandWithInput:@"z" modifierFlags:UIKeyModifierCommand | UIKeyModifierShift action:@selector(redoCircuitEdit:)]
+    ];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -660,6 +738,7 @@ static CGFloat gridSize = 33.0;
 }
 
 - (void) startCreatingObjectFromItem: (ToolbeltItem *) item {
+    [self.document beginCircuitEdit:@"Add Component"];
     if ([item.type isEqualToString:@"note"]) {
         CGPoint center = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
         center.x += (CGFloat)arc4random_uniform(121) - 60.0;
@@ -670,7 +749,7 @@ static CGFloat gridSize = 33.0;
             @"rect": @[@(worldCenter.x - 210.0), @(worldCenter.y - 110.0), @420.0, @220.0]
         }];
         [self.document.circuit.notes addObject:note];
-        [self updateChangeCount:UIDocumentChangeDone];
+        [self finishCircuitEdit];
         [self unpause];
         return;
     }
@@ -695,6 +774,7 @@ static CGFloat gridSize = 33.0;
         self.beginLongPressGestureObject = o;
     }];
     
+    [self finishCircuitEdit];
     [self unpause];
 
 }
@@ -853,15 +933,17 @@ static CGFloat gridSize = 33.0;
                 }];
                 [edit addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
                 [edit addAction:[UIAlertAction actionWithTitle:@"Save" style:UIAlertActionStyleDefault handler:^(UIAlertAction *saveAction) {
+                    [self.document beginCircuitEdit:@"Edit Note"];
                     note.text = edit.textFields.firstObject.text ?: @"";
-                    [self updateChangeCount:UIDocumentChangeDone];
+                    [self finishCircuitEdit];
                     [self unpause];
                 }]];
                 [self presentViewController:edit animated:YES completion:nil];
             }]];
             [actionSheet addAction:[UIAlertAction actionWithTitle:@"Remove" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+                [self.document beginCircuitEdit:@"Remove Note"];
                 [self.document.circuit.notes removeObject:note];
-                [self updateChangeCount:UIDocumentChangeDone];
+                [self finishCircuitEdit];
                 [self unpause];
             }]];
             [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
@@ -908,16 +990,18 @@ static CGFloat gridSize = 33.0;
                         safeEnd = end;
                     }];
                     NSString *label = [text substringToIndex:safeEnd];
+                    [self.document beginCircuitEdit:@"Edit Label"];
                     [self->_document.circuit performWriteBlock:^(CircuitInternal *internal) {
                         strlcpy(object->name, label.UTF8String ?: "", sizeof(object->name));
                     }];
-                    [self updateChangeCount:UIDocumentChangeDone];
+                    [self finishCircuitEdit];
                     [self unpause];
                 }]];
                 [self presentViewController:edit animated:YES completion:nil];
             }]];
         }
         [actionSheet addAction:[UIAlertAction actionWithTitle:@"Remove" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+            [self.document beginCircuitEdit:@"Remove Component"];
             __block NSString *failureMessage = nil;
 
             [self->_document.circuit performWriteBlock:^(CircuitInternal *internal) {
@@ -935,19 +1019,26 @@ static CGFloat gridSize = 33.0;
                     [self unpause];
                 }
             }];
+            [self finishCircuitEdit];
             if (failureMessage) {
                 UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:failureMessage preferredStyle:UIAlertControllerStyleAlert];
                 [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
                 [self presentViewController:alert animated:YES completion:nil];
                 return;
             }
-            [self updateChangeCount:UIDocumentChangeDone];
         }]];
         [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
         actionSheet.popoverPresentationController.sourceView = self.view;
         actionSheet.popoverPresentationController.sourceRect = rect;
         [self presentViewController:actionSheet animated:YES completion:nil];
     }
+}
+
+- (void)finishCircuitEdit {
+    if (!self.document.isProblem) {
+        [self.document.circuit setViewCenterX:_viewport.translation.x viewCenterY:_viewport.translation.y];
+    }
+    [self.document finishCircuitEdit];
 }
 
 - (void) updateChangeCount:(UIDocumentChangeKind)change {
@@ -1010,6 +1101,9 @@ static CGFloat gridSize = 33.0;
     }
     
     CircuitObject *object = _beginLongPressGestureObject;
+    if (sender.state == UIGestureRecognizerStateBegan) {
+        [self.document beginCircuitEdit:self.selectingObjects ? @"Move Selection" : (_beginResizeNote ? @"Resize Note" : @"Move Component")];
+    }
     if (self.selectingObjects && object) {
         if (sender.state == UIGestureRecognizerStateBegan) {
             NSMutableDictionary *origins = [NSMutableDictionary dictionary];
@@ -1031,7 +1125,7 @@ static CGFloat gridSize = 33.0;
             selected->pos.y = origin.y + (ended ? round(dy / gridSize) * gridSize : dy);
         }
         if (ended || sender.state == UIGestureRecognizerStateCancelled || sender.state == UIGestureRecognizerStateFailed) {
-            [self updateChangeCount:UIDocumentChangeDone];
+            [self finishCircuitEdit];
             self.selectionDragOrigins = nil;
             self.beginLongPressGestureObject = NULL;
         }
@@ -1045,10 +1139,10 @@ static CGFloat gridSize = 33.0;
         }];
     }
     if (sender.state == UIGestureRecognizerStateEnded) {
-        [self updateChangeCount:UIDocumentChangeDone];
         if (_beginLongPressGestureObject && !self.document.isProblem) {
             [self snapObjectToGrid:_beginLongPressGestureObject];
         }
+        [self finishCircuitEdit];
         [self unpause];
         _beginLongPressGestureObject = NULL;
         _beginDragNote = nil;
@@ -1057,7 +1151,7 @@ static CGFloat gridSize = 33.0;
     } else if ([sender numberOfTouches] != 1) {
         sender.enabled = NO;
         sender.enabled = YES;
-        [self updateChangeCount:UIDocumentChangeDone];
+        [self finishCircuitEdit];
         [self unpause];
         _beginLongPressGestureObject = NULL;
         _beginDragNote = nil;
@@ -1098,13 +1192,14 @@ static CGFloat gridSize = 33.0;
 
 - (IBAction)handleCreateLinkGesture:(UILongPressGestureRecognizer *)sender {
     Circuit *_circuit = _document.circuit;
-    if (sender.state == UIGestureRecognizerStateEnded || sender.state == UIGestureRecognizerStateCancelled) {
+    if (sender.state == UIGestureRecognizerStateBegan) [self.document beginCircuitEdit:@"Edit Wire"];
+    if (sender.state == UIGestureRecognizerStateEnded || sender.state == UIGestureRecognizerStateCancelled || sender.state == UIGestureRecognizerStateFailed) {
         // If there is no active gate in creation, then just cancel.
         _viewport.currentEditingLinkSource = NULL;
         _viewport.currentEditingLinkTarget = NULL;
+        _viewport.currentEditingLink = NULL;
+        [self finishCircuitEdit];
         [self unpause];
-
-        [self updateChangeCount:UIDocumentChangeDone];
         
         return;
     }
@@ -1267,9 +1362,14 @@ static CGFloat gridSize = 33.0;
                     if (object->out != 0) return;
                     CircuitObjectSetOutput(internal, object, 1);
                 }];
+                Circuit *pressedCircuit = self.document.circuit;
+                NSString *pressedID = [MongoID stringWithId:object->id];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [self.document.circuit performWriteBlock:^(CircuitInternal *internal) {
-                        CircuitObjectSetOutput(internal, object, 0);
+                    if (self.document.circuit != pressedCircuit) return;
+                    CircuitObject *pressedObject = [pressedCircuit findObjectById:pressedID];
+                    if (!pressedObject) return;
+                    [pressedCircuit performWriteBlock:^(CircuitInternal *internal) {
+                        CircuitObjectSetOutput(internal, pressedObject, 0);
                     }];
                     [self updateChangeCount:UIDocumentChangeDone];
                     [self unpause];

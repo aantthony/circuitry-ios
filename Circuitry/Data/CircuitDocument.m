@@ -13,9 +13,15 @@
 
 @interface CircuitDocument() <NSURLSessionTaskDelegate>
 @property (nonatomic) NSData *originalScreenshotData;
+@property (nonatomic) NSUndoManager *editorUndoManager;
+@property (nonatomic) NSDictionary *pendingEditSnapshot;
+@property (nonatomic) NSString *pendingEditName;
 @property (nonatomic) BOOL needsScreenshotUpdate;
 @property (nonatomic) NSError *loadError;
 @end
+
+NSString * const CircuitDocumentHistoryDidChangeNotification = @"CircuitDocumentHistoryDidChangeNotification";
+NSString * const CircuitDocumentCircuitDidRestoreNotification = @"CircuitDocumentCircuitDidRestoreNotification";
 
 static NSString *screenshotPngPath = @"screenshot.png";
 static NSString *CircuitDocumentErrorDomain = @"CircuitDocumentErrorDomain";
@@ -38,6 +44,89 @@ static NSString *CircuitDocumentUnsupportedProcessType(NSArray *items) {
 }
 
 @implementation CircuitDocument
+- (NSUndoManager *)editorUndoManager {
+    if (!_editorUndoManager) {
+        _editorUndoManager = [[NSUndoManager alloc] init];
+        _editorUndoManager.groupsByEvent = NO;
+        _editorUndoManager.levelsOfUndo = 100;
+    }
+    return _editorUndoManager;
+}
+
+- (NSDictionary *)circuitEditSnapshot {
+    NSMutableArray *items = [NSMutableArray array];
+    for (NSDictionary *item in [self exportItems]) {
+        NSMutableDictionary *copy = [item mutableCopy];
+        CircuitObject *object = [self.circuit findObjectById:item[@"_id"]];
+        copy[@"data"] = @(object->data);
+        [items addObject:copy];
+    }
+    NSMutableArray *notes = [NSMutableArray array];
+    for (CircuitNote *note in self.circuit.notes) [notes addObject:note.dictionaryRepresentation];
+    return @{ @"items": items, @"notes": notes, @"title": self.circuit.title ?: @"" };
+}
+
+- (NSDictionary *)structureOfSnapshot:(NSDictionary *)snapshot {
+    NSMutableArray *items = [NSMutableArray array];
+    for (NSDictionary *item in snapshot[@"items"]) {
+        NSMutableDictionary *copy = [item mutableCopy];
+        // Simulation runs during gestures; clock transitions must not create edits.
+        [copy removeObjectsForKeys:@[@"in", @"out", @"data"]];
+        [items addObject:copy];
+    }
+    return @{ @"items": items, @"notes": snapshot[@"notes"], @"title": snapshot[@"title"] };
+}
+
+- (BOOL)circuitEditInProgress { return self.pendingEditSnapshot != nil; }
+
+- (void)beginCircuitEdit:(NSString *)actionName {
+    if (self.pendingEditSnapshot) return;
+    self.pendingEditSnapshot = [self circuitEditSnapshot];
+    self.pendingEditName = actionName;
+    [[NSNotificationCenter defaultCenter] postNotificationName:CircuitDocumentHistoryDidChangeNotification object:self];
+}
+
+- (void)finishCircuitEdit {
+    NSDictionary *before = self.pendingEditSnapshot;
+    if (!before) return;
+    NSString *name = self.pendingEditName;
+    self.pendingEditSnapshot = nil;
+    self.pendingEditName = nil;
+    NSDictionary *after = [self circuitEditSnapshot];
+    if (![[self structureOfSnapshot:before] isEqual:[self structureOfSnapshot:after]]) {
+        [self.editorUndoManager beginUndoGrouping];
+        [[self.editorUndoManager prepareWithInvocationTarget:self] restoreCircuitEditSnapshot:before actionName:name];
+        [self.editorUndoManager setActionName:name];
+        [self.editorUndoManager endUndoGrouping];
+        if (!self.isProblem) [self updateChangeCount:UIDocumentChangeDone];
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:CircuitDocumentHistoryDidChangeNotification object:self];
+}
+
+- (void)restoreCircuitEditSnapshot:(NSDictionary *)snapshot actionName:(NSString *)name {
+    NSDictionary *inverse = [self circuitEditSnapshot];
+    NSMutableDictionary *package = [[self exportPackageDictionaryWithoutItems] mutableCopy];
+    package[@"notes"] = snapshot[@"notes"];
+    package[@"title"] = snapshot[@"title"];
+    Circuit *restored = [[Circuit alloc] initWithPackage:package items:snapshot[@"items"]];
+    if (!restored) return;
+    restored.hints = self.circuit.hints;
+    for (NSDictionary *item in snapshot[@"items"]) {
+        CircuitObject *object = [restored findObjectById:item[@"_id"]];
+        object->in = [item[@"in"] intValue];
+        object->out = [item[@"out"] intValue];
+        object->data = [item[@"data"] unsignedIntValue];
+    }
+    [[self.editorUndoManager prepareWithInvocationTarget:self] restoreCircuitEditSnapshot:inverse actionName:name];
+    [self.editorUndoManager setActionName:name];
+    self.circuit = restored;
+    if (!self.isProblem) {
+        [self updateChangeCount:self.editorUndoManager.isUndoing ? UIDocumentChangeUndone : UIDocumentChangeRedone];
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:CircuitDocumentCircuitDidRestoreNotification object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:CircuitDocumentHistoryDidChangeNotification object:self];
+}
+
 - (void) setProblemInfo:(ProblemSetProblemInfo *)problemInfo {
     _isProblem = problemInfo != nil;
     _problemInfo = problemInfo;

@@ -141,6 +141,7 @@
 }
 
 - (BOOL) textFieldShouldReturn:(UITextField *)textField {
+    [self.document beginCircuitEdit:@"Rename Circuit"];
     if (textField.text.length) {
         _document.circuit.title = textField.text;
         if ([[textField.text lowercaseString] isEqualToString:@"unlock1234"]) {
@@ -151,7 +152,7 @@
             [self showAlertWithTitle:@"Unlock" message:@"All problems are now reset."];
         }
     }
-    [_document updateChangeCount:UIDocumentChangeDone];
+    [self.document finishCircuitEdit];
     [self configureTitleView];
     
     [self.view removeGestureRecognizer:_tapToDismissKeyboard];
@@ -182,10 +183,15 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(circuitTitleDidRestore:) name:CircuitDocumentCircuitDidRestoreNotification object:nil];
     _objectListViewController.document = _document;
     _editorViewController.document = _document;
     [self configureView];
     [self configureTitleView];
+}
+
+- (void)circuitTitleDidRestore:(NSNotification *)notification {
+    if (notification.object == self.document) [self configureTitleView];
 }
 
 static CGPoint hvrTapAndHoldLeft = {225, 611};

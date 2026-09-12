@@ -8,6 +8,9 @@
 
 #import "Circuit.h"
 @class ProblemSetProblemInfo;
+extern NSString * const CircuitDocumentHistoryDidChangeNotification;
+extern NSString * const CircuitDocumentCircuitDidRestoreNotification;
+
 @interface CircuitDocument : UIDocument
 @property (nonatomic) Circuit *circuit;
 @property (nonatomic, readonly) BOOL isProblem;
@@ -16,5 +19,11 @@
 @property (nonatomic, readonly) BOOL needsScreenshotUpdate;
 @property (nonatomic, readonly) NSError *loadError;
 - (NSArray<NSString *> *)duplicateObjectsWithIDs:(NSArray<NSString *> *)objectIDs offset:(CGVector)offset;
+// Explicit transactions group an entire drag or compound edit into one undo step.
+@property (nonatomic, readonly) NSUndoManager *editorUndoManager;
+@property (nonatomic, readonly) BOOL circuitEditInProgress;
+- (void)beginCircuitEdit:(NSString *)actionName;
+- (void)finishCircuitEdit;
+
 - (void) useScreenshot:(UIImage *)image;
 @end
