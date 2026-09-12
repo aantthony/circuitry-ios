@@ -42,6 +42,11 @@
 @property (nonatomic) CircuitTestResult *testResult;
 @property (nonatomic) NSDictionary *inspectionPreviousState;
 @property (nonatomic) BOOL inspectionWasPaused;
+@property (nonatomic) CGPoint inspectionPreviousTranslation;
+@property (nonatomic) CGFloat inspectionPreviousZoom;
+@property (nonatomic) BOOL inspectionObjectListHidden;
+@property (nonatomic) BOOL inspectionProblemInfoHidden;
+@property (nonatomic) UIView *inspectionBanner;
 @property (nonatomic) BOOL inspectionHidBackButton;
 @property (nonatomic) NSDictionary<NSString *, UIView *> *inspectionHighlights;
 @property (nonatomic) UIView *inspectionOverlay;
@@ -754,6 +759,12 @@ static CGPoint hvrDragHereRight = {88,428};
     [viewController dismissViewControllerAnimated:YES completion:^{
         self.inspectionPreviousState = [self.document.circuit captureSimulationState];
         self.inspectionWasPaused = self.editorViewController.simulationPaused;
+        self.inspectionPreviousTranslation = self.editorViewController.viewport.translation;
+        self.inspectionPreviousZoom = self.editorViewController.viewport.zoomScale;
+        self.inspectionObjectListHidden = self.objectListView.hidden;
+        self.inspectionProblemInfoHidden = self.problemInfoView.hidden;
+        self.objectListView.hidden = YES;
+        self.problemInfoView.hidden = YES;
         self.editorViewController.simulationPaused = YES;
         [self.document.circuit restoreSimulationState:check.simulationState];
         [self.editorViewController.viewport setSceneContentNeedsUpdate];
@@ -798,8 +809,12 @@ static CGPoint hvrDragHereRight = {88,428};
         banner.backgroundColor = UIColor.secondarySystemBackgroundColor;
         banner.layer.cornerRadius = 12;
         banner.translatesAutoresizingMaskIntoConstraints = NO;
-        UILabel *label = [[UILabel alloc] init];
-        label.numberOfLines = 0;
+        UITextView *label = [[UITextView alloc] init];
+        label.editable = NO;
+        label.backgroundColor = UIColor.clearColor;
+        label.textContainerInset = UIEdgeInsetsZero;
+        label.textContainer.lineFragmentPadding = 0;
+        [label.heightAnchor constraintEqualToConstant:64].active = YES;
         label.font = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
         label.text = [NSString stringWithFormat:@"Inspecting failed test • Inputs: %@\nExpected: %@ · Actual: %@\nMismatching outputs are outlined in red.", [check.inputs componentsJoinedByString:@", "], [check.expectedOutputs componentsJoinedByString:@", "], [check.actualOutputs componentsJoinedByString:@", "]];
         [banner addArrangedSubview:label];
@@ -807,8 +822,10 @@ static CGPoint hvrDragHereRight = {88,428};
         [done setTitle:@"Done inspecting" forState:UIControlStateNormal];
         done.accessibilityIdentifier = @"doneInspectingTest";
         [done addTarget:self action:@selector(finishTestInspection) forControlEvents:UIControlEventTouchUpInside];
+        [done.heightAnchor constraintGreaterThanOrEqualToConstant:36].active = YES;
         [banner addArrangedSubview:done];
         [overlay addSubview:banner];
+        self.inspectionBanner = banner;
         [NSLayoutConstraint activateConstraints:@[
             [banner.topAnchor constraintEqualToAnchor:overlay.safeAreaLayoutGuide.topAnchor constant:8],
             [banner.centerXAnchor constraintEqualToAnchor:overlay.centerXAnchor],
@@ -816,11 +833,44 @@ static CGPoint hvrDragHereRight = {88,428};
             [banner.leadingAnchor constraintGreaterThanOrEqualToAnchor:overlay.leadingAnchor constant:12],
             [banner.trailingAnchor constraintLessThanOrEqualToAnchor:overlay.trailingAnchor constant:-12]
         ]];
+        NSLayoutConstraint *preferredWidth = [banner.widthAnchor constraintEqualToAnchor:overlay.widthAnchor constant:-24];
+        preferredWidth.priority = UILayoutPriorityDefaultHigh;
+        preferredWidth.active = YES;
+        [self.view layoutIfNeeded];
+        [self layoutTestInspection];
     }];
 }
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
+    [self layoutTestInspection];
+}
+
+- (void)layoutTestInspection {
+    if (!self.inspectionOverlay || !self.inspectionBanner) return;
+    Viewport *viewport = self.editorViewController.viewport;
+    UIView *canvas = self.editorViewController.view;
+    CGRect available = [self.inspectionOverlay convertRect:self.inspectionOverlay.bounds toView:canvas];
+    CGRect banner = [self.inspectionBanner convertRect:self.inspectionBanner.bounds toView:canvas];
+    available = CGRectIntersection(available, canvas.bounds);
+    CGFloat top = MAX(CGRectGetMinY(available), CGRectGetMaxY(banner) + 12);
+    available = CGRectMake(CGRectGetMinX(available) + 16, top,
+                           MAX(1, available.size.width - 32), MAX(1, CGRectGetMaxY(available) - top - 16));
+    __block CGRect worldBounds = CGRectNull;
+    [self.document.circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
+        CGRect rect = [viewport rectForObject:object inView:canvas];
+        CGPoint origin = [viewport unproject:rect.origin];
+        CGRect world = CGRectMake(origin.x, origin.y, rect.size.width / viewport.zoomScale, rect.size.height / viewport.zoomScale);
+        worldBounds = CGRectUnion(worldBounds, world);
+    }];
+    if (!CGRectIsNull(worldBounds)) {
+        CGFloat scale = MIN(available.size.width / MAX(1, worldBounds.size.width), available.size.height / MAX(1, worldBounds.size.height));
+        viewport.zoomScale = MIN(scale, 1.0);
+        viewport.translation = CGPointMake(CGRectGetMidX(available) - CGRectGetMidX(worldBounds) * viewport.zoomScale,
+                                           CGRectGetMidY(available) - CGRectGetMidY(worldBounds) * viewport.zoomScale);
+        [viewport setSceneContentNeedsUpdate];
+        [viewport updateSceneForViewSize:canvas.bounds.size allowContentRebuild:YES];
+    }
     [self.inspectionHighlights enumerateKeysAndObjectsUsingBlock:^(NSString *identifier, UIView *highlight, BOOL *stop) {
         CircuitObject *object = [self.document.circuit findObjectById:identifier];
         if (!object) return;
@@ -835,6 +885,11 @@ static CGPoint hvrDragHereRight = {88,428};
     self.inspectionPreviousState = nil;
     [self.inspectionOverlay removeFromSuperview];
     self.inspectionOverlay = nil;
+    self.inspectionBanner = nil;
+    self.objectListView.hidden = self.inspectionObjectListHidden;
+    self.problemInfoView.hidden = self.inspectionProblemInfoHidden;
+    self.editorViewController.viewport.translation = self.inspectionPreviousTranslation;
+    self.editorViewController.viewport.zoomScale = self.inspectionPreviousZoom;
     for (UIBarButtonItem *item in self.inspectionDisabledItems) item.enabled = YES;
     self.inspectionDisabledItems = nil;
     self.navigationItem.hidesBackButton = self.inspectionHidBackButton;
