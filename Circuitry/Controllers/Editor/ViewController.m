@@ -52,8 +52,8 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 @property (nonatomic) UIStackView *simulationControls;
 @property (nonatomic) UIButton *selectObjectsButton;
 @property (nonatomic) UIButton *duplicateObjectsButton;
-@property (nonatomic) UIButton *undoButton;
-@property (nonatomic) UIButton *redoButton;
+@property (nonatomic, readwrite) UIBarButtonItem *undoBarButtonItem;
+@property (nonatomic, readwrite) UIBarButtonItem *redoBarButtonItem;
 @property (nonatomic) CircuitScene *circuitScene;
 @property (nonatomic) NSTimeInterval timeSinceLastUpdate;
 @property (nonatomic) NSTimeInterval clockTickAccumulator;
@@ -372,27 +372,12 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 }
 
 - (void)configureHistoryControls {
-    self.undoButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    self.redoButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.undoButton setTitle:@"Undo" forState:UIControlStateNormal];
-    [self.redoButton setTitle:@"Redo" forState:UIControlStateNormal];
-    self.undoButton.accessibilityIdentifier = @"circuit.undo";
-    self.redoButton.accessibilityIdentifier = @"circuit.redo";
-    [self.undoButton addTarget:self action:@selector(undoCircuitEdit:) forControlEvents:UIControlEventTouchUpInside];
-    [self.redoButton addTarget:self action:@selector(redoCircuitEdit:) forControlEvents:UIControlEventTouchUpInside];
-    UIStackView *controls = [[UIStackView alloc] initWithArrangedSubviews:@[self.undoButton, self.redoButton]];
-    controls.spacing = 16;
-    controls.layoutMargins = UIEdgeInsetsMake(0, 12, 0, 12);
-    controls.layoutMarginsRelativeArrangement = YES;
-    controls.backgroundColor = [UIColor colorWithWhite:0.1 alpha:0.9];
-    controls.layer.cornerRadius = 10;
-    controls.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.view addSubview:controls];
-    [NSLayoutConstraint activateConstraints:@[
-        [controls.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor constant:8],
-        [controls.trailingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.trailingAnchor constant:-12],
-        [controls.heightAnchor constraintEqualToConstant:44]
-    ]];
+    self.undoBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"arrow.uturn.backward"] style:UIBarButtonItemStylePlain target:self action:@selector(undoCircuitEdit:)];
+    self.redoBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"arrow.uturn.forward"] style:UIBarButtonItemStylePlain target:self action:@selector(redoCircuitEdit:)];
+    self.undoBarButtonItem.accessibilityLabel = @"Undo";
+    self.redoBarButtonItem.accessibilityLabel = @"Redo";
+    self.undoBarButtonItem.accessibilityIdentifier = @"circuit.undo";
+    self.redoBarButtonItem.accessibilityIdentifier = @"circuit.redo";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(historyDidChange:) name:CircuitDocumentHistoryDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(circuitDidRestore:) name:CircuitDocumentCircuitDidRestoreNotification object:nil];
     [self updateHistoryControls];
@@ -404,10 +389,10 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 
 - (void)updateHistoryControls {
     BOOL available = self.document && !self.document.circuitEditInProgress;
-    self.undoButton.enabled = available && self.document.editorUndoManager.canUndo;
-    self.redoButton.enabled = available && self.document.editorUndoManager.canRedo;
-    self.undoButton.accessibilityHint = self.document.editorUndoManager.undoActionName;
-    self.redoButton.accessibilityHint = self.document.editorUndoManager.redoActionName;
+    self.undoBarButtonItem.enabled = available && self.document.editorUndoManager.canUndo;
+    self.redoBarButtonItem.enabled = available && self.document.editorUndoManager.canRedo;
+    self.undoBarButtonItem.accessibilityHint = self.document.editorUndoManager.undoActionName;
+    self.redoBarButtonItem.accessibilityHint = self.document.editorUndoManager.redoActionName;
 }
 
 - (void)circuitDidRestore:(NSNotification *)notification {

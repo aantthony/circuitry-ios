@@ -588,11 +588,14 @@ static CGPoint hvrDragHereRight = {88,428};
     }
     BOOL hasTests = _document.circuit.tests.count > 0;
     self.problemInfoVisible = hasTests;
+    NSMutableArray<UIBarButtonItem *> *actions = [NSMutableArray array];
     if (hasTests) {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Check Answer" style:UIBarButtonItemStyleDone target:self action:@selector(checkAnswer:)];
-    } else {
-        self.navigationItem.rightBarButtonItem = nil;
+        [actions addObject:[[UIBarButtonItem alloc] initWithTitle:@"Check Answer" style:UIBarButtonItemStyleDone target:self action:@selector(checkAnswer:)]];
     }
+    // Navigation items are ordered from the trailing edge inward.
+    if (self.editorViewController.redoBarButtonItem) [actions addObject:self.editorViewController.redoBarButtonItem];
+    if (self.editorViewController.undoBarButtonItem) [actions addObject:self.editorViewController.undoBarButtonItem];
+    self.navigationItem.rightBarButtonItems = actions;
 }
 
 - (void) setObjectListVisible:(BOOL)objectListVisible {

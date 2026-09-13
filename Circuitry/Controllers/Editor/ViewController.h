@@ -10,6 +10,8 @@
 
 @property (nonatomic) Viewport *viewport;
 @property (nonatomic) CircuitDocument *document;
+@property (nonatomic, readonly) UIBarButtonItem *undoBarButtonItem;
+@property (nonatomic, readonly) UIBarButtonItem *redoBarButtonItem;
 // Explicit simulation control, independent of the renderer’s idle state.
 @property (nonatomic) BOOL simulationPaused;
 - (void)stepClock;
