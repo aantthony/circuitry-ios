@@ -379,12 +379,20 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     self.undoBarButtonItem.accessibilityIdentifier = @"circuit.undo";
     self.redoBarButtonItem.accessibilityIdentifier = @"circuit.redo";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(historyDidChange:) name:CircuitDocumentHistoryDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(historyOperationDidFinish:) name:NSUndoManagerDidUndoChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(historyOperationDidFinish:) name:NSUndoManagerDidRedoChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(circuitDidRestore:) name:CircuitDocumentCircuitDidRestoreNotification object:nil];
     [self updateHistoryControls];
 }
 
 - (void)historyDidChange:(NSNotification *)notification {
     if (notification.object == self.document) [self updateHistoryControls];
+}
+
+- (void)historyOperationDidFinish:(NSNotification *)notification {
+    // Snapshot restoration runs inside the undo operation. Wait for the manager
+    // to finish moving the action between stacks before reading availability.
+    if (notification.object == self.document.editorUndoManager) [self updateHistoryControls];
 }
 
 - (void)updateHistoryControls {

@@ -34,6 +34,35 @@
 
 @implementation MongoIDTest
 
+- (void)testHistoryToolbarDisablesWhenUndoOrRedoIsExhausted {
+    CircuitDocument *document = [[CircuitDocument alloc] initWithFileURL:[NSURL fileURLWithPath:@"/tmp/history-toolbar-test.circuit"]];
+    document.circuit = [[Circuit alloc] initWithPackage:@{} items:@[]];
+    ClockTestViewController *editor = [[ClockTestViewController alloc] init];
+    editor.document = document;
+    XCTAssertFalse(editor.undoBarButtonItem.enabled);
+    XCTAssertFalse(editor.redoBarButtonItem.enabled);
+
+    [document beginCircuitEdit:@"Rename"];
+    document.circuit.title = @"First edit";
+    [document finishCircuitEdit];
+    XCTAssertTrue(editor.undoBarButtonItem.enabled);
+    XCTAssertFalse(editor.redoBarButtonItem.enabled);
+
+    [document.editorUndoManager undo];
+    XCTAssertFalse(editor.undoBarButtonItem.enabled);
+    XCTAssertTrue(editor.redoBarButtonItem.enabled);
+    [document.editorUndoManager redo];
+    XCTAssertTrue(editor.undoBarButtonItem.enabled);
+    XCTAssertFalse(editor.redoBarButtonItem.enabled);
+
+    [document.editorUndoManager undo];
+    [document beginCircuitEdit:@"Rename"];
+    document.circuit.title = @"Replacement edit";
+    [document finishCircuitEdit];
+    XCTAssertTrue(editor.undoBarButtonItem.enabled);
+    XCTAssertFalse(editor.redoBarButtonItem.enabled);
+}
+
 - (void)testCircuitUndoPreservesExactPendingSimulationWork {
     for (NSNumber *settled in @[@NO, @YES]) {
         CircuitDocument *document = [[CircuitDocument alloc] initWithFileURL:[NSURL fileURLWithPath:@"/tmp/undo-state-test.circuit"]];
