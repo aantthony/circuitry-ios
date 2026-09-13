@@ -12,6 +12,7 @@
 @property (nonatomic) CircuitDocument *document;
 @property (nonatomic, readonly) UIBarButtonItem *undoBarButtonItem;
 @property (nonatomic, readonly) UIBarButtonItem *redoBarButtonItem;
+@property (nonatomic, readonly) NSArray<UIBarButtonItem *> *selectionBarButtonItems;
 @property (nonatomic, weak) id <ViewControllerTutorialProtocol> tutorialDelegate;
 
 // Gesture events:
@@ -23,7 +24,6 @@
 - (IBAction) handleTapGesture:(UITapGestureRecognizer *)sender;
 - (IBAction) handleLongPressObject:(UILongPressGestureRecognizer *)sender;
 
-- (void)layoutControlsInView:(UIView *)host bottomInset:(CGFloat)bottomInset leftInset:(CGFloat)leftInset;
 - (void) update;
 
 - (void) startCreatingObjectFromItem: (ToolbeltItem *) item;
@@ -39,5 +39,8 @@
 
 - (void) viewControllerTutorial:(ViewController *)viewController didChange:(id)sender;
 - (void) viewControllerTutorial:(ViewController *)viewController didTapBackground:(id)sender;
+
+@optional
+- (void)viewControllerSelectionDidChange:(ViewController *)viewController;
 
 @end

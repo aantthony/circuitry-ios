@@ -575,10 +575,20 @@ static CGPoint hvrDragHereRight = {88,428};
     }
     BOOL hasTests = _document.circuit.tests.count > 0;
     self.problemInfoVisible = hasTests;
+    [self updateEditorToolbar];
+}
+
+- (void)viewControllerSelectionDidChange:(ViewController *)viewController {
+    [self updateEditorToolbar];
+}
+
+- (void)updateEditorToolbar {
+    BOOL hasTests = self.document.circuit.tests.count > 0;
     NSMutableArray<UIBarButtonItem *> *actions = [NSMutableArray array];
     if (hasTests) {
         [actions addObject:[[UIBarButtonItem alloc] initWithTitle:@"Check Answer" style:UIBarButtonItemStyleDone target:self action:@selector(checkAnswer:)]];
     }
+    [actions addObjectsFromArray:self.editorViewController.selectionBarButtonItems ?: @[]];
     // Navigation items are ordered from the trailing edge inward.
     if (self.editorViewController.redoBarButtonItem) [actions addObject:self.editorViewController.redoBarButtonItem];
     if (self.editorViewController.undoBarButtonItem) [actions addObject:self.editorViewController.undoBarButtonItem];
@@ -752,21 +762,6 @@ static CGPoint hvrDragHereRight = {88,428};
         [self.editorViewController.viewport setSceneContentNeedsUpdate];
         [self.editorViewController.viewport updateSceneForViewSize:self.editorViewController.view.bounds.size allowContentRebuild:YES];
     }];
-}
-
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-    CGFloat bottomInset = 0;
-    if (!self.problemInfoView.hidden) {
-        CGRect footer = [self.problemInfoView convertRect:self.problemInfoView.bounds toView:self.view];
-        bottomInset = MAX(0, CGRectGetMaxY(self.view.safeAreaLayoutGuide.layoutFrame) - CGRectGetMinY(footer));
-    }
-    CGFloat leftInset = 0;
-    if (!self.objectListView.hidden) {
-        CGRect palette = [self.objectListView convertRect:self.objectListView.bounds toView:self.view];
-        leftInset = MAX(0, CGRectGetMaxX(palette) - CGRectGetMinX(self.view.safeAreaLayoutGuide.layoutFrame));
-    }
-    [self.editorViewController layoutControlsInView:self.view bottomInset:bottomInset leftInset:leftInset];
 }
 
 - (void) testResultViewController:(TestResultViewController *)viewController didFinish:(id)sender {

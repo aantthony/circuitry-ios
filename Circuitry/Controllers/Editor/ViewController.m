@@ -43,12 +43,8 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 @property (nonatomic) BOOL selectingObjects;
 @property (nonatomic) NSMutableOrderedSet<NSString *> *duplicationSelection;
 @property (nonatomic) NSDictionary<NSString *, NSValue *> *selectionDragOrigins;
-@property (nonatomic) UIStackView *selectionControls;
-@property (nonatomic) NSLayoutConstraint *selectionBottomConstraint;
-@property (nonatomic) NSLayoutConstraint *selectionLeadingConstraint;
-@property (nonatomic) NSArray<NSLayoutConstraint *> *selectionPositionConstraints;
-@property (nonatomic) UIButton *selectObjectsButton;
-@property (nonatomic) UIButton *duplicateObjectsButton;
+@property (nonatomic) UIBarButtonItem *selectObjectsButton;
+@property (nonatomic) UIBarButtonItem *duplicateObjectsButton;
 @property (nonatomic, readwrite) UIBarButtonItem *undoBarButtonItem;
 @property (nonatomic, readwrite) UIBarButtonItem *redoBarButtonItem;
 @property (nonatomic) CircuitScene *circuitScene;
@@ -228,44 +224,27 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 }
 
 - (void)installSelectionControls {
-    self.selectObjectsButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.selectObjectsButton = [[UIBarButtonItem alloc] initWithTitle:@"Select" style:UIBarButtonItemStylePlain target:self action:@selector(toggleObjectSelection:)];
     self.selectObjectsButton.accessibilityIdentifier = @"selectComponents";
-    [self.selectObjectsButton addTarget:self action:@selector(toggleObjectSelection:) forControlEvents:UIControlEventTouchUpInside];
-    self.duplicateObjectsButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.duplicateObjectsButton = [[UIBarButtonItem alloc] initWithTitle:@"Duplicate (0)" style:UIBarButtonItemStylePlain target:self action:@selector(duplicateObjectSelection:)];
     self.duplicateObjectsButton.accessibilityIdentifier = @"duplicateSelection";
-    [self.duplicateObjectsButton addTarget:self action:@selector(duplicateObjectSelection:) forControlEvents:UIControlEventTouchUpInside];
-    self.selectionControls = [[UIStackView alloc] initWithArrangedSubviews:@[self.selectObjectsButton, self.duplicateObjectsButton]];
-    self.selectionControls.axis = UILayoutConstraintAxisHorizontal;
-    self.selectionControls.spacing = 8.0;
-    self.selectionControls.layoutMargins = UIEdgeInsetsMake(4, 10, 4, 10);
-    self.selectionControls.layoutMarginsRelativeArrangement = YES;
-    self.selectionControls.backgroundColor = [UIColor colorWithWhite:0.1 alpha:0.9];
-    self.selectionControls.tintColor = UIColor.whiteColor;
-    self.selectionControls.layer.cornerRadius = 12.0;
-    self.selectionControls.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.view addSubview:self.selectionControls];
-    self.selectionBottomConstraint = [self.selectionControls.bottomAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.bottomAnchor constant:-12];
-    self.selectionLeadingConstraint = [self.selectionControls.leadingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.leadingAnchor constant:12];
-    self.selectionPositionConstraints = @[
-        self.selectionLeadingConstraint,
-        self.selectionBottomConstraint
-    ];
-    [NSLayoutConstraint activateConstraints:self.selectionPositionConstraints];
-    [self.selectObjectsButton.heightAnchor constraintGreaterThanOrEqualToConstant:44].active = YES;
-    [self.duplicateObjectsButton.heightAnchor constraintGreaterThanOrEqualToConstant:44].active = YES;
     [self refreshSelectionControls];
 }
 
+- (NSArray<UIBarButtonItem *> *)selectionBarButtonItems {
+    if (!self.document || self.document.isProblem || !self.selectObjectsButton) return @[];
+    return self.selectingObjects ? @[self.selectObjectsButton, self.duplicateObjectsButton] : @[self.selectObjectsButton];
+}
+
 - (void)refreshSelectionControls {
-    self.selectionControls.hidden = !self.document || self.document.isProblem;
-    [self.selectObjectsButton setTitle:self.selectingObjects ? @"Done" : @"Select" forState:UIControlStateNormal];
+    self.selectObjectsButton.title = self.selectingObjects ? @"Done" : @"Select";
     self.selectObjectsButton.accessibilityHint = self.selectingObjects ? @"Finish selecting components" : @"Tap components to select a group for duplication";
-    self.duplicateObjectsButton.hidden = !self.selectingObjects;
     self.duplicateObjectsButton.enabled = self.duplicationSelection.count > 0;
-    [self.duplicateObjectsButton setTitle:[NSString stringWithFormat:@"Duplicate (%lu)", (unsigned long)self.duplicationSelection.count] forState:UIControlStateNormal];
+    self.duplicateObjectsButton.title = [NSString stringWithFormat:@"Duplicate (%lu)", (unsigned long)self.duplicationSelection.count];
     self.viewport.selectedObjectIDs = [NSSet setWithArray:self.duplicationSelection.array ?: @[]];
-    [self.view setNeedsLayout];
-    [self.parentViewController.view setNeedsLayout];
+    if ([self.tutorialDelegate respondsToSelector:@selector(viewControllerSelectionDidChange:)]) {
+        [self.tutorialDelegate viewControllerSelectionDidChange:self];
+    }
     [self unpause];
 }
 
@@ -373,26 +352,8 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     ];
 }
 
-- (void)layoutControlsInView:(UIView *)host bottomInset:(CGFloat)bottomInset leftInset:(CGFloat)leftInset {
-    if (!self.selectionControls) return;
-    if (self.selectionControls.superview != host) {
-        [NSLayoutConstraint deactivateConstraints:self.selectionPositionConstraints];
-        [host addSubview:self.selectionControls];
-        self.selectionBottomConstraint = [self.selectionControls.bottomAnchor constraintEqualToAnchor:host.safeAreaLayoutGuide.bottomAnchor constant:-12];
-        self.selectionLeadingConstraint = [self.selectionControls.leadingAnchor constraintEqualToAnchor:host.safeAreaLayoutGuide.leadingAnchor constant:12];
-        self.selectionPositionConstraints = @[self.selectionLeadingConstraint, self.selectionBottomConstraint];
-        [NSLayoutConstraint activateConstraints:self.selectionPositionConstraints];
-    }
-    CGSize selectionSize = [self.selectionControls systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
-    CGFloat availableWidth = CGRectGetWidth(host.safeAreaLayoutGuide.layoutFrame);
-    self.selectionLeadingConstraint.constant = MAX(12, MIN(leftInset + 12, availableWidth - selectionSize.width - 12));
-    self.selectionBottomConstraint.constant = -bottomInset - 12;
-    self.selectionControls.userInteractionEnabled = self.view.userInteractionEnabled;
-}
-
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    if (!self.parentViewController) [self layoutControlsInView:self.view bottomInset:0 leftInset:0];
 
     CircuitCanvasView *canvasView = (CircuitCanvasView *)self.view;
     CGSize viewSize = canvasView.bounds.size;
