@@ -19,6 +19,7 @@ extern NSString * const CircuitDocumentCircuitDidRestoreNotification;
 @property (nonatomic, readonly) BOOL needsScreenshotUpdate;
 @property (nonatomic, readonly) NSError *loadError;
 - (NSArray<NSString *> *)duplicateObjectsWithIDs:(NSArray<NSString *> *)objectIDs offset:(CGVector)offset;
+- (NSUInteger)deleteObjectsWithIDs:(NSArray<NSString *> *)objectIDs;
 // Explicit transactions group an entire drag or compound edit into one undo step.
 @property (nonatomic, readonly) NSUndoManager *editorUndoManager;
 @property (nonatomic, readonly) BOOL circuitEditInProgress;

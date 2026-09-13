@@ -217,6 +217,48 @@
 }
 
 
+- (void)testDeleteSelectionRemovesBoundaryWiresAndUndoesAsOneAction {
+    CircuitDocument *document = [[CircuitDocument alloc] initWithFileURL:[NSURL fileURLWithPath:@"/tmp/delete-selection-test.circuit"]];
+    document.circuit = [[Circuit alloc] initWithPackage:@{} items:@[]];
+    NSMutableArray<NSString *> *ids = [NSMutableArray array];
+    [document.circuit performWriteBlock:^(CircuitInternal *internal) {
+        CircuitProcess *types[] = {&CircuitProcessButton, &CircuitProcessNot, &CircuitProcessNot, &CircuitProcessLight};
+        for (int i = 0; i < 4; i++) {
+            CircuitObject *object = CircuitObjectCreate(internal, types[i]);
+            object->id = [MongoID id];
+            [ids addObject:[MongoID stringWithId:object->id]];
+        }
+        for (int i = 0; i < 3; i++) CircuitLinkCreate(internal, [document.circuit findObjectById:ids[i]], 0, [document.circuit findObjectById:ids[i + 1]], 0);
+    }];
+    NSArray *selection = @[ids[1], ids[2], ids[1]];
+    document.problemInfo = [[ProblemSetProblemInfo alloc] init];
+    XCTAssertEqual([document deleteObjectsWithIDs:selection], 0u);
+    document.problemInfo = nil;
+    [document.circuit findObjectById:ids[2]]->flags |= CircuitObjectFlagLocked;
+    XCTAssertEqual([document deleteObjectsWithIDs:selection], 0u);
+    XCTAssertNotEqual([document.circuit findObjectById:ids[1]], NULL);
+    [document.circuit findObjectById:ids[2]]->flags = 0;
+    XCTAssertEqual([document deleteObjectsWithIDs:selection], 2u);
+    XCTAssertEqual([document.circuit findObjectById:ids[1]], NULL);
+    XCTAssertEqual([document.circuit findObjectById:ids[2]], NULL);
+    XCTAssertEqual([document.circuit findObjectById:ids[0]]->outputs[0], NULL);
+    XCTAssertEqual([document.circuit findObjectById:ids[3]]->inputs[0], NULL);
+    XCTAssertEqual([document deleteObjectsWithIDs:selection], 0u);
+    [document.editorUndoManager undo];
+    for (int i = 0; i < 3; i++) {
+        CircuitObject *source = [document.circuit findObjectById:ids[i]];
+        CircuitObject *target = [document.circuit findObjectById:ids[i + 1]];
+        XCTAssertEqual(source->outputs[0]->target, target);
+        XCTAssertEqual(target->inputs[0]->source, source);
+    }
+    XCTAssertFalse(document.editorUndoManager.canUndo);
+    [document.editorUndoManager redo];
+    XCTAssertEqual([document.circuit findObjectById:ids[1]], NULL);
+    XCTAssertEqual([document.circuit findObjectById:ids[2]], NULL);
+    XCTAssertEqual([document deleteObjectsWithIDs:selection], 0u);
+    XCTAssertEqual([document deleteObjectsWithIDs:@[]], 0u);
+}
+
 - (void)testDuplicateSelectionPreservesInternalFanoutAndIsPlaygroundOnly {
     CircuitDocument *document = [[CircuitDocument alloc] initWithFileURL:[NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:@"duplicate-test.circuit"]]];
     document.circuit = [[Circuit alloc] initWithPackage:@{@"name": @"duplicate", @"version": @"1"} items:@[]];

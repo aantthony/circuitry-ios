@@ -201,7 +201,7 @@ int CircuitObjectFlagLocked = 1 << 0;
 CircuitObject *CircuitObjectFindById(CircuitInternal *c, ObjectID id) {
     for(int i = c->objects_count - 1; i >= 0; i--) {
         CircuitObject *o = &c->objects[i];
-        if (!o) continue;
+        if (!o->type) continue;
         if (o->id.m[0] == id.m[0] && o->id.m[1] == id.m[1] && o->id.m[2] == id.m[2]) return o;
     }
     return NULL;

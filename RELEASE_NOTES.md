@@ -2,7 +2,7 @@
 
 - Undo and redo edits to components, wires, labels, and notes, including entire drag gestures.
 - Tap a failed test to apply its input values to your circuit and continue editing.
-- Select, duplicate, and move groups of components with their internal wiring in the playground.
+- Select, duplicate, move, or delete groups of components in the playground, with undo support and internal wiring preserved when duplicating.
 - Personalize buttons and LEDs in your own circuits: long-press a component and choose Edit Label to add or change its short label.
 - Display multi-character labels on components, including labels on momentary button caps.
 

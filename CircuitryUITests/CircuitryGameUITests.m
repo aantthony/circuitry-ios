@@ -300,6 +300,7 @@
     [self launchAppForScreenshots:app];
     [self openProblem:@"Build a Three-Input AND" number:2 inApp:app];
     XCTAssertFalse(app.buttons[@"selectComponents"].exists);
+    XCTAssertFalse(app.buttons[@"deleteSelection"].exists);
     [app.buttons[@"Check Answer"] tap];
     XCTAssertTrue([app.buttons[@"OK"] waitForExistenceWithTimeout:10]);
     XCUIElement *failedRow = [app.cells containingType:XCUIElementTypeImage identifier:@"TestResultMismatch"].firstMatch;
@@ -321,11 +322,20 @@
     NSArray<NSValue *> *ports = [self createGateNamed:@"AND" inputs:2 outputs:1 atOrigin:CGVectorMake(380, 360) inApp:app];
     XCTAssertTrue(app.buttons[@"circuit.undo"].enabled);
     [app.buttons[@"selectComponents"] tap];
+    XCTAssertFalse(app.buttons[@"deleteSelection"].enabled);
     CGVector inlet = ports.firstObject.CGVectorValue;
     [[self point:CGVectorMake(inlet.dx + 62, inlet.dy + 17) inApp:app] tap];
     XCTAssertTrue(app.buttons[@"duplicateSelection"].enabled);
     XCTAssertEqualObjects(app.buttons[@"duplicateSelection"].label, @"Duplicate (1)");
     [app.buttons[@"duplicateSelection"] tap];
+    XCTAssertTrue(app.buttons[@"deleteSelection"].enabled);
+    [app.buttons[@"deleteSelection"] tap];
+    XCTAssertFalse(app.buttons[@"deleteSelection"].enabled);
+    XCTAssertFalse(app.buttons[@"duplicateSelection"].enabled);
+    [app.buttons[@"circuit.undo"] tap];
+    XCTAssertTrue(app.buttons[@"circuit.redo"].enabled);
+    [app.buttons[@"circuit.redo"] tap];
+    [app.buttons[@"circuit.undo"] tap];
     [app.buttons[@"circuit.undo"] tap];
     XCTAssertTrue(app.buttons[@"circuit.redo"].enabled);
     [app.buttons[@"circuit.redo"] tap];

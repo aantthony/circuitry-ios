@@ -45,6 +45,7 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 @property (nonatomic) NSDictionary<NSString *, NSValue *> *selectionDragOrigins;
 @property (nonatomic) UIBarButtonItem *selectObjectsButton;
 @property (nonatomic) UIBarButtonItem *duplicateObjectsButton;
+@property (nonatomic) UIBarButtonItem *deleteObjectsButton;
 @property (nonatomic, readwrite) UIBarButtonItem *undoBarButtonItem;
 @property (nonatomic, readwrite) UIBarButtonItem *redoBarButtonItem;
 @property (nonatomic) CircuitScene *circuitScene;
@@ -228,18 +229,27 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     self.selectObjectsButton.accessibilityIdentifier = @"selectComponents";
     self.duplicateObjectsButton = [[UIBarButtonItem alloc] initWithTitle:@"Duplicate (0)" style:UIBarButtonItemStylePlain target:self action:@selector(duplicateObjectSelection:)];
     self.duplicateObjectsButton.accessibilityIdentifier = @"duplicateSelection";
+    self.deleteObjectsButton = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"trash"] style:UIBarButtonItemStylePlain target:self action:@selector(deleteObjectSelection:)];
+    self.deleteObjectsButton.accessibilityLabel = @"Delete selection";
+    self.deleteObjectsButton.accessibilityIdentifier = @"deleteSelection";
     [self refreshSelectionControls];
 }
 
 - (NSArray<UIBarButtonItem *> *)selectionBarButtonItems {
     if (!self.document || self.document.isProblem || !self.selectObjectsButton) return @[];
-    return self.selectingObjects ? @[self.selectObjectsButton, self.duplicateObjectsButton] : @[self.selectObjectsButton];
+    return self.selectingObjects ? @[self.selectObjectsButton, self.deleteObjectsButton, self.duplicateObjectsButton] : @[self.selectObjectsButton];
 }
 
 - (void)refreshSelectionControls {
     self.selectObjectsButton.title = self.selectingObjects ? @"Done" : @"Select";
-    self.selectObjectsButton.accessibilityHint = self.selectingObjects ? @"Finish selecting components" : @"Tap components to select a group for duplication";
+    self.selectObjectsButton.accessibilityHint = self.selectingObjects ? @"Finish selecting components" : @"Tap components to select a group to duplicate or delete";
     self.duplicateObjectsButton.enabled = self.duplicationSelection.count > 0;
+    BOOL canDelete = self.duplicationSelection.count > 0;
+    for (NSString *identifier in self.duplicationSelection) {
+        CircuitObject *object = [self.document.circuit findObjectById:identifier];
+        if (!object || (object->flags & CircuitObjectFlagLocked)) canDelete = NO;
+    }
+    self.deleteObjectsButton.enabled = canDelete;
     self.duplicateObjectsButton.title = [NSString stringWithFormat:@"Duplicate (%lu)", (unsigned long)self.duplicationSelection.count];
     self.viewport.selectedObjectIDs = [NSSet setWithArray:self.duplicationSelection.array ?: @[]];
     if ([self.tutorialDelegate respondsToSelector:@selector(viewControllerSelectionDidChange:)]) {
@@ -265,6 +275,21 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     self.duplicationSelection = [NSMutableOrderedSet orderedSetWithArray:copies];
     [self refreshSelectionControls];
     UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, @"Selection duplicated. Drag a selected component to move the copies together.");
+}
+
+- (void)deleteObjectSelection:(id)sender {
+    if (self.document.isProblem || !self.selectingObjects || ![self canPerformCircuitHistory]) return;
+    if (![self.document deleteObjectsWithIDs:self.duplicationSelection.array]) return;
+    self.selectedObjects = nil;
+    self.beginLongPressGestureObject = NULL;
+    self.holdDownGestureObject = NULL;
+    self.viewport.currentEditingLink = NULL;
+    self.viewport.currentEditingLinkSource = NULL;
+    self.viewport.currentEditingLinkTarget = NULL;
+    self.selectionDragOrigins = nil;
+    [self.duplicationSelection removeAllObjects];
+    [self refreshSelectionControls];
+    UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, @"Selection deleted. Undo is available in the toolbar.");
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {

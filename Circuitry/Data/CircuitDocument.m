@@ -352,6 +352,27 @@ static NSString *CircuitDocumentUnsupportedProcessType(NSArray *items) {
     return wrapper;
 }
 
+- (NSUInteger)deleteObjectsWithIDs:(NSArray<NSString *> *)objectIDs {
+    if (self.isProblem || !self.circuit || self.circuitEditInProgress) return 0;
+    NSMutableArray<NSString *> *existingIDs = [NSMutableArray array];
+    for (NSString *identifier in [NSOrderedSet orderedSetWithArray:objectIDs]) {
+        CircuitObject *object = [self.circuit findObjectById:identifier];
+        if (!object) continue;
+        if (object->flags & CircuitObjectFlagLocked) return 0;
+        [existingIDs addObject:identifier];
+    }
+    if (!existingIDs.count) return 0;
+    [self beginCircuitEdit:@"Delete Selection"];
+    [self.circuit performWriteBlock:^(CircuitInternal *internal) {
+        for (NSString *identifier in existingIDs) {
+            // Removing a component also removes its incoming and outgoing wires.
+            CircuitObjectRemove(internal, [self.circuit findObjectById:identifier]);
+        }
+    }];
+    [self finishCircuitEdit];
+    return existingIDs.count;
+}
+
 // Snapshot IDs and values before allocating: growing the circuit can relocate objects.
 - (NSArray<NSString *> *)duplicateObjectsWithIDs:(NSArray<NSString *> *)objectIDs offset:(CGVector)offset {
     if (self.isProblem || !self.circuit || !objectIDs.count) return @[];
