@@ -46,10 +46,7 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 @property (nonatomic) UIStackView *selectionControls;
 @property (nonatomic) NSLayoutConstraint *selectionBottomConstraint;
 @property (nonatomic) NSLayoutConstraint *selectionLeadingConstraint;
-@property (nonatomic) NSLayoutConstraint *simulationBottomConstraint;
 @property (nonatomic) NSArray<NSLayoutConstraint *> *selectionPositionConstraints;
-@property (nonatomic) NSArray<NSLayoutConstraint *> *simulationPositionConstraints;
-@property (nonatomic) UIStackView *simulationControls;
 @property (nonatomic) UIButton *selectObjectsButton;
 @property (nonatomic) UIButton *duplicateObjectsButton;
 @property (nonatomic, readwrite) UIBarButtonItem *undoBarButtonItem;
@@ -60,8 +57,6 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 @property (nonatomic) NSTimeInterval slowClockTickAccumulator;
 @property (nonatomic) CFTimeInterval lastDisplayTimestamp;
 @property (nonatomic, getter=isPaused) BOOL paused;
-@property (nonatomic) UIButton *simulationPauseButton;
-@property (nonatomic) UIButton *simulationStepButton;
 @property (nonatomic) BOOL canPan;
 @property (nonatomic) BOOL canZoom;
 @property (nonatomic) BOOL isTutorial;
@@ -106,79 +101,9 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     // clock transitions continue to run.
     if (!paused) {
         self.circuitScene.paused = NO;
-    } else if (self.simulationPaused || ![self circuitContainsClocks]) {
+    } else if (![self circuitContainsClocks]) {
         self.circuitScene.paused = YES;
     }
-}
-
-- (void)setSimulationPaused:(BOOL)simulationPaused {
-    _simulationPaused = simulationPaused;
-    // Never replay time spent paused when resuming.
-    self.lastDisplayTimestamp = 0;
-    self.clockTickAccumulator = 0;
-    self.slowClockTickAccumulator = 0;
-    [self updateSimulationControls];
-    [self unpause];
-}
-
-- (void)toggleSimulationPaused:(id)sender {
-    self.simulationPaused = !self.simulationPaused;
-}
-
-- (void)stepClock {
-    self.simulationPaused = YES;
-    Circuit *circuit = self.document.circuit;
-    // Settle any input edits before delivering the edge. All clock sources
-    // change together so connected components observe a single manual edge.
-    [circuit simulate:512];
-    [circuit performWriteBlock:^(CircuitInternal *internal) {
-        [circuit enumerateClocksUsingBlock:^(CircuitObject *object, BOOL *stop) {
-            CircuitObjectSetOutput(internal, object, !object->out);
-        }];
-    }];
-    [circuit simulate:512];
-    [self unpause];
-}
-
-- (void)stepClockFromControl:(id)sender {
-    [self stepClock];
-}
-
-- (void)updateSimulationControls {
-    [self.simulationPauseButton setTitle:self.simulationPaused ? @"Resume" : @"Pause" forState:UIControlStateNormal];
-    self.simulationPauseButton.accessibilityLabel = self.simulationPaused ? @"Resume simulation" : @"Pause simulation";
-    self.simulationStepButton.enabled = self.simulationPaused && [self circuitContainsClocks];
-    self.simulationStepButton.alpha = self.simulationStepButton.enabled ? 1 : 0.45;
-}
-
-- (void)configureSimulationControls {
-    self.simulationPauseButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    self.simulationPauseButton.accessibilityIdentifier = @"simulation.pause";
-    [self.simulationPauseButton addTarget:self action:@selector(toggleSimulationPaused:) forControlEvents:UIControlEventTouchUpInside];
-    self.simulationStepButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    self.simulationStepButton.accessibilityIdentifier = @"simulation.step";
-    self.simulationStepButton.accessibilityLabel = @"Step clock";
-    self.simulationStepButton.accessibilityHint = @"Advances every clock by one edge and keeps simulation paused.";
-    [self.simulationStepButton setTitle:@"Step clock" forState:UIControlStateNormal];
-    [self.simulationStepButton addTarget:self action:@selector(stepClockFromControl:) forControlEvents:UIControlEventTouchUpInside];
-    UIStackView *controls = [[UIStackView alloc] initWithArrangedSubviews:@[self.simulationPauseButton, self.simulationStepButton]];
-    self.simulationControls = controls;
-    controls.translatesAutoresizingMaskIntoConstraints = NO;
-    controls.spacing = 12;
-    controls.layoutMarginsRelativeArrangement = YES;
-    controls.directionalLayoutMargins = NSDirectionalEdgeInsetsMake(0, 12, 0, 12);
-    controls.backgroundColor = [UIColor colorWithWhite:0.1 alpha:0.9];
-    controls.layer.cornerRadius = 10;
-    controls.tintColor = UIColor.whiteColor;
-    [self.view addSubview:controls];
-    self.simulationBottomConstraint = [controls.bottomAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.bottomAnchor constant:-12];
-    self.simulationPositionConstraints = @[
-        [controls.trailingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.trailingAnchor constant:-12],
-        self.simulationBottomConstraint
-    ];
-    [NSLayoutConstraint activateConstraints:self.simulationPositionConstraints];
-    [controls.heightAnchor constraintGreaterThanOrEqualToConstant:44].active = YES;
-    [self updateSimulationControls];
 }
 
 - (void) setDocument:(CircuitDocument *) document {
@@ -295,7 +220,6 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     [_viewport attachToScene:self.circuitScene backgroundImage:_backgroundImage];
     
     [self installSelectionControls];
-    [self configureSimulationControls];
     [self configureHistoryControls];
     self.document = _document;
     if (self.isTutorial) {
@@ -450,29 +374,20 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
 }
 
 - (void)layoutControlsInView:(UIView *)host bottomInset:(CGFloat)bottomInset leftInset:(CGFloat)leftInset {
-    if (!self.selectionControls || !self.simulationControls) return;
+    if (!self.selectionControls) return;
     if (self.selectionControls.superview != host) {
         [NSLayoutConstraint deactivateConstraints:self.selectionPositionConstraints];
-        [NSLayoutConstraint deactivateConstraints:self.simulationPositionConstraints];
         [host addSubview:self.selectionControls];
-        [host addSubview:self.simulationControls];
         self.selectionBottomConstraint = [self.selectionControls.bottomAnchor constraintEqualToAnchor:host.safeAreaLayoutGuide.bottomAnchor constant:-12];
-        self.simulationBottomConstraint = [self.simulationControls.bottomAnchor constraintEqualToAnchor:host.safeAreaLayoutGuide.bottomAnchor constant:-12];
         self.selectionLeadingConstraint = [self.selectionControls.leadingAnchor constraintEqualToAnchor:host.safeAreaLayoutGuide.leadingAnchor constant:12];
         self.selectionPositionConstraints = @[self.selectionLeadingConstraint, self.selectionBottomConstraint];
-        self.simulationPositionConstraints = @[[self.simulationControls.trailingAnchor constraintEqualToAnchor:host.safeAreaLayoutGuide.trailingAnchor constant:-12], self.simulationBottomConstraint];
         [NSLayoutConstraint activateConstraints:self.selectionPositionConstraints];
-        [NSLayoutConstraint activateConstraints:self.simulationPositionConstraints];
     }
     CGSize selectionSize = [self.selectionControls systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
-    CGSize simulationSize = [self.simulationControls systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
     CGFloat availableWidth = CGRectGetWidth(host.safeAreaLayoutGuide.layoutFrame);
-    BOOL stackControls = availableWidth < leftInset + selectionSize.width + simulationSize.width + 36;
-    self.selectionLeadingConstraint.constant = stackControls ? MAX(12, availableWidth - selectionSize.width - 12) : leftInset + 12;
-    self.selectionBottomConstraint.constant = -bottomInset - (stackControls ? 68 : 12);
-    self.simulationBottomConstraint.constant = -bottomInset - 12;
+    self.selectionLeadingConstraint.constant = MAX(12, MIN(leftInset + 12, availableWidth - selectionSize.width - 12));
+    self.selectionBottomConstraint.constant = -bottomInset - 12;
     self.selectionControls.userInteractionEnabled = self.view.userInteractionEnabled;
-    self.simulationControls.userInteractionEnabled = self.view.userInteractionEnabled;
 }
 
 - (void)viewDidLayoutSubviews {
@@ -638,7 +553,7 @@ static NSString * const tutorialFlagId = @"53c3cdc945f5603003000888";
     self.timeSinceLastUpdate = currentTime - self.lastDisplayTimestamp;
     self.lastDisplayTimestamp = currentTime;
 
-    if (!self.simulationPaused && [self advanceClocksByElapsedTime:self.timeSinceLastUpdate]) {
+    if ([self advanceClocksByElapsedTime:self.timeSinceLastUpdate]) {
         [self unpause];
     }
     if (!self.isPaused) {
@@ -716,8 +631,7 @@ static BOOL animateGateToLockedPosition(CircuitObject *object, float x, float y)
         }
     }
     
-    int circuitChanges = self.simulationPaused ? 0 : [_document.circuit simulate:512];
-    [self updateSimulationControls];
+    int circuitChanges = [_document.circuit simulate:512];
     changes += circuitChanges;
     changes += [_viewport update: dt];
     if (changes) {

@@ -15,13 +15,9 @@
 #import "Viewport.h"
 #import "ViewController.h"
 
-@interface ViewController (ClockTesting)
-- (void)sceneDidUpdateAtTime:(NSTimeInterval)currentTime;
+@interface EditorTestViewController : ViewController
 @end
-
-@interface ClockTestViewController : ViewController
-@end
-@implementation ClockTestViewController
+@implementation EditorTestViewController
 - (void)loadView {
     self.view = [[NSClassFromString(@"CircuitCanvasView") alloc] initWithFrame:CGRectMake(0, 0, 600, 600)];
 }
@@ -37,7 +33,7 @@
 - (void)testHistoryToolbarDisablesWhenUndoOrRedoIsExhausted {
     CircuitDocument *document = [[CircuitDocument alloc] initWithFileURL:[NSURL fileURLWithPath:@"/tmp/history-toolbar-test.circuit"]];
     document.circuit = [[Circuit alloc] initWithPackage:@{} items:@[]];
-    ClockTestViewController *editor = [[ClockTestViewController alloc] init];
+    EditorTestViewController *editor = [[EditorTestViewController alloc] init];
     editor.document = document;
     XCTAssertFalse(editor.undoBarButtonItem.enabled);
     XCTAssertFalse(editor.redoBarButtonItem.enabled);
@@ -166,47 +162,6 @@
     [super tearDown];
 }
 
-- (void)testPausedSimulationStepsOneEdgeWithoutCatchingUp {
-    CircuitDocument *document = [[CircuitDocument alloc] initWithFileURL:
-        [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:@"clock-step-test"]]];
-    document.circuit = [[Circuit alloc] initWithPackage:@{@"_id": @"000000000000000000000001"} items:@[]];
-    __block CircuitObject *fast, *slow, *counter;
-    [document.circuit performWriteBlock:^(CircuitInternal *internal) {
-        fast = CircuitObjectCreate(internal, &CircuitProcessClock);
-        slow = CircuitObjectCreate(internal, &CircuitProcessSlowClock);
-        counter = CircuitObjectCreate(internal, &CircuitProcessCounter4);
-        CircuitLinkCreate(internal, slow, 0, counter, 0);
-    }];
-    ClockTestViewController *editor = [[ClockTestViewController alloc] init];
-    editor.document = document;
-    editor.simulationPaused = YES;
-    [editor sceneDidUpdateAtTime:1];
-    [editor sceneDidUpdateAtTime:100];
-    XCTAssertEqual(fast->out, 0);
-    XCTAssertEqual(slow->out, 0);
-    XCTAssertEqual(counter->out, 0);
-    [editor stepClock];
-    XCTAssertTrue(editor.simulationPaused);
-    XCTAssertEqual(fast->out, 1);
-    XCTAssertEqual(slow->out, 1);
-    XCTAssertEqual(counter->out, 1);
-    [editor sceneDidUpdateAtTime:101];
-    [editor sceneDidUpdateAtTime:200];
-    XCTAssertEqual(counter->out, 1);
-    [editor stepClock];
-    XCTAssertEqual(slow->out, 0);
-    XCTAssertEqual(counter->out, 1); // A falling edge does not increment.
-    [editor stepClock];
-    XCTAssertEqual(counter->out, 2);
-    editor.simulationPaused = NO;
-    [editor sceneDidUpdateAtTime:1000];
-    XCTAssertEqual(fast->out, 1); // No accumulated paused-time transitions.
-    XCTAssertEqual(counter->out, 2);
-    [editor sceneDidUpdateAtTime:1000.5];
-    XCTAssertEqual(slow->out, 0);
-    [editor sceneDidUpdateAtTime:1001];
-    XCTAssertEqual(counter->out, 3);
-}
 
 - (void)testExample
 {

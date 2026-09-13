@@ -310,8 +310,8 @@
     [self waitForExpectationsWithTimeout:5 handler:nil];
     XCTAssertFalse(app.buttons[@"doneInspectingTest"].exists);
     XCTAssertTrue(app.buttons[@"Check Answer"].enabled);
-    XCTAssertTrue(app.buttons[@"simulation.pause"].hittable);
-    XCTAssertEqualObjects(app.buttons[@"simulation.pause"].label, @"Pause simulation");
+    XCTAssertFalse(app.buttons[@"simulation.pause"].exists);
+    XCTAssertFalse(app.buttons[@"simulation.step"].exists);
     [self launchAppForScreenshots:app];
     [app.buttons[@"Playground"] tap];
     [app.buttons[@"Add"] tap];
@@ -330,8 +330,8 @@
     XCTAssertTrue(app.buttons[@"circuit.redo"].enabled);
     [app.buttons[@"circuit.redo"] tap];
     [app.buttons[@"selectComponents"] tap];
-    [app.buttons[@"simulation.pause"] tap];
-    XCTAssertEqualObjects(app.buttons[@"simulation.pause"].label, @"Resume simulation");
+    XCTAssertFalse(app.buttons[@"simulation.pause"].exists);
+    XCTAssertFalse(app.buttons[@"simulation.step"].exists);
     XCTAttachment *playground = [XCTAttachment attachmentWithScreenshot:app.screenshot];
     playground.name = @"playground-editor-controls"; playground.lifetime = XCTAttachmentLifetimeKeepAlways;
     [self addAttachment:playground];

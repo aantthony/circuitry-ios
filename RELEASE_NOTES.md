@@ -2,7 +2,6 @@
 
 - Undo and redo edits to components, wires, labels, and notes, including entire drag gestures.
 - Tap a failed test to apply its input values to your circuit and continue editing.
-- Pause simulation and step clocks one edge at a time to explore sequential circuits.
 - Select, duplicate, and move groups of components with their internal wiring in the playground.
 - Personalize buttons and LEDs in your own circuits: long-press a component and choose Edit Label to add or change its short label.
 - Display multi-character labels on components, including labels on momentary button caps.
