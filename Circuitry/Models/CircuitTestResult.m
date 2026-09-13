@@ -7,6 +7,7 @@
 //
 
 #import "CircuitTestResult.h"
+#import "Circuit.h"
 
 @implementation CircuitTestResultCheck
 - (instancetype) initWithInputs:(NSArray *)inputs expectedOutputs:(NSArray *)expectedOutputs match:(BOOL)match {
@@ -15,6 +16,15 @@
     _expectedOutputs = [expectedOutputs copy];
     _isMatch = match;
     return self;
+}
+- (void)applyInputsToCircuit:(Circuit *)circuit {
+    [circuit performWriteBlock:^(CircuitInternal *internal) {
+        [self.inputIDs enumerateObjectsUsingBlock:^(NSString *identifier, NSUInteger index, BOOL *stop) {
+            if (index >= self.inputs.count) return;
+            CircuitObject *input = [circuit findObjectById:identifier];
+            if (input) CircuitObjectSetOutput(internal, input, [self.inputs[index] intValue]);
+        }];
+    }];
 }
 @end
 

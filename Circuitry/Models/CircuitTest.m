@@ -129,7 +129,6 @@
 
 - (CircuitTestResult *) runAndSimulate:(Circuit *)circuit {
     NSDictionary *initialState = [circuit captureSimulationState];
-    NSMutableArray *simulationStates = [NSMutableArray array];
 
     NSMutableArray *actualOutputStates = [NSMutableArray arrayWithCapacity:_spec.count];
     
@@ -148,7 +147,6 @@
 
         [circuit simulate:512];
         [actualOutputStates addObject:[self outputStates]];
-        [simulationStates addObject:[circuit captureSimulationState]];
 
     }];
 
@@ -172,7 +170,6 @@
         NSArray *outputStates = inputOutputPair[1];
         NSArray *actualOutputs = actualOutputStates[idx];
         __block BOOL isMatchForInput = YES;
-        NSMutableArray *mismatchingIDs = [NSMutableArray array];
 
         [outputStates enumerateObjectsUsingBlock:^(id obj, NSUInteger i, BOOL *stop) {
             int expected = [obj intValue];
@@ -180,7 +177,6 @@
             if (actual != expected) {
                 isMatchForInput = NO;
                 CircuitObject * outputNode = [self.outputNodes[i] pointerValue];
-                [mismatchingIDs addObject:[MongoID stringWithId:outputNode->id]];
                 NSString *inputStateSpecification = [inputStates componentsJoinedByString:@", "];
                 NSString *outputStateSpecification = [outputStates componentsJoinedByString:@", "];
                 [failureMessages addObject:[NSString stringWithFormat:@"f(%@) == (%@) failed: expected %s to equal %d, but got %d instead.", inputStateSpecification, outputStateSpecification, outputNode->name, expected, actual]];
@@ -189,9 +185,7 @@
         
         CircuitTestResultCheck *check = [[CircuitTestResultCheck alloc] initWithInputs:inputStates expectedOutputs:outputStates match:isMatchForInput];
         
-        check.simulationState = simulationStates[idx];
-        check.mismatchingOutputIDs = mismatchingIDs;
-        check.actualOutputs = actualOutputs;
+        check.inputIDs = self.inputIds;
         [checks addObject:check];
     }];
     

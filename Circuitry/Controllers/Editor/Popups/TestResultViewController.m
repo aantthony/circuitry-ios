@@ -120,7 +120,7 @@
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) return nil;
     CircuitTestResultCheck *check = self.testResult.checks[indexPath.row];
-    return !check.isMatch && check.simulationState ? indexPath : nil;
+    return !check.isMatch && check.inputIDs.count ? indexPath : nil;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -150,7 +150,7 @@
     cell.check = check;
     cell.accessoryType = check.isMatch ? UITableViewCellAccessoryNone : UITableViewCellAccessoryDisclosureIndicator;
     cell.selectionStyle = check.isMatch ? UITableViewCellSelectionStyleNone : UITableViewCellSelectionStyleDefault;
-    cell.accessibilityHint = check.isMatch ? nil : @"Double tap to inspect this failed test in the circuit.";
+    cell.accessibilityHint = check.isMatch ? nil : @"Double tap to apply these inputs to the circuit.";
     if (!self.hasAppeared) {
         [cell setShowResult:NO animated:NO];
     } else {

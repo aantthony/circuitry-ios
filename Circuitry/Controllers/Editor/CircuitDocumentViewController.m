@@ -40,18 +40,6 @@
 @property (nonatomic) UIView *titleView;
 @property (nonatomic) BOOL isTutorial;
 @property (nonatomic) CircuitTestResult *testResult;
-@property (nonatomic) NSDictionary *inspectionPreviousState;
-@property (nonatomic) BOOL inspectionWasPaused;
-@property (nonatomic) BOOL inspectionEditorWasInteractive;
-@property (nonatomic) CGPoint inspectionPreviousTranslation;
-@property (nonatomic) CGFloat inspectionPreviousZoom;
-@property (nonatomic) BOOL inspectionObjectListHidden;
-@property (nonatomic) BOOL inspectionProblemInfoHidden;
-@property (nonatomic) UIView *inspectionBanner;
-@property (nonatomic) BOOL inspectionHidBackButton;
-@property (nonatomic) NSDictionary<NSString *, UIView *> *inspectionHighlights;
-@property (nonatomic) UIView *inspectionOverlay;
-@property (nonatomic) NSArray<UIBarButtonItem *> *inspectionDisabledItems;
 @property (nonatomic) CircuitDocument *nextDocument;
 @property (nonatomic) UITapGestureRecognizer *tapToDismissKeyboard;
 @property (nonatomic) NSMutableArray *showingUnlockedToolbeltItems;
@@ -575,7 +563,6 @@ static CGPoint hvrDragHereRight = {88,428};
 }
 
 - (void) viewDidDisappear:(BOOL)animated {
-    [self finishTestInspection];
     [super viewDidDisappear:animated];
     [self.delegate circuitDocumentViewController:self didFinish:self.document];
 }
@@ -759,105 +746,11 @@ static CGPoint hvrDragHereRight = {88,428};
 }
 
 - (void)testResultViewController:(TestResultViewController *)viewController inspectCheck:(CircuitTestResultCheck *)check {
-    if (check.isMatch || !check.simulationState) return;
     [viewController dismissViewControllerAnimated:YES completion:^{
-        self.inspectionPreviousState = [self.document.circuit captureSimulationState];
-        self.inspectionWasPaused = self.editorViewController.simulationPaused;
-        self.inspectionEditorWasInteractive = self.editorViewController.view.userInteractionEnabled;
-        self.editorViewController.view.userInteractionEnabled = NO;
-        self.inspectionPreviousTranslation = self.editorViewController.viewport.translation;
-        self.inspectionPreviousZoom = self.editorViewController.viewport.zoomScale;
-        self.inspectionObjectListHidden = self.objectListView.hidden;
-        self.inspectionProblemInfoHidden = self.problemInfoView.hidden;
-        self.objectListView.hidden = YES;
-        self.problemInfoView.hidden = YES;
-        self.editorViewController.simulationPaused = YES;
-        [self.document.circuit restoreSimulationState:check.simulationState];
+        [check applyInputsToCircuit:self.document.circuit];
+        [self.editorViewController update];
         [self.editorViewController.viewport setSceneContentNeedsUpdate];
         [self.editorViewController.viewport updateSceneForViewSize:self.editorViewController.view.bounds.size allowContentRebuild:YES];
-
-        NSMutableArray *disabledItems = [NSMutableArray array];
-        for (UIBarButtonItem *item in [(self.navigationItem.leftBarButtonItems ?: @[]) arrayByAddingObjectsFromArray:self.navigationItem.rightBarButtonItems ?: @[]]) {
-            if (item.enabled) { [disabledItems addObject:item]; item.enabled = NO; }
-        }
-        self.inspectionDisabledItems = disabledItems;
-        self.inspectionHidBackButton = self.navigationItem.hidesBackButton;
-        self.navigationItem.hidesBackButton = YES;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishTestInspection) name:UIApplicationWillResignActiveNotification object:nil];
-        UIView *overlay = [[UIView alloc] initWithFrame:self.view.bounds];
-        overlay.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        overlay.accessibilityIdentifier = @"failedTestInspection";
-        overlay.accessibilityViewIsModal = YES;
-        self.inspectionOverlay = overlay;
-        [self.view addSubview:overlay];
-
-        NSMutableDictionary *highlights = [NSMutableDictionary dictionary];
-        for (NSString *identifier in check.mismatchingOutputIDs) {
-            CircuitObject *object = [self.document.circuit findObjectById:identifier];
-            if (!object) continue;
-            CGRect rect = [self.editorViewController.viewport rectForObject:object inView:self.editorViewController.view];
-            rect = [self.editorViewController.view convertRect:rect toView:overlay];
-            UIView *highlight = [[UIView alloc] initWithFrame:CGRectInset(rect, -5, -5)];
-            highlight.layer.borderColor = UIColor.systemRedColor.CGColor;
-            highlight.layer.borderWidth = 3;
-            highlight.layer.cornerRadius = 8;
-            highlight.userInteractionEnabled = NO;
-            [overlay addSubview:highlight];
-            highlights[identifier] = highlight;
-        }
-
-        self.inspectionHighlights = highlights;
-
-        UIStackView *banner = [[UIStackView alloc] init];
-        banner.axis = UILayoutConstraintAxisVertical;
-        banner.spacing = 8;
-        banner.layoutMarginsRelativeArrangement = YES;
-        banner.layoutMargins = UIEdgeInsetsMake(12, 16, 12, 16);
-        banner.backgroundColor = UIColor.secondarySystemBackgroundColor;
-        banner.layer.cornerRadius = 12;
-        banner.translatesAutoresizingMaskIntoConstraints = NO;
-        UIScrollView *details = [[UIScrollView alloc] init];
-        if (@available(iOS 26.0, *)) {
-            details.topEdgeEffect.hidden = YES;
-            details.bottomEdgeEffect.hidden = YES;
-            details.leftEdgeEffect.hidden = YES;
-            details.rightEdgeEffect.hidden = YES;
-        }
-        [details.heightAnchor constraintEqualToConstant:72].active = YES;
-        UILabel *label = [[UILabel alloc] init];
-        label.numberOfLines = 0;
-        label.translatesAutoresizingMaskIntoConstraints = NO;
-        label.font = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
-        label.text = [NSString stringWithFormat:@"Inspecting failed test • Inputs: %@\nExpected: %@ · Actual: %@\nMismatching outputs are outlined in red.", [check.inputs componentsJoinedByString:@", "], [check.expectedOutputs componentsJoinedByString:@", "], [check.actualOutputs componentsJoinedByString:@", "]];
-        [details addSubview:label];
-        [NSLayoutConstraint activateConstraints:@[
-            [label.leadingAnchor constraintEqualToAnchor:details.contentLayoutGuide.leadingAnchor],
-            [label.trailingAnchor constraintEqualToAnchor:details.contentLayoutGuide.trailingAnchor],
-            [label.topAnchor constraintEqualToAnchor:details.contentLayoutGuide.topAnchor],
-            [label.bottomAnchor constraintEqualToAnchor:details.contentLayoutGuide.bottomAnchor],
-            [label.widthAnchor constraintEqualToAnchor:details.frameLayoutGuide.widthAnchor]
-        ]];
-        [banner addArrangedSubview:details];
-        UIButton *done = [UIButton buttonWithType:UIButtonTypeSystem];
-        [done setTitle:@"Done inspecting" forState:UIControlStateNormal];
-        done.accessibilityIdentifier = @"doneInspectingTest";
-        [done addTarget:self action:@selector(finishTestInspection) forControlEvents:UIControlEventTouchUpInside];
-        [done.heightAnchor constraintGreaterThanOrEqualToConstant:36].active = YES;
-        [banner addArrangedSubview:done];
-        [overlay addSubview:banner];
-        self.inspectionBanner = banner;
-        [NSLayoutConstraint activateConstraints:@[
-            [banner.topAnchor constraintEqualToAnchor:overlay.safeAreaLayoutGuide.topAnchor constant:8],
-            [banner.centerXAnchor constraintEqualToAnchor:overlay.centerXAnchor],
-            [banner.widthAnchor constraintLessThanOrEqualToConstant:540],
-            [banner.leadingAnchor constraintGreaterThanOrEqualToAnchor:overlay.leadingAnchor constant:12],
-            [banner.trailingAnchor constraintLessThanOrEqualToAnchor:overlay.trailingAnchor constant:-12]
-        ]];
-        NSLayoutConstraint *preferredWidth = [banner.widthAnchor constraintEqualToAnchor:overlay.widthAnchor constant:-24];
-        preferredWidth.priority = UILayoutPriorityDefaultHigh;
-        preferredWidth.active = YES;
-        [self.view layoutIfNeeded];
-        [self layoutTestInspection];
     }];
 }
 
@@ -874,62 +767,6 @@ static CGPoint hvrDragHereRight = {88,428};
         leftInset = MAX(0, CGRectGetMaxX(palette) - CGRectGetMinX(self.view.safeAreaLayoutGuide.layoutFrame));
     }
     [self.editorViewController layoutControlsInView:self.view bottomInset:bottomInset leftInset:leftInset];
-    [self layoutTestInspection];
-}
-
-- (void)layoutTestInspection {
-    if (!self.inspectionOverlay || !self.inspectionBanner) return;
-    Viewport *viewport = self.editorViewController.viewport;
-    UIView *canvas = self.editorViewController.view;
-    CGRect available = [self.inspectionOverlay convertRect:self.inspectionOverlay.bounds toView:canvas];
-    CGRect banner = [self.inspectionBanner convertRect:self.inspectionBanner.bounds toView:canvas];
-    available = CGRectIntersection(available, canvas.bounds);
-    CGFloat top = MAX(CGRectGetMinY(available), CGRectGetMaxY(banner) + 12);
-    available = CGRectMake(CGRectGetMinX(available) + 16, top,
-                           MAX(1, available.size.width - 32), MAX(1, CGRectGetMaxY(available) - top - 16));
-    __block CGRect worldBounds = CGRectNull;
-    [self.document.circuit enumerateObjectsUsingBlock:^(CircuitObject *object, BOOL *stop) {
-        CGRect rect = [viewport rectForObject:object inView:canvas];
-        CGPoint origin = [viewport unproject:rect.origin];
-        CGRect world = CGRectMake(origin.x, origin.y, rect.size.width / viewport.zoomScale, rect.size.height / viewport.zoomScale);
-        worldBounds = CGRectUnion(worldBounds, world);
-    }];
-    if (!CGRectIsNull(worldBounds)) {
-        CGFloat scale = MIN(available.size.width / MAX(1, worldBounds.size.width), available.size.height / MAX(1, worldBounds.size.height));
-        viewport.zoomScale = MIN(scale, 1.0);
-        viewport.translation = CGPointMake(CGRectGetMidX(available) - CGRectGetMidX(worldBounds) * viewport.zoomScale,
-                                           CGRectGetMidY(available) - CGRectGetMidY(worldBounds) * viewport.zoomScale);
-        [viewport setSceneContentNeedsUpdate];
-        [viewport updateSceneForViewSize:canvas.bounds.size allowContentRebuild:YES];
-    }
-    [self.inspectionHighlights enumerateKeysAndObjectsUsingBlock:^(NSString *identifier, UIView *highlight, BOOL *stop) {
-        CircuitObject *object = [self.document.circuit findObjectById:identifier];
-        if (!object) return;
-        CGRect rect = [self.editorViewController.viewport rectForObject:object inView:self.editorViewController.view];
-        highlight.frame = CGRectInset([self.editorViewController.view convertRect:rect toView:self.inspectionOverlay], -5, -5);
-    }];
-}
-
-- (void)finishTestInspection {
-    if (!self.inspectionPreviousState) return;
-    [self.document.circuit restoreSimulationState:self.inspectionPreviousState];
-    self.inspectionPreviousState = nil;
-    [self.inspectionOverlay removeFromSuperview];
-    self.inspectionOverlay = nil;
-    self.inspectionBanner = nil;
-    self.objectListView.hidden = self.inspectionObjectListHidden;
-    self.problemInfoView.hidden = self.inspectionProblemInfoHidden;
-    self.editorViewController.viewport.translation = self.inspectionPreviousTranslation;
-    self.editorViewController.viewport.zoomScale = self.inspectionPreviousZoom;
-    for (UIBarButtonItem *item in self.inspectionDisabledItems) item.enabled = YES;
-    self.inspectionDisabledItems = nil;
-    self.navigationItem.hidesBackButton = self.inspectionHidBackButton;
-    self.inspectionHighlights = nil;
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
-    [self.editorViewController.viewport setSceneContentNeedsUpdate];
-    self.editorViewController.view.userInteractionEnabled = self.inspectionEditorWasInteractive;
-    self.editorViewController.simulationPaused = self.inspectionWasPaused;
-    [self.editorViewController.viewport updateSceneForViewSize:self.editorViewController.view.bounds.size allowContentRebuild:YES];
 }
 
 - (void) testResultViewController:(TestResultViewController *)viewController didFinish:(id)sender {

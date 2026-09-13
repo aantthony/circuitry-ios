@@ -6,13 +6,14 @@
 //  Copyright (c) 2014 Circuitry. All rights reserved.
 //
 
+@class Circuit;
+
 @interface CircuitTestResultCheck : NSObject
 @property (nonatomic, readonly) NSArray *inputs;
 @property (nonatomic, readonly) NSArray *expectedOutputs;
 @property (nonatomic, readonly) BOOL isMatch;
-@property (nonatomic, copy) NSDictionary *simulationState;
-@property (nonatomic, copy) NSArray<NSString *> *mismatchingOutputIDs;
-@property (nonatomic, copy) NSArray<NSNumber *> *actualOutputs;
+@property (nonatomic, copy) NSArray<NSString *> *inputIDs;
+- (void)applyInputsToCircuit:(Circuit *)circuit;
 - (instancetype) initWithInputs:(NSArray *)inputs expectedOutputs:(NSArray *)expectedOutputs match:(BOOL)match;
 @end
 

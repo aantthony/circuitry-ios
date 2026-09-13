@@ -327,7 +327,7 @@
     XCTAssertEqual([document duplicateObjectsWithIDs:@[@"000000000000000000000000"] offset:CGVectorMake(33, 33)].count, 0u);
 }
 
-- (void)testFailedCheckInspectionRestoresExactSimulationState {
+- (void)testFailedCheckAppliesOnlyInputs {
     Circuit *circuit = [[Circuit alloc] initWithPackage:@{@"name": @"inspection", @"version": @"1"} items:@[]];
     __block CircuitObject *input;
     __block CircuitObject *output;
@@ -350,17 +350,17 @@
     XCTAssertEqualObjects(before, [circuit captureSimulationState]);
     CircuitTestResultCheck *failed = result.checks[0];
     XCTAssertFalse(failed.isMatch);
-    XCTAssertEqualObjects(failed.actualOutputs, @[@0]);
-    XCTAssertEqualObjects(failed.mismatchingOutputIDs, @[[MongoID stringWithId:output->id]]);
+    XCTAssertEqualObjects(failed.inputIDs, @[[MongoID stringWithId:input->id]]);
     XCTAssertTrue(((CircuitTestResultCheck *)result.checks[1]).isMatch);
-    [circuit restoreSimulationState:failed.simulationState];
-    XCTAssertEqual(input->out, 0);
-    XCTAssertEqual(output->in, 0);
-    [circuit restoreSimulationState:before];
-    XCTAssertEqualObjects(before, [circuit captureSimulationState]);
-    XCTAssertEqual(input->data, 42u);
     [circuit simulate:512];
+    input->data = 73;
+    [failed applyInputsToCircuit:circuit];
+    XCTAssertEqual(input->out, 0);
+    XCTAssertEqual(input->data, 73u);
+    // Applying inputs doesn't restore a snapshot or directly alter outputs.
     XCTAssertEqual(output->in, 1);
+    [circuit simulate:512];
+    XCTAssertEqual(output->in, 0);
 }
 
 - (void)testProgressMigrationAndNewLevels {

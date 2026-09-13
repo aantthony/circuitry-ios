@@ -305,12 +305,13 @@
     XCUIElement *failedRow = [app.cells containingType:XCUIElementTypeImage identifier:@"TestResultMismatch"].firstMatch;
     XCTAssertTrue(failedRow.exists);
     [failedRow tap];
-    XCTAssertTrue([app.buttons[@"doneInspectingTest"] waitForExistenceWithTimeout:5]);
-    XCTAttachment *inspection = [XCTAttachment attachmentWithScreenshot:app.screenshot];
-    inspection.name = @"failed-test-inspection"; inspection.lifetime = XCTAttachmentLifetimeKeepAlways;
-    [self addAttachment:inspection];
-    [app.buttons[@"doneInspectingTest"] tap];
+    NSPredicate *dismissed = [NSPredicate predicateWithFormat:@"exists == NO"];
+    [self expectationForPredicate:dismissed evaluatedWithObject:app.buttons[@"OK"] handler:nil];
+    [self waitForExpectationsWithTimeout:5 handler:nil];
+    XCTAssertFalse(app.buttons[@"doneInspectingTest"].exists);
     XCTAssertTrue(app.buttons[@"Check Answer"].enabled);
+    XCTAssertTrue(app.buttons[@"simulation.pause"].hittable);
+    XCTAssertEqualObjects(app.buttons[@"simulation.pause"].label, @"Pause simulation");
     [self launchAppForScreenshots:app];
     [app.buttons[@"Playground"] tap];
     [app.buttons[@"Add"] tap];
