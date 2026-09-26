@@ -5,13 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Legal - Circuitry</title>
   <meta name="description" content="Circuitry legal notices, attributions, and privacy information." />
-  <link rel="stylesheet" type="text/css" href="styles/index2.css" />
-  <script src="https://use.typekit.net/yod6gxq.js"></script>
-  <script>try{Typekit.load();}catch(e){}</script>
+  <meta name="theme-color" content="#040913" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap" />
+  <link rel="stylesheet" type="text/css" href="styles/site.css" />
 </head>
 <body>
+  <svg class="defs" aria-hidden="true" focusable="false">
+    <symbol id="icon" viewBox="0 0 1024 1024">
+      <defs>
+        <linearGradient id="icon-bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5ea3e2" /><stop offset="1" stop-color="#0a72cb" /></linearGradient>
+        <clipPath id="icon-clip"><rect width="1024" height="1024" rx="230" /></clipPath>
+      </defs>
+      <rect width="1024" height="1024" rx="230" fill="url(#icon-bg)" />
+      <g clip-path="url(#icon-clip)" stroke="rgba(255,255,255,.33)" stroke-width="7">
+        <path d="M25 0v1024M188 0v1024M351 0v1024M514 0v1024M677 0v1024M840 0v1024M1003 0v1024M0 25h1024M0 188h1024M0 351h1024M0 514h1024M0 677h1024M0 840h1024M0 1003h1024" />
+      </g>
+      <g fill="#fff" stroke="#fff" stroke-width="19">
+        <path d="M411 690v205M599 690v205M505 290V95" fill="none" />
+        <path d="M318 742V575C318 450 395 345 505 290C615 345 693 450 693 575V742C640 695 580 670 505 670C430 670 370 695 318 742Z" stroke="none" />
+        <circle cx="411" cy="895" r="34" stroke="none" /><circle cx="599" cy="895" r="34" stroke="none" /><circle cx="505" cy="95" r="34" stroke="none" />
+      </g>
+    </symbol>
+  </svg>
   <header class="site-header">
-    <a class="brand" href="index.html">Circuitry</a>
+    <a class="brand" href="index.html"><svg aria-hidden="true"><use href="#icon" /></svg>Circuitry</a>
     <nav class="site-nav" aria-label="Primary">
       <a href="index.html#learn">Learn</a>
       <a href="index.html#gallery">Gallery</a>
@@ -20,7 +39,7 @@
 
   <main class="subpage">
     <article class="page-panel legal-copy">
-      <p class="eyebrow">Legal</p>
+      <p class="eyebrow">[ Legal ]</p>
       <h1>Notices and attributions.</h1>
 
       <h2>Attributions</h2>
@@ -49,7 +68,7 @@
   <footer class="footer">
     <div class="footer-inner">
       <div>
-        <a class="brand footer-brand" href="index.html">Circuitry</a>
+        <a class="brand footer-brand" href="index.html"><svg aria-hidden="true"><use href="#icon" /></svg>Circuitry</a>
         <p>Made by Anthony Foster in Melbourne, Australia.</p>
       </div>
       <div class="footer-links">
@@ -58,13 +77,6 @@
       </div>
     </div>
   </footer>
-  <script>
-    var siteHeader = document.querySelector('.site-header');
-    function updateHeaderSurface() {
-      siteHeader.classList.toggle('is-scrolled', window.scrollY > 8);
-    }
-    updateHeaderSurface();
-    window.addEventListener('scroll', updateHeaderSurface, { passive: true });
-  </script>
+  <script src="scripts/site.js"></script>
 </body>
 </html>
