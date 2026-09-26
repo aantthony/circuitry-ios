@@ -1,6 +1,6 @@
 # Circuitry motion reel
 
-A 15 second, 1920×1080, 60fps motion piece for Circuitry: `circuitry-reel.mp4`.
+A 15 second, 1920×1080, 60fps motion piece for Circuitry. The rendered video is not kept in the repo; run `render.mjs` to produce `circuitry-reel.mp4`.
 Everything is code: `reel.html` draws each frame on a canvas, and `audio.mjs`
 synthesizes a 120bpm soundtrack cued to the picture.
 
