@@ -1,6 +1,6 @@
 # Circuitry motion reel
 
-A 15 second, 1920×1080, 60fps motion piece for Circuitry: `circuitry-reel.mp4`.
+A 15 second, 1920×1080, 60fps motion piece for Circuitry: [`docs/video/circuitry-reel.mp4`](../../docs/video/circuitry-reel.mp4), also shown on the website.
 Everything is code: `reel.html` draws each frame on a canvas, and `audio.mjs`
 synthesizes a 120bpm soundtrack cued to the picture.
 
@@ -17,7 +17,7 @@ Open `reel.html` in a browser to preview it in real time. To render the MP4, you
 need Playwright and an ffmpeg with libx264:
 
 ```sh
-node render.mjs                  # frames/ -> audio.wav -> circuitry-reel.mp4
+node render.mjs                  # frames/ -> audio.wav -> docs/video/circuitry-reel.mp4
 node render.mjs --stills 4.2,9.8 # single frames to stills/
 ```
 
