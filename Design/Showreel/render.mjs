@@ -1,4 +1,4 @@
-// Renders reel.html frame by frame in headless Chromium and encodes docs/video/circuitry-reel.mp4.
+// Renders reel.html frame by frame in headless Chromium and encodes circuitry-reel.mp4.
 //
 //   node render.mjs                 full render (needs Playwright + an ffmpeg with libx264)
 //   node render.mjs --stills 4.2,9  render single frames at the given seconds to stills/
@@ -82,10 +82,10 @@ if (stillsArg > 0) {
   await new Promise((resolve, reject) => {
     const ff = spawn(FFMPEG, ['-y', '-loglevel', 'error', '-framerate', String(FPS), '-i', join(dir, 'f%04d.jpg'), '-i', join(ROOT, 'audio.wav'),
       '-c:v', 'libx264', '-preset', 'slow', '-crf', '21', '-pix_fmt', 'yuv420p', '-profile:v', 'high', '-tune', 'film',
-      '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart', '-shortest', join(ROOT, '..', '..', 'docs', 'video', 'circuitry-reel.mp4')], { stdio: 'inherit' });
+      '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart', '-shortest', join(ROOT, 'circuitry-reel.mp4')], { stdio: 'inherit' });
     ff.on('exit', c => c === 0 ? resolve() : reject(new Error(`ffmpeg exited ${c}`)));
   });
-  console.log('wrote docs/video/circuitry-reel.mp4');
+  console.log('wrote circuitry-reel.mp4');
 }
 await browser.close();
 server.close();
